@@ -4,6 +4,7 @@ import { useSettings } from "../settings";
 
 export function AgreementsLayout() {
   const { settings } = useSettings();
+  console.log(settings);
   return (
     <AgreementsProvider baseUrl={settings.endpoint} token={settings.token}>
       <Outlet />

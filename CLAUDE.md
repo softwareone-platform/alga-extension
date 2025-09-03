@@ -45,3 +45,7 @@ This is a React 19 + TypeScript + Vite application with a minimal setup:
 ## Code Style Guidelines
 
 - **TypeScript Types**: Prefer `type` over `interface` for type definitions
+
+## External Libraries and Documentation
+
+- **Always use Context7 tools**: When asked to use or implement features with external libraries, ALWAYS use the context7 MCP tools (`resolve-library-id` and `get-library-docs`) to fetch the latest documentation and code examples before implementation. This ensures you have access to up-to-date information and best practices for any library.

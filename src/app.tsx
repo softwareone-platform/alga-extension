@@ -4,11 +4,8 @@ import { Settings, SettingsProvider } from "./settings";
 import { AgreementsLayout } from "./agreements/layout.tsx";
 import "./index.css";
 
-const BASE_URL = "https://portal.s1.live/public/v1/";
 // const TOKEN =
 //   "idt:TKN-3140-4844:hUOoIJsnPNBU4MeruvvLDjcYMboih3al2WXyEnY4IeTpZCF1xhex7p1qNPZVCD4b";
-
-const TOKEN = "";
 
 export function App() {
   return (
