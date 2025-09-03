@@ -4,7 +4,7 @@ export function Settings() {
   const { settings, setSettings } = useSettings();
 
   return (
-    <>
+    <section className="w-full flex justify-between">
       <div>
         <h1>SoftwareOne</h1>
         <span>{settings.status}</span>
@@ -14,6 +14,6 @@ export function Settings() {
           Edit
         </button>
       </div>
-    </>
+    </section>
   );
 }

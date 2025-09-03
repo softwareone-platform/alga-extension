@@ -1,5 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+
 // import { copyFileSync, mkdirSync } from "node:fs";
 
 // Simple plugin to copy alga.manifest.json to ./dist/manifest.json after build
@@ -16,7 +18,7 @@ import react from "@vitejs/plugin-react";
 // https://vite.dev/config/
 export default defineConfig({
   // plugins: [react(), manifestPlugin()],
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   build: {
     outDir: "./dist/ui",
   },
