@@ -44,9 +44,15 @@ export function Settings() {
       </section>
 
       <Dialog open={isOpen} onClose={handleCancel} className="relative z-50">
-        <DialogBackdrop className="fixed inset-0 bg-black/30" />
+        <DialogBackdrop
+          transition
+          className="fixed inset-0 bg-black/30 duration-200 ease-out data-[closed]:opacity-0"
+        />
         <div className="fixed inset-0 flex justify-end">
-          <DialogPanel className="h-full w-[600px] bg-white shadow-xl flex flex-col py-6 px-10 gap-10">
+          <DialogPanel
+            transition
+            className="h-full w-[600px] bg-white shadow-xl flex flex-col py-6 px-10 gap-10 duration-200 ease-out data-[closed]:translate-x-full"
+          >
             <DialogTitle className="flex justify-between">
               <div className="text-3xl font-semibold">SoftwareOne Settings</div>
               <button
