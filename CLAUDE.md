@@ -41,3 +41,7 @@ This is a React 19 + TypeScript + Vite application with a minimal setup:
 - CSS files are imported directly in components
 - No testing framework is currently configured
 - HMR (Hot Module Replacement) is enabled for fast development
+
+## Code Style Guidelines
+
+- **TypeScript Types**: Prefer `type` over `interface` for type definitions

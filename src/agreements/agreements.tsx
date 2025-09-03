@@ -1,8 +1,8 @@
 import { Link } from "react-router";
+import { useAgreements } from "./use-agreements";
 import "./agreements.css";
-import { useAgreements } from "./hooks/use-agreements";
 
-function Agreements() {
+export function Agreements() {
   const { data } = useAgreements();
 
   return (
@@ -16,5 +16,3 @@ function Agreements() {
     </>
   );
 }
-
-export default Agreements;

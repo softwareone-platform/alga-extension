@@ -1,24 +1,25 @@
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, useMemo, type ReactNode } from "react";
 import { AgreementsClient } from "../lib/swo-client/agreements-client";
 
-interface AgreementsContextType {
+const AgreementsContext = createContext<{
   client: AgreementsClient;
-}
+} | null>(null);
 
-const AgreementsContext = createContext<AgreementsContextType | null>(null);
-
-interface AgreementsProviderProps {
+export type AgreementsProviderProps = {
   children: ReactNode;
   baseUrl: string;
   token: string;
-}
+};
 
 export const AgreementsProvider = ({
   children,
   baseUrl,
   token,
 }: AgreementsProviderProps) => {
-  const client = new AgreementsClient(baseUrl, token);
+  const client = useMemo(
+    () => new AgreementsClient(baseUrl, token),
+    [baseUrl, token]
+  );
 
   return (
     <AgreementsContext.Provider value={{ client }}>

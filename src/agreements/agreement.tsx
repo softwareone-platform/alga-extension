@@ -1,6 +1,6 @@
 import { useParams } from "react-router";
 
-export default function Agreement() {
+export function Agreement() {
   const { id } = useParams<{ id: string }>();
 
   return (
