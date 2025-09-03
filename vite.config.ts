@@ -1,0 +1,23 @@
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+// import { copyFileSync, mkdirSync } from "node:fs";
+
+// Simple plugin to copy alga.manifest.json to ./dist/manifest.json after build
+// function manifestPlugin() {
+//   return {
+//     name: "manifest-copy",
+//     closeBundle() {
+//       mkdirSync("./dist", { recursive: true });
+//       copyFileSync("./manifest.json", "./dist/manifest.json");
+//     },
+//   };
+// }
+
+// https://vite.dev/config/
+export default defineConfig({
+  // plugins: [react(), manifestPlugin()],
+  plugins: [react()],
+  build: {
+    outDir: "./dist/ui",
+  },
+});
