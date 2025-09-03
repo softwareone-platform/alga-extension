@@ -11,6 +11,7 @@ export type SWOSettings = {
   endpoint: string;
   token: string;
   note: string;
+  status: "unconfigured" | "active" | "disabled" | "error";
 };
 
 export type SettingsContextType = {
@@ -35,6 +36,7 @@ const getSettings = (): SWOSettings => {
     endpoint: "",
     token: "",
     note: "",
+    status: "unconfigured",
   };
 };
 
@@ -48,6 +50,7 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
 
   useEffect(() => {
     saveSettingsToStorage(settings);
+
     if (!settings.token) {
       navigate("/settings");
     }

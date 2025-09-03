@@ -1,6 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import { Agreements, Agreement } from "./agreements/index.ts";
-import { Settings } from "./settings";
+import { Settings, SettingsProvider } from "./settings";
 import { AgreementsLayout } from "./agreements/layout.tsx";
 import "./index.css";
 
@@ -13,17 +13,19 @@ const TOKEN = "";
 export function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navigate to="/agreements" replace />} />
-        <Route path="settings" element={<Settings />} />
+      <SettingsProvider>
+        <Routes>
+          <Route path="/" element={<Navigate to="/agreements" replace />} />
+          <Route path="settings" element={<Settings />} />
 
-        <Route path="agreements">
-          <Route element={<AgreementsLayout />}>
-            <Route index element={<Agreements />} />
-            <Route path=":id" element={<Agreement />} />
+          <Route path="agreements">
+            <Route element={<AgreementsLayout />}>
+              <Route index element={<Agreements />} />
+              <Route path=":id" element={<Agreement />} />
+            </Route>
           </Route>
-        </Route>
-      </Routes>
+        </Routes>
+      </SettingsProvider>
     </BrowserRouter>
   );
 }
