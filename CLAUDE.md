@@ -14,6 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a React 19 + TypeScript + Vite application with a minimal setup:
 
 - **Frontend Framework**: React 19 with TypeScript
+- **Routing**: React Router v7 in declarative mode
 - **Build Tool**: Vite with React plugin
 - **Linting**: ESLint with TypeScript, React Hooks, and React Refresh plugins
 - **Entry Point**: `src/main.tsx` renders the main `App` component

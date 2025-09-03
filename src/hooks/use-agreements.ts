@@ -1,14 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
-import { AgreementsClient, type AgreementsOptions } from '../lib/swo-client/agreements-client';
+import { useQuery } from "@tanstack/react-query";
+import { type AgreementsOptions } from "../lib/swo-client/agreements-client";
+import { useAgreementsClient } from "../contexts/agreements-context";
 
-interface UseAgreementsProps {
-  client: AgreementsClient;
-  options?: AgreementsOptions;
-}
+export const useAgreements = (options?: AgreementsOptions) => {
+  const client = useAgreementsClient();
 
-export const useAgreements = ({ client, options }: UseAgreementsProps) => {
   return useQuery({
-    queryKey: ['agreements', options],
+    queryKey: ["agreements", options],
     queryFn: () => client.getAgreements(options),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
