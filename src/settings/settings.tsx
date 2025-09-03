@@ -69,10 +69,8 @@ export function Settings() {
               </button>
             </DialogTitle>
 
-            <div className="grid grid-cols-[auto_380px] gap-10">
-              <label className="block text-sm font-medium mb-2">
-                API Endpoint
-              </label>
+            <div className="grid grid-cols-[auto_380px] gap-10 items-center">
+              <label className="text-sm font-medium">API Endpoint</label>
               <input
                 type="text"
                 value={editedSettings.endpoint}
@@ -85,9 +83,7 @@ export function Settings() {
                 className="w-full px-3 py-2 border rounded-lg text-sm border-gray-300 focus:outline-none"
               />
 
-              <label className="block text-sm font-medium mb-2">
-                API Token
-              </label>
+              <label className="text-sm font-medium">API Token</label>
               <input
                 type="password"
                 value={editedSettings.token}
@@ -100,7 +96,7 @@ export function Settings() {
                 className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
 
-              <label className="block text-sm font-medium mb-2">Note</label>
+              <label className="text-sm font-medium self-start">Note</label>
               <textarea
                 value={editedSettings.note}
                 onChange={(e) =>
