@@ -24,7 +24,7 @@ export function Settings() {
   };
 
   return (
-    <>
+    <div className="w-full flex flex-col p-8 gap-8">
       <section className="w-full flex justify-between">
         <div>
           <h1 className="text-3xl font-semibold">SoftwareOne</h1>
@@ -42,6 +42,8 @@ export function Settings() {
           </button>
         </div>
       </section>
+
+      <Outlet />
 
       <Dialog open={isOpen} onClose={handleCancel} className="relative z-50">
         <DialogBackdrop
@@ -133,8 +135,6 @@ export function Settings() {
           </DialogPanel>
         </div>
       </Dialog>
-      
-      <Outlet />
-    </>
+    </div>
   );
 }
