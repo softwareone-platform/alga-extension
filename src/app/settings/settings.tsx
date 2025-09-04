@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Outlet, Link } from "react-router";
+import { Outlet, NavLink } from "react-router";
 import {
   Dialog,
   DialogPanel,
@@ -66,15 +66,23 @@ export function Settings() {
           data-orientation="horizontal"
           className="flex items-center border-b border-gray-200"
         >
-          <Link to="/settings" className="px-4 py-2">
-            General
-          </Link>
-          <Link to="/settings/details" className="px-4 py-2">
+          <NavLink to="/settings">
+            {({ isActive }) => (
+              <span
+                className={clsx("px-4 py-2 block", {
+                  "border-b-2 border-blue-500 text-blue-500": isActive,
+                })}
+              >
+                General
+              </span>
+            )}
+          </NavLink>
+          <NavLink to="/settings/details" className="px-4 py-2">
             Details
-          </Link>
-          <Link to="/settings/settings" className="px-4 py-2">
+          </NavLink>
+          <NavLink to="/settings/settings" className="px-4 py-2">
             Settings
-          </Link>
+          </NavLink>
         </nav>
         <Outlet />
       </AccountProvider>
