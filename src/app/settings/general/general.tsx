@@ -1,7 +1,7 @@
-import { useAccount } from "../_shared/use-account";
+import { useAccount } from "../_shared";
 
 export function General() {
-  const { data: account } = useAccount();
+  const { data: account, error } = useAccount();
 
   return (
     <div className="w-full bg-white rounded-2xl p-6 flex flex-col gap-6 border border-gray-200">
