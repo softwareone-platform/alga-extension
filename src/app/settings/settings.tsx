@@ -8,6 +8,7 @@ import {
 } from "@headlessui/react";
 import { useSettings, type SWOSettings } from "./_shared";
 import { Button } from "@ui/button";
+import { AccountProvider } from "./_shared/account-context";
 
 export function Settings() {
   const { settings, setSettings } = useSettings();
@@ -43,7 +44,9 @@ export function Settings() {
         </div>
       </section>
 
-      <Outlet />
+      <AccountProvider baseUrl={settings.endpoint} token={settings.token}>
+        <Outlet />
+      </AccountProvider>
 
       <Dialog open={isOpen} onClose={handleCancel} className="relative z-50">
         <DialogBackdrop
