@@ -4,7 +4,6 @@ import {
   useState,
   useEffect,
   type ReactNode,
-  useMemo,
 } from "react";
 import { useNavigate } from "react-router";
 
@@ -18,7 +17,7 @@ export type SWOStatus = "unconfigured" | "active" | "disabled" | "error";
 
 export type SettingsContextType = {
   settings: SWOSettings;
-  status: SWOStatus;
+  status?: SWOStatus;
   disable: () => void;
   enable: () => void;
   error: () => void;
@@ -51,33 +50,26 @@ const saveSettingsToStorage = (settings: SWOSettings) => {
 
 export const SettingsProvider = ({ children }: SettingsProviderProps) => {
   const [settings, setSettings] = useState<SWOSettings>(getSettings);
+  const [status, setStatus] = useState<SWOStatus>();
   const navigate = useNavigate();
-  const [enabled, setEnabled] = useState(true);
-  const [hasError, setError] = useState(false);
 
   const disable = () => {
-    setEnabled(false);
+    setStatus("disabled");
   };
 
   const enable = () => {
-    setEnabled(true);
+    setStatus(
+      !settings.token || !settings.endpoint ? "unconfigured" : "active"
+    );
   };
 
   const error = () => {
-    setError(true);
+    setStatus("error");
   };
-
-  const status = useMemo(() => {
-    if (hasError) return "error";
-
-    if (!settings.token || !settings.endpoint) return "unconfigured";
-
-    if (!enabled) return "disabled";
-    return "active";
-  }, [enabled, hasError, settings]);
 
   useEffect(() => {
     saveSettingsToStorage(settings);
+    enable();
 
     if (!settings.token) {
       navigate("/settings");

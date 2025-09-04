@@ -1,7 +1,13 @@
-import { useAccount } from "../_shared";
+import { useAccount, useSettings } from "../_shared";
 
 export function General() {
-  const { data: account, error } = useAccount();
+  const { data: account, error: accountError } = useAccount();
+  const { error: error } = useSettings();
+
+  if (accountError) {
+    console.error(accountError.cause, accountError.message);
+    error();
+  }
 
   return (
     <div className="w-full bg-white rounded-2xl p-6 flex flex-col gap-6 border border-gray-200">

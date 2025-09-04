@@ -6,13 +6,15 @@ import {
   DialogTitle,
   DialogBackdrop,
 } from "@headlessui/react";
-import { useSettings, type SWOSettings } from "./_shared";
+import { SWOStatus, useSettings, type SWOSettings } from "./_shared";
 import { Button } from "@ui/button";
 import { AccountProvider } from "./_shared/account-context";
 import { clsx } from "clsx";
 import { Tabs } from "@ui/tabs";
 
-function StatusBadge({ status }: { status: string }) {
+function StatusBadge({ status }: { status?: SWOStatus }) {
+  if (!status) return <></>;
+
   return (
     <span
       className={clsx("text-sm px-2 py-0.5 rounded block", {
