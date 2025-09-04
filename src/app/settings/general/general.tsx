@@ -1,14 +1,8 @@
 import { Card } from "@ui/card";
-import { useAccount, useSettings } from "../_shared";
+import { useAccount } from "../_shared";
 
 export function General() {
-  const { data: account, error: accountError } = useAccount();
-  const { error: error } = useSettings();
-
-  if (accountError) {
-    console.error(accountError.cause, accountError.message);
-    error();
-  }
+  const { data: account } = useAccount();
 
   return (
     <Card>

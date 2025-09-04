@@ -8,7 +8,7 @@ import {
 } from "@headlessui/react";
 import { SWOStatus, useSettings, type SWOSettings } from "./_shared";
 import { Button } from "@ui/button";
-import { AccountProvider } from "./_shared/account-context";
+import { AccountProvider, useAccount } from "./_shared/account-context";
 import { clsx } from "clsx";
 import { Tabs } from "@ui/tabs";
 
@@ -30,9 +30,14 @@ function StatusBadge({ status }: { status?: SWOStatus }) {
 }
 
 export function SettingsLayout() {
-  const { settings, status, setSettings } = useSettings();
+  // const { error: accountError } = useAccount();
+  const { settings, status, setSettings, error } = useSettings();
   const [isOpen, setIsOpen] = useState(false);
   const [editedSettings, setEditedSettings] = useState<SWOSettings>(settings);
+
+  // if (accountError) {
+  //   error();
+  // }
 
   const handleSave = () => {
     setSettings(editedSettings);

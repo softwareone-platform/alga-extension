@@ -64,6 +64,11 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
   };
 
   const error = () => {
+    if (status !== "active") {
+      throw new Error(
+        "Cannot put extension in error state. Extension is not enabled. "
+      );
+    }
     setStatus("error");
   };
 
@@ -81,10 +86,10 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
       value={{
         settings,
         status,
+        error,
         setSettings,
         disable,
         enable,
-        error,
       }}
     >
       {children}
