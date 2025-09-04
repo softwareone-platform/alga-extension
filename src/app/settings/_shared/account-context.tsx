@@ -1,25 +1,23 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import { AccountsClient } from "@lib/swo-client";
 import { useQuery } from "@tanstack/react-query";
+import { useSettings } from "./settings-context";
 
 const AccountContext = createContext<{
-  client?: AccountsClient;
+  client: AccountsClient;
 }>(null as any);
 
 export type AccountProviderProps = {
   children: ReactNode;
-  baseUrl: string;
-  token: string;
 };
 
-export const AccountProvider = ({
-  children,
-  baseUrl,
-  token,
-}: AccountProviderProps) => {
+export const AccountProvider = ({ children }: AccountProviderProps) => {
+  const { settings } = useSettings();
+  const { endpoint, token } = settings;
+
   const client = useMemo(
-    () => (baseUrl && token ? new AccountsClient(baseUrl, token) : undefined),
-    [baseUrl, token]
+    () => new AccountsClient(endpoint, token),
+    [endpoint, token]
   );
 
   return (
@@ -31,12 +29,15 @@ export const AccountProvider = ({
 
 export const useAccount = () => {
   const { client } = useContext(AccountContext);
+  const { settings } = useSettings();
+
+  const { endpoint, token } = settings;
 
   return useQuery({
-    queryKey: ["account"],
-    queryFn: () => client!.getAccount(),
+    queryKey: ["account", endpoint, token],
+    queryFn: () => client.getAccount(),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
-    enabled: !!client,
+    enabled: !!(endpoint && token),
   });
 };

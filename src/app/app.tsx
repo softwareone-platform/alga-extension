@@ -14,7 +14,7 @@ export function App() {
   }
 
   return (
-    <AccountProvider baseUrl={settings.endpoint} token={settings.token}>
+    <AccountProvider>
       <Routes>
         <Route path="/" element={<Navigate to="/agreements" replace />} />
 
