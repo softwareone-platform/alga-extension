@@ -10,7 +10,7 @@ export const ErrorCard = forwardRef<HTMLDivElement, ErrorCardProps>(
         className="w-full bg-white rounded-2xl p-2 flex flex-row gap-4 border border-gray-200"
         {...props}
       >
-        <div className="w-2 h-full bg-danger-4 rounded" />
+        <div className="w-2 bg-danger rounded h-full" />
         <div>{children}</div>
       </section>
     );

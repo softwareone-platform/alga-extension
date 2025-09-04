@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, NavLink } from "react-router";
 import {
   Dialog,
@@ -8,9 +8,10 @@ import {
 } from "@headlessui/react";
 import { SWOStatus, useSettings, type SWOSettings } from "./_shared";
 import { Button } from "@ui/button";
-import { AccountProvider, useAccount } from "./_shared/account-context";
+import { useAccount } from "./_shared/account-context";
 import { clsx } from "clsx";
 import { Tabs } from "@ui/tabs";
+import { ErrorCard } from "@ui/error-card";
 
 function StatusBadge({ status }: { status?: SWOStatus }) {
   if (!status) return <></>;
@@ -30,14 +31,16 @@ function StatusBadge({ status }: { status?: SWOStatus }) {
 }
 
 export function SettingsLayout() {
-  // const { error: accountError } = useAccount();
+  const { error: accountError } = useAccount();
   const { settings, status, setSettings, error } = useSettings();
   const [isOpen, setIsOpen] = useState(false);
   const [editedSettings, setEditedSettings] = useState<SWOSettings>(settings);
 
-  // if (accountError) {
-  //   error();
-  // }
+  useEffect(() => {
+    if (accountError) {
+      error();
+    }
+  }, [accountError]);
 
   const handleSave = () => {
     setSettings(editedSettings);
@@ -69,22 +72,20 @@ export function SettingsLayout() {
         </div>
       </section>
 
-      <AccountProvider baseUrl={settings.endpoint} token={settings.token}>
-        <Tabs>
-          <NavLink to="/settings/general">
-            {({ isActive }) => <Tabs.Tab isActive={isActive}>General</Tabs.Tab>}
-          </NavLink>
-          <NavLink to="/settings/details">
-            {({ isActive }) => <Tabs.Tab isActive={isActive}>Details</Tabs.Tab>}
-          </NavLink>
-          <NavLink to="/settings/settings">
-            {({ isActive }) => (
-              <Tabs.Tab isActive={isActive}>Settings</Tabs.Tab>
-            )}
-          </NavLink>
-        </Tabs>
-        <Outlet />
-      </AccountProvider>
+      {accountError && <ErrorCard>{accountError.message}</ErrorCard>}
+
+      <Tabs>
+        <NavLink to="/settings/general">
+          {({ isActive }) => <Tabs.Tab isActive={isActive}>General</Tabs.Tab>}
+        </NavLink>
+        <NavLink to="/settings/details">
+          {({ isActive }) => <Tabs.Tab isActive={isActive}>Details</Tabs.Tab>}
+        </NavLink>
+        <NavLink to="/settings/settings">
+          {({ isActive }) => <Tabs.Tab isActive={isActive}>Settings</Tabs.Tab>}
+        </NavLink>
+      </Tabs>
+      <Outlet />
 
       <Dialog open={isOpen} onClose={handleCancel} className="relative z-50">
         <DialogBackdrop

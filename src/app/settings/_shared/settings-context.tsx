@@ -5,7 +5,6 @@ import {
   useEffect,
   type ReactNode,
 } from "react";
-import { useNavigate } from "react-router";
 
 export type SWOSettings = {
   endpoint: string;
@@ -51,7 +50,6 @@ const saveSettingsToStorage = (settings: SWOSettings) => {
 export const SettingsProvider = ({ children }: SettingsProviderProps) => {
   const [settings, setSettings] = useState<SWOSettings>(getSettings);
   const [status, setStatus] = useState<SWOStatus>();
-  const navigate = useNavigate();
 
   const disable = () => {
     setStatus("disabled");
@@ -64,21 +62,12 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
   };
 
   const error = () => {
-    if (status !== "active") {
-      throw new Error(
-        "Cannot put extension in error state. Extension is not enabled. "
-      );
-    }
     setStatus("error");
   };
 
   useEffect(() => {
     saveSettingsToStorage(settings);
     enable();
-
-    if (!settings.token) {
-      navigate("/settings");
-    }
   }, [settings]);
 
   return (
