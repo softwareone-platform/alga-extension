@@ -31,7 +31,7 @@ function StatusBadge({ status }: { status?: SWOStatus }) {
 }
 
 export function SettingsLayout() {
-  const { error: accountError } = useAccount();
+  const { error: accountError, isLoading } = useAccount();
   const { settings, status, setSettings, error } = useSettings();
   const [isOpen, setIsOpen] = useState(false);
   const [editedSettings, setEditedSettings] = useState<SWOSettings>(settings);
@@ -57,7 +57,7 @@ export function SettingsLayout() {
       <section className="w-full flex justify-between">
         <div className="flex items-center gap-2">
           <h1 className="text-3xl font-semibold">SoftwareOne</h1>
-          <StatusBadge status={status} />
+          {!isLoading && <StatusBadge status={status} />}
         </div>
         <div className="flex items-center gap-6">
           <Button
