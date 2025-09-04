@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Outlet } from "react-router";
 import {
   Dialog,
   DialogPanel,
@@ -132,6 +133,8 @@ export function Settings() {
           </DialogPanel>
         </div>
       </Dialog>
+      
+      <Outlet />
     </>
   );
 }

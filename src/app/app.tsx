@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import { Agreements, Agreement, AgreementsLayout } from "./agreements";
 import { Settings, SettingsProvider } from "./settings";
+import { General, Details, Settings as SettingsTab } from "./settings";
 
 // const TOKEN =
 //   "idt:TKN-3140-4844:hUOoIJsnPNBU4MeruvvLDjcYMboih3al2WXyEnY4IeTpZCF1xhex7p1qNPZVCD4b";
@@ -11,7 +12,13 @@ export function App() {
       <SettingsProvider>
         <Routes>
           <Route path="/" element={<Navigate to="/agreements" replace />} />
-          <Route path="settings" element={<Settings />} />
+
+          <Route path="settings" element={<Settings />}>
+            <Route index element={<Navigate to="general" replace />} />
+            <Route path="general" element={<General />} />
+            <Route path="details" element={<Details />} />
+            <Route path="settings" element={<SettingsTab />} />
+          </Route>
 
           <Route path="agreements">
             <Route element={<AgreementsLayout />}>
