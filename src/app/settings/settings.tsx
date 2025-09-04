@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Outlet } from "react-router";
+import { Outlet, Link } from "react-router";
 import {
   Dialog,
   DialogPanel,
@@ -61,6 +61,21 @@ export function Settings() {
       </section>
 
       <AccountProvider baseUrl={settings.endpoint} token={settings.token}>
+        <nav
+          aria-orientation="horizontal"
+          data-orientation="horizontal"
+          className="flex items-center border-b border-gray-200"
+        >
+          <Link to="/settings" className="px-4 py-2">
+            General
+          </Link>
+          <Link to="/settings/details" className="px-4 py-2">
+            Details
+          </Link>
+          <Link to="/settings/settings" className="px-4 py-2">
+            Settings
+          </Link>
+        </nav>
         <Outlet />
       </AccountProvider>
 
