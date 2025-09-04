@@ -5,8 +5,7 @@ import {
   DialogTitle,
   DialogBackdrop,
 } from "@headlessui/react";
-import { useSettings } from "./settings-context";
-import type { SWOSettings } from "./settings-context";
+import { useSettings, type SWOSettings } from "./_shared";
 
 export function Settings() {
   const { settings, setSettings } = useSettings();

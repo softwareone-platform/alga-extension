@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
-import { AgreementsClient } from "../../../lib/swo-client/agreements-client";
+import { AgreementsClient } from "@lib/swo-client";
 
 const AgreementsContext = createContext<{
   client: AgreementsClient;

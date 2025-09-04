@@ -1,2 +1,2 @@
 export * from "./settings";
-export * from "./settings-context";
+export * from "./_shared/settings-context";

@@ -1,7 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import { Agreements, Agreement, AgreementsLayout } from "./agreements";
 import { Settings, SettingsProvider } from "./settings";
-import "./index.css";
 
 // const TOKEN =
 //   "idt:TKN-3140-4844:hUOoIJsnPNBU4MeruvvLDjcYMboih3al2WXyEnY4IeTpZCF1xhex7p1qNPZVCD4b";
