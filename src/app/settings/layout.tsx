@@ -49,7 +49,7 @@ export function SettingsLayout() {
           <h1 className="text-3xl font-semibold">SoftwareOne</h1>
           <StatusBadge status={status} />
         </div>
-        <div>
+        <div className="flex items-center gap-6">
           <Button
             onClick={() => {
               setEditedSettings(settings);
@@ -58,6 +58,7 @@ export function SettingsLayout() {
           >
             Edit
           </Button>
+          <Button variant="white">Actions</Button>
         </div>
       </section>
 
