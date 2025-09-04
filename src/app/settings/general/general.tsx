@@ -3,8 +3,6 @@ import { useAccount } from "../_shared/use-account";
 export function General() {
   const { data: account } = useAccount();
 
-  console.log(account);
-
   return (
     <div className="w-full bg-white rounded-2xl p-6 flex flex-col gap-6 border border-gray-200">
       <div>
