@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { type AgreementsOptions } from "../lib/swo-client/agreements-client";
+import { type AgreementsOptions } from "../../../lib/swo-client/agreements-client";
 import { useAgreementsClient } from "./agreements-context";
 
 export const useAgreements = (options?: AgreementsOptions) => {

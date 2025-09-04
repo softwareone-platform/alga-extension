@@ -1,5 +1,5 @@
 import { Outlet } from "react-router";
-import { AgreementsProvider } from "./agreements-context";
+import { AgreementsProvider } from "./_shared/agreements-context";
 import { useSettings } from "../settings";
 
 export function AgreementsLayout() {

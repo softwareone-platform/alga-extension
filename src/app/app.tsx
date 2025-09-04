@@ -1,7 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
-import { Agreements, Agreement } from "./agreements/index.ts";
+import { Agreements, Agreement, AgreementsLayout } from "./agreements";
 import { Settings, SettingsProvider } from "./settings";
-import { AgreementsLayout } from "./agreements/layout.tsx";
 import "./index.css";
 
 // const TOKEN =
