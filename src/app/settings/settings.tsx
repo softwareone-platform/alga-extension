@@ -7,6 +7,7 @@ import {
   DialogBackdrop,
 } from "@headlessui/react";
 import { useSettings, type SWOSettings } from "./_shared";
+import { Button } from "@ui/button";
 
 export function Settings() {
   const { settings, setSettings } = useSettings();
@@ -31,15 +32,14 @@ export function Settings() {
           <span>{settings.status}</span>
         </div>
         <div>
-          <button
+          <Button
             onClick={() => {
               setEditedSettings(settings);
               setIsOpen(true);
             }}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           >
             Edit
-          </button>
+          </Button>
         </div>
       </section>
 
@@ -119,18 +119,10 @@ export function Settings() {
             </div>
 
             <div className="flex justify-end gap-6">
-              <button
-                onClick={handleCancel}
-                className="rounded-lg border-0 px-4 py-2 bg-gray-100 text-gray-700 text-sm font-normal"
-              >
+              <Button variant="white" onClick={handleCancel}>
                 Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                className="rounded-lg border-0 px-4 py-2 bg-gray-700 text-white text-sm font-normal"
-              >
-                Save
-              </button>
+              </Button>
+              <Button onClick={handleSave}>Save</Button>
             </div>
           </DialogPanel>
         </div>

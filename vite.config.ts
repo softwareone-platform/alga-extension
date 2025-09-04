@@ -23,6 +23,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@lib": path.resolve(__dirname, "./src/lib"),
+      "@ui": path.resolve(__dirname, "./src/ui"),
     },
   },
   build: {
