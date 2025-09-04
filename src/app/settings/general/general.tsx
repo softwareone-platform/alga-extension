@@ -1,3 +1,4 @@
+import { Card } from "@ui/card";
 import { useAccount, useSettings } from "../_shared";
 
 export function General() {
@@ -10,7 +11,7 @@ export function General() {
   }
 
   return (
-    <div className="w-full bg-white rounded-2xl p-6 flex flex-col gap-6 border border-gray-200">
+    <Card>
       <div>
         <label className="block text-sm font-semibold text-gray-900">
           Account Name
@@ -57,6 +58,6 @@ export function General() {
           </div>
         )}
       </div>
-    </div>
+    </Card>
   );
 }
