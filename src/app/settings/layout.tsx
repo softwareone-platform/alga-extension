@@ -10,6 +10,7 @@ import { useSettings, type SWOSettings } from "./_shared";
 import { Button } from "@ui/button";
 import { AccountProvider } from "./_shared/account-context";
 import { clsx } from "clsx";
+import { Tabs } from "@ui/tabs";
 
 function StatusBadge({ status }: { status: string }) {
   return (
@@ -26,7 +27,7 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-export function Settings() {
+export function SettingsLayout() {
   const { settings, status, setSettings } = useSettings();
   const [isOpen, setIsOpen] = useState(false);
   const [editedSettings, setEditedSettings] = useState<SWOSettings>(settings);
@@ -61,29 +62,19 @@ export function Settings() {
       </section>
 
       <AccountProvider baseUrl={settings.endpoint} token={settings.token}>
-        <nav
-          aria-orientation="horizontal"
-          data-orientation="horizontal"
-          className="flex items-center border-b border-gray-200"
-        >
-          <NavLink to="/settings">
+        <Tabs>
+          <NavLink to="/settings/general">
+            {({ isActive }) => <Tabs.Tab isActive={isActive}>General</Tabs.Tab>}
+          </NavLink>
+          <NavLink to="/settings/details">
+            {({ isActive }) => <Tabs.Tab isActive={isActive}>Details</Tabs.Tab>}
+          </NavLink>
+          <NavLink to="/settings/settings">
             {({ isActive }) => (
-              <span
-                className={clsx("px-4 py-2 block", {
-                  "border-b-2 border-blue-500 text-blue-500": isActive,
-                })}
-              >
-                General
-              </span>
+              <Tabs.Tab isActive={isActive}>Settings</Tabs.Tab>
             )}
           </NavLink>
-          <NavLink to="/settings/details" className="px-4 py-2">
-            Details
-          </NavLink>
-          <NavLink to="/settings/settings" className="px-4 py-2">
-            Settings
-          </NavLink>
-        </nav>
+        </Tabs>
         <Outlet />
       </AccountProvider>
 
