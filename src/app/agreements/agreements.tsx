@@ -1,6 +1,5 @@
 import { Link } from "react-router";
 import { useAgreements } from "./_shared/use-agreements";
-import "./agreements.css";
 
 export function Agreements() {
   const { data } = useAgreements();

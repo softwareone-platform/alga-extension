@@ -14,8 +14,7 @@ export function App() {
           <Route path="/" element={<Navigate to="/agreements" replace />} />
 
           <Route path="settings" element={<Settings />}>
-            <Route index element={<Navigate to="general" replace />} />
-            <Route path="general" element={<General />} />
+            <Route index element={<General />} />
             <Route path="details" element={<Details />} />
             <Route path="settings" element={<SettingsTab />} />
           </Route>
