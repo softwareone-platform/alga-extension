@@ -6,7 +6,17 @@ import "./index.css";
 import { SettingsProvider } from "./app/settings/_shared";
 import { BrowserRouter } from "react-router";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 5,
+      refetchOnWindowFocus: false,
+    },
+    mutations: {
+      retry: 0,
+    },
+  },
+});
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
