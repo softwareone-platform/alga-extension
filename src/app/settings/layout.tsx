@@ -6,7 +6,13 @@ import { useAccount } from "./_shared/account-context";
 import { clsx } from "clsx";
 import { Tabs } from "@ui/tabs";
 import { ErrorCard } from "@ui/error-card";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import {
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  Button as HeadlessButton,
+} from "@headlessui/react";
 import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
 import { Dialog, DialogPanel, DialogTitle } from "@ui/dialog";
 
@@ -28,11 +34,22 @@ function StatusBadge({ status }: { status?: SWOStatus }) {
 }
 
 function Actions() {
-  const { status, enable } = useSettings();
-  const [isOpen, setIsOpen] = useState(false);
+  const { status, enable, disable } = useSettings();
+  const [isDisabledOpen, setIsDisabledOpen] = useState(false);
+  const [isEnabledOpen, setIsEnabledOpen] = useState(false);
 
   const canEnable = status === "disabled";
   const canDisable = status === "active";
+
+  const enableExtension = () => {
+    enable();
+    setIsEnabledOpen(false);
+  };
+
+  const disableExtension = () => {
+    disable();
+    setIsDisabledOpen(false);
+  };
 
   return (
     <>
@@ -45,20 +62,21 @@ function Actions() {
           className="bg-white border border-gray-200 rounded-lg p-1 outline-0 mt-1 text-sm shadow-xl"
         >
           {canEnable && (
-            <MenuItem>
-              <a className="block data-focus:bg-gray-100 data-focus:rounded py-1 px-3 cursor-pointer">
-                Enable
-              </a>
+            <MenuItem
+              as={HeadlessButton}
+              className="block data-focus:bg-gray-100 data-focus:rounded py-1 px-3 cursor-pointer w-full text-left"
+              onClick={() => setIsEnabledOpen(true)}
+            >
+              Enable
             </MenuItem>
           )}
           {canDisable && (
-            <MenuItem>
-              <a
-                className="block data-focus:bg-gray-100 data-focus:rounded py-1 px-3 cursor-pointer"
-                onClick={() => setIsOpen(true)}
-              >
-                Disable
-              </a>
+            <MenuItem
+              as={HeadlessButton}
+              className="block data-focus:bg-gray-100 data-focus:rounded py-1 px-3 cursor-pointer w-full text-left"
+              onClick={() => setIsDisabledOpen(true)}
+            >
+              Disable
             </MenuItem>
           )}
           <MenuItem>
@@ -69,9 +87,34 @@ function Actions() {
         </MenuItems>
       </Menu>
 
-      <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
+      <Dialog open={isEnabledOpen} onClose={() => setIsEnabledOpen(false)}>
         <DialogPanel>
-          <DialogTitle onClose={() => setIsOpen(false)}>
+          <DialogTitle onClose={() => setIsEnabledOpen(false)}>
+            Enable Extension
+          </DialogTitle>
+          <div className="text-sm">
+            Are you sure you want to enable the SoftwareOne extension? If so,
+            leave a note as to why and continue.
+          </div>
+          <div className="flex flex-col gap-2 text-sm">
+            <label className="font-medium">Note</label>
+            <textarea
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none"
+              rows={4}
+            />
+          </div>
+          <div className="flex justify-end gap-6">
+            <Button variant="white" onClick={() => setIsEnabledOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={enableExtension}>Enable</Button>
+          </div>
+        </DialogPanel>
+      </Dialog>
+
+      <Dialog open={isDisabledOpen} onClose={() => setIsDisabledOpen(false)}>
+        <DialogPanel>
+          <DialogTitle onClose={() => setIsDisabledOpen(false)}>
             Disable Extension
           </DialogTitle>
           <div className="text-sm">
@@ -86,10 +129,10 @@ function Actions() {
             />
           </div>
           <div className="flex justify-end gap-6">
-            <Button variant="white" onClick={() => setIsOpen(false)}>
+            <Button variant="white" onClick={() => setIsDisabledOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={() => setIsOpen(false)}>Disable</Button>
+            <Button onClick={disableExtension}>Disable</Button>
           </div>
         </DialogPanel>
       </Dialog>
