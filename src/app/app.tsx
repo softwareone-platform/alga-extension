@@ -3,6 +3,7 @@ import { Agreements, Agreement, AgreementsLayout } from "./agreements";
 import { SettingsLayout, General, Details, Settings } from "./settings";
 import { AccountProvider } from "./settings/_shared";
 import { useSettings } from "@features/settings";
+import { useEffect } from "react";
 
 // const TOKEN =
 //   "idt:TKN-3140-4844:hUOoIJsnPNBU4MeruvvLDjcYMboih3al2WXyEnY4IeTpZCF1xhex7p1qNPZVCD4b";
@@ -10,12 +11,15 @@ import { useSettings } from "@features/settings";
 export function App() {
   const { settings } = useSettings();
   const navigate = useNavigate();
-  if (!settings.token) {
-    navigate("/settings");
-  }
+
+  useEffect(() => {
+    if (!settings.token || !settings.endpoint) {
+      navigate("/settings/general", { replace: true });
+    }
+  }, [settings]);
 
   return (
-    <AccountProvider>
+    <AccountProvider baseUrl={settings.endpoint} token={settings.token}>
       <Routes>
         <Route path="/" element={<Navigate to="/agreements" replace />} />
 

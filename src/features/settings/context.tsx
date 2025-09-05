@@ -1,9 +1,5 @@
-import {
-  createContext,
-  useState,
-  useEffect,
-  type ReactNode,
-} from "react";
+import { createContext, useState, useEffect, type ReactNode } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export type SWOSettings = {
   endpoint: string;
@@ -50,6 +46,8 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
   const [settings, setSettings] = useState<SWOSettings>(getSettings);
   const [status, setStatus] = useState<SWOStatus>();
 
+  const queryClient = useQueryClient();
+
   const disable = () => {
     setStatus("disabled");
   };
@@ -67,6 +65,7 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
   useEffect(() => {
     saveSettingsToStorage(settings);
     enable();
+    queryClient.resetQueries();
   }, [settings]);
 
   return (
