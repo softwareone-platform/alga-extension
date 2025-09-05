@@ -2,7 +2,7 @@ import { Navigate, Route, Routes, useNavigate } from "react-router";
 import { Agreements, Agreement, AgreementsLayout } from "./agreements";
 import { SettingsLayout, General, Details, Settings } from "./settings";
 import { AccountProvider } from "./settings/_shared";
-import { useSettings } from "../features/settings";
+import { useSettings } from "@features/settings";
 
 // const TOKEN =
 //   "idt:TKN-3140-4844:hUOoIJsnPNBU4MeruvvLDjcYMboih3al2WXyEnY4IeTpZCF1xhex7p1qNPZVCD4b";
