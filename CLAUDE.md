@@ -35,8 +35,8 @@ The `src/lib/` folder contains external library integrations that follow a "reac
 
 - **External Clients**: Vanilla JavaScript classes that wrap HTTP APIs (e.g., `swo-client`)
 - **React Integration**: Each client is wrapped with React Context and TanStack Query
-- **Dynamic Configuration**: All clients use `baseUrl` and `token` from application settings (not env variables)
-- **Query Key Pattern**: TanStack queries include `endpoint` and `token` in query keys for proper cache invalidation
+- **Dynamic Configuration**: All clients accept `baseUrl` and `token` as constructor parameters
+- **Optional Client Pattern**: Context providers create clients conditionally based on available credentials
 
 See individual CLAUDE.md files in lib subdirectories for specific implementation details.
 
@@ -71,13 +71,20 @@ This project uses a "reactification" pattern for integrating vanilla JS external
 ### Context Provider Pattern
 
 ```typescript
-export const SomeProvider = ({ children }: Props) => {
-  const { settings } = useSettings();
-  const { endpoint, token } = settings;
+export type SomeProviderProps = {
+  children: ReactNode;
+  baseUrl: string;
+  token: string;
+};
 
+export const SomeProvider = ({
+  children,
+  baseUrl,
+  token,
+}: SomeProviderProps) => {
   const client = useMemo(
-    () => new SomeClient(endpoint, token),
-    [endpoint, token]
+    () => (baseUrl && token ? new SomeClient(baseUrl, token) : undefined),
+    [baseUrl, token]
   );
 
   return (
@@ -93,28 +100,23 @@ export const SomeProvider = ({ children }: Props) => {
 ```typescript
 export const useSome = (options?) => {
   const { client } = useContext(SomeContext);
-  const { settings } = useSettings();
-  const { endpoint, token } = settings;
 
   return useQuery({
-    queryKey: ["resource", endpoint, token, options],
-    queryFn: () => client.getResource(options),
+    queryKey: ["resource", options],
+    queryFn: () => client!.getResource(options),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
-    enabled: !!(endpoint && token),
+    enabled: !!client,
   });
 };
 ```
 
-### Critical Query Key Pattern
+### Key Implementation Details
 
-**Always include `endpoint` and `token` in query keys** when using external APIs with dynamic configuration:
-
-- ✅ `["accounts", endpoint, token]`
-- ✅ `["agreements", endpoint, token, options]`
-- ❌ `["accounts"]` - Missing credentials, cache won't invalidate
-
-This ensures proper cache invalidation when API credentials change in the application settings.
+- **Optional Client Pattern**: Clients are created conditionally in providers using `baseUrl && token ? new Client(baseUrl, token) : undefined`
+- **Context Type Safety**: Context includes optional client property: `{ client?: SomeClient }`
+- **Query Enablement**: Queries use `enabled: !!client` to prevent execution when client is unavailable
+- **Simple Query Keys**: Since clients are recreated when credentials change, query keys can be simpler (e.g., `["resource", options]`)
 
 ## External Libraries and Documentation
 
