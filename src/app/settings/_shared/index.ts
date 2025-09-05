@@ -1,2 +1,2 @@
-export * from "./settings-context";
+export * from "../../../features/settings";
 export * from "./account-context";

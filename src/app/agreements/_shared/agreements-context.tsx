@@ -1,7 +1,7 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import { AgreementsClient, AgreementsOptions } from "@lib/swo-client";
 import { useQuery } from "@tanstack/react-query";
-import { useSettings } from "../../settings/_shared";
+import { useSettings } from "../../../features/settings";
 
 const AgreementsContext = createContext<{
   client: AgreementsClient;

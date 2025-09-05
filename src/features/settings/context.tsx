@@ -1,6 +1,5 @@
 import {
   createContext,
-  useContext,
   useState,
   useEffect,
   type ReactNode,
@@ -23,7 +22,7 @@ export type SettingsContextType = {
   setSettings: (settings: SWOSettings) => void;
 };
 
-const SettingsContext = createContext<SettingsContextType | null>(null);
+export const SettingsContext = createContext<SettingsContextType | null>(null);
 
 type SettingsProviderProps = {
   children: ReactNode;
@@ -84,14 +83,4 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
       {children}
     </SettingsContext.Provider>
   );
-};
-
-export const useSettings = () => {
-  const context = useContext(SettingsContext);
-  if (!context) {
-    throw new Error(
-      "useSettingsContext must be used within a SettingsProvider"
-    );
-  }
-  return context;
 };
