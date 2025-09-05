@@ -1,5 +1,5 @@
 import { Card } from "@ui/card";
-import { useAccount } from "../_shared";
+import { useAccount } from "@features/account";
 
 export function General() {
   const { data: account } = useAccount();

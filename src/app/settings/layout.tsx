@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Outlet, NavLink } from "react-router";
-import { SWOStatus, useSettings, type SWOSettings } from "./_shared";
+import { SWOStatus, useSettings, type SWOSettings } from "@features/settings";
 import { Button } from "@ui/button";
-import { useAccount } from "./_shared/account-context";
+import { useAccount } from "@features/account";
 import { clsx } from "clsx";
 import { Tabs } from "@ui/tabs";
 import { ErrorCard } from "@ui/error-card";

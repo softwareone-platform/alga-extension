@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes, useNavigate } from "react-router";
 import { Agreements, Agreement, AgreementsLayout } from "./agreements";
 import { SettingsLayout, General, Details, Settings } from "./settings";
-import { AccountProvider } from "./settings/_shared";
+import { AccountProvider } from "@features/account";
 import { useSettings } from "@features/settings";
 import { useEffect } from "react";
 
