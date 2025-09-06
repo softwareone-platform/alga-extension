@@ -1,9 +1,9 @@
 import { Outlet } from "react-router";
 import { AgreementsProvider } from "./_shared/agreements-context";
-import { useExtensionSettings } from "@features/extension";
+import { useExtensionDetails } from "@features/extension";
 
 export function AgreementsLayout() {
-  const { extensionSettings } = useExtensionSettings();
+  const { extensionSettings } = useExtensionDetails();
 
   return (
     <AgreementsProvider

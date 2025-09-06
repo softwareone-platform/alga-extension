@@ -1,12 +1,11 @@
-import { ExtensionSettings, ExtensionStatus } from "./models";
+import { ExtensionDetails } from "./models";
 
 const SETTINGS_STORAGE_KEY = "SWO-SETTINGS";
-const STATUS_STORAGE_KEY = "SWO-STATUS";
 
-export class ExtensionDataClient {
+export class ExtensionClient {
   constructor() {}
 
-  async getSettings(): Promise<ExtensionSettings> {
+  async getDetails(): Promise<ExtensionDetails> {
     const stored = localStorage.getItem(SETTINGS_STORAGE_KEY);
     if (stored) {
       return JSON.parse(stored);
@@ -15,33 +14,41 @@ export class ExtensionDataClient {
       endpoint: "",
       token: "",
       note: "",
+      status: "",
     };
   }
 
-  async saveSettings(settings: ExtensionSettings) {
-    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+  async saveDetails(newDetails: Omit<ExtensionDetails, "status">) {
+    const details = {
+      ...newDetails,
+      status:
+        newDetails.token && newDetails.endpoint ? "active" : "unconfigured",
+    };
 
-    if (settings.token && settings.endpoint) {
-      localStorage.setItem(STATUS_STORAGE_KEY, "active");
-    } else {
-      localStorage.setItem(STATUS_STORAGE_KEY, "unconfigured");
-    }
+    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(details));
 
-    return settings;
-  }
-
-  async getStatus(): Promise<ExtensionStatus> {
-    return (
-      (localStorage.getItem(STATUS_STORAGE_KEY) as ExtensionStatus) ||
-      "unconfigured"
-    );
+    return details;
   }
 
   async disable() {
-    localStorage.setItem(STATUS_STORAGE_KEY, "disabled");
+    const details = await this.getDetails();
+    localStorage.setItem(
+      SETTINGS_STORAGE_KEY,
+      JSON.stringify({
+        ...details,
+        status: "disabled",
+      })
+    );
   }
 
   async enable() {
-    localStorage.setItem(STATUS_STORAGE_KEY, "active");
+    const details = await this.getDetails();
+    localStorage.setItem(
+      SETTINGS_STORAGE_KEY,
+      JSON.stringify({
+        ...details,
+        status: "active",
+      })
+    );
   }
 }

@@ -1,8 +1,8 @@
 import { createContext, type ReactNode, useContext, useRef } from "react";
-import { ExtensionDataClient } from "@lib/extension-data";
+import { ExtensionClient } from "@lib/extension-data";
 
 export type ExtensionContextType = {
-  client: ExtensionDataClient;
+  client: ExtensionClient;
 };
 
 const ExtensionContext = createContext<ExtensionContextType>(null as any);
@@ -12,7 +12,7 @@ export type ExtensionProviderProps = {
 };
 
 export const ExtensionProvider = ({ children }: ExtensionProviderProps) => {
-  const client = useRef(new ExtensionDataClient());
+  const client = useRef(new ExtensionClient());
 
   return (
     <ExtensionContext.Provider value={{ client: client.current }}>

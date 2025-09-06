@@ -2,7 +2,7 @@ import { Navigate, Route, Routes, useNavigate } from "react-router";
 import { Agreements, Agreement, AgreementsLayout } from "./agreements";
 import { SettingsLayout, General, Details, Settings } from "./settings";
 import { AccountProvider } from "@features/account";
-import { useExtensionSettings } from "@features/extension";
+import { useExtensionDetails } from "@features/extension";
 import { UserProvider } from "@features/user";
 import { useEffect } from "react";
 
@@ -10,24 +10,18 @@ import { useEffect } from "react";
 //   "idt:TKN-3140-4844:hUOoIJsnPNBU4MeruvvLDjcYMboih3al2WXyEnY4IeTpZCF1xhex7p1qNPZVCD4b";
 
 export function App() {
-  const { extensionSettings } = useExtensionSettings();
+  const { details } = useExtensionDetails();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!extensionSettings?.token || !extensionSettings?.endpoint) {
+    if (!details?.token || !details?.endpoint) {
       navigate("/settings/general", { replace: true });
     }
-  }, [extensionSettings]);
+  }, [details]);
 
   return (
-    <AccountProvider
-      baseUrl={extensionSettings.endpoint}
-      token={extensionSettings.token}
-    >
-      <UserProvider
-        baseUrl={extensionSettings.endpoint}
-        token={extensionSettings.token}
-      >
+    <AccountProvider baseUrl={details.endpoint} token={details.token}>
+      <UserProvider baseUrl={details.endpoint} token={details.token}>
         <Routes>
           <Route path="/" element={<Navigate to="/agreements" replace />} />
 

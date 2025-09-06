@@ -14,15 +14,14 @@ import {
 } from "@headlessui/react";
 import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
 import { Dialog, DialogPanel, DialogTitle } from "@ui/dialog";
-import { ExtensionSettings, ExtensionStatus } from "@lib/extension-data";
+import { ExtensionDetails, ExtensionStatus } from "@lib/extension-data";
 import {
-  useExtensionSettings,
-  useExtensionSettingsMutation,
-  useExtensionStatus,
-  useExtensionStatusMutations,
+  useExtensionDetails,
+  useExtensionDetailsMutation,
+  useExtensionDetailsMutations,
 } from "@features/extension";
 
-function StatusBadge({ status }: { status?: ExtensionStatus }) {
+function StatusBadge({ status }: { status?: ExtensionStatus | "error" }) {
   if (!status) return <></>;
 
   return (
@@ -40,14 +39,16 @@ function StatusBadge({ status }: { status?: ExtensionStatus }) {
 }
 
 function Actions() {
-  const { enable, disable } = useExtensionStatusMutations();
-  const { extensionStatus } = useExtensionStatus();
+  const { enable, disable } = useExtensionDetailsMutations();
+  const {
+    details: { status },
+  } = useExtensionDetails();
 
   const [isDisabledOpen, setIsDisabledOpen] = useState(false);
   const [isEnabledOpen, setIsEnabledOpen] = useState(false);
 
-  const canEnable = extensionStatus === "disabled";
-  const canDisable = extensionStatus === "active";
+  const canEnable = status === "disabled";
+  const canDisable = status === "active";
 
   const enableExtension = () => {
     enable();
@@ -150,41 +151,39 @@ function Actions() {
 
 export function SettingsLayout() {
   const { error } = useAccount();
-  const { extensionSettings, isLoading: isLoadingSettings } =
-    useExtensionSettings();
-  const { extensionStatus, isLoading: isLoadingStatus } = useExtensionStatus();
-  const { save } = useExtensionSettingsMutation();
+  const { details, isLoading } = useExtensionDetails();
+  const { saveDetails } = useExtensionDetailsMutation();
 
-  const [editedSettings, setEditedSettings] =
-    useState<ExtensionSettings>(extensionSettings);
+  const [editedDetails, setEditedDetails] = useState<ExtensionDetails>(details);
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const [status, setStatus] = useState<ExtensionStatus>(extensionStatus);
+  const [status, setStatus] = useState<ExtensionStatus | "error" | "">(
+    details.status
+  );
 
   useEffect(() => {
-    setEditedSettings(extensionSettings);
-  }, [extensionSettings]);
+    setEditedDetails(details);
+    setStatus(details.status);
+  }, [details]);
 
   useEffect(() => {
     if (error) {
       setStatus("error");
-    } else {
-      setStatus(extensionStatus);
     }
-  }, [error, extensionStatus]);
+  }, [error]);
 
   const handleSave = () => {
-    save(editedSettings);
+    saveDetails(editedDetails);
     setIsOpen(false);
   };
 
   const handleCancel = () => {
-    setEditedSettings(extensionSettings!);
+    setEditedDetails(details);
     setIsOpen(false);
   };
 
-  if (isLoadingSettings || isLoadingStatus) return <></>;
+  if (isLoading) return <></>;
 
   return (
     <div className="w-full flex flex-col p-8 gap-8">
@@ -222,10 +221,10 @@ export function SettingsLayout() {
             <label className="text-sm font-medium">API Endpoint</label>
             <input
               type="text"
-              value={editedSettings.endpoint}
+              value={editedDetails.endpoint}
               onChange={(e) =>
-                setEditedSettings({
-                  ...editedSettings,
+                setEditedDetails({
+                  ...editedDetails,
                   endpoint: e.target.value,
                 })
               }
@@ -235,10 +234,10 @@ export function SettingsLayout() {
             <label className="text-sm font-medium">API Token</label>
             <input
               type="password"
-              value={editedSettings.token}
+              value={editedDetails.token}
               onChange={(e) =>
-                setEditedSettings({
-                  ...editedSettings,
+                setEditedDetails({
+                  ...editedDetails,
                   token: e.target.value,
                 })
               }
@@ -247,10 +246,10 @@ export function SettingsLayout() {
 
             <label className="text-sm font-medium self-start">Note</label>
             <textarea
-              value={editedSettings.note}
+              value={editedDetails.note}
               onChange={(e) =>
-                setEditedSettings({
-                  ...editedSettings,
+                setEditedDetails({
+                  ...editedDetails,
                   note: e.target.value,
                 })
               }
