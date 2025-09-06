@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Outlet, NavLink } from "react-router";
-import { SWOStatus, useExtension, type SWOSettings } from "@features/extension";
 import { Button } from "@ui/button";
 import { useAccount } from "@features/account";
 import { clsx } from "clsx";
@@ -15,8 +14,15 @@ import {
 } from "@headlessui/react";
 import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
 import { Dialog, DialogPanel, DialogTitle } from "@ui/dialog";
+import { ExtensionSettings, ExtensionStatus } from "@lib/extension-data";
+import {
+  useExtensionSettings,
+  useExtensionSettingsMutation,
+  useExtensionStatus,
+  useExtensionStatusMutations,
+} from "@features/extension";
 
-function StatusBadge({ status }: { status?: SWOStatus }) {
+function StatusBadge({ status }: { status?: ExtensionStatus }) {
   if (!status) return <></>;
 
   return (
@@ -34,12 +40,14 @@ function StatusBadge({ status }: { status?: SWOStatus }) {
 }
 
 function Actions() {
-  const { status, enable, disable } = useExtension();
+  const { enable, disable } = useExtensionStatusMutations();
+  const { extensionStatus } = useExtensionStatus();
+
   const [isDisabledOpen, setIsDisabledOpen] = useState(false);
   const [isEnabledOpen, setIsEnabledOpen] = useState(false);
 
-  const canEnable = status === "disabled";
-  const canDisable = status === "active";
+  const canEnable = extensionStatus === "disabled";
+  const canDisable = extensionStatus === "active";
 
   const enableExtension = () => {
     enable();
@@ -141,48 +149,57 @@ function Actions() {
 }
 
 export function SettingsLayout() {
-  const { error: accountError, isLoading } = useAccount();
-  const { settings, status, setSettings, error } = useExtension();
+  const { error } = useAccount();
+  const { extensionSettings, isLoading: isLoadingSettings } =
+    useExtensionSettings();
+  const { extensionStatus, isLoading: isLoadingStatus } = useExtensionStatus();
+  const { save } = useExtensionSettingsMutation();
+
+  const [editedSettings, setEditedSettings] =
+    useState<ExtensionSettings>(extensionSettings);
+
   const [isOpen, setIsOpen] = useState(false);
-  const [editedSettings, setEditedSettings] = useState<SWOSettings>(settings);
+
+  const [status, setStatus] = useState<ExtensionStatus>(extensionStatus);
 
   useEffect(() => {
-    if (accountError) {
-      error();
+    setEditedSettings(extensionSettings);
+  }, [extensionSettings]);
+
+  useEffect(() => {
+    if (error) {
+      setStatus("error");
+    } else {
+      setStatus(extensionStatus);
     }
-  }, [accountError]);
+  }, [error, extensionStatus]);
 
   const handleSave = () => {
-    setSettings(editedSettings);
+    save(editedSettings);
     setIsOpen(false);
   };
 
   const handleCancel = () => {
-    setEditedSettings(settings);
+    setEditedSettings(extensionSettings!);
     setIsOpen(false);
   };
+
+  if (isLoadingSettings || isLoadingStatus) return <></>;
 
   return (
     <div className="w-full flex flex-col p-8 gap-8">
       <section className="w-full flex justify-between">
         <div className="flex items-center gap-2">
           <h1 className="text-3xl font-semibold">SoftwareOne</h1>
-          {!isLoading && <StatusBadge status={status} />}
+          {!!status && <StatusBadge status={status} />}
         </div>
         <div className="flex items-center gap-6">
-          <Button
-            onClick={() => {
-              setEditedSettings(settings);
-              setIsOpen(true);
-            }}
-          >
-            Edit
-          </Button>
+          <Button onClick={() => setIsOpen(true)}>Edit</Button>
           <Actions />
         </div>
       </section>
 
-      {accountError && <ErrorCard>{accountError.message}</ErrorCard>}
+      {error && <ErrorCard>{error.message}</ErrorCard>}
 
       <Tabs>
         <NavLink to="/settings/general">

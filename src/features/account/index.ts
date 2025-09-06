@@ -1,2 +1,2 @@
-export * from "./context";
+export { AccountProvider } from "./context";
 export * from "./hooks";

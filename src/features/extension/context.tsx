@@ -1,85 +1,32 @@
-import { createContext, useState, useEffect, type ReactNode } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-
-export type SWOSettings = {
-  endpoint: string;
-  token: string;
-  note: string;
-};
-
-export type SWOStatus = "unconfigured" | "active" | "disabled" | "error";
+import { createContext, type ReactNode, useContext, useRef } from "react";
+import { ExtensionDataClient } from "@lib/extension-data";
 
 export type ExtensionContextType = {
-  settings: SWOSettings;
-  status?: SWOStatus;
-  disable: () => void;
-  enable: () => void;
-  error: () => void;
-  setSettings: (settings: SWOSettings) => void;
+  client: ExtensionDataClient;
 };
 
-export const ExtensionContext = createContext<ExtensionContextType | null>(null);
+const ExtensionContext = createContext<ExtensionContextType>(null as any);
 
-type ExtensionProviderProps = {
+export type ExtensionProviderProps = {
   children: ReactNode;
 };
 
-const STORAGE_KEY = "SWO-SETTINGS";
-
-const getSettings = (): SWOSettings => {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored) {
-    return JSON.parse(stored);
-  }
-  return {
-    endpoint: "",
-    token: "",
-    note: "",
-  };
-};
-
-const saveSettingsToStorage = (settings: SWOSettings) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-};
-
 export const ExtensionProvider = ({ children }: ExtensionProviderProps) => {
-  const [settings, setSettings] = useState<SWOSettings>(getSettings);
-  const [status, setStatus] = useState<SWOStatus>();
-
-  const queryClient = useQueryClient();
-
-  const disable = () => {
-    setStatus("disabled");
-  };
-
-  const enable = () => {
-    setStatus(
-      !settings.token || !settings.endpoint ? "unconfigured" : "active"
-    );
-  };
-
-  const error = () => {
-    setStatus("error");
-  };
-
-  useEffect(() => {
-    saveSettingsToStorage(settings);
-    enable();
-    queryClient.resetQueries();
-  }, [settings]);
+  const client = useRef(new ExtensionDataClient());
 
   return (
-    <ExtensionContext.Provider
-      value={{
-        settings,
-        status,
-        error,
-        setSettings,
-        disable,
-        enable,
-      }}
-    >
+    <ExtensionContext.Provider value={{ client: client.current }}>
       {children}
     </ExtensionContext.Provider>
   );
+};
+
+export const useExtensionClient = () => {
+  const ctx = useContext(ExtensionContext);
+  if (!ctx) {
+    throw new Error(
+      "useExtensionClient must be used within an ExtensionProvider"
+    );
+  }
+  return ctx.client;
 };
