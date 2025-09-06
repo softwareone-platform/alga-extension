@@ -50,7 +50,7 @@ export class ExtensionClient {
     const details = await this.getDetails();
     const newDetails = {
       ...details,
-      note: note || details.note,
+      note: note || "",
       status: "disabled",
       disabledAt: new Date().toISOString(),
     };
@@ -62,7 +62,7 @@ export class ExtensionClient {
     const details = await this.getDetails();
     const newDetails = {
       ...details,
-      note: note || details.note,
+      note: note || "",
       status: "active",
       activatedAt: new Date().toISOString(),
     };
