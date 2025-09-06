@@ -7,7 +7,7 @@ export const useExtensionSettings = () => {
 
   const { data, ...state } = useQuery({
     queryKey: ["extension", "settings"],
-    queryFn: () => client.getSettings(),
+    queryFn: async () => client.getSettings(),
     initialData: {
       endpoint: "",
       token: "",
@@ -20,7 +20,6 @@ export const useExtensionSettings = () => {
 
 export const useExtensionSettingsMutation = () => {
   const client = useExtensionClient();
-  const queryClient = useQueryClient();
 
   const {
     mutate: save,
@@ -28,7 +27,6 @@ export const useExtensionSettingsMutation = () => {
     ...state
   } = useMutation({
     mutationFn: (settings: ExtensionSettings) => client.saveSettings(settings),
-    onSuccess: () => queryClient.resetQueries(),
   });
 
   return { save, saveAsync, state };
@@ -40,8 +38,6 @@ export const useExtensionStatus = () => {
   const { data, ...state } = useQuery({
     queryKey: ["extension", "status"],
     queryFn: () => client.getStatus(),
-    staleTime: Infinity,
-    gcTime: Infinity,
     initialData: "unconfigured",
   });
 

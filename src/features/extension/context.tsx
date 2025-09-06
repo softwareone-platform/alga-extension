@@ -28,5 +28,6 @@ export const useExtensionClient = () => {
       "useExtensionClient must be used within an ExtensionProvider"
     );
   }
+
   return ctx.client;
 };
