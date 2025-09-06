@@ -15,14 +15,20 @@ export class ExtensionClient {
       token: "",
       note: "",
       status: "",
+      createdAt: "",
+      updatedAt: "",
+      activatedAt: "",
+      disabledAt: "",
     };
   }
 
   async saveDetails(newDetails: Omit<ExtensionDetails, "status">) {
+    const isComplete = newDetails.token && newDetails.endpoint;
     const details = {
       ...newDetails,
-      status:
-        newDetails.token && newDetails.endpoint ? "active" : "unconfigured",
+      status: isComplete ? "active" : "unconfigured",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
 
     localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(details));

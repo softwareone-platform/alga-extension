@@ -5,4 +5,8 @@ export type ExtensionDetails = {
   token: string;
   note: string;
   status: ExtensionStatus | "";
+  createdAt: string;
+  updatedAt: string;
+  activatedAt: string;
+  disabledAt: string;
 };
