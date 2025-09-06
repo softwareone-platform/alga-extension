@@ -1,5 +1,6 @@
-import { createContext, useMemo, type ReactNode } from "react";
+import { createContext, useEffect, useMemo, type ReactNode } from "react";
 import { AccountsClient } from "@lib/swo-client";
+import { useQueryClient } from "@tanstack/react-query";
 
 const AccountContext = createContext<{
   client?: AccountsClient;
@@ -20,6 +21,12 @@ export const AccountProvider = ({
     () => (baseUrl && token ? new AccountsClient(baseUrl, token) : undefined),
     [baseUrl, token]
   );
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    queryClient.resetQueries({ queryKey: ["account"] });
+  }, [client]);
 
   return (
     <AccountContext.Provider value={{ client }}>

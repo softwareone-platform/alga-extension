@@ -20,6 +20,7 @@ export const useExtensionSettings = () => {
 
 export const useExtensionSettingsMutation = () => {
   const client = useExtensionClient();
+  const queryClient = useQueryClient();
 
   const {
     mutate: save,
@@ -27,6 +28,8 @@ export const useExtensionSettingsMutation = () => {
     ...state
   } = useMutation({
     mutationFn: (settings: ExtensionSettings) => client.saveSettings(settings),
+    onSuccess: (settings) =>
+      queryClient.setQueryData(["extension", "settings"], settings),
   });
 
   return { save, saveAsync, state };
@@ -54,7 +57,8 @@ export const useExtensionStatusMutations = () => {
     ...disableState
   } = useMutation({
     mutationFn: () => client.disable(),
-    onSuccess: () => queryClient.resetQueries(),
+    onSuccess: () =>
+      queryClient.setQueryData(["extension", "status"], "disabled"),
   });
 
   const {
@@ -63,7 +67,8 @@ export const useExtensionStatusMutations = () => {
     ...enableState
   } = useMutation({
     mutationFn: () => client.enable(),
-    onSuccess: () => queryClient.resetQueries(),
+    onSuccess: () =>
+      queryClient.setQueryData(["extension", "status"], "active"),
   });
 
   return {

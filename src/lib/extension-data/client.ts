@@ -26,6 +26,8 @@ export class ExtensionDataClient {
     } else {
       localStorage.setItem(STATUS_STORAGE_KEY, "unconfigured");
     }
+
+    return settings;
   }
 
   async getStatus(): Promise<ExtensionStatus> {
