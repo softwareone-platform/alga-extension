@@ -1,9 +1,9 @@
 import { Outlet } from "react-router";
 import { AgreementsProvider } from "./_shared/agreements-context";
-import { useSettings } from "@features/settings";
+import { useExtension } from "@features/extension";
 
 export function AgreementsLayout() {
-  const { settings } = useSettings();
+  const { settings } = useExtension();
   const { endpoint: baseUrl, token } = settings;
 
   return (

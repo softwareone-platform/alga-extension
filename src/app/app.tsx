@@ -2,7 +2,7 @@ import { Navigate, Route, Routes, useNavigate } from "react-router";
 import { Agreements, Agreement, AgreementsLayout } from "./agreements";
 import { SettingsLayout, General, Details, Settings } from "./settings";
 import { AccountProvider } from "@features/account";
-import { useSettings } from "@features/settings";
+import { useExtension } from "@features/extension";
 import { UserProvider } from "@features/user";
 import { useEffect } from "react";
 
@@ -10,7 +10,7 @@ import { useEffect } from "react";
 //   "idt:TKN-3140-4844:hUOoIJsnPNBU4MeruvvLDjcYMboih3al2WXyEnY4IeTpZCF1xhex7p1qNPZVCD4b";
 
 export function App() {
-  const { settings } = useSettings();
+  const { settings } = useExtension();
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -9,7 +9,7 @@ export type SWOSettings = {
 
 export type SWOStatus = "unconfigured" | "active" | "disabled" | "error";
 
-export type SettingsContextType = {
+export type ExtensionContextType = {
   settings: SWOSettings;
   status?: SWOStatus;
   disable: () => void;
@@ -18,9 +18,9 @@ export type SettingsContextType = {
   setSettings: (settings: SWOSettings) => void;
 };
 
-export const SettingsContext = createContext<SettingsContextType | null>(null);
+export const ExtensionContext = createContext<ExtensionContextType | null>(null);
 
-type SettingsProviderProps = {
+type ExtensionProviderProps = {
   children: ReactNode;
 };
 
@@ -42,7 +42,7 @@ const saveSettingsToStorage = (settings: SWOSettings) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
 };
 
-export const SettingsProvider = ({ children }: SettingsProviderProps) => {
+export const ExtensionProvider = ({ children }: ExtensionProviderProps) => {
   const [settings, setSettings] = useState<SWOSettings>(getSettings);
   const [status, setStatus] = useState<SWOStatus>();
 
@@ -69,7 +69,7 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
   }, [settings]);
 
   return (
-    <SettingsContext.Provider
+    <ExtensionContext.Provider
       value={{
         settings,
         status,
@@ -80,6 +80,6 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
       }}
     >
       {children}
-    </SettingsContext.Provider>
+    </ExtensionContext.Provider>
   );
 };

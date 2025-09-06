@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { App } from "./app";
 import "./index.css";
-import { SettingsProvider } from "@features/settings";
+import { ExtensionProvider } from "@features/extension";
 import { BrowserRouter } from "react-router";
 
 const queryClient = new QueryClient({
@@ -21,11 +21,11 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <SettingsProvider>
+      <ExtensionProvider>
         <BrowserRouter>
           <App />
         </BrowserRouter>
-      </SettingsProvider>
+      </ExtensionProvider>
     </QueryClientProvider>
   </StrictMode>
 );

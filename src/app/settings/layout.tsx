@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet, NavLink } from "react-router";
-import { SWOStatus, useSettings, type SWOSettings } from "@features/settings";
+import { SWOStatus, useExtension, type SWOSettings } from "@features/extension";
 import { Button } from "@ui/button";
 import { useAccount } from "@features/account";
 import { clsx } from "clsx";
@@ -34,7 +34,7 @@ function StatusBadge({ status }: { status?: SWOStatus }) {
 }
 
 function Actions() {
-  const { status, enable, disable } = useSettings();
+  const { status, enable, disable } = useExtension();
   const [isDisabledOpen, setIsDisabledOpen] = useState(false);
   const [isEnabledOpen, setIsEnabledOpen] = useState(false);
 
@@ -142,7 +142,7 @@ function Actions() {
 
 export function SettingsLayout() {
   const { error: accountError, isLoading } = useAccount();
-  const { settings, status, setSettings, error } = useSettings();
+  const { settings, status, setSettings, error } = useExtension();
   const [isOpen, setIsOpen] = useState(false);
   const [editedSettings, setEditedSettings] = useState<SWOSettings>(settings);
 
