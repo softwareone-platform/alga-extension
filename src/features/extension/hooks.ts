@@ -45,7 +45,7 @@ export const useExtensionDetailsMutations = () => {
     mutateAsync: disableAsync,
     ...disableState
   } = useMutation({
-    mutationFn: () => client.disable(),
+    mutationFn: (note?: string) => client.disable(note),
     onSuccess: () =>
       queryClient.setQueryData(["extension", "details"], {
         ...(queryClient.getQueryData(["extension", "details"]) || {}),
@@ -58,7 +58,7 @@ export const useExtensionDetailsMutations = () => {
     mutateAsync: enableAsync,
     ...enableState
   } = useMutation({
-    mutationFn: () => client.enable(),
+    mutationFn: (note?: string) => client.enable(note),
     onSuccess: () =>
       queryClient.setQueryData(["extension", "details"], {
         ...(queryClient.getQueryData(["extension", "details"]) || {}),

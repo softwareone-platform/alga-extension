@@ -47,16 +47,20 @@ function Actions() {
   const [isDisabledOpen, setIsDisabledOpen] = useState(false);
   const [isEnabledOpen, setIsEnabledOpen] = useState(false);
 
+  const [note, setNote] = useState("");
+
   const canEnable = status === "disabled";
   const canDisable = status === "active";
 
   const enableExtension = () => {
-    enable();
+    enable(note);
+    setNote("");
     setIsEnabledOpen(false);
   };
 
   const disableExtension = () => {
-    disable();
+    disable(note);
+    setNote("");
     setIsDisabledOpen(false);
   };
 
@@ -110,6 +114,8 @@ function Actions() {
             <textarea
               className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none"
               rows={4}
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
             />
           </div>
           <div className="flex justify-end gap-6">
@@ -135,6 +141,8 @@ function Actions() {
             <textarea
               className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none"
               rows={4}
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
             />
           </div>
           <div className="flex justify-end gap-6">
