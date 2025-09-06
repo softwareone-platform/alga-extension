@@ -3,6 +3,7 @@ import { Agreements, Agreement, AgreementsLayout } from "./agreements";
 import { SettingsLayout, General, Details, Settings } from "./settings";
 import { AccountProvider } from "@features/account";
 import { useSettings } from "@features/settings";
+import { UserProvider } from "@features/user";
 import { useEffect } from "react";
 
 // const TOKEN =
@@ -20,23 +21,28 @@ export function App() {
 
   return (
     <AccountProvider baseUrl={settings.endpoint} token={settings.token}>
-      <Routes>
-        <Route path="/" element={<Navigate to="/agreements" replace />} />
+      <UserProvider baseUrl={settings.endpoint} token={settings.token}>
+        <Routes>
+          <Route path="/" element={<Navigate to="/agreements" replace />} />
 
-        <Route path="settings" element={<SettingsLayout />}>
-          <Route index element={<Navigate to="/settings/general" replace />} />
-          <Route path="general" element={<General />} />
-          <Route path="details" element={<Details />} />
-          <Route path="settings" element={<Settings />} />
-        </Route>
-
-        <Route path="agreements">
-          <Route element={<AgreementsLayout />}>
-            <Route index element={<Agreements />} />
-            <Route path=":id" element={<Agreement />} />
+          <Route path="settings" element={<SettingsLayout />}>
+            <Route
+              index
+              element={<Navigate to="/settings/general" replace />}
+            />
+            <Route path="general" element={<General />} />
+            <Route path="details" element={<Details />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
-        </Route>
-      </Routes>
+
+          <Route path="agreements">
+            <Route element={<AgreementsLayout />}>
+              <Route index element={<Agreements />} />
+              <Route path=":id" element={<Agreement />} />
+            </Route>
+          </Route>
+        </Routes>
+      </UserProvider>
     </AccountProvider>
   );
 }
