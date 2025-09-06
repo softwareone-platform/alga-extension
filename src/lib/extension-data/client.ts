@@ -2,6 +2,11 @@ import { ExtensionDetails } from "./models";
 
 const SETTINGS_STORAGE_KEY = "SWO-SETTINGS";
 
+export type ExtensionDetailsChanges = Omit<
+  ExtensionDetails,
+  "status" | "createdAt" | "updatedAt" | "activatedAt" | "disabledAt"
+>;
+
 export class ExtensionClient {
   constructor() {}
 
@@ -22,13 +27,18 @@ export class ExtensionClient {
     };
   }
 
-  async saveDetails(newDetails: Omit<ExtensionDetails, "status">) {
+  async saveDetails(newDetails: ExtensionDetailsChanges) {
     const isComplete = newDetails.token && newDetails.endpoint;
+
+    const oldDetails = await this.getDetails();
+
     const details = {
+      ...oldDetails,
       ...newDetails,
       status: isComplete ? "active" : "unconfigured",
-      createdAt: new Date().toISOString(),
+      createdAt: oldDetails.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      activatedAt: isComplete ? new Date().toISOString() : "",
     };
 
     localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(details));
@@ -36,25 +46,27 @@ export class ExtensionClient {
     return details;
   }
 
-  async disable() {
+  async disable(note?: string) {
     const details = await this.getDetails();
-    localStorage.setItem(
-      SETTINGS_STORAGE_KEY,
-      JSON.stringify({
-        ...details,
-        status: "disabled",
-      })
-    );
+    const newDetails = {
+      ...details,
+      note: note || details.note,
+      status: "disabled",
+      disabledAt: new Date().toISOString(),
+    };
+
+    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(newDetails));
   }
 
-  async enable() {
+  async enable(note?: string) {
     const details = await this.getDetails();
-    localStorage.setItem(
-      SETTINGS_STORAGE_KEY,
-      JSON.stringify({
-        ...details,
-        status: "active",
-      })
-    );
+    const newDetails = {
+      ...details,
+      note: note || details.note,
+      status: "active",
+      activatedAt: new Date().toISOString(),
+    };
+
+    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(newDetails));
   }
 }
