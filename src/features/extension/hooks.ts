@@ -8,7 +8,7 @@ export const useExtensionDetails = () => {
   const { data, ...state } = useQuery({
     queryKey: ["extension", "details"],
     queryFn: async () => client.getDetails(),
-    initialData: {
+    placeholderData: {
       endpoint: "",
       token: "",
       note: "",
@@ -16,7 +16,7 @@ export const useExtensionDetails = () => {
     } as ExtensionDetails,
   });
 
-  return { details: data, ...state };
+  return { details: data!, ...state };
 };
 
 export const useExtensionDetailsMutation = () => {

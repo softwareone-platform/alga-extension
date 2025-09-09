@@ -10,14 +10,16 @@ import { useEffect } from "react";
 //   "idt:TKN-3140-4844:hUOoIJsnPNBU4MeruvvLDjcYMboih3al2WXyEnY4IeTpZCF1xhex7p1qNPZVCD4b";
 
 export function App() {
-  const { details } = useExtensionDetails();
+  const { details, isPlaceholderData } = useExtensionDetails();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!details?.token || !details?.endpoint) {
+    if (isPlaceholderData) return;
+    if (!details.token || !details.endpoint)
       navigate("/settings/general", { replace: true });
-    }
   }, [details]);
+
+  if (isPlaceholderData) return <></>;
 
   return (
     <AccountProvider baseUrl={details.endpoint} token={details.token}>
