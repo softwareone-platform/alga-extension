@@ -1,5 +1,5 @@
 import { RqlQuery } from "@swo/rql-client";
-import { AxiosInstance, AxiosResponse } from "axios";
+import { AxiosInstance } from "axios";
 import {
   Subscription,
   SubscriptionListResponse,

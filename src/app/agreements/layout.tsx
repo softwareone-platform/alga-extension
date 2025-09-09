@@ -3,13 +3,10 @@ import { AgreementsProvider } from "./_shared/agreements-context";
 import { useExtensionDetails } from "@features/extension";
 
 export function AgreementsLayout() {
-  const { extensionSettings } = useExtensionDetails();
+  const { details } = useExtensionDetails();
 
   return (
-    <AgreementsProvider
-      baseUrl={extensionSettings.endpoint}
-      token={extensionSettings.token}
-    >
+    <AgreementsProvider baseUrl={details.endpoint} token={details.token}>
       <Outlet />
     </AgreementsProvider>
   );
