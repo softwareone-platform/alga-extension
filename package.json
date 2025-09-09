@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@alga-psa/ui-kit": "^0.1.0",
     "@headlessui/react": "^2.2.7",
     "@swo/mp-api-model": "^5.0.428",
     "@swo/rql-client": "^5.0.3",

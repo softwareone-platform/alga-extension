@@ -20,9 +20,16 @@ import {
   useExtensionDetailsMutation,
   useExtensionDetailsMutations,
 } from "@features/extension";
+import { Badge } from "@alga-psa/ui-kit";
 
 function StatusBadge({ status }: { status?: ExtensionStatus | "error" }) {
   if (!status) return <></>;
+
+  if (status === "error") return <Badge tone="danger">Error</Badge>;
+  if (status === "unconfigured")
+    return <Badge tone="default">Unconfigured</Badge>;
+  if (status === "disabled") return <Badge tone="warning">Disabled</Badge>;
+  if (status === "active") return <Badge tone="success">Active</Badge>;
 
   return (
     <span

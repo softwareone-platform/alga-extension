@@ -2,9 +2,11 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { App } from "./app";
-import "./index.css";
 import { ExtensionProvider } from "@features/extension";
 import { BrowserRouter } from "react-router";
+
+import "./index.css";
+import "@alga-psa/ui-kit/theme.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {
