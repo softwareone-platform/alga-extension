@@ -4,6 +4,7 @@ import { Icon } from "@ui/icon";
 import {
   Agreement as AgreementType,
   AgreementStatus as AgreementStatusType,
+  SellerQueryModel,
 } from "@swo/mp-api-model";
 import { Badge } from "@alga-psa/ui-kit";
 
@@ -90,15 +91,51 @@ function Agreement({ agreement }: { agreement: AgreementType }) {
   );
 }
 
+function Seller({ seller }: { seller: SellerQueryModel }) {
+  return (
+    <Card className="w-fit!">
+      <h2 className="text-lg font-semibold text-black mb-4">Seller</h2>
+      <div className="grid grid-cols-[auto_auto] gap-4">
+        <label className="text-sm font-semibold text-black">Name</label>
+        <div className="flex gap-2 items-center">
+          <span className="text-sm text-black">{seller.name || "—"}</span>
+        </div>
+
+        <label className="text-sm font-semibold text-black">ID</label>
+        <div className="flex gap-2 items-center">
+          <span className="text-sm text-black">{seller.id || "—"}</span>
+        </div>
+
+        <label className="text-sm font-semibold text-black">Address</label>
+        <div className="flex gap-2 items-center">
+          <span className="text-sm text-black">
+            {seller.address
+              ? `${seller.address.addressLine1}, ${seller.address.city}, ${seller.address.postCode}`
+              : "—"}
+          </span>
+        </div>
+
+        <label className="text-sm font-semibold text-black">Country</label>
+        <div className="flex gap-2 items-center">
+          <span className="text-sm text-black">
+            {seller.address?.country || "—"}
+          </span>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
 export function SoftwareOne() {
   const { data, isPending } = useAgreement("AGR-4258-9931-4515");
 
-  if (isPending) return <div>Loading...</div>;
+  if (isPending) return <></>;
   if (!data) return <div>Agreement not found</div>;
 
   return (
-    <Card>
+    <Card className="flex flex-row gap-6 items-start">
       <Agreement agreement={data} />
+      {data.seller && <Seller seller={data.seller} />}
     </Card>
   );
 }
