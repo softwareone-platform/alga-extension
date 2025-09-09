@@ -16,18 +16,75 @@ function AgreementActions() {
 
 function AgreementSummary({ agreement }: { agreement: AgreementType }) {
   return (
-    <Card className="flex flex-row">
+    <Card className="flex flex-row justify-between">
       <div>
         <label className="block text-sm font-semibold text-black">
           Agreement ID
         </label>
-        <div className="text-sm text-black">{agreement.id}</div>
+        <span className="text-sm text-black">{agreement.id}</span>
       </div>
       <div>
         <label className="block text-sm font-semibold text-black">
           Product
         </label>
-        <div className="text-sm text-black">{agreement.product?.name}</div>
+        <div>
+          <img
+            src={agreement.product?.icon}
+            alt={agreement.product?.name}
+            className="size-8"
+          />
+          <span className="text-sm text-black">
+            {agreement.product?.name || "-"}
+          </span>
+        </div>
+      </div>
+      <div>
+        <label className="block text-sm font-semibold text-black">Vendor</label>
+        <span className="text-sm text-black">
+          {agreement.seller?.name || "-"}
+        </span>
+      </div>
+      <div>
+        <label className="block text-sm font-semibold text-black">
+          Billing config
+        </label>
+        <span className="text-sm text-black">-</span>
+      </div>
+      <div>
+        <label className="block text-sm font-semibold text-black">
+          Consumer
+        </label>
+        <span className="text-sm text-black">
+          {agreement.licensee?.name || "-"}
+        </span>
+      </div>
+      <div>
+        <label className="block text-sm font-semibold text-black">SPxY</label>
+        <span className="text-sm text-black">
+          {agreement.price?.SPxY || "-"}
+        </span>
+      </div>
+      <div>
+        <label className="block text-sm font-semibold text-black">Margin</label>
+        <span className="text-sm text-black">-</span>
+      </div>
+      <div>
+        <label className="block text-sm font-semibold text-black">RPxY</label>
+        <span className="text-sm text-black">-</span>
+      </div>
+      <div>
+        <label className="block text-sm font-semibold text-black">
+          Currency
+        </label>
+        <span className="text-sm text-black">
+          {agreement.price?.currency || "-"}
+        </span>
+      </div>
+      <div>
+        <label className="block text-sm font-semibold text-black">
+          Operations
+        </label>
+        <span className="text-sm text-black">-</span>
       </div>
     </Card>
   );
