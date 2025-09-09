@@ -23,20 +23,8 @@ function StatusBadge({ status }: { status?: ExtensionStatus | "error" }) {
   if (status === "unconfigured")
     return <Badge tone="default">Unconfigured</Badge>;
   if (status === "disabled") return <Badge tone="warning">Disabled</Badge>;
-  if (status === "active") return <Badge tone="success">Active</Badge>;
 
-  return (
-    <span
-      className={clsx("text-sm px-2 py-0.5 rounded block", {
-        "bg-success-1 text-success-4": status === "active",
-        "bg-warning-1 text-warning-4": status === "disabled",
-        "bg-danger-1 text-danger-4": status === "error",
-        "bg-gray-200 text-gray-800": status === "unconfigured",
-      })}
-    >
-      {status}
-    </span>
-  );
+  return <Badge tone="success">Active</Badge>;
 }
 
 function SettingsActions() {
@@ -175,7 +163,7 @@ export function Settings() {
   return (
     <div className="w-full flex flex-col p-8 gap-8">
       <header className="w-full flex justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-6">
           <h1 className="text-3xl font-semibold">SoftwareOne</h1>
           {!!status && <StatusBadge status={status} />}
         </div>

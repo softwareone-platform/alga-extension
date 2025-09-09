@@ -4,7 +4,11 @@ import { Button } from "@ui/button";
 import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { useParams } from "react-router";
-import { Agreement as AgreementType } from "@swo/mp-api-model";
+import {
+  Agreement as AgreementType,
+  AgreementStatus as AgreementStatusType,
+} from "@swo/mp-api-model";
+import { Badge } from "@alga-psa/ui-kit";
 
 function AgreementActions() {
   return (
@@ -12,6 +16,22 @@ function AgreementActions() {
       <ActionItem>Edit</ActionItem>
     </Actions>
   );
+}
+
+function StatusBadge({ status }: { status?: AgreementStatusType }) {
+  if (!status) return <></>;
+
+  let tone: "danger" | "default" | "success" | "warning" = "default";
+
+  if (status === "Failed") tone = "danger";
+  if (status === "Draft") tone = "default";
+  if (status === "Provisioning") tone = "warning";
+  if (status === "Updating") tone = "warning";
+  if (status === "Active") tone = "success";
+  if (status === "Terminated") tone = "default";
+  if (status === "Deleted") tone = "default";
+
+  return <Badge tone={tone}>{status}</Badge>;
 }
 
 function AgreementSummary({ agreement }: { agreement: AgreementType }) {
@@ -109,13 +129,14 @@ export function Agreement() {
 
   if (isPending) return <div>Loading...</div>;
 
-  const { name } = data!;
+  const { name, status } = data!;
 
   return (
     <div className="w-full flex flex-col p-6 gap-8">
       <header className="w-full flex justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-6">
           <h1 className="text-3xl font-semibold">{name}</h1>
+          {!!status && <StatusBadge status={status} />}
         </div>
         <div className="flex items-center gap-6">
           <Button>Edit</Button>
