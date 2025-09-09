@@ -3,12 +3,13 @@ import { ActionItem, Actions } from "@ui/actions";
 import { Button } from "@ui/button";
 import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
-import { useParams } from "react-router";
+import { NavLink, Outlet, useParams } from "react-router";
 import {
   Agreement as AgreementType,
   AgreementStatus as AgreementStatusType,
 } from "@swo/mp-api-model";
 import { Badge } from "@alga-psa/ui-kit";
+import { Tabs } from "@ui/tabs";
 
 function AgreementActions() {
   return (
@@ -144,6 +145,14 @@ export function Agreement() {
         </div>
       </header>
       <AgreementSummary agreement={data!} />
+      <Tabs>
+        <NavLink to="softwareone">
+          {({ isActive }) => (
+            <Tabs.Tab isActive={isActive}>SoftwareOne</Tabs.Tab>
+          )}
+        </NavLink>
+      </Tabs>
+      <Outlet />
     </div>
   );
 }

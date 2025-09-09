@@ -176,10 +176,10 @@ export function Settings() {
       {error && <ErrorCard>{error.message}</ErrorCard>}
 
       <Tabs>
-        <NavLink to="/settings/general">
+        <NavLink to="general">
           {({ isActive }) => <Tabs.Tab isActive={isActive}>General</Tabs.Tab>}
         </NavLink>
-        <NavLink to="/settings/details">
+        <NavLink to="details">
           {({ isActive }) => <Tabs.Tab isActive={isActive}>Details</Tabs.Tab>}
         </NavLink>
       </Tabs>

@@ -34,10 +34,7 @@ export function App() {
           <Route path="/" element={<Navigate to="/agreements" replace />} />
 
           <Route path="settings" element={<Settings />}>
-            <Route
-              index
-              element={<Navigate to="/settings/general" replace />}
-            />
+            <Route index element={<Navigate to="general" replace />} />
             <Route path="general" element={<General />} />
             <Route path="details" element={<Details />} />
           </Route>
@@ -46,12 +43,7 @@ export function App() {
             <Route element={<AgreementsLayout />}>
               <Route index element={<Agreements />} />
               <Route path=":id" element={<Agreement />}>
-                <Route
-                  index
-                  element={
-                    <Navigate to="/agreements/:id/softwareone" replace />
-                  }
-                />
+                <Route index element={<Navigate to="softwareone" replace />} />
                 <Route path="softwareone" element={<SoftwareOne />} />
               </Route>
             </Route>
