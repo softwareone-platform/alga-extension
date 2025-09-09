@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes, useNavigate } from "react-router";
 import { Agreements, Agreement, AgreementsLayout } from "./agreements";
-import { SettingsLayout, General, Details, Settings } from "./settings";
+import { Settings, General, Details } from "./settings";
 import { AccountProvider } from "@features/account";
 import { useExtensionDetails } from "@features/extension";
 import { UserProvider } from "@features/user";
@@ -25,14 +25,13 @@ export function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/agreements" replace />} />
 
-          <Route path="settings" element={<SettingsLayout />}>
+          <Route path="settings" element={<Settings />}>
             <Route
               index
               element={<Navigate to="/settings/general" replace />}
             />
             <Route path="general" element={<General />} />
             <Route path="details" element={<Details />} />
-            <Route path="settings" element={<Settings />} />
           </Route>
 
           <Route path="agreements">

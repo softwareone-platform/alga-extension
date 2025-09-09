@@ -164,7 +164,7 @@ function Actions() {
   );
 }
 
-export function SettingsLayout() {
+export function Settings() {
   const { error } = useAccount();
   const { details, isLoading } = useExtensionDetails();
   const { saveDetails } = useExtensionDetailsMutation();
@@ -218,9 +218,6 @@ export function SettingsLayout() {
       <Tabs>
         <NavLink to="/settings/general">
           {({ isActive }) => <Tabs.Tab isActive={isActive}>General</Tabs.Tab>}
-        </NavLink>
-        <NavLink to="/settings/settings">
-          {({ isActive }) => <Tabs.Tab isActive={isActive}>Settings</Tabs.Tab>}
         </NavLink>
         <NavLink to="/settings/details">
           {({ isActive }) => <Tabs.Tab isActive={isActive}>Details</Tabs.Tab>}
