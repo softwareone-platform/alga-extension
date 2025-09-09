@@ -10,14 +10,14 @@ export function General() {
         <label className="block text-sm font-semibold text-gray-900">
           Account Name
         </label>
-        <div className="text-sm text-gray-500">{account?.name || "-"}</div>
+        <div className="text-sm text-gray-500">{account?.name || "—"}</div>
       </div>
 
       <div>
         <label className="block text-sm font-semibold text-gray-900">
           Account ID
         </label>
-        <div className="text-sm text-gray-500">{account?.id || "-"}</div>
+        <div className="text-sm text-gray-500">{account?.id || "—"}</div>
       </div>
 
       <div>
@@ -25,7 +25,7 @@ export function General() {
           Company Description
         </label>
         <div className="text-sm text-gray-500">
-          {account?.description || "-"}
+          {account?.description || "—"}
         </div>
       </div>
 
@@ -33,14 +33,14 @@ export function General() {
         <label className="block text-sm font-semibold text-gray-900">
           Company Website
         </label>
-        <div className="text-sm text-gray-500">{account?.website || "-"}</div>
+        <div className="text-sm text-gray-500">{account?.website || "—"}</div>
       </div>
 
       <div>
         <label className="block text-sm font-semibold text-gray-900">
           Headquarters address
         </label>
-        {!account?.address && <div>-</div>}
+        {!account?.address && <div>—</div>}
         {account?.address && (
           <div className="text-sm text-gray-500 flex flex-col">
             <span>Address line1: {account?.address.addressLine1}</span>
