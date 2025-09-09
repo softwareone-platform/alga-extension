@@ -23,7 +23,7 @@ function StatusBadge({ status }: { status?: AgreementStatusType }) {
   return <Badge tone={tone}>{status}</Badge>;
 }
 
-function AgreementDisplay({ agreement }: { agreement: AgreementType }) {
+function Agreement({ agreement }: { agreement: AgreementType }) {
   return (
     <Card className="w-fit!">
       <h2 className="text-lg font-semibold text-black mb-4">Agreement</h2>
@@ -98,7 +98,7 @@ export function SoftwareOne() {
 
   return (
     <Card>
-      <AgreementDisplay agreement={data} />
+      <Agreement agreement={data} />
     </Card>
   );
 }
