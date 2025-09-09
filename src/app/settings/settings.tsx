@@ -181,7 +181,7 @@ export function Settings() {
 
   return (
     <div className="w-full flex flex-col p-8 gap-8">
-      <section className="w-full flex justify-between">
+      <header className="w-full flex justify-between">
         <div className="flex items-center gap-2">
           <h1 className="text-3xl font-semibold">SoftwareOne</h1>
           {!!status && <StatusBadge status={status} />}
@@ -190,7 +190,7 @@ export function Settings() {
           <Button onClick={() => setIsOpen(true)}>Edit</Button>
           <SettingsActions />
         </div>
-      </section>
+      </header>
 
       {error && <ErrorCard>{error.message}</ErrorCard>}
 
