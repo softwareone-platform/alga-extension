@@ -1,5 +1,10 @@
 import { Navigate, Route, Routes, useNavigate } from "react-router";
-import { Agreements, Agreement, AgreementsLayout } from "./agreements";
+import {
+  Agreements,
+  Agreement,
+  AgreementsLayout,
+  SoftwareOne,
+} from "./agreements";
 import { Settings, General, Details } from "./settings";
 import { AccountProvider } from "@features/account";
 import { useExtensionDetails } from "@features/extension";
@@ -40,7 +45,15 @@ export function App() {
           <Route path="agreements">
             <Route element={<AgreementsLayout />}>
               <Route index element={<Agreements />} />
-              <Route path=":id" element={<Agreement />} />
+              <Route path=":id" element={<Agreement />}>
+                <Route
+                  index
+                  element={
+                    <Navigate to="/agreements/:id/softwareone" replace />
+                  }
+                />
+                <Route path="softwareone" element={<SoftwareOne />} />
+              </Route>
             </Route>
           </Route>
         </Routes>

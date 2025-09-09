@@ -1,3 +1,3 @@
-export * from "./agreement/agreement";
+export * from "./agreement";
 export * from "./agreements";
 export * from "./layout";
