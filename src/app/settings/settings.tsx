@@ -21,6 +21,7 @@ import {
   useExtensionDetailsMutations,
 } from "@features/extension";
 import { Badge } from "@alga-psa/ui-kit";
+import { ActionItem, Actions } from "@ui/actions";
 
 function StatusBadge({ status }: { status?: ExtensionStatus | "error" }) {
   if (!status) return <></>;
@@ -45,7 +46,7 @@ function StatusBadge({ status }: { status?: ExtensionStatus | "error" }) {
   );
 }
 
-function Actions() {
+function SettingsActions() {
   const { enable, disable } = useExtensionDetailsMutations();
   const {
     details: { status },
@@ -73,39 +74,17 @@ function Actions() {
 
   return (
     <>
-      <Menu>
-        <MenuButton as={Button} variant="white">
-          Actions
-        </MenuButton>
-        <MenuItems
-          anchor="bottom end"
-          className="bg-white border border-gray-200 rounded-lg p-1 outline-0 mt-1 text-sm shadow-xl"
-        >
-          {canEnable && (
-            <MenuItem
-              as={HeadlessButton}
-              className="block data-focus:bg-gray-100 data-focus:rounded py-1 px-3 cursor-pointer w-full text-left"
-              onClick={() => setIsEnabledOpen(true)}
-            >
-              Enable
-            </MenuItem>
-          )}
-          {canDisable && (
-            <MenuItem
-              as={HeadlessButton}
-              className="block data-focus:bg-gray-100 data-focus:rounded py-1 px-3 cursor-pointer w-full text-left"
-              onClick={() => setIsDisabledOpen(true)}
-            >
-              Disable
-            </MenuItem>
-          )}
-          <MenuItem>
-            <a className="block data-focus:bg-gray-100 data-focus:rounded py-1 px-3 cursor-pointer">
-              View documentation
-            </a>
-          </MenuItem>
-        </MenuItems>
-      </Menu>
+      <Actions>
+        {canEnable && (
+          <ActionItem onClick={() => setIsEnabledOpen(true)}>Enable</ActionItem>
+        )}
+        {canDisable && (
+          <ActionItem onClick={() => setIsDisabledOpen(true)}>
+            Disable
+          </ActionItem>
+        )}
+        <ActionItem>View documentation</ActionItem>
+      </Actions>
 
       <Dialog open={isEnabledOpen} onClose={() => setIsEnabledOpen(false)}>
         <DialogPanel>
@@ -209,7 +188,7 @@ export function Settings() {
         </div>
         <div className="flex items-center gap-6">
           <Button onClick={() => setIsOpen(true)}>Edit</Button>
-          <Actions />
+          <SettingsActions />
         </div>
       </section>
 
