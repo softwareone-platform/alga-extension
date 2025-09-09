@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Outlet, NavLink } from "react-router";
 import { Button } from "@ui/button";
 import { useAccount } from "@features/account";
-import { clsx } from "clsx";
 import { Tabs } from "@ui/tabs";
 import { ErrorCard } from "@ui/error-card";
 import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
