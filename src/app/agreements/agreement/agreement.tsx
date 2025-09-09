@@ -151,6 +151,23 @@ export function Agreement() {
             <Tabs.Tab isActive={isActive}>SoftwareOne</Tabs.Tab>
           )}
         </NavLink>
+        <NavLink to="subscriptions">
+          {({ isActive }) => (
+            <Tabs.Tab isActive={isActive}>Subscriptions</Tabs.Tab>
+          )}
+        </NavLink>
+        <NavLink to="orders">
+          {({ isActive }) => <Tabs.Tab isActive={isActive}>Orders</Tabs.Tab>}
+        </NavLink>
+        <NavLink to="consumer">
+          {({ isActive }) => <Tabs.Tab isActive={isActive}>Consumer</Tabs.Tab>}
+        </NavLink>
+        <NavLink to="billing">
+          {({ isActive }) => <Tabs.Tab isActive={isActive}>Billing</Tabs.Tab>}
+        </NavLink>
+        <NavLink to="details">
+          {({ isActive }) => <Tabs.Tab isActive={isActive}>Details</Tabs.Tab>}
+        </NavLink>
       </Tabs>
       <Outlet />
     </div>

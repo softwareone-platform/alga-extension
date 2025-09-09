@@ -4,6 +4,11 @@ import {
   Agreement,
   AgreementsLayout,
   SoftwareOne,
+  Subscriptions,
+  Orders,
+  Consumer,
+  Billing,
+  Details as AgreementDetails,
 } from "./agreements";
 import { Settings, General, Details } from "./settings";
 import { AccountProvider } from "@features/account";
@@ -45,6 +50,11 @@ export function App() {
               <Route path=":id" element={<Agreement />}>
                 <Route index element={<Navigate to="softwareone" replace />} />
                 <Route path="softwareone" element={<SoftwareOne />} />
+                <Route path="subscriptions" element={<Subscriptions />} />
+                <Route path="orders" element={<Orders />} />
+                <Route path="consumer" element={<Consumer />} />
+                <Route path="billing" element={<Billing />} />
+                <Route path="details" element={<AgreementDetails />} />
               </Route>
             </Route>
           </Route>
