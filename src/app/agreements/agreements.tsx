@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { useAgreements } from "./_shared";
+import { useAgreements } from "@features/agreements";
 
 export function Agreements() {
   const { data } = useAgreements();

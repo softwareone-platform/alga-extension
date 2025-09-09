@@ -5,13 +5,6 @@ import { useAccount } from "@features/account";
 import { clsx } from "clsx";
 import { Tabs } from "@ui/tabs";
 import { ErrorCard } from "@ui/error-card";
-import {
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  Button as HeadlessButton,
-} from "@headlessui/react";
 import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
 import { Dialog, DialogPanel, DialogTitle } from "@ui/dialog";
 import { ExtensionDetails, ExtensionStatus } from "@lib/extension-data";

@@ -5,7 +5,7 @@ export function General() {
   const { data: account } = useAccount();
 
   return (
-    <Card>
+    <Card className="flex flex-col">
       <div>
         <label className="block text-sm font-semibold text-gray-900">
           Account Name
