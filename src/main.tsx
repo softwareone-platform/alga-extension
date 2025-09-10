@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { App } from "./app";
 import { ExtensionProvider } from "@features/extension";
 import { BrowserRouter } from "react-router";
+import { KVStorage } from "@lib/alga";
 
 import "./index.css";
 import "@alga-psa/ui-kit/theme.css";
@@ -20,10 +21,12 @@ const queryClient = new QueryClient({
   },
 });
 
+const kvStorage = new KVStorage();
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ExtensionProvider>
+      <ExtensionProvider kvStorage={kvStorage}>
         <BrowserRouter>
           <App />
         </BrowserRouter>

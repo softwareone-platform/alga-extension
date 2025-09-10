@@ -1,3 +1,4 @@
+import { KVStorage } from "@lib/alga";
 import { ExtensionDetails } from "./models";
 
 const SETTINGS_STORAGE_KEY = "SWO-SETTINGS";
@@ -8,23 +9,29 @@ export type ExtensionDetailsChanges = Omit<
 >;
 
 export class ExtensionClient {
-  constructor() {}
+  private kvStorage: KVStorage;
+
+  constructor(kvStorage: KVStorage) {
+    this.kvStorage = kvStorage;
+  }
 
   async getDetails(): Promise<ExtensionDetails> {
-    const stored = localStorage.getItem(SETTINGS_STORAGE_KEY);
-    if (stored) {
-      return JSON.parse(stored);
-    }
-    return {
-      endpoint: "",
-      token: "",
-      note: "",
-      status: "",
-      createdAt: "",
-      updatedAt: "",
-      activatedAt: "",
-      disabledAt: "",
-    };
+    const stored = await this.kvStorage.get<ExtensionDetails>(
+      SETTINGS_STORAGE_KEY
+    );
+
+    return (
+      stored || {
+        endpoint: "",
+        token: "",
+        note: "",
+        status: "",
+        createdAt: "",
+        updatedAt: "",
+        activatedAt: "",
+        disabledAt: "",
+      }
+    );
   }
 
   async saveDetails(newDetails: ExtensionDetailsChanges) {
@@ -41,7 +48,7 @@ export class ExtensionClient {
       activatedAt: isComplete ? new Date().toISOString() : "",
     };
 
-    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(details));
+    await this.kvStorage.set(SETTINGS_STORAGE_KEY, details);
 
     return details;
   }
@@ -55,7 +62,7 @@ export class ExtensionClient {
       disabledAt: new Date().toISOString(),
     };
 
-    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(newDetails));
+    await this.kvStorage.set(SETTINGS_STORAGE_KEY, newDetails);
   }
 
   async enable(note?: string) {
@@ -67,6 +74,6 @@ export class ExtensionClient {
       activatedAt: new Date().toISOString(),
     };
 
-    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(newDetails));
+    await this.kvStorage.set(SETTINGS_STORAGE_KEY, newDetails);
   }
 }

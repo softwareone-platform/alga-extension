@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AgreementsContext } from "./context";
-import { AgreementsOptions } from "@lib/swo-client";
+import { AgreementsOptions } from "@lib/swo";
 
 export const useAgreements = (options?: AgreementsOptions) => {
   const { client } = useContext(AgreementsContext);

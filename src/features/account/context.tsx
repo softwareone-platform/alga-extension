@@ -1,5 +1,5 @@
 import { createContext, useEffect, useMemo, type ReactNode } from "react";
-import { AccountsClient } from "@lib/swo-client";
+import { AccountsClient } from "@lib/swo";
 import { useQueryClient } from "@tanstack/react-query";
 
 const AccountContext = createContext<{
