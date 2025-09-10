@@ -123,12 +123,93 @@ function SettingsActions() {
   );
 }
 
+function SettingsDrawer({
+  isOpen,
+  onCancel,
+  onSaved,
+  details,
+}: {
+  isOpen: boolean;
+  onCancel: () => void;
+  onSaved: (details: ExtensionDetails) => void;
+  details: ExtensionDetails;
+}) {
+  const [editedDetails, setEditedDetails] = useState<ExtensionDetails>(details);
+
+  useEffect(() => {
+    setEditedDetails(details);
+  }, [details]);
+
+  const handleSave = () => {
+    onSaved(editedDetails);
+  };
+
+  const handleCancel = () => {
+    setEditedDetails(details);
+    onCancel();
+  };
+
+  return (
+    <Drawer open={isOpen} onClose={handleCancel}>
+      <DrawerPanel>
+        <DrawerTitle onClose={handleCancel}>SoftwareOne Settings</DrawerTitle>
+
+        <div className="grid grid-cols-[auto_380px] gap-10 items-center">
+          <label className="text-sm font-medium">API Endpoint</label>
+          <input
+            type="text"
+            value={editedDetails.endpoint}
+            onChange={(e) =>
+              setEditedDetails({
+                ...editedDetails,
+                endpoint: e.target.value,
+              })
+            }
+            className="w-full px-3 py-2 border rounded-lg text-sm border-gray-300 focus:outline-none"
+          />
+
+          <label className="text-sm font-medium">API Token</label>
+          <input
+            type="password"
+            value={editedDetails.token}
+            onChange={(e) =>
+              setEditedDetails({
+                ...editedDetails,
+                token: e.target.value,
+              })
+            }
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <label className="text-sm font-medium self-start">Note</label>
+          <textarea
+            value={editedDetails.note}
+            onChange={(e) =>
+              setEditedDetails({
+                ...editedDetails,
+                note: e.target.value,
+              })
+            }
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            rows={4}
+          />
+        </div>
+
+        <div className="flex justify-end gap-6">
+          <Button variant="white" onClick={handleCancel}>
+            Cancel
+          </Button>
+          <Button onClick={handleSave}>Save</Button>
+        </div>
+      </DrawerPanel>
+    </Drawer>
+  );
+}
+
 export function Settings() {
   const { error } = useAccount();
   const { details, isLoading } = useExtensionDetails();
   const { saveDetails } = useExtensionDetailsMutation();
-
-  const [editedDetails, setEditedDetails] = useState<ExtensionDetails>(details);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -137,7 +218,6 @@ export function Settings() {
   );
 
   useEffect(() => {
-    setEditedDetails(details);
     setStatus(details.status);
   }, [details]);
 
@@ -147,13 +227,12 @@ export function Settings() {
     }
   }, [error]);
 
-  const handleSave = () => {
-    saveDetails(editedDetails);
+  const handleSave = (details: ExtensionDetails) => {
+    saveDetails(details);
     setIsOpen(false);
   };
 
   const handleCancel = () => {
-    setEditedDetails(details);
     setIsOpen(false);
   };
 
@@ -174,6 +253,13 @@ export function Settings() {
 
       {error && <ErrorCard>{error.message}</ErrorCard>}
 
+      <SettingsDrawer
+        isOpen={isOpen}
+        onCancel={handleCancel}
+        onSaved={handleSave}
+        details={details}
+      />
+
       <Tabs>
         <NavLink to="general">
           {({ isActive }) => <Tabs.Tab isActive={isActive}>General</Tabs.Tab>}
@@ -183,60 +269,6 @@ export function Settings() {
         </NavLink>
       </Tabs>
       <Outlet />
-
-      <Drawer open={isOpen} onClose={handleCancel}>
-        <DrawerPanel>
-          <DrawerTitle onClose={handleCancel}>SoftwareOne Settings</DrawerTitle>
-
-          <div className="grid grid-cols-[auto_380px] gap-10 items-center">
-            <label className="text-sm font-medium">API Endpoint</label>
-            <input
-              type="text"
-              value={editedDetails.endpoint}
-              onChange={(e) =>
-                setEditedDetails({
-                  ...editedDetails,
-                  endpoint: e.target.value,
-                })
-              }
-              className="w-full px-3 py-2 border rounded-lg text-sm border-gray-300 focus:outline-none"
-            />
-
-            <label className="text-sm font-medium">API Token</label>
-            <input
-              type="password"
-              value={editedDetails.token}
-              onChange={(e) =>
-                setEditedDetails({
-                  ...editedDetails,
-                  token: e.target.value,
-                })
-              }
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-
-            <label className="text-sm font-medium self-start">Note</label>
-            <textarea
-              value={editedDetails.note}
-              onChange={(e) =>
-                setEditedDetails({
-                  ...editedDetails,
-                  note: e.target.value,
-                })
-              }
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              rows={4}
-            />
-          </div>
-
-          <div className="flex justify-end gap-6">
-            <Button variant="white" onClick={handleCancel}>
-              Cancel
-            </Button>
-            <Button onClick={handleSave}>Save</Button>
-          </div>
-        </DrawerPanel>
-      </Drawer>
     </div>
   );
 }
