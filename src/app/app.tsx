@@ -16,10 +16,6 @@ import { useExtensionDetails } from "@features/extension";
 import { UserProvider } from "@features/user";
 import { useEffect } from "react";
 
-//idt:TKN-3140-4844:hUOoIJsnPNBU4MeruvvLDjcYMboih3al2WXyEnY4IeTpZCF1xhex7p1qNPZVCD4b
-
-//idt:TKN-2515-5802:gcOsB36nFewgcEXVStNz6n9QsfzPz5nkZaNVW0WWl1VBjTttwUYEBFn8kA9lmnnc
-
 export function App() {
   const { details, isPlaceholderData } = useExtensionDetails();
   const navigate = useNavigate();
