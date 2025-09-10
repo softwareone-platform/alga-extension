@@ -36,7 +36,7 @@ export const useExtensionDetailsMutation = () => {
   return { saveDetails, saveDetailsAsync, state };
 };
 
-export const useExtensionDetailsMutations = () => {
+export const useExtensionStatusMutations = () => {
   const client = useExtensionClient();
   const queryClient = useQueryClient();
 

@@ -1,12 +1,12 @@
 import { createContext, useEffect, useMemo, type ReactNode } from "react";
-import { AgreementsClient as SWOAgreementsClient } from "@lib/swo";
+import { AgreementsClient } from "@lib/swo";
 import { useQueryClient } from "@tanstack/react-query";
-import { AgreementsClient as AlgaAgreementsClient } from "@lib/alga";
+import { KVStorage } from "@lib/alga";
 import { useKVStorage } from "@features/kv-storage";
 
 export const AgreementsContext = createContext<{
-  swoClient?: SWOAgreementsClient;
-  algaClient?: AlgaAgreementsClient;
+  client?: AgreementsClient;
+  kvClient?: KVStorage;
 }>(null as any);
 
 export type AgreementsProviderProps = {
@@ -20,27 +20,19 @@ export const AgreementsProvider = ({
   baseUrl,
   token,
 }: AgreementsProviderProps) => {
-  const kvStorage = useKVStorage();
-
-  const swoClient = useMemo(
-    () =>
-      baseUrl && token ? new SWOAgreementsClient(baseUrl, token) : undefined,
+  const client = useMemo(
+    () => (baseUrl && token ? new AgreementsClient(baseUrl, token) : undefined),
     [baseUrl, token]
   );
-
-  const algaClient = useMemo(
-    () => (kvStorage ? new AlgaAgreementsClient(kvStorage) : undefined),
-    [kvStorage]
-  );
-
+  const kvClient = useKVStorage("agreements");
   const queryClient = useQueryClient();
 
   useEffect(() => {
     queryClient.resetQueries({ queryKey: ["agreements"] });
-  }, [swoClient]);
+  }, [client]);
 
   return (
-    <AgreementsContext.Provider value={{ swoClient, algaClient }}>
+    <AgreementsContext.Provider value={{ client, kvClient }}>
       {children}
     </AgreementsContext.Provider>
   );

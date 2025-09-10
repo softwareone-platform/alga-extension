@@ -10,7 +10,7 @@ import { ExtensionDetails, ExtensionStatus } from "@lib/extension-data";
 import {
   useExtensionDetails,
   useExtensionDetailsMutation,
-  useExtensionDetailsMutations,
+  useExtensionStatusMutations,
 } from "@features/extension";
 import { Badge } from "@alga-psa/ui-kit";
 import { ActionItem, Actions } from "@ui/actions";
@@ -27,7 +27,7 @@ function StatusBadge({ status }: { status?: ExtensionStatus | "error" }) {
 }
 
 function SettingsActions() {
-  const { enable, disable } = useExtensionDetailsMutations();
+  const { enable, disable } = useExtensionStatusMutations();
   const {
     details: { status },
   } = useExtensionDetails();

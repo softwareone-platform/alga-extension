@@ -1,8 +1,7 @@
 export type PlanService = "payg";
 export type Operations = "self-service" | "managed";
 
-export type Agreement = {
-  id: string;
+export type AgreementSettings = {
   consumerId: string;
   planService: PlanService;
   markup: number;

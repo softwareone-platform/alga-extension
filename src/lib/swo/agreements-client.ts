@@ -10,6 +10,8 @@ import {
 } from "@swo/mp-api-model";
 import { axiosInstance, ListOptions } from "./shared";
 
+export { Agreement };
+
 export type AgreementsOptions = ListOptions<Agreement> & {
   licenseeId?: string;
 };

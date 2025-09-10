@@ -13,7 +13,7 @@ export type ExtensionProviderProps = {
 };
 
 export const ExtensionProvider = ({ children }: ExtensionProviderProps) => {
-  const kvStorage = useKVStorage();
+  const kvStorage = useKVStorage("extension");
   const client = useRef(new ExtensionClient(kvStorage));
 
   return (
