@@ -1,6 +1,6 @@
 import { createContext, type ReactNode, useContext, useRef } from "react";
 import { ExtensionClient } from "@lib/extension-data";
-import { KVStorage } from "@lib/alga";
+import { useKVStorage } from "@features/kv-storage";
 
 export type ExtensionContextType = {
   client: ExtensionClient;
@@ -10,13 +10,10 @@ const ExtensionContext = createContext<ExtensionContextType>(null as any);
 
 export type ExtensionProviderProps = {
   children: ReactNode;
-  kvStorage: KVStorage;
 };
 
-export const ExtensionProvider = ({
-  children,
-  kvStorage,
-}: ExtensionProviderProps) => {
+export const ExtensionProvider = ({ children }: ExtensionProviderProps) => {
+  const kvStorage = useKVStorage();
   const client = useRef(new ExtensionClient(kvStorage));
 
   return (
