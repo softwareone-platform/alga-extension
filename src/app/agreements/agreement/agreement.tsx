@@ -49,7 +49,8 @@ function AgreementSummary({ id }: { id: string }) {
   const RPxY = useMemo(() => {
     if (!algaAgreement?.markup || !swoAgreement?.price?.SPxY) return undefined;
 
-    return swoAgreement?.price?.SPxY * (1 + algaAgreement?.markup / 100);
+    const val = swoAgreement?.price?.SPxY * (1 + algaAgreement?.markup / 100);
+    return (Math.round(val * 100) / 100).toFixed(2);
   }, [swoAgreement?.price?.SPxY, algaAgreement?.markup]);
 
   if (isSWOPending || isAlgaPending) return <div>Loading...</div>;
