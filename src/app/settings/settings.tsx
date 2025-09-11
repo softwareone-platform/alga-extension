@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Outlet, NavLink } from "react-router";
 import { Button } from "@ui/button";
 import { useAccount } from "@features/account";
@@ -207,21 +207,12 @@ export function Settings() {
   const { details, isLoading } = useExtensionDetails();
   const { saveDetails } = useExtensionDetailsMutation();
 
-  const [isOpen, setIsOpen] = useState(false);
-
-  const [status, setStatus] = useState<ExtensionStatus | "error" | "">(
-    details.status
+  const status = useMemo<ExtensionStatus | "error" | "">(
+    () => (error ? "error" : details.status),
+    [details.status, error]
   );
 
-  useEffect(() => {
-    setStatus(details.status);
-  }, [details]);
-
-  useEffect(() => {
-    if (error) {
-      setStatus("error");
-    }
-  }, [error]);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSave = (details: ExtensionDetails) => {
     saveDetails(details);

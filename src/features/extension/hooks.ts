@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useExtensionClient } from "./context";
-import { ExtensionDetails } from "@lib/extension-data";
+import { ExtensionDetails, ExtensionDetailsChanges } from "@lib/extension-data";
 
 export const useExtensionDetails = () => {
   const client = useExtensionClient();
@@ -28,7 +28,8 @@ export const useExtensionDetailsMutation = () => {
     mutateAsync: saveDetailsAsync,
     ...state
   } = useMutation({
-    mutationFn: (details: ExtensionDetails) => client.saveDetails(details),
+    mutationFn: (details: ExtensionDetailsChanges) =>
+      client.saveDetails(details),
     onSuccess: (details) =>
       queryClient.setQueryData(["extension", "details"], details),
   });

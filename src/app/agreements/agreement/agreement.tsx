@@ -109,7 +109,7 @@ function AgreementSummary({
         </div>
       </div>
       <div className="flex flex-col gap-1">
-        <label className="text-sm font-semibold text-black">Margin</label>
+        <label className="text-sm font-semibold text-black">Markup</label>
         <div className="flex gap-2 items-center grow">
           <span className="text-sm text-black">{settings.markup}%</span>
         </div>
@@ -172,7 +172,7 @@ function AgreementSettingsDrawer({
 
         <div className="grid grid-cols-[auto_380px] gap-10 items-center">
           <label className="text-sm font-medium">Markup</label>
-          <div className="border border-[var(--alga-border)] bg-[var(--alga-bg)] text-[var(--alga-fg)] rounded-[var(--alga-radius)]">
+          <div className="relative">
             <Input
               type="number"
               value={editedSettings.markup}
@@ -182,8 +182,11 @@ function AgreementSettingsDrawer({
                   markup: Number(e.target.value),
                 })
               }
-              className="border-none bg-transparent [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+              className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield] pr-13"
             />
+            <span className="absolute right-0 top-[1px] h-[calc(100%-2px)] flex items-center justify-center text-sm border-l border-gray-300 w-10 px-2">
+              %
+            </span>
           </div>
           <label className="text-sm font-medium self-start">Note</label>
           <Textarea
