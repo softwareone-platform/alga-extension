@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router";
 
 import "./index.css";
 import "@alga-psa/ui-kit/theme.css";
+import { KVStorage } from "@lib/alga";
 
 //idt:TKN-3140-4844:hUOoIJsnPNBU4MeruvvLDjcYMboih3al2WXyEnY4IeTpZCF1xhex7p1qNPZVCD4b
 //idt:TKN-2515-5802:gcOsB36nFewgcEXVStNz6n9QsfzPz5nkZaNVW0WWl1VBjTttwUYEBFn8kA9lmnnc
@@ -23,10 +24,12 @@ const queryClient = new QueryClient({
   },
 });
 
+const kvStorage = new KVStorage("swo:extension");
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ExtensionProvider>
+      <ExtensionProvider kvStorage={kvStorage}>
         <BrowserRouter>
           <App />
         </BrowserRouter>

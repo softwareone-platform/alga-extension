@@ -9,12 +9,5 @@ export type Agreement = {
   operations: Operations;
   note?: string;
   RPxY?: number;
-};
-
-export const DEFAULT_AGREEMENT: Agreement = {
-  id: "",
-  consumerId: "",
-  planService: "payg",
-  markup: 0,
-  operations: "self-service",
+  updatedAt?: string;
 };

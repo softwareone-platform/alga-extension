@@ -19,18 +19,22 @@ export class ExtensionClient {
     return await this.kvStorage.get<ExtensionDetails>(SETTINGS_STORAGE_KEY);
   }
 
-  async saveDetails(newDetails: ExtensionDetailsChanges) {
-    const isComplete = newDetails.token && newDetails.endpoint;
+  async saveDetails(
+    changes: ExtensionDetailsChanges
+  ): Promise<ExtensionDetails> {
+    const isComplete = changes.token && changes.endpoint;
 
     const oldDetails = await this.getDetails();
 
-    const details = {
+    const details: ExtensionDetails = {
       ...oldDetails,
-      ...newDetails,
+      ...changes,
       status: isComplete ? "active" : "unconfigured",
       createdAt: oldDetails?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      activatedAt: isComplete ? new Date().toISOString() : "",
+      activatedAt: isComplete
+        ? new Date().toISOString()
+        : oldDetails?.activatedAt,
     };
 
     await this.kvStorage.set(SETTINGS_STORAGE_KEY, details);

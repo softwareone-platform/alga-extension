@@ -10,10 +10,14 @@ const ExtensionContext = createContext<ExtensionContextType>(null as any);
 
 export type ExtensionProviderProps = {
   children: ReactNode;
+  kvStorage: KVStorage;
 };
 
-export const ExtensionProvider = ({ children }: ExtensionProviderProps) => {
-  const client = useRef(new ExtensionClient(new KVStorage("swo:extension")));
+export const ExtensionProvider = ({
+  children,
+  kvStorage,
+}: ExtensionProviderProps) => {
+  const client = useRef(new ExtensionClient(kvStorage));
 
   return (
     <ExtensionContext.Provider value={{ client: client.current }}>
