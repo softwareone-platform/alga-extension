@@ -17,16 +17,16 @@ import { UserProvider } from "@features/user";
 import { useEffect } from "react";
 
 export function App() {
-  const { details, isPlaceholderData } = useExtensionDetails();
+  const { details, isPending } = useExtensionDetails();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isPlaceholderData) return;
+    if (isPending) return;
     if (!details?.token || !details?.endpoint)
       navigate("/settings/general", { replace: true });
   }, [details]);
 
-  if (isPlaceholderData) return <></>;
+  if (isPending) return <></>;
 
   return (
     <AccountProvider baseUrl={details?.endpoint} token={details?.token}>
