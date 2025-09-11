@@ -1,20 +1,15 @@
-import {
-  useAgreement,
-  useAgreementSettings,
-  useAgreementSettingsMutation,
-} from "@features/agreements/hooks";
 import { ActionItem, Actions } from "@ui/actions";
 import { Button } from "@ui/button";
 import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import {
-  Agreement as AgreementType,
-  AgreementStatus as AgreementStatusType,
+  Agreement as SWOAgreement,
+  AgreementStatus as SWOAgreementStatus,
 } from "@swo/mp-api-model";
+import { Agreement as AlgaAgreement } from "@lib/alga";
 import { Badge } from "@alga-psa/ui-kit";
 import { Tabs } from "@ui/tabs";
-import { AgreementSettings } from "@features/agreements";
 import { useEffect, useState } from "react";
 import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
 import { Input, Textarea } from "@ui/forms";
@@ -27,7 +22,7 @@ function AgreementActions() {
   );
 }
 
-function StatusBadge({ status }: { status?: AgreementStatusType }) {
+function StatusBadge({ status }: { status?: SWOAgreementStatus }) {
   if (!status) return <></>;
 
   let tone: "danger" | "default" | "success" | "warning" = "default";
@@ -44,30 +39,30 @@ function StatusBadge({ status }: { status?: AgreementStatusType }) {
 }
 
 function AgreementSummary({
-  agreement,
-  settings,
+  SWOAgreement,
+  algaAgreement,
 }: {
-  agreement: AgreementType;
-  settings: AgreementSettings;
+  SWOAgreement: SWOAgreement;
+  algaAgreement: AlgaAgreement;
 }) {
   return (
     <Card className="flex flex-row justify-between">
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Agreement ID</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">{agreement.id}</span>
+          <span className="text-sm text-black">{SWOAgreement.id}</span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Product</label>
         <div className="flex gap-2 items-center grow">
           <Icon
-            iconUrl={agreement.product?.icon}
-            alt={agreement.product?.name}
+            iconUrl={SWOAgreement.product?.icon}
+            alt={SWOAgreement.product?.name}
             className="size-8"
           />
           <span className="text-sm text-black">
-            {agreement.product?.name || "—"}
+            {SWOAgreement.product?.name || "—"}
           </span>
         </div>
       </div>
@@ -75,12 +70,12 @@ function AgreementSummary({
         <label className="text-sm font-semibold text-black">Vendor</label>
         <div className="flex gap-2 items-center grow">
           <Icon
-            iconUrl={agreement.vendor?.icon}
-            alt={agreement.vendor?.name}
+            iconUrl={SWOAgreement.vendor?.icon}
+            alt={SWOAgreement.vendor?.name}
             className="size-8"
           />
           <span className="text-sm text-black">
-            {agreement.vendor?.name || "—"}
+            {SWOAgreement.vendor?.name || "—"}
           </span>
         </div>
       </div>
@@ -96,7 +91,7 @@ function AgreementSummary({
         <label className="text-sm font-semibold text-black">Consumer</label>
         <div className="flex gap-2 items-center grow">
           <span className="text-sm text-black">
-            {agreement.licensee?.name || "—"}
+            {SWOAgreement.licensee?.name || "—"}
           </span>
         </div>
       </div>
@@ -104,14 +99,14 @@ function AgreementSummary({
         <label className="text-sm font-semibold text-black">SPxY</label>
         <div className="flex gap-2 items-center grow">
           <span className="text-sm text-black">
-            {agreement.price?.SPxY || "—"}
+            {SWOAgreement.price?.SPxY || "—"}
           </span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Markup</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">{settings.markup}%</span>
+          <span className="text-sm text-black">{algaAgreement.markup}%</span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
@@ -124,7 +119,7 @@ function AgreementSummary({
         <label className="text-sm font-semibold text-black">Currency</label>
         <div className="flex gap-2 items-center grow">
           <span className="text-sm text-black">
-            {agreement.price?.currency || "—"}
+            {SWOAgreement.price?.currency || "—"}
           </span>
         </div>
       </div>
@@ -244,7 +239,7 @@ export function Agreement() {
           <AgreementActions />
         </div>
       </header>
-      <AgreementSummary agreement={agreement} settings={settings} />
+      <AgreementSummary SWOAgreement={agreement} algaAgreement={settings} />
       <AgreementSettingsDrawer
         isOpen={isOpen}
         onCancel={handleCancel}

@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AgreementsContext } from "./context";
 import { AgreementsOptions } from "@lib/swo";
-import { AgreementSettings } from "./models";
+import { AgreementChanges as AlgaAgreementChanges } from "@lib/alga";
 
 export const useAgreements = (options?: AgreementsOptions) => {
   const { swoClient } = useContext(AgreementsContext);
@@ -16,38 +16,31 @@ export const useAgreements = (options?: AgreementsOptions) => {
   });
 };
 
-export const useAgreement = (id: string) => {
+export const useSWOAgreement = (id: string) => {
   const { swoClient } = useContext(AgreementsContext);
 
   const { data: agreement, ...state } = useQuery({
-    queryKey: ["agreements", id],
+    queryKey: ["agreements", "swo", id],
     queryFn: () => swoClient!.getAgreement(id),
+    enabled: !!swoClient,
   });
 
-  return { agreement: agreement!, ...state };
+  return { agreement, ...state };
 };
 
-export const useAgreementSettings = (id: string) => {
+export const useAlgaAgreement = (id: string) => {
   const { algaClient } = useContext(AgreementsContext);
 
-  const placeholderData = {
-    consumerId: "",
-    planService: "payg",
-    markup: 0,
-    operations: "self-service",
-    note: "",
-  } as AgreementSettings;
-
-  const { data: settings, ...state } = useQuery({
-    queryKey: ["agreements", id, "settings"],
-    queryFn: () => algaClient!.getAgreement(`${id}:settings`),
-    placeholderData,
+  const { data: agreement, ...state } = useQuery({
+    queryKey: ["agreements", "alga", id],
+    queryFn: () => algaClient!.getAgreement(id),
+    enabled: !!algaClient,
   });
 
-  return { settings: settings || placeholderData, ...state };
+  return { agreement, ...state };
 };
 
-export const useAgreementSettingsMutation = (id: string) => {
+export const useAlgaAgreementSettingsMutation = (id: string) => {
   const { algaClient } = useContext(AgreementsContext);
 
   const queryClient = useQueryClient();
@@ -57,13 +50,10 @@ export const useAgreementSettingsMutation = (id: string) => {
     mutateAsync: saveSettingsAsync,
     ...state
   } = useMutation({
-    mutationFn: (settings: AgreementSettings) =>
-      algaClient!.saveAgreement(`${id}:settings`, settings),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["agreements", id, "settings"],
-      });
-    },
+    mutationFn: (changes: AlgaAgreementChanges) =>
+      algaClient!.saveAgreement(changes),
+    onSuccess: (agreement) =>
+      queryClient.setQueryData(["agreements", "alga", id], agreement),
   });
 
   return { saveSettings, saveSettingsAsync, state };

@@ -5,9 +5,13 @@ export type Agreement = {
   id: string;
   consumerId: string;
   planService: PlanService;
-  markup: number;
   operations: Operations;
+  price: {
+    SPxY: number;
+    RPxY: number;
+    currency: string;
+    markup: number;
+  };
   note?: string;
-  RPxY?: number;
   updatedAt?: string;
 };

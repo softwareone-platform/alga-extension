@@ -56,7 +56,7 @@ export class AgreementsClient {
     return data.data || [];
   }
 
-  async getAgreement(id: string): Promise<Agreement> {
+  async getAgreement(id: string): Promise<Agreement | null> {
     const query = new RqlQuery<Agreement>();
 
     query

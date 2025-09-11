@@ -1,10 +1,4 @@
-export type PlanService = "payg";
-export type Operations = "self-service" | "managed";
+import { Agreement as SWOAgreement } from "@swo/mp-api-model";
+import { Agreement as AlgaAgreement } from "@lib/alga";
 
-export type AgreementSettings = {
-  consumerId: string;
-  planService: PlanService;
-  markup: number;
-  operations: Operations;
-  note: string;
-};
+export type Agreement = SWOAgreement & Omit<AlgaAgreement, "id">;
