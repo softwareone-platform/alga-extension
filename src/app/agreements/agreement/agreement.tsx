@@ -3,16 +3,18 @@ import { Button } from "@ui/button";
 import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
-import {
-  Agreement as SWOAgreement,
-  AgreementStatus as SWOAgreementStatus,
-} from "@swo/mp-api-model";
-import { Agreement as AlgaAgreement } from "@lib/alga";
+import { AgreementStatus as SWOAgreementStatus } from "@swo/mp-api-model";
 import { Badge } from "@alga-psa/ui-kit";
 import { Tabs } from "@ui/tabs";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
 import { Input, Textarea } from "@ui/forms";
+import {
+  useAlgaAgreement,
+  useAlgaAgreementSettingsMutation,
+  useSWOAgreement,
+} from "@features/agreements";
+import { AgreementChanges as AlgaAgreementChanges } from "@lib/alga";
 
 function AgreementActions() {
   return (
@@ -38,31 +40,40 @@ function StatusBadge({ status }: { status?: SWOAgreementStatus }) {
   return <Badge tone={tone}>{status}</Badge>;
 }
 
-function AgreementSummary({
-  SWOAgreement,
-  algaAgreement,
-}: {
-  SWOAgreement: SWOAgreement;
-  algaAgreement: AlgaAgreement;
-}) {
+function AgreementSummary({ id }: { id: string }) {
+  const { agreement: swoAgreement, isPending: isSWOPending } =
+    useSWOAgreement(id);
+  const { agreement: algaAgreement, isPending: isAlgaPending } =
+    useAlgaAgreement(id);
+
+  const RPxY = useMemo(() => {
+    if (!algaAgreement?.markup || !swoAgreement?.price?.SPxY) return undefined;
+
+    return swoAgreement?.price?.SPxY * (1 + algaAgreement?.markup / 100);
+  }, [swoAgreement?.price?.SPxY, algaAgreement?.markup]);
+
+  if (isSWOPending || isAlgaPending) return <div>Loading...</div>;
+
+  if (!swoAgreement) return <div>Agreement not found</div>;
+
   return (
     <Card className="flex flex-row justify-between">
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Agreement ID</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">{SWOAgreement.id}</span>
+          <span className="text-sm text-black">{swoAgreement.id}</span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Product</label>
         <div className="flex gap-2 items-center grow">
           <Icon
-            iconUrl={SWOAgreement.product?.icon}
-            alt={SWOAgreement.product?.name}
+            iconUrl={swoAgreement.product?.icon}
+            alt={swoAgreement.product?.name}
             className="size-8"
           />
           <span className="text-sm text-black">
-            {SWOAgreement.product?.name || "—"}
+            {swoAgreement.product?.name || "—"}
           </span>
         </div>
       </div>
@@ -70,12 +81,12 @@ function AgreementSummary({
         <label className="text-sm font-semibold text-black">Vendor</label>
         <div className="flex gap-2 items-center grow">
           <Icon
-            iconUrl={SWOAgreement.vendor?.icon}
-            alt={SWOAgreement.vendor?.name}
+            iconUrl={swoAgreement.vendor?.icon}
+            alt={swoAgreement.vendor?.name}
             className="size-8"
           />
           <span className="text-sm text-black">
-            {SWOAgreement.vendor?.name || "—"}
+            {swoAgreement.vendor?.name || "—"}
           </span>
         </div>
       </div>
@@ -91,7 +102,7 @@ function AgreementSummary({
         <label className="text-sm font-semibold text-black">Consumer</label>
         <div className="flex gap-2 items-center grow">
           <span className="text-sm text-black">
-            {SWOAgreement.licensee?.name || "—"}
+            {swoAgreement.licensee?.name || "—"}
           </span>
         </div>
       </div>
@@ -99,65 +110,85 @@ function AgreementSummary({
         <label className="text-sm font-semibold text-black">SPxY</label>
         <div className="flex gap-2 items-center grow">
           <span className="text-sm text-black">
-            {SWOAgreement.price?.SPxY || "—"}
+            {swoAgreement.price?.SPxY || "—"}
           </span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Markup</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">{algaAgreement.markup}%</span>
+          <span className="text-sm text-black">
+            {algaAgreement?.markup ? `${algaAgreement.markup}%` : "—"}
+          </span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">RPxY</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">—</span>
+          <span className="text-sm text-black">{RPxY || "—"}</span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Currency</label>
         <div className="flex gap-2 items-center grow">
           <span className="text-sm text-black">
-            {SWOAgreement.price?.currency || "—"}
+            {swoAgreement.price?.currency || "—"}
           </span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Operations</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">—</span>
+          <span className="text-sm text-black">
+            {algaAgreement?.operations || "—"}
+          </span>
         </div>
       </div>
     </Card>
   );
 }
 
-function AgreementSettingsDrawer({
+function AgreementEditor({
   isOpen,
-  onCancel,
-  onSaved,
-  settings,
+  onClose,
+  id,
 }: {
   isOpen: boolean;
-  onCancel: () => void;
-  onSaved: (details: AgreementSettings) => void;
-  settings: AgreementSettings;
+  onClose: () => void;
+  id: string;
 }) {
-  const [editedSettings, setEditedSettings] =
-    useState<AgreementSettings>(settings);
+  const defaults = useMemo<AlgaAgreementChanges>(
+    () => ({
+      id,
+      consumerId: "",
+      planService: "payg",
+      operations: "self-service",
+      markup: 0,
+      note: "",
+    }),
+    [id]
+  );
+
+  const { agreement: algaAgreement } = useAlgaAgreement(id);
+
+  const { saveAgreement } = useAlgaAgreementSettingsMutation();
+
+  const [editedSettings, setEditedSettings] = useState<AlgaAgreementChanges>(
+    algaAgreement || defaults
+  );
 
   useEffect(() => {
-    setEditedSettings(settings);
-  }, [settings]);
+    setEditedSettings(algaAgreement || defaults);
+  }, [algaAgreement, defaults]);
 
   const handleSave = () => {
-    onSaved(editedSettings);
+    saveAgreement(editedSettings);
+    onClose();
   };
 
   const handleCancel = () => {
-    setEditedSettings(settings);
-    onCancel();
+    setEditedSettings(algaAgreement || defaults);
+    onClose();
   };
 
   return (
@@ -209,23 +240,16 @@ function AgreementSettingsDrawer({
 
 export function Agreement() {
   const { id } = useParams<{ id: string }>();
-  const { agreement, isPending } = useAgreement(id!);
-  const { settings, isLoading } = useAgreementSettings(id!);
-  const { saveSettings } = useAgreementSettingsMutation(id!);
+  const { agreement: swoAgreement, isPending: isSWOPending } = useSWOAgreement(
+    id!
+  );
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleSave = (settings: AgreementSettings) => {
-    saveSettings(settings);
-    setIsOpen(false);
-  };
+  if (isSWOPending) return <div>Loading...</div>;
 
-  const handleCancel = () => {
-    setIsOpen(false);
-  };
+  if (!swoAgreement) return <div>Agreement not found</div>;
 
-  if (isPending || isLoading) return <div>Loading...</div>;
-
-  const { name, status } = agreement;
+  const { name, status } = swoAgreement;
 
   return (
     <div className="w-full flex flex-col p-6 gap-8">
@@ -239,12 +263,11 @@ export function Agreement() {
           <AgreementActions />
         </div>
       </header>
-      <AgreementSummary SWOAgreement={agreement} algaAgreement={settings} />
-      <AgreementSettingsDrawer
+      <AgreementSummary id={id!} />
+      <AgreementEditor
         isOpen={isOpen}
-        onCancel={handleCancel}
-        onSaved={handleSave}
-        settings={settings}
+        onClose={() => setIsOpen(false)}
+        id={id!}
       />
       <Tabs>
         <NavLink to="softwareone">

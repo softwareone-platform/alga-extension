@@ -1,4 +1,3 @@
-import { useAgreement } from "@features/agreements/hooks";
 import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import {
@@ -7,6 +6,7 @@ import {
   SellerQueryModel,
 } from "@swo/mp-api-model";
 import { Badge } from "@alga-psa/ui-kit";
+import { useSWOAgreement } from "@features/agreements";
 
 function StatusBadge({ status }: { status?: AgreementStatusType }) {
   if (!status) return <></>;
@@ -127,7 +127,7 @@ function Seller({ seller }: { seller: SellerQueryModel }) {
 }
 
 export function SoftwareOne() {
-  const { agreement, isPending } = useAgreement("AGR-4258-9931-4515");
+  const { agreement, isPending } = useSWOAgreement("AGR-4258-9931-4515");
 
   if (isPending) return <></>;
   if (!agreement) return <div>Agreement not found</div>;

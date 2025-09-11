@@ -40,21 +40,21 @@ export const useAlgaAgreement = (id: string) => {
   return { agreement, ...state };
 };
 
-export const useAlgaAgreementSettingsMutation = (id: string) => {
+export const useAlgaAgreementSettingsMutation = () => {
   const { algaClient } = useContext(AgreementsContext);
 
   const queryClient = useQueryClient();
 
   const {
-    mutate: saveSettings,
-    mutateAsync: saveSettingsAsync,
+    mutate: saveAgreement,
+    mutateAsync: saveAgreementAsync,
     ...state
   } = useMutation({
     mutationFn: (changes: AlgaAgreementChanges) =>
       algaClient!.saveAgreement(changes),
     onSuccess: (agreement) =>
-      queryClient.setQueryData(["agreements", "alga", id], agreement),
+      queryClient.setQueryData(["agreements", "alga", agreement.id], agreement),
   });
 
-  return { saveSettings, saveSettingsAsync, state };
+  return { saveAgreement, saveAgreementAsync, state };
 };

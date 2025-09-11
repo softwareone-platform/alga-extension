@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Outlet, NavLink } from "react-router";
 import { Button } from "@ui/button";
 import { useAccount } from "@features/account";
@@ -126,39 +126,38 @@ function SettingsActions({
     </>
   );
 }
-
-const DEFAULTS = {
-  endpoint: "",
-  token: "",
-  note: "",
-};
-
-function SettingsDrawer({
+function SettingsEditor({
   isOpen,
-  onCancel,
-  onSaved,
-  details,
+  onClose,
 }: {
   isOpen: boolean;
-  onCancel: () => void;
-  onSaved: (details: ExtensionDetailsChanges) => void;
-  details?: ExtensionDetails | null;
+  onClose: () => void;
 }) {
+  const { details } = useExtensionDetails();
+  const { saveDetails } = useExtensionDetailsMutation();
+
+  const defaults = useRef<ExtensionDetailsChanges>({
+    endpoint: "",
+    token: "",
+    note: "",
+  });
+
   const [editedDetails, setEditedDetails] = useState<ExtensionDetailsChanges>(
-    details || DEFAULTS
+    details || defaults.current
   );
 
   useEffect(() => {
-    setEditedDetails(details || DEFAULTS);
+    setEditedDetails(details || defaults.current);
   }, [details]);
 
   const handleSave = () => {
-    onSaved(editedDetails);
+    saveDetails(editedDetails);
+    onClose();
   };
 
   const handleCancel = () => {
-    setEditedDetails(details || DEFAULTS);
-    onCancel();
+    setEditedDetails(details || defaults.current);
+    onClose();
   };
 
   return (
@@ -253,12 +252,7 @@ export function Settings() {
 
       {error && <ErrorCard>{error.message}</ErrorCard>}
 
-      <SettingsDrawer
-        isOpen={isOpen}
-        onCancel={handleCancel}
-        onSaved={handleSave}
-        details={details}
-      />
+      <SettingsEditor isOpen={isOpen} onClose={() => setIsOpen(false)} />
 
       <Tabs>
         <NavLink to="general">
