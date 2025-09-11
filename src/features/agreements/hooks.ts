@@ -5,30 +5,30 @@ import { AgreementsOptions } from "@lib/swo";
 import { AgreementSettings } from "./models";
 
 export const useAgreements = (options?: AgreementsOptions) => {
-  const { client } = useContext(AgreementsContext);
+  const { swoClient } = useContext(AgreementsContext);
 
   return useQuery({
     queryKey: ["agreements", options],
-    queryFn: () => client!.getAgreements(options),
+    queryFn: () => swoClient!.getAgreements(options),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
-    enabled: !!client,
+    enabled: !!swoClient,
   });
 };
 
 export const useAgreement = (id: string) => {
-  const { client } = useContext(AgreementsContext);
+  const { swoClient } = useContext(AgreementsContext);
 
   const { data: agreement, ...state } = useQuery({
     queryKey: ["agreements", id],
-    queryFn: () => client!.getAgreement(id),
+    queryFn: () => swoClient!.getAgreement(id),
   });
 
   return { agreement: agreement!, ...state };
 };
 
 export const useAgreementSettings = (id: string) => {
-  const { kvClient } = useContext(AgreementsContext);
+  const { algaClient } = useContext(AgreementsContext);
 
   const placeholderData = {
     consumerId: "",
@@ -40,7 +40,7 @@ export const useAgreementSettings = (id: string) => {
 
   const { data: settings, ...state } = useQuery({
     queryKey: ["agreements", id, "settings"],
-    queryFn: () => kvClient!.get<AgreementSettings>(`${id}:settings`),
+    queryFn: () => algaClient!.getAgreement(`${id}:settings`),
     placeholderData,
   });
 
@@ -48,7 +48,8 @@ export const useAgreementSettings = (id: string) => {
 };
 
 export const useAgreementSettingsMutation = (id: string) => {
-  const { kvClient } = useContext(AgreementsContext);
+  const { algaClient } = useContext(AgreementsContext);
+
   const queryClient = useQueryClient();
 
   const {
@@ -57,7 +58,7 @@ export const useAgreementSettingsMutation = (id: string) => {
     ...state
   } = useMutation({
     mutationFn: (settings: AgreementSettings) =>
-      kvClient!.set(`${id}:settings`, settings),
+      algaClient!.saveAgreement(`${id}:settings`, settings),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["agreements", id, "settings"],
