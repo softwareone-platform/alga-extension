@@ -127,15 +127,15 @@ function Seller({ seller }: { seller: SellerQueryModel }) {
 }
 
 export function SoftwareOne() {
-  const { data, isPending } = useAgreement("AGR-4258-9931-4515");
+  const { agreement, isPending } = useAgreement("AGR-4258-9931-4515");
 
   if (isPending) return <></>;
-  if (!data) return <div>Agreement not found</div>;
+  if (!agreement) return <div>Agreement not found</div>;
 
   return (
     <Card className="flex flex-row gap-6 items-start">
-      <Agreement agreement={data} />
-      {data.seller && <Seller seller={data.seller} />}
+      <Agreement agreement={agreement} />
+      {agreement.seller && <Seller seller={agreement.seller} />}
     </Card>
   );
 }

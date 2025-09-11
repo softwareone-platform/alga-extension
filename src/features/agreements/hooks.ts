@@ -19,26 +19,43 @@ export const useAgreements = (options?: AgreementsOptions) => {
 export const useAgreement = (id: string) => {
   const { client } = useContext(AgreementsContext);
 
-  return useQuery({
+  const { data: agreement, ...state } = useQuery({
     queryKey: ["agreements", id],
     queryFn: () => client!.getAgreement(id),
   });
+
+  return { agreement: agreement!, ...state };
 };
 
 export const useAgreementSettings = (id: string) => {
   const { kvClient } = useContext(AgreementsContext);
 
-  return useQuery({
+  const placeholderData = {
+    consumerId: "",
+    planService: "payg",
+    markup: 0,
+    operations: "self-service",
+    note: "",
+  } as AgreementSettings;
+
+  const { data: settings, ...state } = useQuery({
     queryKey: ["agreements", id, "settings"],
-    queryFn: () => kvClient!.get(`${id}:settings`),
+    queryFn: () => kvClient!.get<AgreementSettings>(`${id}:settings`),
+    placeholderData,
   });
+
+  return { settings: settings || placeholderData, ...state };
 };
 
 export const useAgreementSettingsMutation = (id: string) => {
   const { kvClient } = useContext(AgreementsContext);
   const queryClient = useQueryClient();
 
-  return useMutation({
+  const {
+    mutate: saveSettings,
+    mutateAsync: saveSettingsAsync,
+    ...state
+  } = useMutation({
     mutationFn: (settings: AgreementSettings) =>
       kvClient!.set(`${id}:settings`, settings),
     onSuccess: () => {
@@ -47,4 +64,6 @@ export const useAgreementSettingsMutation = (id: string) => {
       });
     },
   });
+
+  return { saveSettings, saveSettingsAsync, state };
 };

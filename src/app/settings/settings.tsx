@@ -14,6 +14,7 @@ import {
 } from "@features/extension";
 import { Badge } from "@alga-psa/ui-kit";
 import { ActionItem, Actions } from "@ui/actions";
+import { Input, Textarea } from "@ui/forms";
 
 function StatusBadge({ status }: { status?: ExtensionStatus | "error" }) {
   if (!status) return <></>;
@@ -77,8 +78,7 @@ function SettingsActions() {
           </div>
           <div className="flex flex-col gap-2 text-sm">
             <label className="font-medium">Note</label>
-            <textarea
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none"
+            <Textarea
               rows={4}
               value={note}
               onChange={(e) => setNote(e.target.value)}
@@ -104,8 +104,7 @@ function SettingsActions() {
           </div>
           <div className="flex flex-col gap-2 text-sm">
             <label className="font-medium">Note</label>
-            <textarea
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none"
+            <Textarea
               rows={4}
               value={note}
               onChange={(e) => setNote(e.target.value)}
@@ -156,7 +155,7 @@ function SettingsDrawer({
 
         <div className="grid grid-cols-[auto_380px] gap-10 items-center">
           <label className="text-sm font-medium">API Endpoint</label>
-          <input
+          <Input
             type="text"
             value={editedDetails.endpoint}
             onChange={(e) =>
@@ -165,11 +164,10 @@ function SettingsDrawer({
                 endpoint: e.target.value,
               })
             }
-            className="w-full px-3 py-2 border rounded-lg text-sm border-gray-300 focus:outline-none"
           />
 
           <label className="text-sm font-medium">API Token</label>
-          <input
+          <Input
             type="password"
             value={editedDetails.token}
             onChange={(e) =>
@@ -178,11 +176,10 @@ function SettingsDrawer({
                 token: e.target.value,
               })
             }
-            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
           <label className="text-sm font-medium self-start">Note</label>
-          <textarea
+          <Textarea
             value={editedDetails.note}
             onChange={(e) =>
               setEditedDetails({
@@ -190,7 +187,6 @@ function SettingsDrawer({
                 note: e.target.value,
               })
             }
-            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows={4}
           />
         </div>

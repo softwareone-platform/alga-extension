@@ -1,19 +1,23 @@
-import { ButtonHTMLAttributes, forwardRef } from "react";
+import { forwardRef } from "react";
+import {
+  Button as HeadlessButton,
+  ButtonProps as HeadlessButtonProps,
+} from "@headlessui/react";
 import { clsx } from "clsx";
 
 type ButtonVariant = "primary" | "secondary" | "white";
 
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+type ButtonProps = HeadlessButtonProps & {
   variant?: ButtonVariant;
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant = "primary", className, ...props }, ref) => {
     return (
-      <button
+      <HeadlessButton
         ref={ref}
         className={clsx(
-          "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ring-offset-background relative h-10 py-2 px-4 group cursor-pointer",
+          "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-[rgb(var(--color-primary-600))] disabled:pointer-events-none disabled:opacity-50 ring-offset-background relative h-10 py-2 px-4 group cursor-pointer",
           {
             "bg-[rgb(var(--color-primary-500))] text-white hover:bg-[rgb(var(--color-primary-600))]":
               variant === "primary",
