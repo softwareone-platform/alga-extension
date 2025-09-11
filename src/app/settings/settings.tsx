@@ -31,17 +31,20 @@ function StatusBadge({ status }: { status?: ExtensionStatus | "error" }) {
   return <Badge tone="success">Active</Badge>;
 }
 
-function SettingsActions() {
+function SettingsActions({
+  status,
+}: {
+  status: ExtensionStatus | "error" | undefined;
+}) {
   const { enable, disable } = useExtensionStatusMutations();
-  const { details } = useExtensionDetails();
 
   const [isDisabledOpen, setIsDisabledOpen] = useState(false);
   const [isEnabledOpen, setIsEnabledOpen] = useState(false);
 
   const [note, setNote] = useState("");
 
-  const canEnable = details?.status === "disabled";
-  const canDisable = details?.status === "active";
+  const canEnable = status === "disabled";
+  const canDisable = status === "active";
 
   const enableExtension = () => {
     enable(note);
@@ -244,7 +247,7 @@ export function Settings() {
         </div>
         <div className="flex items-center gap-6">
           <Button onClick={() => setIsOpen(true)}>Edit</Button>
-          <SettingsActions />
+          <SettingsActions status={status} />
         </div>
       </header>
 

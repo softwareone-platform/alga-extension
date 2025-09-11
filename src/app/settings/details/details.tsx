@@ -5,6 +5,8 @@ import dayjs from "dayjs";
 export function Details() {
   const { details } = useExtensionDetails();
 
+  const { createdAt, updatedAt, activatedAt, disabledAt, note } = details || {};
+
   return (
     <Card className="flex flex-col">
       <div>
@@ -12,7 +14,7 @@ export function Details() {
           Created
         </label>
         <div className="text-sm text-gray-500">
-          {dayjs(details?.createdAt).format("HH:mm MM/DD/YYYY") || "—"}
+          {createdAt ? dayjs(createdAt).format("HH:mm MM/DD/YYYY") : "—"}
         </div>
       </div>
 
@@ -21,7 +23,7 @@ export function Details() {
           Updated
         </label>
         <div className="text-sm text-gray-500">
-          {dayjs(details?.updatedAt).format("HH:mm MM/DD/YYYY") || "—"}
+          {updatedAt ? dayjs(updatedAt).format("HH:mm MM/DD/YYYY") : "—"}
         </div>
       </div>
 
@@ -30,7 +32,7 @@ export function Details() {
           Activated
         </label>
         <div className="text-sm text-gray-500">
-          {dayjs(details?.activatedAt).format("HH:mm MM/DD/YYYY") || "—"}
+          {activatedAt ? dayjs(activatedAt).format("HH:mm MM/DD/YYYY") : "—"}
         </div>
       </div>
 
@@ -39,7 +41,7 @@ export function Details() {
           Disabled
         </label>
         <div className="text-sm text-gray-500">
-          {dayjs(details?.disabledAt).format("HH:mm MM/DD/YYYY") || "—"}
+          {disabledAt ? dayjs(disabledAt).format("HH:mm MM/DD/YYYY") : "—"}
         </div>
       </div>
 
@@ -47,7 +49,7 @@ export function Details() {
         <label className="block text-sm font-semibold text-gray-900">
           Note
         </label>
-        <div className="text-sm text-gray-500">{details?.note || "—"}</div>
+        <div className="text-sm text-gray-500">{note || "—"}</div>
       </div>
     </Card>
   );

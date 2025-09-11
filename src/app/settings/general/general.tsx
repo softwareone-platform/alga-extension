@@ -40,7 +40,7 @@ export function General() {
         <label className="block text-sm font-semibold text-gray-900">
           Headquarters address
         </label>
-        {!account?.address && <div>—</div>}
+        {!account?.address && <div className="text-sm text-gray-500">—</div>}
         {account?.address && (
           <div className="text-sm text-gray-500 flex flex-col">
             <span>Address line1: {account?.address.addressLine1}</span>
