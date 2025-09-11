@@ -6,7 +6,7 @@ export function AgreementsLayout() {
   const { details } = useExtensionDetails();
 
   return (
-    <AgreementsProvider baseUrl={details.endpoint} token={details.token}>
+    <AgreementsProvider baseUrl={details?.endpoint} token={details?.token}>
       <Outlet />
     </AgreementsProvider>
   );

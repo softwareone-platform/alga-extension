@@ -6,7 +6,11 @@ import { Tabs } from "@ui/tabs";
 import { ErrorCard } from "@ui/error-card";
 import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
 import { Dialog, DialogPanel, DialogTitle } from "@ui/dialog";
-import { ExtensionDetails, ExtensionStatus } from "@lib/extension-data";
+import {
+  ExtensionDetails,
+  ExtensionDetailsChanges,
+  ExtensionStatus,
+} from "@lib/extension-data";
 import {
   useExtensionDetails,
   useExtensionDetailsMutation,
@@ -29,17 +33,15 @@ function StatusBadge({ status }: { status?: ExtensionStatus | "error" }) {
 
 function SettingsActions() {
   const { enable, disable } = useExtensionStatusMutations();
-  const {
-    details: { status },
-  } = useExtensionDetails();
+  const { details } = useExtensionDetails();
 
   const [isDisabledOpen, setIsDisabledOpen] = useState(false);
   const [isEnabledOpen, setIsEnabledOpen] = useState(false);
 
   const [note, setNote] = useState("");
 
-  const canEnable = status === "disabled";
-  const canDisable = status === "active";
+  const canEnable = details?.status === "disabled";
+  const canDisable = details?.status === "active";
 
   const enableExtension = () => {
     enable(note);
@@ -122,6 +124,12 @@ function SettingsActions() {
   );
 }
 
+const DEFAULTS = {
+  endpoint: "",
+  token: "",
+  note: "",
+};
+
 function SettingsDrawer({
   isOpen,
   onCancel,
@@ -130,13 +138,15 @@ function SettingsDrawer({
 }: {
   isOpen: boolean;
   onCancel: () => void;
-  onSaved: (details: ExtensionDetails) => void;
-  details: ExtensionDetails;
+  onSaved: (details: ExtensionDetailsChanges) => void;
+  details?: ExtensionDetails | null;
 }) {
-  const [editedDetails, setEditedDetails] = useState<ExtensionDetails>(details);
+  const [editedDetails, setEditedDetails] = useState<ExtensionDetailsChanges>(
+    details || DEFAULTS
+  );
 
   useEffect(() => {
-    setEditedDetails(details);
+    setEditedDetails(details || DEFAULTS);
   }, [details]);
 
   const handleSave = () => {
@@ -144,7 +154,7 @@ function SettingsDrawer({
   };
 
   const handleCancel = () => {
-    setEditedDetails(details);
+    setEditedDetails(details || DEFAULTS);
     onCancel();
   };
 
@@ -159,10 +169,10 @@ function SettingsDrawer({
             type="text"
             value={editedDetails.endpoint}
             onChange={(e) =>
-              setEditedDetails({
-                ...editedDetails,
+              setEditedDetails((v) => ({
+                ...v,
                 endpoint: e.target.value,
-              })
+              }))
             }
           />
 
@@ -171,10 +181,10 @@ function SettingsDrawer({
             type="password"
             value={editedDetails.token}
             onChange={(e) =>
-              setEditedDetails({
-                ...editedDetails,
+              setEditedDetails((v) => ({
+                ...v,
                 token: e.target.value,
-              })
+              }))
             }
           />
 
@@ -182,10 +192,10 @@ function SettingsDrawer({
           <Textarea
             value={editedDetails.note}
             onChange={(e) =>
-              setEditedDetails({
-                ...editedDetails,
+              setEditedDetails((v) => ({
+                ...v,
                 note: e.target.value,
-              })
+              }))
             }
             rows={4}
           />
@@ -207,14 +217,14 @@ export function Settings() {
   const { details, isLoading } = useExtensionDetails();
   const { saveDetails } = useExtensionDetailsMutation();
 
-  const status = useMemo<ExtensionStatus | "error" | "">(
-    () => (error ? "error" : details.status),
-    [details.status, error]
+  const status = useMemo<ExtensionStatus | "error" | undefined>(
+    () => (error ? "error" : details?.status),
+    [details?.status, error]
   );
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleSave = (details: ExtensionDetails) => {
+  const handleSave = (details: ExtensionDetailsChanges) => {
     saveDetails(details);
     setIsOpen(false);
   };

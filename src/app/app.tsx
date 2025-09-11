@@ -22,15 +22,15 @@ export function App() {
 
   useEffect(() => {
     if (isPlaceholderData) return;
-    if (!details.token || !details.endpoint)
+    if (!details?.token || !details?.endpoint)
       navigate("/settings/general", { replace: true });
   }, [details]);
 
   if (isPlaceholderData) return <></>;
 
   return (
-    <AccountProvider baseUrl={details.endpoint} token={details.token}>
-      <UserProvider baseUrl={details.endpoint} token={details.token}>
+    <AccountProvider baseUrl={details?.endpoint} token={details?.token}>
+      <UserProvider baseUrl={details?.endpoint} token={details?.token}>
         <Routes>
           <Route path="/" element={<Navigate to="/agreements" replace />} />
 

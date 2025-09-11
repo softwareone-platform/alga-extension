@@ -2,7 +2,6 @@ import { createContext, useEffect, useMemo, type ReactNode } from "react";
 import { AgreementsClient } from "@lib/swo";
 import { useQueryClient } from "@tanstack/react-query";
 import { KVStorage } from "@lib/alga";
-import { useKVStorage } from "@features/kv-storage";
 
 export const AgreementsContext = createContext<{
   client?: AgreementsClient;
@@ -11,8 +10,8 @@ export const AgreementsContext = createContext<{
 
 export type AgreementsProviderProps = {
   children: ReactNode;
-  baseUrl: string;
-  token: string;
+  baseUrl?: string;
+  token?: string;
 };
 
 export const AgreementsProvider = ({
@@ -24,7 +23,7 @@ export const AgreementsProvider = ({
     () => (baseUrl && token ? new AgreementsClient(baseUrl, token) : undefined),
     [baseUrl, token]
   );
-  const kvClient = useKVStorage("agreements");
+  const kvClient = new KVStorage("swo:agreements");
   const queryClient = useQueryClient();
 
   useEffect(() => {

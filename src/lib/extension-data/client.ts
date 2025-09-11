@@ -1,7 +1,7 @@
 import { KVStorage } from "@lib/alga";
 import { ExtensionDetails } from "./models";
 
-const SETTINGS_STORAGE_KEY = "SWO-SETTINGS";
+const SETTINGS_STORAGE_KEY = "settings";
 
 export type ExtensionDetailsChanges = Omit<
   ExtensionDetails,
@@ -15,23 +15,8 @@ export class ExtensionClient {
     this.kvStorage = kvStorage;
   }
 
-  async getDetails(): Promise<ExtensionDetails> {
-    const stored = await this.kvStorage.get<ExtensionDetails>(
-      SETTINGS_STORAGE_KEY
-    );
-
-    return (
-      stored || {
-        endpoint: "",
-        token: "",
-        note: "",
-        status: "",
-        createdAt: "",
-        updatedAt: "",
-        activatedAt: "",
-        disabledAt: "",
-      }
-    );
+  async getDetails(): Promise<ExtensionDetails | null> {
+    return await this.kvStorage.get<ExtensionDetails>(SETTINGS_STORAGE_KEY);
   }
 
   async saveDetails(newDetails: ExtensionDetailsChanges) {
@@ -43,7 +28,7 @@ export class ExtensionClient {
       ...oldDetails,
       ...newDetails,
       status: isComplete ? "active" : "unconfigured",
-      createdAt: oldDetails.createdAt || new Date().toISOString(),
+      createdAt: oldDetails?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       activatedAt: isComplete ? new Date().toISOString() : "",
     };

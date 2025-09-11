@@ -1,6 +1,6 @@
 import { createContext, type ReactNode, useContext, useRef } from "react";
 import { ExtensionClient } from "@lib/extension-data";
-import { useKVStorage } from "@features/kv-storage";
+import { KVStorage } from "@lib/alga";
 
 export type ExtensionContextType = {
   client: ExtensionClient;
@@ -13,8 +13,7 @@ export type ExtensionProviderProps = {
 };
 
 export const ExtensionProvider = ({ children }: ExtensionProviderProps) => {
-  const kvStorage = useKVStorage("extension");
-  const client = useRef(new ExtensionClient(kvStorage));
+  const client = useRef(new ExtensionClient(new KVStorage("swo:extension")));
 
   return (
     <ExtensionContext.Provider value={{ client: client.current }}>

@@ -8,8 +8,8 @@ const UserContext = createContext<{
 
 export type UserProviderProps = {
   children: ReactNode;
-  baseUrl: string;
-  token: string;
+  baseUrl?: string;
+  token?: string;
 };
 
 export const UserProvider = ({

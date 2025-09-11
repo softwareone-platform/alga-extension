@@ -12,7 +12,7 @@ export function Details() {
           Created
         </label>
         <div className="text-sm text-gray-500">
-          {dayjs(details.createdAt).format("HH:mm MM/DD/YYYY") || "—"}
+          {dayjs(details?.createdAt).format("HH:mm MM/DD/YYYY") || "—"}
         </div>
       </div>
 
@@ -21,7 +21,7 @@ export function Details() {
           Updated
         </label>
         <div className="text-sm text-gray-500">
-          {dayjs(details.updatedAt).format("HH:mm MM/DD/YYYY") || "—"}
+          {dayjs(details?.updatedAt).format("HH:mm MM/DD/YYYY") || "—"}
         </div>
       </div>
 
@@ -30,7 +30,7 @@ export function Details() {
           Activated
         </label>
         <div className="text-sm text-gray-500">
-          {dayjs(details.activatedAt).format("HH:mm MM/DD/YYYY") || "—"}
+          {dayjs(details?.activatedAt).format("HH:mm MM/DD/YYYY") || "—"}
         </div>
       </div>
 
@@ -39,7 +39,7 @@ export function Details() {
           Disabled
         </label>
         <div className="text-sm text-gray-500">
-          {dayjs(details.disabledAt).format("HH:mm MM/DD/YYYY") || "—"}
+          {dayjs(details?.disabledAt).format("HH:mm MM/DD/YYYY") || "—"}
         </div>
       </div>
 
@@ -47,7 +47,7 @@ export function Details() {
         <label className="block text-sm font-semibold text-gray-900">
           Note
         </label>
-        <div className="text-sm text-gray-500">{details.note || "—"}</div>
+        <div className="text-sm text-gray-500">{details?.note || "—"}</div>
       </div>
     </Card>
   );
