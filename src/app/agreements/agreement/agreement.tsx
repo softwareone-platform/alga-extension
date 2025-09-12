@@ -14,8 +14,11 @@ import {
   useAlgaAgreementSettingsMutation,
   useSWOAgreement,
 } from "@features/agreements";
-import { AgreementChanges as AlgaAgreementChanges } from "@lib/alga";
-import { Field, Label, Radio, RadioGroup } from "@headlessui/react";
+import {
+  AgreementChanges as AlgaAgreementChanges,
+  Operations,
+} from "@lib/alga";
+import { Radio, RadioGroup } from "@ui/radio";
 
 function AgreementActions() {
   return (
@@ -217,30 +220,23 @@ function AgreementEditor({
             </span>
           </div>
 
-          <label className="text-sm font-medium">Operations</label>
+          <label className="text-sm font-medium self-start">Operations</label>
           <RadioGroup
             value={editedSettings.operations}
             onChange={(operations) =>
               setEditedSettings({
                 ...editedSettings,
-                operations,
+                operations: operations as Operations,
               })
             }
             aria-label="Operations"
           >
-            {["self-service", "managed"].map((planService) => (
-              <Field key={planService} className="flex items-center gap-2">
-                <Radio
-                  value={planService}
-                  className="group flex size-4 items-center justify-center rounded-full border-0 outline-2 -outline-offset-2 outline-gray-400 bg-white data-checked:bg-[rgb(var(--color-primary-600))] data-checked:outline-[rgb(var(--color-primary-600))]"
-                >
-                  <span className="invisible size-[6px] rounded-full bg-white group-data-checked:visible" />
-                </Radio>
-                <Label className="data-disabled:opacity-50">
-                  {planService}
-                </Label>
-              </Field>
-            ))}
+            <Radio value="managed">
+              <span>Managed (Not visible to Clients)</span>
+            </Radio>
+            <Radio value="self-service">
+              <span>Self-service (Clients will see Agreement details)</span>
+            </Radio>
           </RadioGroup>
 
           <label className="text-sm font-medium self-start">Note</label>
