@@ -6,7 +6,7 @@ export type AuditProps = {
 };
 
 export const Audit = ({ at, by }: AuditProps) => {
-  if (!at && !by) return <span>-</span>;
+  if (!at && !by) return <span>—</span>;
 
   return (
     <>
