@@ -22,17 +22,17 @@ export class ExtensionClient {
   async saveDetails(
     changes: ExtensionDetailsChanges
   ): Promise<ExtensionDetails> {
-    const isComplete = changes.token && changes.endpoint;
+    const isConfigured = changes.token && changes.endpoint;
 
     const oldDetails = await this.getDetails();
 
     const details: ExtensionDetails = {
       ...oldDetails,
       ...changes,
-      status: isComplete ? "active" : "unconfigured",
+      status: isConfigured ? "active" : "unconfigured",
       createdAt: oldDetails?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      activatedAt: isComplete
+      activatedAt: isConfigured
         ? new Date().toISOString()
         : oldDetails?.activatedAt,
     };

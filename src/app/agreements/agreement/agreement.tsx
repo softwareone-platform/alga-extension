@@ -209,6 +209,20 @@ function AgreementEditor({
         <DrawerTitle onClose={handleCancel}>SoftwareOne Settings</DrawerTitle>
 
         <div className="grid grid-cols-[auto_380px] gap-10 items-center">
+          <label className="text-sm font-medium">Consumer</label>
+          <div>
+            <Listbox
+              value={editedSettings.consumerId}
+              onChange={(consumerId) =>
+                setEditedSettings({
+                  ...editedSettings,
+                  consumerId,
+                })
+              }
+            >
+              <ListboxButton>-</ListboxButton>
+            </Listbox>
+          </div>
           <label className="text-sm font-medium">Plan Service</label>
           <div>
             <Listbox
