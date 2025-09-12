@@ -17,8 +17,15 @@ import {
 import {
   AgreementChanges as AlgaAgreementChanges,
   Operations,
+  PlanService,
 } from "@lib/alga";
 import { Radio, RadioGroup } from "@ui/radio";
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+} from "@ui/listbox";
 
 function AgreementActions() {
   return (
@@ -202,6 +209,23 @@ function AgreementEditor({
         <DrawerTitle onClose={handleCancel}>SoftwareOne Settings</DrawerTitle>
 
         <div className="grid grid-cols-[auto_380px] gap-10 items-center">
+          <label className="text-sm font-medium">Plan Service</label>
+          <div>
+            <Listbox
+              value={editedSettings.planService}
+              onChange={(planService: PlanService) =>
+                setEditedSettings({
+                  ...editedSettings,
+                  planService,
+                })
+              }
+            >
+              <ListboxButton>{editedSettings.planService}</ListboxButton>
+              <ListboxOptions>
+                <ListboxOption value="payg">Pay as you go (PAYG)</ListboxOption>
+              </ListboxOptions>
+            </Listbox>
+          </div>
           <label className="text-sm font-medium">Markup</label>
           <div className="relative">
             <Input
@@ -223,10 +247,10 @@ function AgreementEditor({
           <label className="text-sm font-medium self-start">Operations</label>
           <RadioGroup
             value={editedSettings.operations}
-            onChange={(operations) =>
+            onChange={(operations: Operations) =>
               setEditedSettings({
                 ...editedSettings,
-                operations: operations as Operations,
+                operations,
               })
             }
             aria-label="Operations"
