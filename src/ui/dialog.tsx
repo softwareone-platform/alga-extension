@@ -7,6 +7,7 @@ import {
   DialogTitleProps as HeadlessDialogTitleProps,
 } from "@headlessui/react";
 import { clsx } from "clsx";
+import { X } from "lucide-react";
 
 export const Dialog = ({ className, ...props }: HeadlessDialogProps) => {
   return (
@@ -53,20 +54,11 @@ export const DialogTitle = ({
       {...props}
     >
       <div className="text-2xl font-semibold">{children}</div>
-      <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
+      <button
+        onClick={onClose}
+        className="text-gray-400 hover:text-gray-600 cursor-pointer"
+      >
+        <X />
       </button>
     </HeadlessDialogTitle>
   );

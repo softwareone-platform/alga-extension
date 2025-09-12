@@ -15,6 +15,7 @@ import {
   useSWOAgreement,
 } from "@features/agreements";
 import { AgreementChanges as AlgaAgreementChanges } from "@lib/alga";
+import { Field, Label, Radio, RadioGroup } from "@headlessui/react";
 
 function AgreementActions() {
   return (
@@ -217,7 +218,30 @@ function AgreementEditor({
           </div>
 
           <label className="text-sm font-medium">Operations</label>
-          <div></div>
+          <RadioGroup
+            value={editedSettings.operations}
+            onChange={(operations) =>
+              setEditedSettings({
+                ...editedSettings,
+                operations,
+              })
+            }
+            aria-label="Operations"
+          >
+            {["self-service", "managed"].map((planService) => (
+              <Field key={planService} className="flex items-center gap-2">
+                <Radio
+                  value={planService}
+                  className="group flex size-4 items-center justify-center rounded-full border-0 outline-2 -outline-offset-2 outline-gray-400 bg-white data-checked:bg-[rgb(var(--color-primary-600))] data-checked:outline-[rgb(var(--color-primary-600))]"
+                >
+                  <span className="invisible size-[6px] rounded-full bg-white group-data-checked:visible" />
+                </Radio>
+                <Label className="data-disabled:opacity-50">
+                  {planService}
+                </Label>
+              </Field>
+            ))}
+          </RadioGroup>
 
           <label className="text-sm font-medium self-start">Note</label>
           <Textarea
