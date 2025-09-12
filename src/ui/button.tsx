@@ -5,9 +5,9 @@ import {
 } from "@headlessui/react";
 import { clsx } from "clsx";
 
-type ButtonVariant = "primary" | "secondary" | "white";
+export type ButtonVariant = "primary" | "secondary" | "white";
 
-type ButtonProps = HeadlessButtonProps & {
+export type ButtonProps = HeadlessButtonProps & {
   variant?: ButtonVariant;
 };
 

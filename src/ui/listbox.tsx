@@ -2,7 +2,6 @@ import {
   Listbox as HeadlessListbox,
   ListboxProps as HeadlessListboxProps,
   ListboxButton as HeadlessListboxButton,
-  ListboxButtonProps as HeadlessListboxButtonProps,
   ListboxOptions as HeadlessListboxOptions,
   ListboxOptionsProps as HeadlessListboxOptionsProps,
   ListboxOption as HeadlessListboxOption,
@@ -10,15 +9,18 @@ import {
 } from "@headlessui/react";
 import { clsx } from "clsx";
 import { Button } from "./button";
+import { ReactNode } from "react";
 
 export const Listbox = ({ ...props }: HeadlessListboxProps) => {
   return <HeadlessListbox {...props} />;
 };
 
-export const ListboxButton = ({
-  className,
-  ...props
-}: HeadlessListboxButtonProps) => {
+export type ListboxButtonProps = {
+  className?: string;
+  children: ReactNode;
+};
+
+export const ListboxButton = ({ className, ...props }: ListboxButtonProps) => {
   return (
     <HeadlessListboxButton
       as={Button}
