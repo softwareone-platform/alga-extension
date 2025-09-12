@@ -231,11 +231,11 @@ function AgreementEditor({
             }
             aria-label="Operations"
           >
-            <Radio value="managed">
-              <span>Managed (Not visible to Clients)</span>
-            </Radio>
             <Radio value="self-service">
               <span>Self-service (Clients will see Agreement details)</span>
+            </Radio>
+            <Radio value="managed">
+              <span>Managed (Not visible to Clients)</span>
             </Radio>
           </RadioGroup>
 
