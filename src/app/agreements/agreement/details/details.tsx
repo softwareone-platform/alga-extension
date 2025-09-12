@@ -2,10 +2,12 @@ import { useAlgaAgreement, useSWOAgreement } from "@features/agreements";
 import { Audit } from "@ui/audit";
 import { Card } from "@ui/card";
 import dayjs from "dayjs";
+import { useParams } from "react-router";
 
 export function Details() {
-  const { agreement: swoAgreement } = useSWOAgreement("AGR-4258-9931-4515");
-  const { agreement: algaAgreement } = useAlgaAgreement("AGR-4258-9931-4515");
+  const { id } = useParams<{ id: string }>();
+  const { agreement: swoAgreement } = useSWOAgreement(id!);
+  const { agreement: algaAgreement } = useAlgaAgreement(id!);
 
   if (!swoAgreement) return <></>;
 

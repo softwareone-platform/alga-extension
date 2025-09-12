@@ -2,6 +2,7 @@ import { Card } from "@ui/card";
 import { useAlgaAgreement, useSWOAgreement } from "@features/agreements";
 import { PlanService as AlgaPlanService } from "@lib/alga";
 import { Link } from "@ui/link";
+import { useParams } from "react-router";
 
 const PLAN_SERVICE_NAME = {
   payg: "Pay-as-you-go",
@@ -65,16 +66,16 @@ function Markup({ markup }: { markup?: number }) {
 }
 
 export function Billing() {
-  const id = "AGR-4258-9931-4515";
-  const { agreement: algaAgreement } = useAlgaAgreement(id);
-  const { agreement: swoAgreement } = useSWOAgreement(id);
+  const { id } = useParams<{ id: string }>();
+  const { agreement: algaAgreement } = useAlgaAgreement(id!);
+  const { agreement: swoAgreement } = useSWOAgreement(id!);
 
   return (
     <Card className="flex flex-row gap-6 items-start">
       <PlanService
         planService={algaAgreement?.planService}
         serviceName={swoAgreement?.name}
-        serviceUrl={`https://portal.platform.softwareone.com/commerce/agreements/${id}`}
+        serviceUrl={`https://portal.platform.softwareone.com/commerce/agreements/${id!}`}
       />
       <Markup markup={algaAgreement?.markup} />
     </Card>

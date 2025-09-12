@@ -7,6 +7,7 @@ import {
 } from "@swo/mp-api-model";
 import { Badge } from "@alga-psa/ui-kit";
 import { useSWOAgreement } from "@features/agreements";
+import { useParams } from "react-router";
 
 function StatusBadge({ status }: { status?: AgreementStatusType }) {
   if (!status) return <></>;
@@ -127,7 +128,8 @@ function Seller({ seller }: { seller: SellerQueryModel }) {
 }
 
 export function SoftwareOne() {
-  const { agreement, isPending } = useSWOAgreement("AGR-4258-9931-4515");
+  const { id } = useParams<{ id: string }>();
+  const { agreement, isPending } = useSWOAgreement(id!);
 
   if (isPending) return <></>;
   if (!agreement) return <div>Agreement not found</div>;
