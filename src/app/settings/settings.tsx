@@ -14,7 +14,7 @@ import {
 } from "@features/extension";
 import { Badge } from "@alga-psa/ui-kit";
 import { ActionItem, Actions } from "@ui/actions";
-import { Input, Textarea } from "@ui/forms";
+import { Input, Textarea } from "@ui/input";
 
 function StatusBadge({ status }: { status?: ExtensionStatus | "error" }) {
   if (!status) return <></>;

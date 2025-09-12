@@ -8,7 +8,7 @@ import { Badge } from "@alga-psa/ui-kit";
 import { Tabs } from "@ui/tabs";
 import { useEffect, useMemo, useState } from "react";
 import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
-import { Input, Textarea } from "@ui/forms";
+import { Input, Textarea } from "@ui/input";
 import {
   useAlgaAgreement,
   useAlgaAgreementSettingsMutation,
