@@ -9,12 +9,14 @@ import {
 import { Button } from "./button";
 import { ReactNode } from "react";
 import clsx from "clsx";
+import { EllipsisVertical } from "lucide-react";
 
 export const Actions = ({ children }: { children: ReactNode }) => {
   return (
     <Menu>
-      <MenuButton as={Button} variant="white">
-        Actions
+      <MenuButton as={Button} variant="white" className="gap-1 pl-3">
+        <EllipsisVertical className="size-4" />
+        <span>Actions</span>
       </MenuButton>
       <MenuItems
         anchor="bottom end"

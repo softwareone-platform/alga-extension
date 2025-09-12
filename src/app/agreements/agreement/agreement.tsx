@@ -215,6 +215,10 @@ function AgreementEditor({
               %
             </span>
           </div>
+
+          <label className="text-sm font-medium">Operations</label>
+          <div></div>
+
           <label className="text-sm font-medium self-start">Note</label>
           <Textarea
             value={editedSettings.note}
