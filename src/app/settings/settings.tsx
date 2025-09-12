@@ -213,7 +213,6 @@ function SettingsEditor({
 export function Settings() {
   const { error } = useAccount();
   const { details, isLoading } = useExtensionDetails();
-  const { saveDetails } = useExtensionDetailsMutation();
 
   const status = useMemo<ExtensionStatus | "error" | undefined>(
     () => (error ? "error" : details?.status),
@@ -221,15 +220,6 @@ export function Settings() {
   );
 
   const [isOpen, setIsOpen] = useState(false);
-
-  const handleSave = (details: ExtensionDetailsChanges) => {
-    saveDetails(details);
-    setIsOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsOpen(false);
-  };
 
   if (isLoading) return <></>;
 

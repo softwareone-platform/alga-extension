@@ -10,7 +10,7 @@ export const Icon = forwardRef<HTMLImageElement, IconProps>(
   ({ iconUrl, className, ...props }, ref) => {
     const { details } = useExtensionDetails();
 
-    if (!iconUrl) return <></>;
+    if (!iconUrl || !details) return <></>;
 
     const url = `${details.endpoint}${iconUrl.replace("v1/", "")}`.replace(
       /([^:])\/+/g,

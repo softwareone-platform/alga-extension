@@ -2,6 +2,7 @@ import {
   Listbox as HeadlessListbox,
   ListboxProps as HeadlessListboxProps,
   ListboxButton as HeadlessListboxButton,
+  ListboxButtonProps as HeadlessListboxButtonProps,
   ListboxOptions as HeadlessListboxOptions,
   ListboxOptionsProps as HeadlessListboxOptionsProps,
   ListboxOption as HeadlessListboxOption,
@@ -20,11 +21,14 @@ export type ListboxButtonProps = {
   children: ReactNode;
 };
 
-export const ListboxButton = ({ className, ...props }: ListboxButtonProps) => {
+export const ListboxButton = ({
+  className,
+  ...props
+}: HeadlessListboxButtonProps) => {
   return (
     <HeadlessListboxButton
       as={Button}
-      variant="white"
+      {...({ variant: "white" } as any)}
       className={clsx(className, "gap-1 pl-3")}
       {...props}
     />
