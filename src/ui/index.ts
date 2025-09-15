@@ -9,3 +9,4 @@ export * from "./audit";
 export * from "./input";
 export * from "./radio";
 export * from "./listbox";
+export * from "./table";
