@@ -6,7 +6,7 @@ import {
   SellerQueryModel,
 } from "@swo/mp-api-model";
 import { Badge } from "@alga-psa/ui-kit";
-import { useSWOAgreement } from "@features/swo-agreements";
+import { useSWOAgreement } from "@features/agreements";
 import { useParams } from "react-router";
 
 function StatusBadge({ status }: { status?: AgreementStatusType }) {

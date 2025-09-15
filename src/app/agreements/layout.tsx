@@ -1,6 +1,8 @@
 import { Outlet } from "react-router";
-import { SWOAgreementsProvider } from "@features/swo-agreements";
-import { AlgaAgreementsProvider } from "@features/alga-agreements";
+import {
+  SWOAgreementsProvider,
+  AlgaAgreementsProvider,
+} from "@features/agreements";
 import { useExtensionDetails } from "@features/extension";
 import { KVStorage } from "@lib/alga";
 

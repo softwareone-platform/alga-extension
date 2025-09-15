@@ -6,11 +6,13 @@ import { AgreementsOptions } from "@lib/swo";
 export const useSWOAgreements = (options?: AgreementsOptions) => {
   const { client: swoClient } = useContext(SWOAgreementsContext);
 
-  return useQuery({
+  const { data: agreements, ...state } = useQuery({
     queryKey: ["swo-agreements", options],
     queryFn: () => swoClient!.getAgreements(options),
     enabled: !!swoClient,
   });
+
+  return { agreements, ...state };
 };
 
 export const useSWOAgreement = (id: string) => {

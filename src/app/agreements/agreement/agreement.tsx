@@ -3,17 +3,15 @@ import { Button } from "@ui/button";
 import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
-import { AgreementStatus as SWOAgreementStatus } from "@swo/mp-api-model";
-import { Badge } from "@alga-psa/ui-kit";
 import { Tabs } from "@ui/tabs";
 import { useEffect, useMemo, useState } from "react";
 import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
 import { Input, Textarea } from "@ui/input";
-import { useSWOAgreement } from "@features/swo-agreements";
+import { useSWOAgreement, AgreementStatusBadge } from "@features/agreements";
 import {
   useAlgaAgreement,
   useAlgaAgreementSettingsMutation,
-} from "@features/alga-agreements";
+} from "@features/agreements/services/alga";
 import {
   AgreementChanges as AlgaAgreementChanges,
   Operations,
@@ -33,22 +31,6 @@ function AgreementActions() {
       <ActionItem>Edit</ActionItem>
     </Actions>
   );
-}
-
-function StatusBadge({ status }: { status?: SWOAgreementStatus }) {
-  if (!status) return <></>;
-
-  let tone: "danger" | "default" | "success" | "warning" = "default";
-
-  if (status === "Failed") tone = "danger";
-  if (status === "Draft") tone = "default";
-  if (status === "Provisioning") tone = "warning";
-  if (status === "Updating") tone = "warning";
-  if (status === "Active") tone = "success";
-  if (status === "Terminated") tone = "default";
-  if (status === "Deleted") tone = "default";
-
-  return <Badge tone={tone}>{status}</Badge>;
 }
 
 function AgreementSummary({ id }: { id: string }) {
@@ -319,7 +301,7 @@ export function Agreement() {
       <header className="w-full flex justify-between">
         <div className="flex items-center gap-6">
           <h1 className="text-3xl font-semibold">{name}</h1>
-          {!!status && <StatusBadge status={status} />}
+          {!!status && <AgreementStatusBadge status={status} />}
         </div>
         <div className="flex items-center gap-6">
           <Button onClick={() => setIsOpen(true)}>Edit</Button>

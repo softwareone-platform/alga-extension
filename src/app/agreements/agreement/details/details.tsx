@@ -1,5 +1,4 @@
-import { useSWOAgreement } from "@features/swo-agreements";
-import { useAlgaAgreement } from "@features/alga-agreements";
+import { useSWOAgreement, useAlgaAgreement } from "@features/agreements";
 import { Audit } from "@ui/audit";
 import { Card } from "@ui/card";
 import dayjs from "dayjs";
