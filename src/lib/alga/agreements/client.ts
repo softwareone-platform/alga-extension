@@ -18,6 +18,13 @@ export class AgreementsClient {
     );
   }
 
+  async getAgreements(ids: string[]): Promise<Agreement[]> {
+    // TODO: Temp
+    return await Promise.all(ids.map((id) => this.getAgreement(id))).then(
+      (agreements) => agreements.filter((agreement) => !!agreement)
+    );
+  }
+
   async saveAgreement(changes: AgreementChanges): Promise<Agreement> {
     const agreement = {
       ...changes,

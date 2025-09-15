@@ -3,8 +3,16 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlgaAgreementsContext } from "./context";
 import { AgreementChanges as AlgaAgreementChanges } from "@lib/alga";
 
-export const useAlgaAgreements = () => {
-  const { client: algaClient } = useContext(AlgaAgreementsContext);
+export const useAlgaAgreements = (ids: string[]) => {
+  const { client } = useContext(AlgaAgreementsContext);
+
+  const { data: agreements, ...state } = useQuery({
+    queryKey: ["alga-agreements", ids],
+    queryFn: () => client!.getAgreements(ids),
+    enabled: !!client,
+  });
+
+  return { agreements, ...state };
 };
 
 export const useAlgaAgreement = (id: string) => {
