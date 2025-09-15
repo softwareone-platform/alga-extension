@@ -38,9 +38,7 @@ const NameCell = ({
       <span className="row-span-2 justify-self-end">
         <AgreementStatusBadge status={status} />
       </span>
-      <span className="text-xs text-[rgb(var(--color-text-500))] truncate">
-        {id}
-      </span>
+      <span className="text-xs text-text-500 truncate">{id}</span>
     </TableCell>
   );
 };
