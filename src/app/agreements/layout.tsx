@@ -1,5 +1,6 @@
 import { Outlet } from "react-router";
-import { AgreementsProvider } from "@features/agreements";
+import { SWOAgreementsProvider } from "@features/swo-agreements";
+import { AlgaAgreementsProvider } from "@features/alga-agreements";
 import { useExtensionDetails } from "@features/extension";
 import { KVStorage } from "@lib/alga";
 
@@ -9,12 +10,10 @@ export function AgreementsLayout() {
   const { details } = useExtensionDetails();
 
   return (
-    <AgreementsProvider
-      kvStorage={kvStorage}
-      baseUrl={details?.endpoint}
-      token={details?.token}
-    >
-      <Outlet />
-    </AgreementsProvider>
+    <SWOAgreementsProvider baseUrl={details?.endpoint} token={details?.token}>
+      <AlgaAgreementsProvider kvStorage={kvStorage}>
+        <Outlet />
+      </AlgaAgreementsProvider>
+    </SWOAgreementsProvider>
   );
 }

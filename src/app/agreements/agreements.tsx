@@ -1,8 +1,8 @@
 import { Link } from "react-router";
-import { useAgreements } from "@features/agreements";
+import { useSWOAgreements } from "@features/swo-agreements";
 
 export function Agreements() {
-  const { data } = useAgreements();
+  const { data } = useSWOAgreements();
 
   return (
     <>

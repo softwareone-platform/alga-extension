@@ -1,5 +1,6 @@
 import { Card } from "@ui/card";
-import { useAlgaAgreement, useSWOAgreement } from "@features/agreements";
+import { useSWOAgreement } from "@features/swo-agreements";
+import { useAlgaAgreement } from "@features/alga-agreements";
 import { PlanService as AlgaPlanService } from "@lib/alga";
 import { Link } from "@ui/link";
 import { useParams } from "react-router";

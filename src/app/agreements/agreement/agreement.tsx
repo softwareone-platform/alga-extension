@@ -9,11 +9,11 @@ import { Tabs } from "@ui/tabs";
 import { useEffect, useMemo, useState } from "react";
 import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
 import { Input, Textarea } from "@ui/input";
+import { useSWOAgreement } from "@features/swo-agreements";
 import {
   useAlgaAgreement,
   useAlgaAgreementSettingsMutation,
-  useSWOAgreement,
-} from "@features/agreements";
+} from "@features/alga-agreements";
 import {
   AgreementChanges as AlgaAgreementChanges,
   Operations,
