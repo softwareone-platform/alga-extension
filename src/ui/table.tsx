@@ -1,5 +1,6 @@
 import { forwardRef, HTMLAttributes } from "react";
 import { clsx } from "clsx";
+import { useNavigate } from "react-router";
 
 export const Table = forwardRef<
   HTMLTableElement,
@@ -48,11 +49,26 @@ TableBody.displayName = "TableBody";
 export type TableRowProps = Omit<
   HTMLAttributes<HTMLTableRowElement>,
   "className"
->;
+> & {
+  link?: string;
+};
 
 export const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(
-  (props, ref) => {
-    return <tr className="contents" ref={ref} {...props} />;
+  ({ link, ...props }, ref) => {
+    const navigate = useNavigate();
+
+    return (
+      <tr
+        className={clsx("contents group", { "cursor-pointer": !!link })}
+        onClick={() => {
+          if (link) {
+            navigate(link);
+          }
+        }}
+        ref={ref}
+        {...props}
+      />
+    );
   }
 );
 
@@ -83,7 +99,7 @@ export const TableCell = forwardRef<
   return (
     <td
       className={clsx(
-        "border-b py-3 px-6 border-border-200 text-left text-sm text-dupa",
+        "border-b py-3 px-6 border-border-200 text-left text-sm text-text-700 group-hover:bg-primary-50",
         className
       )}
       ref={ref}

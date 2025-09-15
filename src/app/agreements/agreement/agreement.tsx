@@ -24,6 +24,7 @@ import {
   ListboxOption,
   ListboxOptions,
 } from "@ui/listbox";
+import { calculateRPxY } from "../utils";
 
 function AgreementActions() {
   return (
@@ -40,10 +41,10 @@ function AgreementSummary({ id }: { id: string }) {
     useAlgaAgreement(id);
 
   const RPxY = useMemo(() => {
-    if (!algaAgreement?.markup || !swoAgreement?.price?.SPxY) return undefined;
-
-    const val = swoAgreement?.price?.SPxY * (1 + algaAgreement?.markup / 100);
-    return (Math.round(val * 100) / 100).toFixed(2);
+    return calculateRPxY(
+      swoAgreement?.price?.SPxY || 0,
+      algaAgreement?.markup || 0
+    );
   }, [swoAgreement?.price?.SPxY, algaAgreement?.markup]);
 
   if (isSWOPending || isAlgaPending) return <div>Loading...</div>;
@@ -119,7 +120,7 @@ function AgreementSummary({ id }: { id: string }) {
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">RPxY</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">{RPxY || "—"}</span>
+          <span className="text-sm text-black">{RPxY}</span>
         </div>
       </div>
       <div className="flex flex-col gap-1">

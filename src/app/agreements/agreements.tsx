@@ -1,4 +1,3 @@
-import { Link, useNavigate } from "react-router";
 import {
   useSWOAgreements,
   useAlgaAgreements,
@@ -17,6 +16,7 @@ import {
   TableRow,
 } from "@ui/table";
 import { Icon } from "@ui/icon";
+import { calculateRPxY } from "./utils";
 
 const NameCell = ({
   name,
@@ -29,12 +29,9 @@ const NameCell = ({
 }) => {
   return (
     <TableCell className="grid grid-cols-[auto_auto] gap-y-0.5 gap-x-2 w-full">
-      <Link
-        to={`/agreements/${id}`}
-        className="text-sm text-blue-500 hover:text-blue-600 truncate"
-      >
+      <span className="text-sm text-blue-500 hover:text-blue-600 truncate">
         {name || "—"}
-      </Link>
+      </span>
       <span className="row-span-2 justify-self-end">
         <AgreementStatusBadge status={status} />
       </span>
@@ -64,18 +61,15 @@ export function Agreements() {
     (swoAgreements || []).map((agreement) => agreement.id!)
   );
 
-  const navigate = useNavigate();
-
-  const algaAgreementsById = useMemo(
-    () =>
-      algaAgreements?.reduce((acc, agreement) => {
-        acc[agreement.id!] = agreement;
-        return acc;
-      }, {} as Record<string, AlgaAgreement>),
-    [algaAgreements]
-  );
-
-  console.log(algaAgreementsById);
+  const algaAgreementsById =
+    useMemo(
+      () =>
+        algaAgreements?.reduce((acc, agreement) => {
+          acc[agreement.id!] = agreement;
+          return acc;
+        }, {} as Record<string, AlgaAgreement>),
+      [algaAgreements]
+    ) || {};
 
   return (
     <Card>
@@ -95,10 +89,7 @@ export function Agreements() {
         </TableHead>
         <TableBody>
           {swoAgreements?.map((agreement) => (
-            <TableRow
-              key={agreement.id}
-              onClick={() => navigate(`/agreements/${agreement.id}`)}
-            >
+            <TableRow key={agreement.id} link={`/agreements/${agreement.id}`}>
               <NameCell
                 name={agreement.name}
                 id={agreement.id!}
@@ -111,11 +102,29 @@ export function Agreements() {
               />
               <TableCell></TableCell>
               <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
+              <TableCell>{agreement.price?.SPxY || "—"}</TableCell>
+              <TableCell>
+                {algaAgreementsById[agreement.id!]?.markup
+                  ? `${algaAgreementsById[agreement.id!]?.markup}%`
+                  : "—"}
+              </TableCell>
+              <TableCell>
+                {calculateRPxY(
+                  agreement.price?.SPxY || 0,
+                  algaAgreementsById[agreement.id!]?.markup || 0
+                )}
+              </TableCell>
+              <TableCell>
+                {algaAgreementsById[agreement.id!]?.operations == "managed" && (
+                  <span>Managed</span>
+                )}
+                {algaAgreementsById[agreement.id!]?.operations ==
+                  "self-service" && <span>Self-service</span>}
+                {!algaAgreementsById[agreement.id!]?.operations && (
+                  <span>—</span>
+                )}
+              </TableCell>
+              <TableCell>{agreement.price?.currency || "—"}</TableCell>
             </TableRow>
           ))}
         </TableBody>
