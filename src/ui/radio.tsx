@@ -34,7 +34,7 @@ export const Radio = forwardRef<HTMLDivElement, RadioProps>(
         <HeadlessRadio
           ref={ref}
           value={value}
-          className="group flex size-4 items-center justify-center rounded-full border-0 outline-2 -outline-offset-2 outline-gray-400 bg-white data-checked:bg-[rgb(var(--color-primary-600))] data-checked:outline-[rgb(var(--color-primary-600))] cursor-pointer"
+          className="group flex size-4 items-center justify-center rounded-full border-0 outline-2 -outline-offset-2 outline-border-400 bg-white data-checked:bg-primary-600 data-checked:outline-primary-600 cursor-pointer"
           {...props}
         >
           <span className="invisible size-[6px] rounded-full bg-white group-data-checked:visible" />

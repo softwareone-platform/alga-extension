@@ -14,7 +14,7 @@ export const Input = forwardRef<HTMLInputElement, HeadlessInputProps>(
         ref={ref}
         className={clsx(
           className,
-          "w-full px-3 py-2 rounded-lg text-sm border border-gray-300 focus:outline-2 focus:-outline-offset-1 focus:outline-[rgb(var(--color-primary-600))]"
+          "w-full px-3 py-2 rounded-lg text-sm border border-border-300 focus:outline-2 focus:-outline-offset-1 focus:outline-primary-600"
         )}
         {...props}
       />
@@ -31,7 +31,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, HeadlessTextareaProps>(
         ref={ref}
         className={clsx(
           className,
-          "w-full px-3 py-2 rounded-lg text-sm border border-gray-300 focus:outline-2 focus:-outline-offset-1 focus:outline-[rgb(var(--color-primary-600))]"
+          "w-full px-3 py-2 rounded-lg text-sm border border-border-300 focus:outline-2 focus:-outline-offset-1 focus:outline-primary-600"
         )}
         {...props}
       />

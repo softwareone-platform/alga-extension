@@ -1,4 +1,4 @@
-import { forwardRef, HTMLAttributes, ReactNode } from "react";
+import { forwardRef, HTMLAttributes } from "react";
 import { clsx } from "clsx";
 
 export const Table = forwardRef<
@@ -10,7 +10,7 @@ export const Table = forwardRef<
       ref={ref}
       className={clsx(
         className,
-        "w-full grid border border-gray-200 rounded-md"
+        "w-full grid border border-border-200 rounded-md"
       )}
       {...props}
     />
@@ -65,7 +65,7 @@ export const TableHeadCell = forwardRef<
   return (
     <th
       className={clsx(
-        "border-b py-3 px-6 border-gray-200 text-left text-xs font-medium tracking-wider",
+        "border-b py-3 px-6 border-border-200 text-left text-xs font-medium tracking-wider",
         className
       )}
       ref={ref}
@@ -83,7 +83,7 @@ export const TableCell = forwardRef<
   return (
     <td
       className={clsx(
-        "border-b py-3 px-6 border-gray-200 text-left text-sm text-dupa",
+        "border-b py-3 px-6 border-border-200 text-left text-sm text-dupa",
         className
       )}
       ref={ref}

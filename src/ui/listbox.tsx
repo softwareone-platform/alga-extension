@@ -32,7 +32,7 @@ export const ListboxButton = ({
       {...({ variant: "white" } as any)}
       className={clsx(
         className,
-        "w-full px-3 py-2 rounded-lg text-sm border border-gray-300 focus-within:outline-2 focus-within:-outline-offset-1 focus-within:outline-[rgb(var(--color-primary-600))] flex justify-between items-center cursor-pointer hover:bg-[rgb(var(--color-primary-50))] hover:text-[rgb(var(--color-primary-700))]"
+        "w-full px-3 py-2 rounded-lg text-sm border border-border-300 focus-within:outline-2 focus-within:-outline-offset-1 focus-within:outline-primary-600 flex justify-between items-center cursor-pointer hover:bg-primary-50 hover:text-primary-700"
       )}
       {...props}
     >
@@ -50,7 +50,7 @@ export const ListboxOptions = ({
     <HeadlessListboxOptions
       className={clsx(
         className,
-        "bg-white border border-gray-200 rounded-lg p-1 outline-0 mt-1 text-sm shadow-xl absolute min-w-(--button-width) z-10"
+        "bg-white border border-border-200 rounded-lg p-1 outline-0 mt-1 text-sm shadow-xl absolute min-w-(--button-width) z-10"
       )}
       {...props}
     />

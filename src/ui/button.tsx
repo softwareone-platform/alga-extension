@@ -17,11 +17,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <HeadlessButton
         ref={ref}
         className={clsx(
-          "flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-[rgb(var(--color-primary-600))] disabled:pointer-events-none disabled:opacity-50 ring-offset-background relative h-10 py-2 px-4 group cursor-pointer",
+          "flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-primary-600 disabled:pointer-events-none disabled:opacity-50 ring-offset-background relative h-10 py-2 px-4 group cursor-pointer",
           {
-            "bg-[rgb(var(--color-primary-500))] text-white hover:bg-[rgb(var(--color-primary-600))]":
+            "bg-primary-500 text-white hover:bg-primary-600":
               variant === "primary",
-            "border border-[rgb(var(--color-border-400))] bg-white text-[rgb(var(--color-text-700))] hover:bg-[rgb(var(--color-primary-50))] hover:text-[rgb(var(--color-primary-700))]":
+            "border border-border-400 bg-white text-text-700 hover:bg-primary-50 hover:text-primary-700":
               variant === "white",
           },
           className
