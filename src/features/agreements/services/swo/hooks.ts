@@ -26,3 +26,15 @@ export const useSWOAgreement = (id: string) => {
 
   return { agreement, ...state };
 };
+
+export const useSWOAgreementSubscriptions = (agreementId: string) => {
+  const { client: swoClient } = useContext(SWOAgreementsContext);
+
+  const { data: subscriptions, ...state } = useQuery({
+    queryKey: ["swo-agreements", agreementId, "subscriptions"],
+    queryFn: () => swoClient!.getSubscriptions(agreementId),
+    enabled: !!swoClient,
+  });
+
+  return { subscriptions, ...state };
+};

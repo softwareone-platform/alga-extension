@@ -110,8 +110,8 @@ export function Agreements() {
               </TableCell>
               <TableCell>
                 {calculateRPxY(
-                  agreement.price?.SPxY || 0,
-                  algaAgreementsById[agreement.id!]?.markup || 0
+                  agreement.price?.SPxY,
+                  algaAgreementsById[agreement.id!]?.markup
                 )}
               </TableCell>
               <TableCell>

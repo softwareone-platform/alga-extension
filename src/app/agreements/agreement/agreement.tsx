@@ -40,12 +40,10 @@ function AgreementSummary({ id }: { id: string }) {
   const { agreement: algaAgreement, isPending: isAlgaPending } =
     useAlgaAgreement(id);
 
-  const RPxY = useMemo(() => {
-    return calculateRPxY(
-      swoAgreement?.price?.SPxY || 0,
-      algaAgreement?.markup || 0
-    );
-  }, [swoAgreement?.price?.SPxY, algaAgreement?.markup]);
+  const RPxY = useMemo(
+    () => calculateRPxY(swoAgreement?.price?.SPxY, algaAgreement?.markup),
+    [swoAgreement?.price?.SPxY, algaAgreement?.markup]
+  );
 
   if (isSWOPending || isAlgaPending) return <div>Loading...</div>;
 

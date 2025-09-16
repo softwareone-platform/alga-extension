@@ -1,4 +1,10 @@
-export const calculateRPxY = (SPxY: number = 0, markup: number = 0) => {
+export const calculateRPxY = (
+  SPxY: number | null | undefined,
+  markup: number | null | undefined
+) => {
+  if (SPxY === undefined || SPxY === null) return "—";
+  if (markup === undefined || markup === null) return "—";
+
   const val = SPxY * (1 + markup / 100);
-  return val ? (Math.round(val * 100) / 100).toFixed(2) : "—";
+  return (Math.round(val * 100) / 100).toFixed(2);
 };
