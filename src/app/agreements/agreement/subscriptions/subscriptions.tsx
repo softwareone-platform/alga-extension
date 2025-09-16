@@ -13,15 +13,12 @@ import {
   TableHeadCell,
   TableRow,
 } from "@ui/table";
-import { calculateRPxY } from "../../utils";
 import { Link } from "@ui/link";
 import { useMemo } from "react";
+import { TermsEntity } from "@swo/mp-api-model";
+import { RPxYCell } from "@features/rpxy";
 
-const PeriodCell = ({
-  period,
-}: {
-  period: "1m" | "1y" | "one-time" | null | undefined;
-}) => {
+const PeriodCell = ({ period }: { period: TermsEntity["period"] }) => {
   const text = useMemo(() => {
     if (period === "1m") return "Monthly";
     if (period === "1y") return "Yearly";
@@ -35,7 +32,7 @@ const PeriodCell = ({
 const CommitmentCell = ({
   commitment,
 }: {
-  commitment: "1m" | "1y" | "3y" | null | undefined;
+  commitment: TermsEntity["commitment"];
 }) => {
   const text = useMemo(() => {
     if (commitment === "1m") return "1 month";
@@ -51,8 +48,6 @@ export function Subscriptions() {
   const { id } = useParams<{ id: string }>();
   const { subscriptions } = useSWOAgreementSubscriptions(id!);
   const { agreement: algaAgreement } = useAlgaAgreement(id!);
-
-  console.log(subscriptions, algaAgreement?.markup);
 
   if (!subscriptions) return <>Loading...</>;
 
@@ -91,12 +86,14 @@ export function Subscriptions() {
               </TableCell>
               <TableCell>{subscription.price?.SPxM || "—"}</TableCell>
               <TableCell>{subscription.price?.SPxY || "—"}</TableCell>
-              <TableCell>
-                {calculateRPxY(subscription.price?.SPxM, algaAgreement?.markup)}
-              </TableCell>
-              <TableCell>
-                {calculateRPxY(subscription.price?.SPxY, algaAgreement?.markup)}
-              </TableCell>
+              <RPxYCell
+                SPxY={subscription.price?.SPxM}
+                markup={algaAgreement?.markup}
+              />
+              <RPxYCell
+                SPxY={subscription.price?.SPxY}
+                markup={algaAgreement?.markup}
+              />
               <PeriodCell period={subscription.terms?.period} />
               <CommitmentCell commitment={subscription.terms?.commitment} />
               <TableCell>{subscription.price?.currency || "—"}</TableCell>

@@ -24,7 +24,7 @@ import {
   ListboxOption,
   ListboxOptions,
 } from "@ui/listbox";
-import { calculateRPxY } from "../utils";
+import { calculateRPxY } from "@features/rpxy";
 
 function AgreementActions() {
   return (

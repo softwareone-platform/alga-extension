@@ -16,7 +16,7 @@ import {
   TableRow,
 } from "@ui/table";
 import { Icon } from "@ui/icon";
-import { calculateRPxY } from "./utils";
+import { RPxYCell } from "@features/rpxy";
 
 const NameCell = ({
   name,
@@ -108,12 +108,10 @@ export function Agreements() {
                   ? `${algaAgreementsById[agreement.id!]?.markup}%`
                   : "—"}
               </TableCell>
-              <TableCell>
-                {calculateRPxY(
-                  agreement.price?.SPxY,
-                  algaAgreementsById[agreement.id!]?.markup
-                )}
-              </TableCell>
+              <RPxYCell
+                SPxY={agreement.price?.SPxY}
+                markup={algaAgreementsById[agreement.id!]?.markup}
+              />
               <TableCell>
                 {algaAgreementsById[agreement.id!]?.operations == "managed" && (
                   <span>Managed</span>
