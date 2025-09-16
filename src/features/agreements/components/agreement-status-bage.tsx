@@ -6,7 +6,7 @@ export const AgreementStatusBadge = ({
 }: {
   status?: AgreementStatus;
 }) => {
-  if (!status) return <></>;
+  if (!status) return <span>—</span>;
 
   let tone: "danger" | "default" | "success" | "warning" = "default";
 

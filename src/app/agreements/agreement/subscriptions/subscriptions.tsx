@@ -15,6 +15,37 @@ import {
 } from "@ui/table";
 import { calculateRPxY } from "../../utils";
 import { Link } from "@ui/link";
+import { useMemo } from "react";
+
+const PeriodCell = ({
+  period,
+}: {
+  period: "1m" | "1y" | "one-time" | null | undefined;
+}) => {
+  const text = useMemo(() => {
+    if (period === "1m") return "Monthly";
+    if (period === "1y") return "Yearly";
+    if (period === "one-time") return "One-time";
+    return "—";
+  }, [period]);
+
+  return <TableCell>{text}</TableCell>;
+};
+
+const CommitmentCell = ({
+  commitment,
+}: {
+  commitment: "1m" | "1y" | "3y" | null | undefined;
+}) => {
+  const text = useMemo(() => {
+    if (commitment === "1m") return "1 month";
+    if (commitment === "1y") return "1 year";
+    if (commitment === "3y") return "3 years";
+    return "—";
+  }, [commitment]);
+
+  return <TableCell>{text}</TableCell>;
+};
 
 export function Subscriptions() {
   const { id } = useParams<{ id: string }>();
@@ -58,17 +89,17 @@ export function Subscriptions() {
                   {subscription.id}
                 </span>
               </TableCell>
-              <TableCell>{subscription.price?.SPxM}</TableCell>
-              <TableCell>{subscription.price?.SPxY}</TableCell>
+              <TableCell>{subscription.price?.SPxM || "—"}</TableCell>
+              <TableCell>{subscription.price?.SPxY || "—"}</TableCell>
               <TableCell>
                 {calculateRPxY(subscription.price?.SPxM, algaAgreement?.markup)}
               </TableCell>
               <TableCell>
                 {calculateRPxY(subscription.price?.SPxY, algaAgreement?.markup)}
               </TableCell>
-              <TableCell>{subscription.terms?.period}</TableCell>
-              <TableCell>{subscription.terms?.commitment}</TableCell>
-              <TableCell>{subscription.price?.currency}</TableCell>
+              <PeriodCell period={subscription.terms?.period} />
+              <CommitmentCell commitment={subscription.terms?.commitment} />
+              <TableCell>{subscription.price?.currency || "—"}</TableCell>
               <TableCell>
                 <SubscriptionStatusBadge status={subscription.status} />
               </TableCell>
