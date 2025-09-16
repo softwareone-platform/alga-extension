@@ -14,22 +14,31 @@ import {
   TableRow,
 } from "@ui/table";
 import { Link } from "@ui/link";
-import { useMemo } from "react";
 import { RPxYCell } from "@features/rpxy";
+import { useMemo } from "react";
+import dayjs from "dayjs";
 
 const CreatedCell = ({
-  commitment,
+  createdAt,
 }: {
-  commitment: "1m" | "1y" | "3y" | null | undefined;
+  createdAt: string | null | undefined;
 }) => {
-  const text = useMemo(() => {
-    if (commitment === "1m") return "1 month";
-    if (commitment === "1y") return "1 year";
-    if (commitment === "3y") return "3 years";
-    return "—";
-  }, [commitment]);
+  if (!createdAt) return <TableCell>—</TableCell>;
 
-  return <TableCell>{text}</TableCell>;
+  const date = useMemo(() => {
+    return dayjs(createdAt).format("MM/DD/YYYY");
+  }, [createdAt]);
+
+  const time = useMemo(() => {
+    return dayjs(createdAt).format("HH:mm");
+  }, [createdAt]);
+
+  return (
+    <TableCell className="flex flex-col gap-0.5 items-start">
+      <span>{date}</span>
+      <span className="text-xs text-text-500">{time}</span>
+    </TableCell>
+  );
 };
 
 export function Orders() {
@@ -45,13 +54,12 @@ export function Orders() {
 
   return (
     <Card>
-      <Table className="grid-cols-[auto_auto_auto_auto_auto_auto_auto_auto_auto_auto_auto]">
+      <Table className="grid-cols-[auto_auto_auto_auto_auto_auto_auto_auto_auto_auto]">
         <TableHead>
           <TableRow>
             <TableHeadCell>Name</TableHeadCell>
             <TableHeadCell>Type</TableHeadCell>
             <TableHeadCell>Agreement</TableHeadCell>
-            <TableHeadCell>Product</TableHeadCell>
             <TableHeadCell>Customer</TableHeadCell>
             <TableHeadCell>SPxY</TableHeadCell>
             <TableHeadCell>Markup</TableHeadCell>
@@ -64,7 +72,7 @@ export function Orders() {
         <TableBody>
           {orders?.map((order) => (
             <TableRow key={order.id}>
-              <TableCell className="flex flex-col gap-0.5 items-start">
+              <TableCell>
                 <Link
                   className="truncate"
                   href={`/agreements/${id}/orders/${order.id}`}
@@ -75,16 +83,17 @@ export function Orders() {
               </TableCell>
               <TableCell>{order.type || "—"}</TableCell>
               <TableCell>AGREEMENT</TableCell>
-              <TableCell>PRODUCT</TableCell>
               <TableCell>CONSUMER</TableCell>
               <TableCell>{order.price?.SPxY || "—"}</TableCell>
-              <TableCell>{algaAgreement?.markup || "—"}</TableCell>
+              <TableCell>
+                {algaAgreement?.markup ? `${algaAgreement.markup}%` : "—"}
+              </TableCell>
               <RPxYCell
                 SPxY={order.price?.SPxY}
                 markup={algaAgreement?.markup}
               />
               <TableCell>{order.price?.currency || "—"}</TableCell>
-              <TableCell>CREATED</TableCell>
+              <CreatedCell createdAt={order.audit?.created?.at} />
               <TableCell>
                 <OrderStatusBadge status={order.status} />
               </TableCell>
