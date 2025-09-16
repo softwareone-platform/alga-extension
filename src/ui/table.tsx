@@ -99,7 +99,7 @@ export const TableCell = forwardRef<
   return (
     <td
       className={clsx(
-        "border-b py-3 px-6 border-border-200 text-left text-sm text-text-700 group-hover:bg-primary-50",
+        "border-b py-3 px-6 border-border-200 text-left text-sm text-text-700 group-hover:bg-primary-50 flex items-center",
         className
       )}
       ref={ref}

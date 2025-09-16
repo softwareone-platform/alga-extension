@@ -48,7 +48,7 @@ const ProductCell = ({
   iconUrl?: string;
 }) => {
   return (
-    <TableCell className="flex gap-4 w-full items-center">
+    <TableCell className="gap-4 w-full items-center">
       <Icon iconUrl={iconUrl} alt={name} className="size-8" />
       <span className="truncate">{name || "—"}</span>
     </TableCell>
@@ -73,7 +73,7 @@ export function Agreements() {
 
   return (
     <Card>
-      <Table className="grid-cols-[1fr_1fr_1fr_160px_100px_100px_100px_120px_100px]">
+      <Table className="grid-cols-[minmax(192px,auto)_minmax(192px,auto)_minmax(150px,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)]">
         <TableHead>
           <TableRow>
             <TableHeadCell>Name</TableHeadCell>
