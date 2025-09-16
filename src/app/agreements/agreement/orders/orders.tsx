@@ -46,8 +46,6 @@ export function Orders() {
   const { orders } = useSWOAgreementOrders(id!);
   const { agreement: algaAgreement } = useAlgaAgreement(id!);
 
-  console.log(orders, algaAgreement?.markup);
-
   if (!orders) return <>Loading...</>;
 
   if (orders.length === 0) return <>No Orders found.</>;
