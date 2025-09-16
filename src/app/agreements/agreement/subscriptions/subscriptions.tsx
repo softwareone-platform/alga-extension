@@ -1,5 +1,6 @@
 import { Card } from "@ui/card";
 import {
+  SubscriptionStatusBadge,
   useAlgaAgreement,
   useSWOAgreementSubscriptions,
 } from "@features/agreements";
@@ -13,6 +14,7 @@ import {
   TableRow,
 } from "@ui/table";
 import { calculateRPxY } from "../../utils";
+import { Link } from "@ui/link";
 
 export function Subscriptions() {
   const { id } = useParams<{ id: string }>();
@@ -44,7 +46,18 @@ export function Subscriptions() {
         <TableBody>
           {subscriptions?.map((subscription) => (
             <TableRow key={subscription.id}>
-              <TableCell>{subscription.name}</TableCell>
+              <TableCell className="flex flex-col gap-0.5 items-start">
+                <Link
+                  className="truncate"
+                  href={`/agreements/${id}/subscriptions/${subscription.id}`}
+                  target="_blank"
+                >
+                  {subscription.name}
+                </Link>
+                <span className="text-xs text-text-500 truncate">
+                  {subscription.id}
+                </span>
+              </TableCell>
               <TableCell>{subscription.price?.SPxM}</TableCell>
               <TableCell>{subscription.price?.SPxY}</TableCell>
               <TableCell>
@@ -56,7 +69,9 @@ export function Subscriptions() {
               <TableCell>{subscription.terms?.period}</TableCell>
               <TableCell>{subscription.terms?.commitment}</TableCell>
               <TableCell>{subscription.price?.currency}</TableCell>
-              <TableCell>{subscription.status}</TableCell>
+              <TableCell>
+                <SubscriptionStatusBadge status={subscription.status} />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
