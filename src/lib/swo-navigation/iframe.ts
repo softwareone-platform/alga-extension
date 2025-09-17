@@ -4,6 +4,7 @@ import {
   PushNavigationMessage,
   ReplaceNavigationMessage,
 } from "./messages";
+import { toAbsoluteUrl } from "./utils";
 
 export const runIFrame = (
   hostWindow: Window,
@@ -24,6 +25,9 @@ export const runIFrame = (
       console.log("message received in iframe", event.data);
       const { args } = event.data;
 
+      if (args[2] && toAbsoluteUrl(args[2]) === iframeWindow.location.href)
+        return;
+
       console.log("replacing state in iframe", args);
       replaceStateFn?.(...args) || orginalReplaceState(...args);
     }
@@ -31,7 +35,7 @@ export const runIFrame = (
 
   iframeWindow.addEventListener("message", listener);
 
-  iframeWindow.history.replaceState = (...args) =>
+  iframeWindow.history.replaceState = (...args) => {
     hostWindow.postMessage(
       {
         type: "swo:navigation:replace",
@@ -39,8 +43,10 @@ export const runIFrame = (
       } satisfies ReplaceNavigationMessage,
       "*"
     );
+    orginalReplaceState(...args);
+  };
 
-  iframeWindow.history.pushState = (...args) =>
+  iframeWindow.history.pushState = (...args) => {
     hostWindow.postMessage(
       {
         type: "swo:navigation:push",
@@ -48,6 +54,8 @@ export const runIFrame = (
       } satisfies PushNavigationMessage,
       "*"
     );
+    orginalReplaceState(...args);
+  };
 
   return () => {
     iframeWindow.removeEventListener("message", listener);

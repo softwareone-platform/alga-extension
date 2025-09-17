@@ -26,7 +26,10 @@ export function App() {
     if (window.top === window || !window.top || isReady.current) return;
     isReady.current = true;
 
-    runIFrame(window.top, window);
+    runIFrame(window.top, window, (...args) => {
+      navigate(args[2]!, { replace: true });
+      console.log("navigated to: ", args[2]);
+    });
   }, []);
 
   useEffect(() => {
