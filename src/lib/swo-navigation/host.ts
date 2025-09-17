@@ -1,17 +1,16 @@
 import { isUrlChangedMessage } from "./messages";
-import { toRelativeUrl } from "./utils";
 
-export const runHost = (hostWindow: Window, iframeWindow: Window) => {
-  const basePath = toRelativeUrl(hostWindow.location.href);
-  console.log("running host", basePath);
+export const runHost = (
+  hostWindow: Window,
+  setUrl: (relativeUrl: string) => void
+) => {
+  console.log("running host");
 
   const handleMessage = (event: MessageEvent) => {
     if (!isUrlChangedMessage(event.data)) return;
     const { relativeUrl } = event.data;
 
-    console.log("message received in host", relativeUrl);
-
-    hostWindow.history.replaceState(null, "", `${basePath}${relativeUrl}`);
+    setUrl(relativeUrl);
   };
 
   hostWindow.addEventListener("message", handleMessage);
