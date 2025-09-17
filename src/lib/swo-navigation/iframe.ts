@@ -22,19 +22,21 @@ export const runIFrame = (hostWindow: Window, iframeWindow: Window) => {
     }
   });
 
-  iframeWindow.history.replaceState = (...args) => {
-    const message: ReplaceNavigationMessage = {
-      type: "swo:navigation:replace",
-      data: { data: args[0], unused: args[1], url: args[2] },
-    };
-    hostWindow.postMessage(message, "*");
-  };
+  iframeWindow.history.replaceState = (...args) =>
+    hostWindow.postMessage(
+      {
+        type: "swo:navigation:replace",
+        data: { data: args[0], unused: args[1], url: args[2] },
+      } satisfies ReplaceNavigationMessage,
+      "*"
+    );
 
-  iframeWindow.history.pushState = (...args) => {
-    const message: PushNavigationMessage = {
-      type: "swo:navigation:push",
-      data: { data: args[0], unused: args[1], url: args[2] },
-    };
-    hostWindow.postMessage(message, "*");
-  };
+  iframeWindow.history.pushState = (...args) =>
+    hostWindow.postMessage(
+      {
+        type: "swo:navigation:push",
+        data: { data: args[0], unused: args[1], url: args[2] },
+      } satisfies PushNavigationMessage,
+      "*"
+    );
 };

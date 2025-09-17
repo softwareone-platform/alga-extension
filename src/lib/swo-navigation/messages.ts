@@ -29,3 +29,11 @@ export const isPushNavigationMessage = (
 ): message is PushNavigationMessage => {
   return message.type === "swo:navigation:push";
 };
+
+export const isNavigationMessage = (
+  message: NavigationMessage
+): message is NavigationMessage => {
+  return (
+    isReplaceNavigationMessage(message) || isPushNavigationMessage(message)
+  );
+};
