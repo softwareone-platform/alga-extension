@@ -1,37 +1,23 @@
-import {
-  isNavigationMessage,
-  isPushNavigationMessage,
-  isReplaceNavigationMessage,
-  ReplaceNavigationMessage,
-} from "./messages";
+import { isUrlChangedMessage } from "./messages";
+import { toRelativeUrl } from "./utils";
 
 export const runHost = (hostWindow: Window, iframeWindow: Window) => {
-  console.log("running host");
-  const listener = (event: MessageEvent) => {
-    if (!isNavigationMessage(event.data)) return;
+  const basePath = toRelativeUrl(hostWindow.location.href);
+  console.log("running host", basePath);
 
-    console.log("message received in host", event.data);
-    const { args } = event.data;
+  const handleMessage = (event: MessageEvent) => {
+    if (!isUrlChangedMessage(event.data)) return;
+    const { relativeUrl } = event.data;
 
-    if (isReplaceNavigationMessage(event.data))
-      hostWindow.history.replaceState(...args);
+    console.log("message received in host", relativeUrl);
 
-    if (isPushNavigationMessage(event.data))
-      hostWindow.history.replaceState(...args);
-
-    iframeWindow.postMessage(
-      {
-        type: "swo:navigation:replace",
-        args,
-      } satisfies ReplaceNavigationMessage,
-      "*"
-    );
+    hostWindow.history.replaceState(null, "", `${basePath}${relativeUrl}`);
   };
 
-  hostWindow.addEventListener("message", listener);
+  hostWindow.addEventListener("message", handleMessage);
 
   return () => {
-    hostWindow.removeEventListener("message", listener);
+    hostWindow.removeEventListener("message", handleMessage);
     console.log("host teardown");
   };
 };
