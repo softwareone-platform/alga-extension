@@ -5,22 +5,19 @@ import {
 } from "./messages";
 
 export const runIFrame = (hostWindow: Window, iframeWindow: Window) => {
-  if (hostWindow === iframeWindow) {
-    console.log("Not in iFrame. Skipping...");
-    return;
-  }
-
   const orginalReplaceState = iframeWindow.history.replaceState.bind(
     iframeWindow.history
   );
 
-  iframeWindow.addEventListener("message", (event) => {
+  const listener = (event: MessageEvent) => {
     console.log("message received in iframe", event.data);
     if (isReplaceNavigationMessage(event.data)) {
       const { data, unused, url } = event.data.data;
       orginalReplaceState(data, unused, url);
     }
-  });
+  };
+
+  iframeWindow.addEventListener("message", listener);
 
   iframeWindow.history.replaceState = (...args) =>
     hostWindow.postMessage(
@@ -39,4 +36,9 @@ export const runIFrame = (hostWindow: Window, iframeWindow: Window) => {
       } satisfies PushNavigationMessage,
       "*"
     );
+
+  return () => {
+    iframeWindow.removeEventListener("message", listener);
+    iframeWindow.history.replaceState = orginalReplaceState;
+  };
 };

@@ -6,8 +6,7 @@ import {
 } from "./messages";
 
 export const runHost = (hostWindow: Window, iframeWindow: Window) => {
-  console.log("attached");
-  hostWindow.onmessage = (event) => {
+  const listener = (event: MessageEvent) => {
     console.log("message received in host", event);
 
     if (!isNavigationMessage(event.data)) return;
@@ -28,4 +27,8 @@ export const runHost = (hostWindow: Window, iframeWindow: Window) => {
       "*"
     );
   };
+
+  hostWindow.addEventListener("message", listener);
+
+  return () => hostWindow.removeEventListener("message", listener);
 };
