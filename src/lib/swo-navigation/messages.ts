@@ -1,17 +1,17 @@
-export type NavigationMessageData = {
-  data: any;
-  unused: string;
-  url?: string | URL | null;
-};
+export type NavigationArgs = [
+  data: any,
+  unused: string,
+  url?: string | URL | null | undefined
+];
 
 export type ReplaceNavigationMessage = {
   type: "swo:navigation:replace";
-  data: NavigationMessageData;
+  args: NavigationArgs;
 };
 
 export type PushNavigationMessage = {
   type: "swo:navigation:push";
-  data: NavigationMessageData;
+  args: NavigationArgs;
 };
 
 export type NavigationMessage =

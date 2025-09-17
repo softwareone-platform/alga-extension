@@ -14,29 +14,28 @@ import { Settings, General, Details } from "./settings";
 import { AccountProvider } from "@features/account";
 import { useExtensionDetails } from "@features/extension";
 import { UserProvider } from "@features/user";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { runIFrame } from "@lib/swo-navigation";
 
 export function App() {
   const { details, isPending } = useExtensionDetails();
   const navigate = useNavigate();
-
-  const [isReady, setIsReady] = useState(false);
+  const isReady = useRef(false);
 
   useEffect(() => {
-    if (isReady || window.top === window || !window.top) return;
+    if (window.top === window || !window.top || isReady.current) return;
+    isReady.current = true;
 
     runIFrame(window.top, window);
-    setIsReady(true);
   }, []);
 
   useEffect(() => {
-    if (isPending || !isReady) return;
+    if (isPending) return;
     if (!details?.token || !details?.endpoint)
       navigate("/settings/general", { replace: true });
   }, [details]);
 
-  if (isPending || !isReady) return <></>;
+  if (isPending) return <></>;
 
   return (
     <AccountProvider baseUrl={details?.endpoint} token={details?.token}>

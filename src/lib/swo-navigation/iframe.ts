@@ -1,19 +1,31 @@
 import {
+  NavigationArgs,
   isReplaceNavigationMessage,
   PushNavigationMessage,
   ReplaceNavigationMessage,
 } from "./messages";
 
-export const runIFrame = (hostWindow: Window, iframeWindow: Window) => {
+export const runIFrame = (
+  hostWindow: Window,
+  iframeWindow: Window,
+  replaceStateFn?: (...args: NavigationArgs) => void
+) => {
+  console.log("running iframe");
   const orginalReplaceState = iframeWindow.history.replaceState.bind(
     iframeWindow.history
   );
 
+  const orginalPushState = iframeWindow.history.pushState.bind(
+    iframeWindow.history
+  );
+
   const listener = (event: MessageEvent) => {
-    console.log("message received in iframe", event.data);
     if (isReplaceNavigationMessage(event.data)) {
-      const { data, unused, url } = event.data.data;
-      orginalReplaceState(data, unused, url);
+      console.log("message received in iframe", event.data);
+      const { args } = event.data;
+
+      console.log("replacing state in iframe", args);
+      replaceStateFn?.(...args) || orginalReplaceState(...args);
     }
   };
 
@@ -23,7 +35,7 @@ export const runIFrame = (hostWindow: Window, iframeWindow: Window) => {
     hostWindow.postMessage(
       {
         type: "swo:navigation:replace",
-        data: { data: args[0], unused: args[1], url: args[2] },
+        args,
       } satisfies ReplaceNavigationMessage,
       "*"
     );
@@ -32,7 +44,7 @@ export const runIFrame = (hostWindow: Window, iframeWindow: Window) => {
     hostWindow.postMessage(
       {
         type: "swo:navigation:push",
-        data: { data: args[0], unused: args[1], url: args[2] },
+        args,
       } satisfies PushNavigationMessage,
       "*"
     );
@@ -40,5 +52,7 @@ export const runIFrame = (hostWindow: Window, iframeWindow: Window) => {
   return () => {
     iframeWindow.removeEventListener("message", listener);
     iframeWindow.history.replaceState = orginalReplaceState;
+    iframeWindow.history.pushState = orginalPushState;
+    console.log("iframe teardown");
   };
 };
