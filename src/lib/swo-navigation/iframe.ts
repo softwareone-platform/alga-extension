@@ -29,7 +29,7 @@ export const runIFrame = (
         return;
 
       console.log("replacing state in iframe", args);
-      replaceStateFn?.(...args) || orginalReplaceState(...args);
+      orginalReplaceState(...args);
     }
   };
 
@@ -43,10 +43,9 @@ export const runIFrame = (
       } satisfies ReplaceNavigationMessage,
       "*"
     );
-    orginalReplaceState(...args);
   };
 
-  iframeWindow.history.pushState = (...args) => {
+  iframeWindow.history.pushState = (...args) =>
     hostWindow.postMessage(
       {
         type: "swo:navigation:push",
@@ -54,8 +53,6 @@ export const runIFrame = (
       } satisfies PushNavigationMessage,
       "*"
     );
-    orginalReplaceState(...args);
-  };
 
   return () => {
     iframeWindow.removeEventListener("message", listener);

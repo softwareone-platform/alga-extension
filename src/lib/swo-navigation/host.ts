@@ -8,17 +8,16 @@ import {
 export const runHost = (hostWindow: Window, iframeWindow: Window) => {
   console.log("running host");
   const listener = (event: MessageEvent) => {
-    console.log("message received in host", event);
-
     if (!isNavigationMessage(event.data)) return;
 
+    console.log("message received in host", event.data);
     const { args } = event.data;
 
     if (isReplaceNavigationMessage(event.data))
       hostWindow.history.replaceState(...args);
 
     if (isPushNavigationMessage(event.data))
-      hostWindow.history.pushState(...args);
+      hostWindow.history.replaceState(...args);
 
     iframeWindow.postMessage(
       {
