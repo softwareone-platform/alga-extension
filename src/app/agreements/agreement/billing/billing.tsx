@@ -1,12 +1,12 @@
 import { Card } from "@ui/card";
-import { useSWOAgreement, useAlgaAgreement } from "@features/agreements";
+import {
+  useSWOAgreement,
+  useAlgaAgreement,
+  PLAN_SERVICES,
+} from "@features/agreements";
 import { PlanService as AlgaPlanService } from "@lib/alga";
 import { Link } from "@ui/link";
 import { useParams } from "react-router";
-
-const PLAN_SERVICE_NAME = {
-  payg: "Pay-as-you-go",
-} as const;
 
 function PlanService({
   planService,
@@ -40,7 +40,7 @@ function PlanService({
         </label>
         <div className="flex gap-2 items-center">
           <span className="text-sm text-black">
-            {planService ? `${PLAN_SERVICE_NAME[planService]}` : "—"}
+            {planService ? `${PLAN_SERVICES[planService]}` : "—"}
           </span>
         </div>
       </div>
