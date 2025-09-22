@@ -7,11 +7,13 @@ import { Tabs } from "@ui/tabs";
 import { useEffect, useMemo, useState } from "react";
 import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
 import { Input, Textarea } from "@ui/input";
-import { useSWOAgreement, AgreementStatusBadge } from "@features/agreements";
 import {
+  useSWOAgreement,
+  AgreementStatusBadge,
   useAlgaAgreement,
   useAlgaAgreementSettingsMutation,
-} from "@features/agreements/services/alga";
+  PLAN_SERVICES,
+} from "@features/agreements";
 import {
   AgreementChanges as AlgaAgreementChanges,
   Operations,
@@ -215,9 +217,13 @@ function AgreementEditor({
                 })
               }
             >
-              <ListboxButton>{editedSettings.planService}</ListboxButton>
+              <ListboxButton>
+                {PLAN_SERVICES[editedSettings.planService]}
+              </ListboxButton>
               <ListboxOptions>
-                <ListboxOption value="payg">Pay as you go (PAYG)</ListboxOption>
+                {Object.entries(PLAN_SERVICES).map(([key, value]) => (
+                  <ListboxOption value={key}>{value}</ListboxOption>
+                ))}
               </ListboxOptions>
             </Listbox>
           </div>
