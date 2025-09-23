@@ -1,9 +1,9 @@
 import {
-  useSWOAgreements,
-  useAlgaAgreements,
+  useAgreements,
+  useBillingConfigs,
   AgreementStatusBadge,
 } from "@features/agreements";
-import { Agreement as AlgaAgreement } from "@lib/alga";
+import { BillingConfig } from "@lib/alga";
 import { useMemo } from "react";
 import { Card } from "@ui/card";
 import { AgreementStatus } from "@swo/mp-api-model";
@@ -56,19 +56,19 @@ const ProductCell = ({
 };
 
 export function Agreements() {
-  const { agreements: swoAgreements } = useSWOAgreements();
-  const { agreements: algaAgreements } = useAlgaAgreements(
-    (swoAgreements || []).map((agreement) => agreement.id!)
+  const { agreements } = useAgreements();
+  const { billingConfigs } = useBillingConfigs(
+    (agreements || []).map((agreement) => agreement.id!)
   );
 
-  const algaAgreementsById =
+  const billingConfigsById =
     useMemo(
       () =>
-        algaAgreements?.reduce((acc, agreement) => {
-          acc[agreement.id!] = agreement;
+        billingConfigs?.reduce((acc, billingConfig) => {
+          acc[billingConfig.id!] = billingConfig;
           return acc;
-        }, {} as Record<string, AlgaAgreement>),
-      [algaAgreements]
+        }, {} as Record<string, BillingConfig>),
+      [billingConfigs]
     ) || {};
 
   return (
@@ -88,7 +88,7 @@ export function Agreements() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {swoAgreements?.map((agreement) => (
+          {agreements?.map((agreement) => (
             <TableRow key={agreement.id} link={`/agreements/${agreement.id}`}>
               <NameCell
                 name={agreement.name}
@@ -104,21 +104,21 @@ export function Agreements() {
               <TableCell></TableCell>
               <TableCell>{agreement.price?.SPxY || "—"}</TableCell>
               <TableCell>
-                {algaAgreementsById[agreement.id!]?.markup
-                  ? `${algaAgreementsById[agreement.id!]?.markup}%`
+                {billingConfigsById[agreement.id!]?.markup
+                  ? `${billingConfigsById[agreement.id!]?.markup}%`
                   : "—"}
               </TableCell>
               <RPxYCell
                 SPxY={agreement.price?.SPxY}
-                markup={algaAgreementsById[agreement.id!]?.markup}
+                markup={billingConfigsById[agreement.id!]?.markup}
               />
               <TableCell>
-                {algaAgreementsById[agreement.id!]?.operations == "managed" && (
+                {billingConfigsById[agreement.id!]?.operations == "managed" && (
                   <span>Managed</span>
                 )}
-                {algaAgreementsById[agreement.id!]?.operations ==
+                {billingConfigsById[agreement.id!]?.operations ==
                   "self-service" && <span>Self-service</span>}
-                {!algaAgreementsById[agreement.id!]?.operations && (
+                {!billingConfigsById[agreement.id!]?.operations && (
                   <span>—</span>
                 )}
               </TableCell>

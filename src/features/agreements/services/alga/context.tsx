@@ -1,34 +1,31 @@
 import { createContext, useEffect, useMemo, type ReactNode } from "react";
-import { AgreementsClient as AlgaAgreementsClient } from "@lib/alga";
+import { BillingConfigClient } from "@lib/alga";
 import { useQueryClient } from "@tanstack/react-query";
 import { KVStorage } from "@lib/alga";
 
-export const AlgaAgreementsContext = createContext<{
-  client?: AlgaAgreementsClient;
+export const BillingConfigsContext = createContext<{
+  client?: BillingConfigClient;
 }>(null as any);
 
-export type AgreementsProviderProps = {
+export type BillingConfigsProviderProps = {
   children: ReactNode;
   kvStorage: KVStorage;
 };
 
-export const AlgaAgreementsProvider = ({
+export const BillingConfigsProvider = ({
   children,
   kvStorage,
-}: AgreementsProviderProps) => {
-  const client = useMemo(
-    () => new AlgaAgreementsClient(kvStorage),
-    [kvStorage]
-  );
+}: BillingConfigsProviderProps) => {
+  const client = useMemo(() => new BillingConfigClient(kvStorage), [kvStorage]);
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    queryClient.resetQueries({ queryKey: ["alga-agreements"] });
+    queryClient.resetQueries({ queryKey: ["billing-configs"] });
   }, [client]);
 
   return (
-    <AlgaAgreementsContext.Provider value={{ client }}>
+    <BillingConfigsContext.Provider value={{ client }}>
       {children}
-    </AlgaAgreementsContext.Provider>
+    </BillingConfigsContext.Provider>
   );
 };

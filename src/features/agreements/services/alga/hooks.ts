@@ -1,47 +1,50 @@
 import { useContext } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AlgaAgreementsContext } from "./context";
-import { AgreementChanges as AlgaAgreementChanges } from "@lib/alga";
+import { BillingConfigsContext } from "./context";
+import { BillingConfigChanges } from "@lib/alga";
 
-export const useAlgaAgreements = (ids: string[]) => {
-  const { client } = useContext(AlgaAgreementsContext);
+export const useBillingConfigs = (ids: string[]) => {
+  const { client } = useContext(BillingConfigsContext);
 
-  const { data: agreements, ...state } = useQuery({
-    queryKey: ["alga-agreements", ids],
-    queryFn: () => client!.getAgreements(ids),
+  const { data: billingConfigs, ...state } = useQuery({
+    queryKey: ["billing-configs", ids],
+    queryFn: () => client!.getBillingConfigs(ids),
     enabled: !!client,
   });
 
-  return { agreements, ...state };
+  return { billingConfigs, ...state };
 };
 
-export const useAlgaAgreement = (id: string) => {
-  const { client } = useContext(AlgaAgreementsContext);
+export const useBillingConfig = (id: string) => {
+  const { client } = useContext(BillingConfigsContext);
 
-  const { data: agreement, ...state } = useQuery({
-    queryKey: ["alga-agreements", id],
-    queryFn: () => client!.getAgreement(id),
+  const { data: billingConfig, ...state } = useQuery({
+    queryKey: ["billing-configs", id],
+    queryFn: () => client!.getBillingConfig(id),
     enabled: !!client,
   });
 
-  return { agreement, ...state };
+  return { billingConfig, ...state };
 };
 
-export const useAlgaAgreementSettingsMutation = () => {
-  const { client } = useContext(AlgaAgreementsContext);
+export const useBillingConfigMutation = () => {
+  const { client } = useContext(BillingConfigsContext);
 
   const queryClient = useQueryClient();
 
   const {
-    mutate: saveAgreement,
-    mutateAsync: saveAgreementAsync,
+    mutate: saveBillingConfig,
+    mutateAsync: saveBillingConfigAsync,
     ...state
   } = useMutation({
-    mutationFn: (changes: AlgaAgreementChanges) =>
-      client!.saveAgreement(changes),
-    onSuccess: (agreement) =>
-      queryClient.setQueryData(["alga-agreements", agreement.id], agreement),
+    mutationFn: (changes: BillingConfigChanges) =>
+      client!.saveBillingConfig(changes),
+    onSuccess: (billingConfig) =>
+      queryClient.setQueryData(
+        ["billing-configs", billingConfig.id],
+        billingConfig
+      ),
   });
 
-  return { saveAgreement, saveAgreementAsync, state };
+  return { saveBillingConfig, saveBillingConfigAsync, state };
 };

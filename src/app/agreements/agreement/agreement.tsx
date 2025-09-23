@@ -8,17 +8,13 @@ import { useEffect, useMemo, useState } from "react";
 import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
 import { Input, Textarea } from "@ui/input";
 import {
-  useSWOAgreement,
+  useAgreement,
   AgreementStatusBadge,
-  useAlgaAgreement,
-  useAlgaAgreementSettingsMutation,
+  useBillingConfig,
+  useBillingConfigMutation,
   PLAN_SERVICES,
 } from "@features/agreements";
-import {
-  AgreementChanges as AlgaAgreementChanges,
-  Operations,
-  PlanService,
-} from "@lib/alga";
+import { BillingConfigChanges, Operations, PlanService } from "@lib/alga";
 import { Radio, RadioGroup } from "@ui/radio";
 import {
   Listbox,
@@ -37,38 +33,38 @@ function AgreementActions() {
 }
 
 function AgreementSummary({ id }: { id: string }) {
-  const { agreement: swoAgreement, isPending: isSWOPending } =
-    useSWOAgreement(id);
-  const { agreement: algaAgreement, isPending: isAlgaPending } =
-    useAlgaAgreement(id);
+  const { agreement, isPending: isAgreementPending } = useAgreement(id);
+  const { billingConfig, isPending: isBillingConfigPending } =
+    useBillingConfig(id);
 
   const RPxY = useMemo(
-    () => calculateRPxY(swoAgreement?.price?.SPxY, algaAgreement?.markup),
-    [swoAgreement?.price?.SPxY, algaAgreement?.markup]
+    () => calculateRPxY(agreement?.price?.SPxY, billingConfig?.markup),
+    [agreement?.price?.SPxY, billingConfig?.markup]
   );
 
-  if (isSWOPending || isAlgaPending) return <div>Loading...</div>;
+  if (isAgreementPending || isBillingConfigPending)
+    return <div>Loading...</div>;
 
-  if (!swoAgreement) return <div>Agreement not found</div>;
+  if (!agreement) return <div>Agreement not found</div>;
 
   return (
     <Card className="flex flex-row justify-between">
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Agreement ID</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">{swoAgreement.id}</span>
+          <span className="text-sm text-black">{agreement.id}</span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Product</label>
         <div className="flex gap-2 items-center grow">
           <Icon
-            iconUrl={swoAgreement.product?.icon}
-            alt={swoAgreement.product?.name}
+            iconUrl={agreement.product?.icon}
+            alt={agreement.product?.name}
             className="size-8"
           />
           <span className="text-sm text-black">
-            {swoAgreement.product?.name || "—"}
+            {agreement.product?.name || "—"}
           </span>
         </div>
       </div>
@@ -76,12 +72,12 @@ function AgreementSummary({ id }: { id: string }) {
         <label className="text-sm font-semibold text-black">Vendor</label>
         <div className="flex gap-2 items-center grow">
           <Icon
-            iconUrl={swoAgreement.vendor?.icon}
-            alt={swoAgreement.vendor?.name}
+            iconUrl={agreement.vendor?.icon}
+            alt={agreement.vendor?.name}
             className="size-8"
           />
           <span className="text-sm text-black">
-            {swoAgreement.vendor?.name || "—"}
+            {agreement.vendor?.name || "—"}
           </span>
         </div>
       </div>
@@ -97,7 +93,7 @@ function AgreementSummary({ id }: { id: string }) {
         <label className="text-sm font-semibold text-black">Consumer</label>
         <div className="flex gap-2 items-center grow">
           <span className="text-sm text-black">
-            {swoAgreement.licensee?.name || "—"}
+            {agreement.licensee?.name || "—"}
           </span>
         </div>
       </div>
@@ -105,7 +101,7 @@ function AgreementSummary({ id }: { id: string }) {
         <label className="text-sm font-semibold text-black">SPxY</label>
         <div className="flex gap-2 items-center grow">
           <span className="text-sm text-black">
-            {swoAgreement.price?.SPxY || "—"}
+            {agreement.price?.SPxY || "—"}
           </span>
         </div>
       </div>
@@ -113,7 +109,7 @@ function AgreementSummary({ id }: { id: string }) {
         <label className="text-sm font-semibold text-black">Markup</label>
         <div className="flex gap-2 items-center grow">
           <span className="text-sm text-black">
-            {algaAgreement?.markup ? `${algaAgreement.markup}%` : "—"}
+            {billingConfig?.markup ? `${billingConfig.markup}%` : "—"}
           </span>
         </div>
       </div>
@@ -127,7 +123,7 @@ function AgreementSummary({ id }: { id: string }) {
         <label className="text-sm font-semibold text-black">Currency</label>
         <div className="flex gap-2 items-center grow">
           <span className="text-sm text-black">
-            {swoAgreement.price?.currency || "—"}
+            {agreement.price?.currency || "—"}
           </span>
         </div>
       </div>
@@ -135,7 +131,7 @@ function AgreementSummary({ id }: { id: string }) {
         <label className="text-sm font-semibold text-black">Operations</label>
         <div className="flex gap-2 items-center grow">
           <span className="text-sm text-black">
-            {algaAgreement?.operations || "—"}
+            {billingConfig?.operations || "—"}
           </span>
         </div>
       </div>
@@ -143,46 +139,47 @@ function AgreementSummary({ id }: { id: string }) {
   );
 }
 
-function AgreementEditor({
+function BillingConfigEditor({
   isOpen,
   onClose,
-  id,
+  agreementId,
 }: {
   isOpen: boolean;
   onClose: () => void;
-  id: string;
+  agreementId: string;
 }) {
-  const defaults = useMemo<AlgaAgreementChanges>(
+  const defaults = useMemo<BillingConfigChanges>(
     () => ({
-      id,
+      id: agreementId,
+      agreementId: "",
       consumerId: "",
       planService: "payg",
       operations: "self-service",
       markup: 0,
       note: "",
     }),
-    [id]
+    [agreementId]
   );
 
-  const { agreement: algaAgreement } = useAlgaAgreement(id);
+  const { billingConfig } = useBillingConfig(agreementId);
 
-  const { saveAgreement } = useAlgaAgreementSettingsMutation();
+  const { saveBillingConfig } = useBillingConfigMutation();
 
-  const [editedSettings, setEditedSettings] = useState<AlgaAgreementChanges>(
-    algaAgreement || defaults
+  const [edited, setEdited] = useState<BillingConfigChanges>(
+    billingConfig || defaults
   );
 
   useEffect(() => {
-    setEditedSettings(algaAgreement || defaults);
-  }, [algaAgreement, defaults]);
+    setEdited(billingConfig || defaults);
+  }, [billingConfig, defaults]);
 
   const handleSave = () => {
-    saveAgreement(editedSettings);
+    saveBillingConfig(edited);
     onClose();
   };
 
   const handleCancel = () => {
-    setEditedSettings(algaAgreement || defaults);
+    setEdited(billingConfig || defaults);
     onClose();
   };
 
@@ -195,10 +192,10 @@ function AgreementEditor({
           <label className="text-sm font-medium">Consumer</label>
           <div>
             <Listbox
-              value={editedSettings.consumerId}
+              value={edited.consumerId}
               onChange={(consumerId) =>
-                setEditedSettings({
-                  ...editedSettings,
+                setEdited({
+                  ...edited,
                   consumerId,
                 })
               }
@@ -209,17 +206,15 @@ function AgreementEditor({
           <label className="text-sm font-medium">Plan Service</label>
           <div>
             <Listbox
-              value={editedSettings.planService}
+              value={edited.planService}
               onChange={(planService: PlanService) =>
-                setEditedSettings({
-                  ...editedSettings,
+                setEdited({
+                  ...edited,
                   planService,
                 })
               }
             >
-              <ListboxButton>
-                {PLAN_SERVICES[editedSettings.planService]}
-              </ListboxButton>
+              <ListboxButton>{PLAN_SERVICES[edited.planService]}</ListboxButton>
               <ListboxOptions>
                 {Object.entries(PLAN_SERVICES).map(([key, value]) => (
                   <ListboxOption value={key}>{value}</ListboxOption>
@@ -231,10 +226,10 @@ function AgreementEditor({
           <div className="relative">
             <Input
               type="number"
-              value={editedSettings.markup}
+              value={edited.markup}
               onChange={(e) =>
-                setEditedSettings({
-                  ...editedSettings,
+                setEdited({
+                  ...edited,
                   markup: Number(e.target.value),
                 })
               }
@@ -247,10 +242,10 @@ function AgreementEditor({
 
           <label className="text-sm font-medium self-start">Operations</label>
           <RadioGroup
-            value={editedSettings.operations}
+            value={edited.operations}
             onChange={(operations: Operations) =>
-              setEditedSettings({
-                ...editedSettings,
+              setEdited({
+                ...edited,
                 operations,
               })
             }
@@ -266,10 +261,10 @@ function AgreementEditor({
 
           <label className="text-sm font-medium self-start">Note</label>
           <Textarea
-            value={editedSettings.note}
+            value={edited.note}
             onChange={(e) =>
-              setEditedSettings({
-                ...editedSettings,
+              setEdited({
+                ...edited,
                 note: e.target.value,
               })
             }
@@ -290,7 +285,7 @@ function AgreementEditor({
 
 export function Agreement() {
   const { id } = useParams<{ id: string }>();
-  const { agreement: swoAgreement, isPending: isSWOPending } = useSWOAgreement(
+  const { agreement: swoAgreement, isPending: isSWOPending } = useAgreement(
     id!
   );
   const [isOpen, setIsOpen] = useState(false);
@@ -314,10 +309,10 @@ export function Agreement() {
         </div>
       </header>
       <AgreementSummary id={id!} />
-      <AgreementEditor
+      <BillingConfigEditor
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        id={id!}
+        agreementId={id!}
       />
       <Tabs>
         <NavLink to="softwareone">

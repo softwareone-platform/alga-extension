@@ -1,51 +1,51 @@
 import { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { SWOAgreementsContext } from "./context";
+import { AgreementsContext as AgreementsContext } from "./context";
 import { AgreementsOptions } from "@lib/swo";
 
-export const useSWOAgreements = (options?: AgreementsOptions) => {
-  const { client: swoClient } = useContext(SWOAgreementsContext);
+export const useAgreements = (options?: AgreementsOptions) => {
+  const { client } = useContext(AgreementsContext);
 
   const { data: agreements, ...state } = useQuery({
-    queryKey: ["swo-agreements", options],
-    queryFn: () => swoClient!.getAgreements(options),
-    enabled: !!swoClient,
+    queryKey: ["agreements", options],
+    queryFn: () => client!.getAgreements(options),
+    enabled: !!client,
   });
 
   return { agreements, ...state };
 };
 
-export const useSWOAgreement = (id: string) => {
-  const { client: swoClient } = useContext(SWOAgreementsContext);
+export const useAgreement = (id: string) => {
+  const { client } = useContext(AgreementsContext);
 
   const { data: agreement, ...state } = useQuery({
-    queryKey: ["swo-agreements", id],
-    queryFn: () => swoClient!.getAgreement(id),
-    enabled: !!swoClient,
+    queryKey: ["agreements", id],
+    queryFn: () => client!.getAgreement(id),
+    enabled: !!client,
   });
 
   return { agreement, ...state };
 };
 
-export const useSWOAgreementSubscriptions = (agreementId: string) => {
-  const { client: swoClient } = useContext(SWOAgreementsContext);
+export const useAgreementSubscriptions = (agreementId: string) => {
+  const { client } = useContext(AgreementsContext);
 
   const { data: subscriptions, ...state } = useQuery({
-    queryKey: ["swo-agreements", agreementId, "subscriptions"],
-    queryFn: () => swoClient!.getSubscriptions(agreementId),
-    enabled: !!swoClient,
+    queryKey: ["agreements", agreementId, "subscriptions"],
+    queryFn: () => client!.getSubscriptions(agreementId),
+    enabled: !!client,
   });
 
   return { subscriptions, ...state };
 };
 
-export const useSWOAgreementOrders = (agreementId: string) => {
-  const { client: swoClient } = useContext(SWOAgreementsContext);
+export const useAgreementOrders = (agreementId: string) => {
+  const { client } = useContext(AgreementsContext);
 
   const { data: orders, ...state } = useQuery({
-    queryKey: ["swo-agreements", agreementId, "orders"],
-    queryFn: () => swoClient!.getOrders(agreementId),
-    enabled: !!swoClient,
+    queryKey: ["agreements", agreementId, "orders"],
+    queryFn: () => client!.getOrders(agreementId),
+    enabled: !!client,
   });
 
   return { orders, ...state };

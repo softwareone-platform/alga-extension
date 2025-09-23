@@ -1,8 +1,8 @@
 import { Card } from "@ui/card";
 import {
   SubscriptionStatusBadge,
-  useAlgaAgreement,
-  useSWOAgreementSubscriptions,
+  useBillingConfig,
+  useAgreementSubscriptions,
 } from "@features/agreements";
 import { useParams } from "react-router";
 import {
@@ -46,8 +46,8 @@ const CommitmentCell = ({
 
 export function Subscriptions() {
   const { id } = useParams<{ id: string }>();
-  const { subscriptions } = useSWOAgreementSubscriptions(id!);
-  const { agreement: algaAgreement } = useAlgaAgreement(id!);
+  const { subscriptions } = useAgreementSubscriptions(id!);
+  const { billingConfig } = useBillingConfig(id!);
 
   if (!subscriptions) return <>Loading...</>;
 
@@ -88,11 +88,11 @@ export function Subscriptions() {
               <TableCell>{subscription.price?.SPxY || "—"}</TableCell>
               <RPxYCell
                 SPxY={subscription.price?.SPxM}
-                markup={algaAgreement?.markup}
+                markup={billingConfig?.markup}
               />
               <RPxYCell
                 SPxY={subscription.price?.SPxY}
-                markup={algaAgreement?.markup}
+                markup={billingConfig?.markup}
               />
               <PeriodCell period={subscription.terms?.period} />
               <CommitmentCell commitment={subscription.terms?.commitment} />

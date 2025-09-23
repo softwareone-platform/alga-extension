@@ -1,8 +1,8 @@
 import { Card } from "@ui/card";
 import {
   OrderStatusBadge,
-  useAlgaAgreement,
-  useSWOAgreementOrders,
+  useBillingConfig,
+  useAgreementOrders,
 } from "@features/agreements";
 import { useParams } from "react-router";
 import {
@@ -43,8 +43,8 @@ const CreatedCell = ({
 
 export function Orders() {
   const { id } = useParams<{ id: string }>();
-  const { orders } = useSWOAgreementOrders(id!);
-  const { agreement: algaAgreement } = useAlgaAgreement(id!);
+  const { orders } = useAgreementOrders(id!);
+  const { billingConfig } = useBillingConfig(id!);
 
   if (!orders) return <>Loading...</>;
 
@@ -84,11 +84,11 @@ export function Orders() {
               <TableCell>CONSUMER</TableCell>
               <TableCell>{order.price?.SPxY || "—"}</TableCell>
               <TableCell>
-                {algaAgreement?.markup ? `${algaAgreement.markup}%` : "—"}
+                {billingConfig?.markup ? `${billingConfig.markup}%` : "—"}
               </TableCell>
               <RPxYCell
                 SPxY={order.price?.SPxY}
-                markup={algaAgreement?.markup}
+                markup={billingConfig?.markup}
               />
               <TableCell>{order.price?.currency || "—"}</TableCell>
               <CreatedCell createdAt={order.audit?.created?.at} />

@@ -1,2 +1,2 @@
 export * from "./kv-storage";
-export * from "./agreements";
+export * from "./billing-config";

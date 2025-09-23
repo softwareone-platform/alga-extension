@@ -1,7 +1,7 @@
 import { Card } from "@ui/card";
 import {
-  useSWOAgreement,
-  useAlgaAgreement,
+  useAgreement,
+  useBillingConfig,
   PLAN_SERVICES,
 } from "@features/agreements";
 import { PlanService as AlgaPlanService } from "@lib/alga";
@@ -67,17 +67,17 @@ function Markup({ markup }: { markup?: number }) {
 
 export function Billing() {
   const { id } = useParams<{ id: string }>();
-  const { agreement: algaAgreement } = useAlgaAgreement(id!);
-  const { agreement: swoAgreement } = useSWOAgreement(id!);
+  const { billingConfig } = useBillingConfig(id!);
+  const { agreement } = useAgreement(id!);
 
   return (
     <Card className="flex flex-row gap-6 items-start">
       <PlanService
-        planService={algaAgreement?.planService}
-        serviceName={swoAgreement?.name}
+        planService={billingConfig?.planService}
+        serviceName={agreement?.name}
         serviceUrl={`https://portal.platform.softwareone.com/commerce/agreements/${id!}`}
       />
-      <Markup markup={algaAgreement?.markup} />
+      <Markup markup={billingConfig?.markup} />
     </Card>
   );
 }

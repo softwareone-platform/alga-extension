@@ -2,28 +2,10 @@ import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import {
   Agreement as AgreementType,
-  AgreementStatus as AgreementStatusType,
   SellerQueryModel,
 } from "@swo/mp-api-model";
-import { Badge } from "@alga-psa/ui-kit";
-import { useSWOAgreement } from "@features/agreements";
+import { AgreementStatusBadge, useAgreement } from "@features/agreements";
 import { useParams } from "react-router";
-
-function StatusBadge({ status }: { status?: AgreementStatusType }) {
-  if (!status) return <></>;
-
-  let tone: "danger" | "default" | "success" | "warning" = "default";
-
-  if (status === "Failed") tone = "danger";
-  if (status === "Draft") tone = "default";
-  if (status === "Provisioning") tone = "warning";
-  if (status === "Updating") tone = "warning";
-  if (status === "Active") tone = "success";
-  if (status === "Terminated") tone = "default";
-  if (status === "Deleted") tone = "default";
-
-  return <Badge tone={tone}>{status}</Badge>;
-}
 
 function Agreement({ agreement }: { agreement: AgreementType }) {
   return (
@@ -33,7 +15,7 @@ function Agreement({ agreement }: { agreement: AgreementType }) {
         <label className="text-sm font-semibold text-black">Agreement ID</label>
         <div className="flex gap-2 items-center">
           <span className="text-sm text-black">{agreement.id}</span>
-          <StatusBadge status={agreement.status} />
+          <AgreementStatusBadge status={agreement.status} />
         </div>
 
         <label className="text-sm font-semibold text-black">Product</label>
@@ -129,7 +111,7 @@ function Seller({ seller }: { seller: SellerQueryModel }) {
 
 export function SoftwareOne() {
   const { id } = useParams<{ id: string }>();
-  const { agreement, isPending } = useSWOAgreement(id!);
+  const { agreement, isPending } = useAgreement(id!);
 
   if (isPending) return <></>;
   if (!agreement) return <div>Agreement not found</div>;

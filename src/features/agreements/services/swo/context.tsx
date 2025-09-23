@@ -1,9 +1,9 @@
 import { createContext, useEffect, useMemo, type ReactNode } from "react";
-import { AgreementsClient as SWOAgreementsClient } from "@lib/swo";
+import { AgreementsClient } from "@lib/swo";
 import { useQueryClient } from "@tanstack/react-query";
 
-export const SWOAgreementsContext = createContext<{
-  client?: SWOAgreementsClient;
+export const AgreementsContext = createContext<{
+  client?: AgreementsClient;
 }>(null as any);
 
 export type AgreementsProviderProps = {
@@ -12,25 +12,24 @@ export type AgreementsProviderProps = {
   token?: string;
 };
 
-export const SWOAgreementsProvider = ({
+export const AgreementsProvider = ({
   children,
   baseUrl,
   token,
 }: AgreementsProviderProps) => {
   const client = useMemo(
-    () =>
-      baseUrl && token ? new SWOAgreementsClient(baseUrl, token) : undefined,
+    () => (baseUrl && token ? new AgreementsClient(baseUrl, token) : undefined),
     [baseUrl, token]
   );
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    queryClient.resetQueries({ queryKey: ["swo-agreements"] });
+    queryClient.resetQueries({ queryKey: ["agreements"] });
   }, [client]);
 
   return (
-    <SWOAgreementsContext.Provider value={{ client }}>
+    <AgreementsContext.Provider value={{ client }}>
       {children}
-    </SWOAgreementsContext.Provider>
+    </AgreementsContext.Provider>
   );
 };

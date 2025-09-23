@@ -1,4 +1,4 @@
-import { useSWOAgreement, useAlgaAgreement } from "@features/agreements";
+import { useAgreement, useBillingConfig } from "@features/agreements";
 import { Audit } from "@ui/audit";
 import { Card } from "@ui/card";
 import dayjs from "dayjs";
@@ -6,13 +6,13 @@ import { useParams } from "react-router";
 
 export function Details() {
   const { id } = useParams<{ id: string }>();
-  const { agreement: swoAgreement } = useSWOAgreement(id!);
-  const { agreement: algaAgreement } = useAlgaAgreement(id!);
+  const { agreement } = useAgreement(id!);
+  const { billingConfig } = useBillingConfig(id!);
 
-  if (!swoAgreement) return <></>;
+  if (!agreement) return <></>;
 
-  const { created, updated, active, terminated } = swoAgreement.audit!;
-  const { updatedAt: algaUpdatedAt } = algaAgreement || {};
+  const { created, updated, active, terminated } = agreement.audit!;
+  const { updatedAt: algaUpdatedAt } = billingConfig || {};
 
   const updatedAt =
     algaUpdatedAt &&
@@ -20,7 +20,7 @@ export function Details() {
       ? algaUpdatedAt
       : updated?.at;
 
-  const { note } = algaAgreement || {};
+  const { note } = billingConfig || {};
 
   return (
     <Card className="flex flex-col">
