@@ -3,24 +3,24 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BillingConfigsContext } from "./context";
 import { BillingConfigChanges } from "@lib/alga";
 
-export const useBillingConfigs = (ids: string[]) => {
+export const useBillingConfigs = (agreementsIds: string[]) => {
   const { client } = useContext(BillingConfigsContext);
 
   const { data: billingConfigs, ...state } = useQuery({
-    queryKey: ["billing-configs", ids],
-    queryFn: () => client!.getBillingConfigs(ids),
+    queryKey: ["billing-configs", agreementsIds],
+    queryFn: () => client!.getByAgreementsIds(agreementsIds),
     enabled: !!client,
   });
 
   return { billingConfigs, ...state };
 };
 
-export const useBillingConfig = (id: string) => {
+export const useBillingConfig = (agreementId: string) => {
   const { client } = useContext(BillingConfigsContext);
 
   const { data: billingConfig, ...state } = useQuery({
-    queryKey: ["billing-configs", id],
-    queryFn: () => client!.getBillingConfig(id),
+    queryKey: ["billing-configs", agreementId],
+    queryFn: () => client!.getByAgreementId(agreementId),
     enabled: !!client,
   });
 
@@ -37,8 +37,7 @@ export const useBillingConfigMutation = () => {
     mutateAsync: saveBillingConfigAsync,
     ...state
   } = useMutation({
-    mutationFn: (changes: BillingConfigChanges) =>
-      client!.saveBillingConfig(changes),
+    mutationFn: (changes: BillingConfigChanges) => client!.save(changes),
     onSuccess: (billingConfig) =>
       queryClient.setQueryData(
         ["billing-configs", billingConfig.id],
