@@ -40,7 +40,7 @@ export const useBillingConfigMutation = () => {
     mutationFn: (changes: BillingConfigChanges) => client!.save(changes),
     onSuccess: (billingConfig) =>
       queryClient.setQueryData(
-        ["billing-configs", billingConfig.id],
+        ["billing-configs", billingConfig.agreementId],
         billingConfig
       ),
   });

@@ -86,7 +86,7 @@ function AgreementSummary({ id }: { id: string }) {
           Billing config
         </label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">—</span>
+          <span className="text-sm text-black">{billingConfig?.id || "—"}</span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
@@ -150,8 +150,7 @@ function BillingConfigEditor({
 }) {
   const defaults = useMemo<BillingConfigChanges>(
     () => ({
-      id: agreementId,
-      agreementId: "",
+      agreementId,
       consumerId: "",
       planService: "payg",
       operations: "self-service",
