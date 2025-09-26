@@ -14,7 +14,7 @@ export class OrdersClient {
     this.axios = axiosInstance(baseUrl, token);
   }
 
-  async getOrders(options?: OrdersOptions): Promise<Order[]> {
+  async getOrders(options?: OrdersOptions): Promise<OrderListResponse> {
     const { offset = 0, limit = 10, sort, licenseeId } = options || {};
 
     const query = new RqlQuery<Order>();
@@ -48,7 +48,7 @@ export class OrdersClient {
     const { data }: AxiosResponse<OrderListResponse> = await this.axios.get(
       `/commerce/orders?${query.toString()}`
     );
-    return data.data || [];
+    return data;
   }
 
   async getOrder(id: string): Promise<Order> {

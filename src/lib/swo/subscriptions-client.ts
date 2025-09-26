@@ -21,7 +21,7 @@ export class SubscriptionsClient {
 
   async getSubscriptions(
     options?: SubscriptionsOptions
-  ): Promise<Subscription[]> {
+  ): Promise<SubscriptionListResponse> {
     const { offset = 0, limit = 10, sort, licenseeId } = options || {};
 
     const query = new RqlQuery<Subscription>();
@@ -61,7 +61,7 @@ export class SubscriptionsClient {
       `/commerce/subscriptions?${query.toString()}`
     );
 
-    return data.data || [];
+    return data;
   }
 
   async getSubscription(id: string): Promise<Subscription> {
@@ -109,7 +109,7 @@ export class SubscriptionsClient {
   async getOrders(
     subscriptionId: string,
     options?: ListOptions<Order>
-  ): Promise<Order[]> {
+  ): Promise<OrderListResponse> {
     const { offset = 0, limit = 10, sort } = options || {};
 
     const query = new RqlQuery<Order>();
@@ -145,7 +145,7 @@ export class SubscriptionsClient {
     const { data } = await this.axios.get<OrderListResponse>(
       `/commerce/orders?${query.toString()}`
     );
-    return data.data || [];
+    return data;
   }
 
   async terminateSubscription(id: string, notes?: string): Promise<void> {

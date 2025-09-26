@@ -124,20 +124,24 @@ export type PaginationProps = Omit<
   HTMLAttributes<HTMLTableCellElement>,
   "children"
 > & {
-  onPage: (page: number) => void;
-  currentPage?: number;
+  onPageChange: (page: number) => void;
+  startPage?: number;
   pageSize?: number;
   totalItems: number;
 };
 
 export const Pagination = forwardRef<HTMLTableCellElement, PaginationProps>(
-  ({ onPage, currentPage, pageSize, totalItems, className, ...props }, ref) => {
-    const totalPages = Math.ceil(totalItems / (pageSize ?? 10));
-    const [page, setPage] = useState(currentPage ?? 1);
+  (
+    { onPageChange, startPage, pageSize, totalItems, className, ...props },
+    ref
+  ) => {
+    const totalPages = Math.ceil(totalItems / (pageSize ?? 10)) || 1;
+    const [page, setPage] = useState(startPage ?? 1);
 
-    useEffect(() => {
-      setPage(currentPage ?? 1);
-    }, [currentPage]);
+    const setCurrentPage = (page: number) => {
+      setPage(page);
+      onPageChange(page);
+    };
 
     return (
       <TableCell
@@ -150,7 +154,7 @@ export const Pagination = forwardRef<HTMLTableCellElement, PaginationProps>(
       >
         <Button
           variant="white"
-          onClick={() => setPage((p) => Math.max(p - 1, 1))}
+          onClick={() => setCurrentPage(Math.max(page - 1, 1))}
           disabled={page === 1}
         >
           Previous
@@ -160,7 +164,7 @@ export const Pagination = forwardRef<HTMLTableCellElement, PaginationProps>(
         </span>
         <Button
           variant="white"
-          onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+          onClick={() => setCurrentPage(Math.min(page + 1, totalPages))}
           disabled={page === totalPages}
         >
           Next

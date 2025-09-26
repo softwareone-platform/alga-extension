@@ -21,7 +21,9 @@ export class AgreementsClient {
     this.axios = axiosInstance(baseUrl, token);
   }
 
-  async getAgreements(options?: AgreementsOptions): Promise<Agreement[]> {
+  async getAgreements(
+    options?: AgreementsOptions
+  ): Promise<AgreementListResponse> {
     const { offset = 0, limit = 10, sort, licenseeId } = options || {};
 
     const query = new RqlQuery<Agreement>();
@@ -53,7 +55,7 @@ export class AgreementsClient {
     const { data } = await this.axios.get<AgreementListResponse>(
       `/commerce/agreements?${query.toString()}`
     );
-    return data.data || [];
+    return data;
   }
 
   async getAgreement(id: string): Promise<Agreement | null> {
@@ -87,7 +89,7 @@ export class AgreementsClient {
   async getSubscriptions(
     agreementId: string,
     options?: ListOptions<Subscription>
-  ): Promise<Subscription[]> {
+  ): Promise<SubscriptionListResponse> {
     const { offset = 0, limit = 10, sort } = options || {};
 
     const query = new RqlQuery<Subscription>();
@@ -110,13 +112,13 @@ export class AgreementsClient {
     const { data } = await this.axios.get<SubscriptionListResponse>(
       `/commerce/subscriptions?agreement.id=${agreementId}&${query.toString()}`
     );
-    return data.data || [];
+    return data;
   }
 
   async getOrders(
     agreementId: string,
     options?: ListOptions<Order>
-  ): Promise<Order[]> {
+  ): Promise<OrderListResponse> {
     const { offset = 0, limit = 10, sort } = options || {};
 
     const query = new RqlQuery<Order>();
@@ -144,6 +146,6 @@ export class AgreementsClient {
     const { data } = await this.axios.get<OrderListResponse>(
       `/commerce/orders?agreement.id=${agreementId}&${query.toString()}`
     );
-    return data.data || [];
+    return data;
   }
 }

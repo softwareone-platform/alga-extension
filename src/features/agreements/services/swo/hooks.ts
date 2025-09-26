@@ -6,13 +6,16 @@ import { AgreementsOptions } from "@lib/swo";
 export const useAgreements = (options?: AgreementsOptions) => {
   const { client } = useContext(AgreementsContext);
 
-  const { data: agreements, ...state } = useQuery({
+  const { data, ...state } = useQuery({
     queryKey: ["agreements", options],
     queryFn: () => client!.getAgreements(options),
     enabled: !!client,
   });
 
-  return { agreements, ...state };
+  const agreements = data?.data || [];
+  const pagination = data?.$meta?.pagination || { total: 0 };
+
+  return { agreements, pagination, ...state };
 };
 
 export const useAgreement = (id: string) => {
@@ -30,23 +33,29 @@ export const useAgreement = (id: string) => {
 export const useAgreementSubscriptions = (agreementId: string) => {
   const { client } = useContext(AgreementsContext);
 
-  const { data: subscriptions, ...state } = useQuery({
+  const { data, ...state } = useQuery({
     queryKey: ["agreements", agreementId, "subscriptions"],
     queryFn: () => client!.getSubscriptions(agreementId),
     enabled: !!client,
   });
 
-  return { subscriptions, ...state };
+  const subscriptions = data?.data || [];
+  const pagination = data?.$meta?.pagination || { total: 0 };
+
+  return { subscriptions, pagination, ...state };
 };
 
 export const useAgreementOrders = (agreementId: string) => {
   const { client } = useContext(AgreementsContext);
 
-  const { data: orders, ...state } = useQuery({
+  const { data, ...state } = useQuery({
     queryKey: ["agreements", agreementId, "orders"],
     queryFn: () => client!.getOrders(agreementId),
     enabled: !!client,
   });
 
-  return { orders, ...state };
+  const orders = data?.data || [];
+  const pagination = data?.$meta?.pagination || { total: 0 };
+
+  return { orders, pagination, ...state };
 };

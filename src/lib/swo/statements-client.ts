@@ -23,7 +23,9 @@ export class StatementsClient {
     this.axios = axiosInstance(baseUrl, token);
   }
 
-  async getStatements(options?: StatementsOptions): Promise<Statement[]> {
+  async getStatements(
+    options?: StatementsOptions
+  ): Promise<StatementListResponse> {
     const { offset = 0, limit = 10, sort, licenseeId } = options || {};
 
     const query = new RqlQuery<Statement>();
@@ -60,7 +62,7 @@ export class StatementsClient {
       `/billing/statements?${query.toString()}`
     );
 
-    return data.data || [];
+    return data;
   }
 
   async getStatement(id: string): Promise<Statement> {
@@ -93,7 +95,7 @@ export class StatementsClient {
   async getCharges(
     statementId: string,
     options?: ListOptions<Charge>
-  ): Promise<Charge[]> {
+  ): Promise<ChargeListResponse> {
     const { offset = 0, limit = 10, sort } = options || {};
 
     const query = new RqlQuery<Charge>();
@@ -119,6 +121,6 @@ export class StatementsClient {
       `/billing/statements/${statementId}/charges?${query.toString()}`
     );
 
-    return data.data || [];
+    return data;
   }
 }

@@ -4,7 +4,7 @@ import {
   AgreementStatusBadge,
 } from "@features/agreements";
 import { BillingConfig } from "@lib/alga";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Card } from "@ui/card";
 import { AgreementStatus } from "@swo/mp-api-model";
 import {
@@ -58,9 +58,12 @@ const ProductCell = ({
 };
 
 export function Agreements() {
-  const { agreements } = useAgreements();
+  const limit = 10;
+
+  const [offset, setOffset] = useState(0);
+  const { agreements, pagination } = useAgreements({ limit, offset });
   const { billingConfigs } = useBillingConfigs(
-    (agreements || []).map((agreement) => agreement.id!)
+    agreements.map((agreement) => agreement.id!)
   );
 
   const billingConfigsById =
@@ -129,7 +132,10 @@ export function Agreements() {
           ))}
         </TableBody>
         <TableFooter>
-          <Pagination onPage={() => {}} currentPage={1} totalItems={12} />
+          <Pagination
+            onPageChange={(page) => setOffset((page - 1) * limit)}
+            totalItems={pagination.total ?? 0}
+          />
         </TableFooter>
       </Table>
     </Card>
