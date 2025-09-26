@@ -128,11 +128,20 @@ export type PaginationProps = Omit<
   startPage?: number;
   pageSize?: number;
   totalItems: number;
+  isLoading?: boolean;
 };
 
 export const Pagination = forwardRef<HTMLTableCellElement, PaginationProps>(
   (
-    { onPageChange, startPage, pageSize, totalItems, className, ...props },
+    {
+      onPageChange,
+      startPage,
+      pageSize,
+      totalItems,
+      className,
+      isLoading,
+      ...props
+    },
     ref
   ) => {
     const totalPages = Math.ceil(totalItems / (pageSize ?? 10)) || 1;
@@ -155,7 +164,7 @@ export const Pagination = forwardRef<HTMLTableCellElement, PaginationProps>(
         <Button
           variant="white"
           onClick={() => setCurrentPage(Math.max(page - 1, 1))}
-          disabled={page === 1}
+          disabled={page === 1 || isLoading}
         >
           Previous
         </Button>
@@ -165,7 +174,7 @@ export const Pagination = forwardRef<HTMLTableCellElement, PaginationProps>(
         <Button
           variant="white"
           onClick={() => setCurrentPage(Math.min(page + 1, totalPages))}
-          disabled={page === totalPages}
+          disabled={page === totalPages || isLoading}
         >
           Next
         </Button>

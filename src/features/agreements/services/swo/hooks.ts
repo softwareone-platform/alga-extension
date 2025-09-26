@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { AgreementsContext as AgreementsContext } from "./context";
 import { AgreementsOptions } from "@lib/swo";
 
@@ -10,6 +10,7 @@ export const useAgreements = (options?: AgreementsOptions) => {
     queryKey: ["agreements", options],
     queryFn: () => client!.getAgreements(options),
     enabled: !!client,
+    placeholderData: keepPreviousData,
   });
 
   const agreements = data?.data || [];
@@ -37,6 +38,7 @@ export const useAgreementSubscriptions = (agreementId: string) => {
     queryKey: ["agreements", agreementId, "subscriptions"],
     queryFn: () => client!.getSubscriptions(agreementId),
     enabled: !!client,
+    placeholderData: keepPreviousData,
   });
 
   const subscriptions = data?.data || [];
@@ -52,6 +54,7 @@ export const useAgreementOrders = (agreementId: string) => {
     queryKey: ["agreements", agreementId, "orders"],
     queryFn: () => client!.getOrders(agreementId),
     enabled: !!client,
+    placeholderData: keepPreviousData,
   });
 
   const orders = data?.data || [];

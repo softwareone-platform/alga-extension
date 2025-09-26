@@ -58,10 +58,8 @@ const ProductCell = ({
 };
 
 export function Agreements() {
-  const limit = 10;
-
   const [offset, setOffset] = useState(0);
-  const { agreements, pagination } = useAgreements({ limit, offset });
+  const { agreements, pagination, isFetching } = useAgreements({ offset });
   const { billingConfigs } = useBillingConfigs(
     agreements.map((agreement) => agreement.id!)
   );
@@ -133,8 +131,11 @@ export function Agreements() {
         </TableBody>
         <TableFooter>
           <Pagination
-            onPageChange={(page) => setOffset((page - 1) * limit)}
+            onPageChange={(page) =>
+              setOffset((page - 1) * (pagination.limit ?? 0))
+            }
             totalItems={pagination.total ?? 0}
+            isLoading={isFetching}
           />
         </TableFooter>
       </Table>
