@@ -9,8 +9,8 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
-  TableHeadCell,
+  TableHeader,
+  TableHeaderCell,
   TableRow,
 } from "@ui/table";
 import { Link } from "@ui/link";
@@ -53,20 +53,20 @@ export function Orders() {
   return (
     <Card>
       <Table className="grid-cols-[auto_auto_auto_auto_auto_auto_auto_auto_auto_auto]">
-        <TableHead>
+        <TableHeader>
           <TableRow>
-            <TableHeadCell>Name</TableHeadCell>
-            <TableHeadCell>Type</TableHeadCell>
-            <TableHeadCell>Agreement</TableHeadCell>
-            <TableHeadCell>Customer</TableHeadCell>
-            <TableHeadCell>SPxY</TableHeadCell>
-            <TableHeadCell>Markup</TableHeadCell>
-            <TableHeadCell>RPxY</TableHeadCell>
-            <TableHeadCell>Currency</TableHeadCell>
-            <TableHeadCell>Created</TableHeadCell>
-            <TableHeadCell>Status</TableHeadCell>
+            <TableHeaderCell>Name</TableHeaderCell>
+            <TableHeaderCell>Type</TableHeaderCell>
+            <TableHeaderCell>Agreement</TableHeaderCell>
+            <TableHeaderCell>Customer</TableHeaderCell>
+            <TableHeaderCell>SPxY</TableHeaderCell>
+            <TableHeaderCell>Markup</TableHeaderCell>
+            <TableHeaderCell>RPxY</TableHeaderCell>
+            <TableHeaderCell>Currency</TableHeaderCell>
+            <TableHeaderCell>Created</TableHeaderCell>
+            <TableHeaderCell>Status</TableHeaderCell>
           </TableRow>
-        </TableHead>
+        </TableHeader>
         <TableBody>
           {orders?.map((order) => (
             <TableRow key={order.id}>

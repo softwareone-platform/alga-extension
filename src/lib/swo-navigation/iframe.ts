@@ -1,8 +1,7 @@
-import { isUrlChangedMessage, UrlChangedMessage } from "./messages";
+import { UrlChangedMessage } from "./messages";
 import { toRelativeUrl } from "./utils";
 
 export const runIFrame = (hostWindow: Window, iframeWindow: Window) => {
-  console.log("running iframe");
   const orginalReplaceState = iframeWindow.history.replaceState.bind(
     iframeWindow.history
   );
@@ -11,19 +10,7 @@ export const runIFrame = (hostWindow: Window, iframeWindow: Window) => {
     iframeWindow.history
   );
 
-  const handleMessage = (event: MessageEvent) => {
-    if (isUrlChangedMessage(event.data)) {
-      const { relativeUrl } = event.data;
-      console.log("message received in iframe", relativeUrl);
-    }
-  };
-  iframeWindow.addEventListener("message", handleMessage);
-
   const handlePopState = () => {
-    console.log(
-      "popstate received in iframe",
-      toRelativeUrl(iframeWindow.location.href)
-    );
     hostWindow.postMessage(
       {
         type: "swo:url-changed",
@@ -58,7 +45,6 @@ export const runIFrame = (hostWindow: Window, iframeWindow: Window) => {
   };
 
   return () => {
-    iframeWindow.removeEventListener("message", handleMessage);
     iframeWindow.removeEventListener("popstate", handlePopState);
     iframeWindow.history.replaceState = orginalReplaceState;
     iframeWindow.history.pushState = orginalPushState;

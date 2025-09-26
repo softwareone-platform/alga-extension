@@ -8,11 +8,13 @@ import { useMemo } from "react";
 import { Card } from "@ui/card";
 import { AgreementStatus } from "@swo/mp-api-model";
 import {
+  Pagination,
   Table,
   TableBody,
   TableCell,
-  TableHead,
-  TableHeadCell,
+  TableFooter,
+  TableHeader,
+  TableHeaderCell,
   TableRow,
 } from "@ui/table";
 import { Icon } from "@ui/icon";
@@ -74,19 +76,19 @@ export function Agreements() {
   return (
     <Card>
       <Table className="grid-cols-[minmax(192px,auto)_minmax(192px,auto)_minmax(150px,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)]">
-        <TableHead>
+        <TableHeader>
           <TableRow>
-            <TableHeadCell>Name</TableHeadCell>
-            <TableHeadCell>Product</TableHeadCell>
-            <TableHeadCell>Billing config ID</TableHeadCell>
-            <TableHeadCell>Customer</TableHeadCell>
-            <TableHeadCell>SPxY</TableHeadCell>
-            <TableHeadCell>Markup</TableHeadCell>
-            <TableHeadCell>RPxY</TableHeadCell>
-            <TableHeadCell>Operations</TableHeadCell>
-            <TableHeadCell>Currency</TableHeadCell>
+            <TableHeaderCell>Name</TableHeaderCell>
+            <TableHeaderCell>Product</TableHeaderCell>
+            <TableHeaderCell>Billing config ID</TableHeaderCell>
+            <TableHeaderCell>Customer</TableHeaderCell>
+            <TableHeaderCell>SPxY</TableHeaderCell>
+            <TableHeaderCell>Markup</TableHeaderCell>
+            <TableHeaderCell>RPxY</TableHeaderCell>
+            <TableHeaderCell>Operations</TableHeaderCell>
+            <TableHeaderCell>Currency</TableHeaderCell>
           </TableRow>
-        </TableHead>
+        </TableHeader>
         <TableBody>
           {agreements?.map((agreement) => (
             <TableRow key={agreement.id} link={`/agreements/${agreement.id}`}>
@@ -126,6 +128,9 @@ export function Agreements() {
             </TableRow>
           ))}
         </TableBody>
+        <TableFooter>
+          <Pagination onPage={() => {}} currentPage={1} totalItems={12} />
+        </TableFooter>
       </Table>
     </Card>
   );

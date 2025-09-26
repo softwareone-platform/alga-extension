@@ -9,8 +9,8 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
-  TableHeadCell,
+  TableHeader,
+  TableHeaderCell,
   TableRow,
 } from "@ui/table";
 import { Link } from "@ui/link";
@@ -56,19 +56,19 @@ export function Subscriptions() {
   return (
     <Card>
       <Table className="grid-cols-[auto_auto_auto_auto_auto_auto_auto_auto_auto]">
-        <TableHead>
+        <TableHeader>
           <TableRow>
-            <TableHeadCell>Name</TableHeadCell>
-            <TableHeadCell>SPxM</TableHeadCell>
-            <TableHeadCell>SPxY</TableHeadCell>
-            <TableHeadCell>RPxM</TableHeadCell>
-            <TableHeadCell>RPxY</TableHeadCell>
-            <TableHeadCell>Billing period</TableHeadCell>
-            <TableHeadCell>Commitment</TableHeadCell>
-            <TableHeadCell>Currency</TableHeadCell>
-            <TableHeadCell>Status</TableHeadCell>
+            <TableHeaderCell>Name</TableHeaderCell>
+            <TableHeaderCell>SPxM</TableHeaderCell>
+            <TableHeaderCell>SPxY</TableHeaderCell>
+            <TableHeaderCell>RPxM</TableHeaderCell>
+            <TableHeaderCell>RPxY</TableHeaderCell>
+            <TableHeaderCell>Billing period</TableHeaderCell>
+            <TableHeaderCell>Commitment</TableHeaderCell>
+            <TableHeaderCell>Currency</TableHeaderCell>
+            <TableHeaderCell>Status</TableHeaderCell>
           </TableRow>
-        </TableHead>
+        </TableHeader>
         <TableBody>
           {subscriptions?.map((subscription) => (
             <TableRow key={subscription.id}>

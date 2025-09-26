@@ -1,6 +1,7 @@
-import { forwardRef, HTMLAttributes } from "react";
+import { forwardRef, HTMLAttributes, useEffect, useState } from "react";
 import { clsx } from "clsx";
 import { useNavigate } from "react-router";
+import { Button } from "./button";
 
 export const Table = forwardRef<
   HTMLTableElement,
@@ -20,18 +21,27 @@ export const Table = forwardRef<
 
 Table.displayName = "Table";
 
-export type TableHeadProps = Omit<
+export type TableSectionProps = Omit<
   HTMLAttributes<HTMLTableSectionElement>,
   "className"
 >;
 
-export const TableHead = forwardRef<HTMLTableSectionElement, TableHeadProps>(
-  (props, ref) => {
-    return <thead className="contents" ref={ref} {...props} />;
-  }
-);
+export const TableHeader = forwardRef<
+  HTMLTableSectionElement,
+  TableSectionProps
+>((props, ref) => {
+  return <thead className="contents" ref={ref} {...props} />;
+});
 
-TableHead.displayName = "TableHead";
+export const TableFooter = forwardRef<
+  HTMLTableSectionElement,
+  TableSectionProps
+>((props, ref) => {
+  return <tfoot className="contents" ref={ref} {...props} />;
+});
+
+TableHeader.displayName = "TableHeader";
+TableFooter.displayName = "TableFooter";
 
 export type TableBodyProps = Omit<
   HTMLAttributes<HTMLTableSectionElement>,
@@ -74,9 +84,9 @@ export const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(
 
 TableRow.displayName = "TableRow";
 
-export const TableHeadCell = forwardRef<
-  HTMLTableHeaderCellElement,
-  HTMLAttributes<HTMLTableHeaderCellElement>
+export const TableHeaderCell = forwardRef<
+  HTMLTableCellElement,
+  HTMLAttributes<HTMLTableCellElement>
 >(({ className, ...props }, ref) => {
   return (
     <th
@@ -90,7 +100,7 @@ export const TableHeadCell = forwardRef<
   );
 });
 
-TableHeadCell.displayName = "TableHeadCell";
+TableHeaderCell.displayName = "TableHeadCell";
 
 export const TableCell = forwardRef<
   HTMLTableCellElement,
@@ -109,3 +119,55 @@ export const TableCell = forwardRef<
 });
 
 TableCell.displayName = "TableCell";
+
+export type PaginationProps = Omit<
+  HTMLAttributes<HTMLTableCellElement>,
+  "children"
+> & {
+  onPage: (page: number) => void;
+  currentPage?: number;
+  pageSize?: number;
+  totalItems: number;
+};
+
+export const Pagination = forwardRef<HTMLTableCellElement, PaginationProps>(
+  ({ onPage, currentPage, pageSize, totalItems, className, ...props }, ref) => {
+    const totalPages = Math.ceil(totalItems / (pageSize ?? 10));
+    const [page, setPage] = useState(currentPage ?? 1);
+
+    useEffect(() => {
+      setPage(currentPage ?? 1);
+    }, [currentPage]);
+
+    return (
+      <TableCell
+        ref={ref}
+        {...props}
+        className={clsx(
+          "flex justify-between col-span-full border-b-0",
+          className
+        )}
+      >
+        <Button
+          variant="white"
+          onClick={() => setPage((p) => Math.max(p - 1, 1))}
+          disabled={page === 1}
+        >
+          Previous
+        </Button>
+        <span className="text-sm text-text-700">
+          Page {page} of {totalPages} ({totalItems} total records)
+        </span>
+        <Button
+          variant="white"
+          onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+          disabled={page === totalPages}
+        >
+          Next
+        </Button>
+      </TableCell>
+    );
+  }
+);
+
+Pagination.displayName = "Pagination";
