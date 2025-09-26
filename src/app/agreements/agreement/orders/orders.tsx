@@ -9,13 +9,15 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHeader,
   TableHeaderCell,
   TableRow,
+  Pagination,
 } from "@ui/table";
 import { Link } from "@ui/link";
 import { RPxYCell } from "@features/rpxy";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import dayjs from "dayjs";
 
 const CreatedCell = ({
@@ -43,7 +45,10 @@ const CreatedCell = ({
 
 export function Orders() {
   const { id } = useParams<{ id: string }>();
-  const { orders } = useAgreementOrders(id!);
+  const [offset, setOffset] = useState(0);
+  const { orders, pagination, isFetching } = useAgreementOrders(id!, {
+    offset,
+  });
   const { billingConfig } = useBillingConfig(id!);
 
   if (!orders) return <>Loading...</>;
@@ -98,6 +103,15 @@ export function Orders() {
             </TableRow>
           ))}
         </TableBody>
+        <TableFooter>
+          <Pagination
+            onPageChange={(page) =>
+              setOffset((page - 1) * (pagination.limit ?? 0))
+            }
+            totalItems={pagination.total ?? 0}
+            isLoading={isFetching}
+          />
+        </TableFooter>
       </Table>
     </Card>
   );

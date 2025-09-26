@@ -14,6 +14,10 @@ export type AgreementsOptions = ListOptions<Agreement> & {
   licenseeId?: string;
 };
 
+export type OrdersOptions = ListOptions<Order>;
+
+export type SubscriptionsOptions = ListOptions<Subscription>;
+
 export class AgreementsClient {
   private axios: AxiosInstance;
 
@@ -88,7 +92,7 @@ export class AgreementsClient {
 
   async getSubscriptions(
     agreementId: string,
-    options?: ListOptions<Subscription>
+    options?: SubscriptionsOptions
   ): Promise<SubscriptionListResponse> {
     const { offset = 0, limit = 10, sort } = options || {};
 
@@ -117,7 +121,7 @@ export class AgreementsClient {
 
   async getOrders(
     agreementId: string,
-    options?: ListOptions<Order>
+    options?: OrdersOptions
   ): Promise<OrderListResponse> {
     const { offset = 0, limit = 10, sort } = options || {};
 

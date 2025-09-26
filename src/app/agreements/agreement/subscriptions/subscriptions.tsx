@@ -9,12 +9,14 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHeader,
   TableHeaderCell,
   TableRow,
+  Pagination,
 } from "@ui/table";
 import { Link } from "@ui/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { TermsEntity } from "@swo/mp-api-model";
 import { RPxYCell } from "@features/rpxy";
 
@@ -46,7 +48,11 @@ const CommitmentCell = ({
 
 export function Subscriptions() {
   const { id } = useParams<{ id: string }>();
-  const { subscriptions } = useAgreementSubscriptions(id!);
+  const [offset, setOffset] = useState(0);
+  const { subscriptions, pagination, isFetching } = useAgreementSubscriptions(
+    id!,
+    { offset }
+  );
   const { billingConfig } = useBillingConfig(id!);
 
   if (!subscriptions) return <>Loading...</>;
@@ -103,6 +109,15 @@ export function Subscriptions() {
             </TableRow>
           ))}
         </TableBody>
+        <TableFooter>
+          <Pagination
+            onPageChange={(page) =>
+              setOffset((page - 1) * (pagination.limit ?? 0))
+            }
+            totalItems={pagination.total ?? 0}
+            isLoading={isFetching}
+          />
+        </TableFooter>
       </Table>
     </Card>
   );

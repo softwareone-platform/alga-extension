@@ -12,6 +12,8 @@ export type SubscriptionsOptions = ListOptions<Subscription> & {
   licenseeId?: string;
 };
 
+export type OrdersOptions = ListOptions<Order>;
+
 export class SubscriptionsClient {
   private axios: AxiosInstance;
 
@@ -108,7 +110,7 @@ export class SubscriptionsClient {
 
   async getOrders(
     subscriptionId: string,
-    options?: ListOptions<Order>
+    options?: OrdersOptions
   ): Promise<OrderListResponse> {
     const { offset = 0, limit = 10, sort } = options || {};
 

@@ -1,7 +1,11 @@
 import { useContext } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { AgreementsContext as AgreementsContext } from "./context";
-import { AgreementsOptions } from "@lib/swo";
+import {
+  AgreementsOptions,
+  OrdersOptions,
+  SubscriptionsOptions,
+} from "@lib/swo";
 
 export const useAgreements = (options?: AgreementsOptions) => {
   const { client } = useContext(AgreementsContext);
@@ -31,12 +35,15 @@ export const useAgreement = (id: string) => {
   return { agreement, ...state };
 };
 
-export const useAgreementSubscriptions = (agreementId: string) => {
+export const useAgreementSubscriptions = (
+  agreementId: string,
+  options?: SubscriptionsOptions
+) => {
   const { client } = useContext(AgreementsContext);
 
   const { data, ...state } = useQuery({
-    queryKey: ["agreements", agreementId, "subscriptions"],
-    queryFn: () => client!.getSubscriptions(agreementId),
+    queryKey: ["agreements", agreementId, "subscriptions", options],
+    queryFn: () => client!.getSubscriptions(agreementId, options),
     enabled: !!client,
     placeholderData: keepPreviousData,
   });
@@ -47,12 +54,15 @@ export const useAgreementSubscriptions = (agreementId: string) => {
   return { subscriptions, pagination, ...state };
 };
 
-export const useAgreementOrders = (agreementId: string) => {
+export const useAgreementOrders = (
+  agreementId: string,
+  options?: OrdersOptions
+) => {
   const { client } = useContext(AgreementsContext);
 
   const { data, ...state } = useQuery({
-    queryKey: ["agreements", agreementId, "orders"],
-    queryFn: () => client!.getOrders(agreementId),
+    queryKey: ["agreements", agreementId, "orders", options],
+    queryFn: () => client!.getOrders(agreementId, options),
     enabled: !!client,
     placeholderData: keepPreviousData,
   });
