@@ -34,6 +34,16 @@ const StatementStatusBadge = ({ status }: { status?: StatementStatus }) => {
   return <Badge tone={tone}>{status}</Badge>;
 };
 
+const AgreementCell = ({ name, id }: { name?: string; id?: string }) => {
+  if (!name && !id) return <TableCell>—</TableCell>;
+  return (
+    <TableCell className="flex flex-col gap-0.5 items-start relative w-full">
+      <span className="truncate w-full">{name || "—"}</span>
+      <span className="text-xs text-text-500 truncate w-full">{id || "—"}</span>
+    </TableCell>
+  );
+};
+
 const ProductCell = ({
   name,
   iconUrl,
@@ -63,7 +73,7 @@ export function Statements() {
         billingConfigs?.reduce(
           (acc, billingConfig) => ({
             ...acc,
-            [billingConfig.id!]: billingConfig,
+            [billingConfig!.agreementId!]: billingConfig,
           }),
           {} as Record<string, BillingConfig>
         ),
@@ -72,13 +82,12 @@ export function Statements() {
 
   return (
     <Card>
-      <Table className="grid-cols-[minmax(192px,auto)_minmax(192px,auto)_minmax(150px,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)]">
+      <Table className="grid-cols-[minmax(192px,auto)_minmax(150px,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)]">
         <TableHeader>
           <TableRow>
             <TableHeaderCell>Name</TableHeaderCell>
-            <TableHeaderCell>Type</TableHeaderCell>
+            <TableHeaderCell>Statement Type</TableHeaderCell>
             <TableHeaderCell>Agreement</TableHeaderCell>
-            <TableHeaderCell>Subscription</TableHeaderCell>
             <TableHeaderCell>Product</TableHeaderCell>
             <TableHeaderCell>Consumer</TableHeaderCell>
             <TableHeaderCell>Invoice</TableHeaderCell>
@@ -97,9 +106,11 @@ export function Statements() {
                   {statement.id!}
                 </span>
               </TableCell>
-
-              <TableCell></TableCell>
-              <TableCell></TableCell>
+              <TableCell>{statement.type || "—"}</TableCell>
+              <AgreementCell
+                name={statement.agreement?.name}
+                id={statement.agreement?.id}
+              />
               <ProductCell
                 name={statement.product?.name}
                 iconUrl={statement.product?.icon}
@@ -123,13 +134,15 @@ export function Statements() {
           ))}
         </TableBody>
         <TableFooter>
-          <Pagination
-            onPageChange={(page) =>
-              setOffset((page - 1) * (pagination.limit ?? 0))
-            }
-            totalItems={pagination.total ?? 0}
-            isLoading={isFetching}
-          />
+          <TableRow>
+            <Pagination
+              onPageChange={(page) =>
+                setOffset((page - 1) * (pagination.limit ?? 0))
+              }
+              totalItems={pagination.total ?? 0}
+              isLoading={isFetching}
+            />
+          </TableRow>
         </TableFooter>
       </Table>
     </Card>
