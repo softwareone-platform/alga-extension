@@ -1,9 +1,4 @@
-import {
-  useAgreements,
-  useBillingConfigs,
-  AgreementStatusBadge,
-} from "@features/agreements";
-import { BillingConfig } from "@lib/alga";
+import { AgreementStatusBadge } from "@features/agreements";
 import { useMemo, useState } from "react";
 import { Card } from "@ui/card";
 import { AgreementStatus } from "@swo/mp-api-model";
@@ -20,24 +15,12 @@ import {
 import { Icon } from "@ui/icon";
 import { RPxYCell } from "@features/rpxy";
 
-const NameCell = ({
-  name,
-  id,
-  status,
-}: {
-  name?: string;
-  id: string;
-  status?: AgreementStatus;
-}) => {
+const NameCell = ({ id }: { id: string }) => {
   return (
     <TableCell className="grid grid-cols-[auto_auto] gap-y-0.5 gap-x-2 w-full">
       <span className="text-sm text-blue-500 hover:text-blue-600 truncate">
-        {name ?? "—"}
+        {id ?? "—"}
       </span>
-      <span className="row-span-2 justify-self-end">
-        <AgreementStatusBadge status={status} />
-      </span>
-      <span className="text-xs text-text-500 truncate">{id}</span>
     </TableCell>
   );
 };
