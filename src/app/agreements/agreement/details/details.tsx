@@ -1,8 +1,9 @@
-import { useAgreement, useBillingConfig } from "@features/agreements";
+import { useAgreement } from "@features/agreements";
 import { Audit } from "@ui/audit";
 import { Card } from "@ui/card";
 import dayjs from "dayjs";
 import { useParams } from "react-router";
+import { useBillingConfig } from "@features/billing-config";
 
 export function Details() {
   const { id } = useParams<{ id: string }>();

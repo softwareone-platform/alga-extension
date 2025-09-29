@@ -153,7 +153,7 @@ export const Pagination = forwardRef<HTMLTableCellElement, PaginationProps>(
     };
 
     return (
-      <TableCell
+      <TableHeaderCell
         ref={ref}
         {...props}
         className={clsx(
@@ -178,7 +178,7 @@ export const Pagination = forwardRef<HTMLTableCellElement, PaginationProps>(
         >
           Next
         </Button>
-      </TableCell>
+      </TableHeaderCell>
     );
   }
 );

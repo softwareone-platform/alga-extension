@@ -1,9 +1,5 @@
 import { Card } from "@ui/card";
-import {
-  OrderStatusBadge,
-  useBillingConfig,
-  useAgreementOrders,
-} from "@features/agreements";
+import { OrderStatusBadge, useAgreementOrders } from "@features/agreements";
 import { useParams } from "react-router";
 import {
   Table,
@@ -19,6 +15,7 @@ import { Link } from "@ui/link";
 import { PriceWithMarkupCell } from "@features/markup";
 import { useMemo, useState } from "react";
 import dayjs from "dayjs";
+import { useBillingConfig } from "@features/billing-config";
 
 const CreatedCell = ({
   createdAt,

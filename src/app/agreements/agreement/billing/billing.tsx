@@ -1,12 +1,9 @@
 import { Card } from "@ui/card";
-import {
-  useAgreement,
-  useBillingConfig,
-  PLAN_SERVICES,
-} from "@features/agreements";
+import { useAgreement, PLAN_SERVICES } from "@features/agreements";
 import { PlanService as AlgaPlanService } from "@lib/alga";
 import { Link } from "@ui/link";
 import { useParams } from "react-router";
+import { useBillingConfig } from "@features/billing-config";
 
 function PlanService({
   planService,

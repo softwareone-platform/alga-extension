@@ -10,10 +10,12 @@ import { Input, Textarea } from "@ui/input";
 import {
   useAgreement,
   AgreementStatusBadge,
-  useBillingConfig,
-  useBillingConfigMutation,
   PLAN_SERVICES,
 } from "@features/agreements";
+import {
+  useBillingConfig,
+  useBillingConfigMutation,
+} from "@features/billing-config";
 import { BillingConfigChanges, Operations, PlanService } from "@lib/alga";
 import { Radio, RadioGroup } from "@ui/radio";
 import {

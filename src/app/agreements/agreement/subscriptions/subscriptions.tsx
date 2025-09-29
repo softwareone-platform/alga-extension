@@ -1,7 +1,6 @@
 import { Card } from "@ui/card";
 import {
   SubscriptionStatusBadge,
-  useBillingConfig,
   useAgreementSubscriptions,
 } from "@features/agreements";
 import { useParams } from "react-router";
@@ -19,6 +18,7 @@ import { Link } from "@ui/link";
 import { useMemo, useState } from "react";
 import { TermsEntity } from "@swo/mp-api-model";
 import { PriceWithMarkupCell } from "@features/markup";
+import { useBillingConfig } from "@features/billing-config";
 
 const PeriodCell = ({ period }: { period: TermsEntity["period"] }) => {
   const text = useMemo(() => {
