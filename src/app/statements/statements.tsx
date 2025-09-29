@@ -12,27 +12,9 @@ import {
 } from "@ui/table";
 import { Icon } from "@ui/icon";
 import { MarkupCell, PriceWithMarkupCell } from "@features/markup";
-import { useStatements } from "@features/statements";
+import { useStatements, StatementStatusBadge } from "@features/statements";
 import { useBillingConfigs } from "@features/billing-config";
 import { BillingConfig } from "@lib/alga";
-import { StatementStatus } from "@swo/mp-api-model/billing";
-import { Badge } from "@alga-psa/ui-kit";
-
-const StatementStatusBadge = ({ status }: { status?: StatementStatus }) => {
-  if (!status) return <span>—</span>;
-
-  let tone: "danger" | "default" | "success" | "warning" = "default";
-
-  if (status === "Pending") tone = "warning";
-  if (status === "Generated") tone = "default";
-  if (status === "Queued") tone = "default";
-  if (status === "Error") tone = "danger";
-  if (status === "Cancelled") tone = "danger";
-  if (status === "Issued") tone = "success";
-  if (status === "Generating") tone = "default";
-
-  return <Badge tone={tone}>{status}</Badge>;
-};
 
 const AgreementCell = ({ name, id }: { name?: string; id?: string }) => {
   if (!name && !id) return <TableCell>—</TableCell>;

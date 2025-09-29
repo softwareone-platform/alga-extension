@@ -286,16 +286,14 @@ function BillingConfigEditor({
 
 export function Agreement() {
   const { id } = useParams<{ id: string }>();
-  const { agreement: swoAgreement, isPending: isSWOPending } = useAgreement(
-    id!
-  );
+  const { agreement, isPending } = useAgreement(id!);
   const [isOpen, setIsOpen] = useState(false);
 
-  if (isSWOPending) return <div>Loading...</div>;
+  if (isPending) return <div>Loading...</div>;
 
-  if (!swoAgreement) return <div>Agreement not found</div>;
+  if (!agreement) return <div>Agreement not found</div>;
 
-  const { name, status } = swoAgreement;
+  const { name, status } = agreement;
 
   return (
     <div className="w-full flex flex-col p-6 gap-8">
