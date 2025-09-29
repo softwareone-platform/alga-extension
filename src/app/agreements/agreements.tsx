@@ -14,7 +14,7 @@ import {
   TableRow,
 } from "@ui/table";
 import { Icon } from "@ui/icon";
-import { RPxYCell } from "@features/rpxy";
+import { MarkupCell, PriceWithMarkupCell } from "@features/markup";
 import { useBillingConfigs } from "@features/billing-config";
 
 const NameCell = ({
@@ -64,10 +64,13 @@ export function Agreements() {
   const billingConfigsById =
     useMemo(
       () =>
-        billingConfigs?.reduce((acc, billingConfig) => {
-          acc[billingConfig.id!] = billingConfig;
-          return acc;
-        }, {} as Record<string, BillingConfig>),
+        billingConfigs?.reduce(
+          (acc, billingConfig) => ({
+            ...acc,
+            [billingConfig.id!]: billingConfig,
+          }),
+          {} as Record<string, BillingConfig>
+        ),
       [billingConfigs]
     ) || {};
 
@@ -103,13 +106,9 @@ export function Agreements() {
               <TableCell></TableCell>
               <TableCell></TableCell>
               <TableCell>{agreement.price?.SPxY || "—"}</TableCell>
-              <TableCell>
-                {billingConfigsById[agreement.id!]?.markup
-                  ? `${billingConfigsById[agreement.id!]?.markup}%`
-                  : "—"}
-              </TableCell>
-              <RPxYCell
-                SPxY={agreement.price?.SPxY}
+              <MarkupCell markup={billingConfigsById[agreement.id!]?.markup} />
+              <PriceWithMarkupCell
+                price={agreement.price?.SPxY}
                 markup={billingConfigsById[agreement.id!]?.markup}
               />
               <TableCell>

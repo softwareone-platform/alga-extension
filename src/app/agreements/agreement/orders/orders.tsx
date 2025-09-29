@@ -16,7 +16,7 @@ import {
   Pagination,
 } from "@ui/table";
 import { Link } from "@ui/link";
-import { RPxYCell } from "@features/rpxy";
+import { PriceWithMarkupCell } from "@features/markup";
 import { useMemo, useState } from "react";
 import dayjs from "dayjs";
 
@@ -91,8 +91,8 @@ export function Orders() {
               <TableCell>
                 {billingConfig?.markup ? `${billingConfig.markup}%` : "—"}
               </TableCell>
-              <RPxYCell
-                SPxY={order.price?.SPxY}
+              <PriceWithMarkupCell
+                price={order.price?.SPxY}
                 markup={billingConfig?.markup}
               />
               <TableCell>{order.price?.currency || "—"}</TableCell>

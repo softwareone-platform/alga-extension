@@ -1,7 +1,5 @@
-import { AgreementStatusBadge } from "@features/agreements";
 import { useMemo, useState } from "react";
 import { Card } from "@ui/card";
-import { AgreementStatus } from "@swo/mp-api-model";
 import {
   Pagination,
   Table,
@@ -13,16 +11,14 @@ import {
   TableRow,
 } from "@ui/table";
 import { Icon } from "@ui/icon";
-import { RPxYCell } from "@features/rpxy";
+import { MarkupCell, PriceWithMarkupCell } from "@features/markup";
+import { useStatements } from "@features/statements";
+import { useBillingConfigs } from "@features/billing-config";
+import { BillingConfig } from "@lib/alga";
+import { StatementStatus } from "@swo/mp-api-model/billing";
 
-const NameCell = ({ id }: { id: string }) => {
-  return (
-    <TableCell className="grid grid-cols-[auto_auto] gap-y-0.5 gap-x-2 w-full">
-      <span className="text-sm text-blue-500 hover:text-blue-600 truncate">
-        {id ?? "—"}
-      </span>
-    </TableCell>
-  );
+const StatementStatusBadge = ({ status }: { status: StatementStatus }) => {
+  return <TableCell>{status || "—"}</TableCell>;
 };
 
 const ProductCell = ({
@@ -44,58 +40,70 @@ export function Statements() {
   const [offset, setOffset] = useState(0);
   const { statements, pagination, isFetching } = useStatements({ offset });
 
+  const { billingConfigs } = useBillingConfigs(
+    statements.map((statement) => statement.agreement?.id ?? "").filter(Boolean)
+  );
+
+  const billingConfigsById =
+    useMemo(
+      () =>
+        billingConfigs?.reduce(
+          (acc, billingConfig) => ({
+            ...acc,
+            [billingConfig.id!]: billingConfig,
+          }),
+          {} as Record<string, BillingConfig>
+        ),
+      [billingConfigs]
+    ) || {};
+
   return (
     <Card>
       <Table className="grid-cols-[minmax(192px,auto)_minmax(192px,auto)_minmax(150px,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)]">
         <TableHeader>
           <TableRow>
             <TableHeaderCell>Name</TableHeaderCell>
+            <TableHeaderCell>Type</TableHeaderCell>
+            <TableHeaderCell>Agreement</TableHeaderCell>
+            <TableHeaderCell>Subscription</TableHeaderCell>
             <TableHeaderCell>Product</TableHeaderCell>
-            <TableHeaderCell>Billing config ID</TableHeaderCell>
-            <TableHeaderCell>Customer</TableHeaderCell>
-            <TableHeaderCell>SPxY</TableHeaderCell>
+            <TableHeaderCell>Consumer</TableHeaderCell>
+            <TableHeaderCell>Invoice</TableHeaderCell>
+            <TableHeaderCell>Total SP</TableHeaderCell>
             <TableHeaderCell>Markup</TableHeaderCell>
-            <TableHeaderCell>RPxY</TableHeaderCell>
-            <TableHeaderCell>Operations</TableHeaderCell>
+            <TableHeaderCell>Total RP</TableHeaderCell>
             <TableHeaderCell>Currency</TableHeaderCell>
+            <TableHeaderCell>Status</TableHeaderCell>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {agreements?.map((agreement) => (
-            <TableRow key={agreement.id} link={`/agreements/${agreement.id}`}>
-              <NameCell
-                name={agreement.name}
-                id={agreement.id!}
-                status={agreement.status}
-              />
+          {statements?.map((statement) => (
+            <TableRow key={statement.id} link={`/statements/${statement.id}`}>
+              <TableCell>
+                <span className="text-sm text-blue-500 hover:text-blue-600 truncate">
+                  {statement.id!}
+                </span>
+              </TableCell>
 
+              <TableCell></TableCell>
+              <TableCell></TableCell>
               <ProductCell
-                name={agreement.product?.name}
-                iconUrl={agreement.product?.icon}
+                name={statement.product?.name}
+                iconUrl={statement.product?.icon}
               />
               <TableCell></TableCell>
               <TableCell></TableCell>
-              <TableCell>{agreement.price?.SPxY || "—"}</TableCell>
-              <TableCell>
-                {billingConfigsById[agreement.id!]?.markup
-                  ? `${billingConfigsById[agreement.id!]?.markup}%`
-                  : "—"}
-              </TableCell>
-              <RPxYCell
-                SPxY={agreement.price?.SPxY}
-                markup={billingConfigsById[agreement.id!]?.markup}
+
+              <TableCell>{statement.price?.totalSP || "—"}</TableCell>
+              <MarkupCell
+                markup={billingConfigsById[statement.agreement?.id!]?.markup}
               />
-              <TableCell>
-                {billingConfigsById[agreement.id!]?.operations == "managed" && (
-                  <span>Managed</span>
-                )}
-                {billingConfigsById[agreement.id!]?.operations ==
-                  "self-service" && <span>Self-service</span>}
-                {!billingConfigsById[agreement.id!]?.operations && (
-                  <span>—</span>
-                )}
-              </TableCell>
-              <TableCell>{agreement.price?.currency || "—"}</TableCell>
+              <PriceWithMarkupCell
+                price={statement.price?.totalSP}
+                markup={billingConfigsById[statement.agreement?.id!]?.markup}
+              />
+              <TableCell>{statement.price?.currency?.sale || "—"}</TableCell>
+              <TableCell>{statement.status || "—"}</TableCell>
             </TableRow>
           ))}
         </TableBody>

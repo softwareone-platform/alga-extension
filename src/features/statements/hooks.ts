@@ -1,74 +1,51 @@
 import { useContext } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { AgreementsContext as AgreementsContext } from "./context";
-import {
-  AgreementsOptions,
-  OrdersOptions,
-  SubscriptionsOptions,
-} from "@lib/swo";
+import { StatementsContext } from "./context";
+import { StatementsOptions, ChargesOptions } from "@lib/swo";
 
-export const useAgreements = (options?: AgreementsOptions) => {
-  const { client } = useContext(AgreementsContext);
+export const useStatements = (options?: StatementsOptions) => {
+  const { client } = useContext(StatementsContext);
 
   const { data, ...state } = useQuery({
-    queryKey: ["agreements", options],
-    queryFn: () => client!.getAgreements(options),
+    queryKey: ["statements", options],
+    queryFn: () => client!.getStatements(options),
     enabled: !!client,
     placeholderData: keepPreviousData,
   });
 
-  const agreements = data?.data || [];
+  const statements = data?.data || [];
   const pagination = data?.$meta?.pagination || { total: 0 };
 
-  return { agreements, pagination, ...state };
+  return { statements, pagination, ...state };
 };
 
-export const useAgreement = (id: string) => {
-  const { client } = useContext(AgreementsContext);
+export const useStatement = (id: string) => {
+  const { client } = useContext(StatementsContext);
 
-  const { data: agreement, ...state } = useQuery({
-    queryKey: ["agreements", id],
-    queryFn: () => client!.getAgreement(id),
+  const { data: statement, ...state } = useQuery({
+    queryKey: ["statements", id],
+    queryFn: () => client!.getStatement(id),
     enabled: !!client,
   });
 
-  return { agreement, ...state };
+  return { statement, ...state };
 };
 
-export const useAgreementSubscriptions = (
-  agreementId: string,
-  options?: SubscriptionsOptions
+export const useStatementCharges = (
+  statementId: string,
+  options?: ChargesOptions
 ) => {
-  const { client } = useContext(AgreementsContext);
+  const { client } = useContext(StatementsContext);
 
   const { data, ...state } = useQuery({
-    queryKey: ["agreements", agreementId, "subscriptions", options],
-    queryFn: () => client!.getSubscriptions(agreementId, options),
+    queryKey: ["statements", statementId, "charges", options],
+    queryFn: () => client!.getCharges(statementId, options),
     enabled: !!client,
     placeholderData: keepPreviousData,
   });
 
-  const subscriptions = data?.data || [];
+  const charges = data?.data || [];
   const pagination = data?.$meta?.pagination || { total: 0 };
 
-  return { subscriptions, pagination, ...state };
-};
-
-export const useAgreementOrders = (
-  agreementId: string,
-  options?: OrdersOptions
-) => {
-  const { client } = useContext(AgreementsContext);
-
-  const { data, ...state } = useQuery({
-    queryKey: ["agreements", agreementId, "orders", options],
-    queryFn: () => client!.getOrders(agreementId, options),
-    enabled: !!client,
-    placeholderData: keepPreviousData,
-  });
-
-  const orders = data?.data || [];
-  const pagination = data?.$meta?.pagination || { total: 0 };
-
-  return { orders, pagination, ...state };
+  return { charges, pagination, ...state };
 };

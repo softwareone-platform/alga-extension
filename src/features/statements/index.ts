@@ -1,2 +1,2 @@
-export { AgreementsProvider } from "./context";
+export { StatementsProvider } from "./context";
 export * from "./hooks";

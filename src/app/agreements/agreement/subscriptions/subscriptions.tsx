@@ -18,7 +18,7 @@ import {
 import { Link } from "@ui/link";
 import { useMemo, useState } from "react";
 import { TermsEntity } from "@swo/mp-api-model";
-import { RPxYCell } from "@features/rpxy";
+import { PriceWithMarkupCell } from "@features/markup";
 
 const PeriodCell = ({ period }: { period: TermsEntity["period"] }) => {
   const text = useMemo(() => {
@@ -92,12 +92,12 @@ export function Subscriptions() {
               </TableCell>
               <TableCell>{subscription.price?.SPxM || "—"}</TableCell>
               <TableCell>{subscription.price?.SPxY || "—"}</TableCell>
-              <RPxYCell
-                SPxY={subscription.price?.SPxM}
+              <PriceWithMarkupCell
+                price={subscription.price?.SPxM}
                 markup={billingConfig?.markup}
               />
-              <RPxYCell
-                SPxY={subscription.price?.SPxY}
+              <PriceWithMarkupCell
+                price={subscription.price?.SPxY}
                 markup={billingConfig?.markup}
               />
               <PeriodCell period={subscription.terms?.period} />

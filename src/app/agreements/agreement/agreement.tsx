@@ -22,7 +22,7 @@ import {
   ListboxOption,
   ListboxOptions,
 } from "@ui/listbox";
-import { calculateRPxY } from "@features/rpxy";
+import { withMarkup } from "@features/markup";
 
 function AgreementActions() {
   return (
@@ -38,7 +38,7 @@ function AgreementSummary({ id }: { id: string }) {
     useBillingConfig(id);
 
   const RPxY = useMemo(
-    () => calculateRPxY(agreement?.price?.SPxY, billingConfig?.markup),
+    () => withMarkup(agreement?.price?.SPxY, billingConfig?.markup),
     [agreement?.price?.SPxY, billingConfig?.markup]
   );
 
