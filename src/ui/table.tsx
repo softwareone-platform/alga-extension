@@ -157,7 +157,7 @@ export const Pagination = forwardRef<HTMLTableCellElement, PaginationProps>(
         ref={ref}
         {...props}
         className={clsx(
-          "flex justify-between col-span-full border-b-0",
+          "flex justify-between items-center col-span-full border-b-0",
           className
         )}
       >
