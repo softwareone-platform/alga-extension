@@ -16,6 +16,11 @@ import { useExtensionDetails } from "@features/extension";
 import { UserProvider } from "@features/user";
 import { useEffect, useRef } from "react";
 import { runIFrame } from "@lib/swo-navigation";
+import { Statements, StatementsLayout } from "./statements";
+import { KVStorage } from "@lib/alga";
+import { BillingConfigsProvider } from "@features/billing-config";
+
+const kvStorage = new KVStorage("swo:billing-configs");
 
 export function App() {
   const { details, isPending } = useExtensionDetails();
@@ -40,30 +45,38 @@ export function App() {
   return (
     <AccountProvider baseUrl={details?.endpoint} token={details?.token}>
       <UserProvider baseUrl={details?.endpoint} token={details?.token}>
-        <Routes>
-          <Route path="/" element={<Navigate to="/agreements" replace />} />
+        <BillingConfigsProvider kvStorage={kvStorage}>
+          <Routes>
+            <Route path="/" element={<Navigate to="/agreements" replace />} />
 
-          <Route path="settings" element={<Settings />}>
-            <Route index element={<Navigate to="general" replace />} />
-            <Route path="general" element={<General />} />
-            <Route path="details" element={<Details />} />
-          </Route>
+            <Route path="settings" element={<Settings />}>
+              <Route index element={<Navigate to="general" replace />} />
+              <Route path="general" element={<General />} />
+              <Route path="details" element={<Details />} />
+            </Route>
 
-          <Route path="agreements">
-            <Route element={<AgreementsLayout />}>
-              <Route index element={<Agreements />} />
-              <Route path=":id" element={<Agreement />}>
-                <Route index element={<Navigate to="softwareone" replace />} />
-                <Route path="softwareone" element={<SoftwareOne />} />
-                <Route path="subscriptions" element={<Subscriptions />} />
-                <Route path="orders" element={<Orders />} />
-                <Route path="consumer" element={<Consumer />} />
-                <Route path="billing" element={<Billing />} />
-                <Route path="details" element={<AgreementDetails />} />
+            <Route path="agreements">
+              <Route element={<AgreementsLayout />}>
+                <Route index element={<Agreements />} />
+                <Route path=":id" element={<Agreement />}>
+                  <Route
+                    index
+                    element={<Navigate to="softwareone" replace />}
+                  />
+                  <Route path="softwareone" element={<SoftwareOne />} />
+                  <Route path="subscriptions" element={<Subscriptions />} />
+                  <Route path="orders" element={<Orders />} />
+                  <Route path="consumer" element={<Consumer />} />
+                  <Route path="billing" element={<Billing />} />
+                  <Route path="details" element={<AgreementDetails />} />
+                </Route>
               </Route>
             </Route>
-          </Route>
-        </Routes>
+            <Route path="statements" element={<StatementsLayout />}>
+              <Route index element={<Statements />} />
+            </Route>
+          </Routes>
+        </BillingConfigsProvider>
       </UserProvider>
     </AccountProvider>
   );
