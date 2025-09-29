@@ -1,4 +1,8 @@
-import { useAgreements, AgreementStatusBadge } from "@features/agreements";
+import {
+  useAgreements,
+  useBillingConfigs,
+  AgreementStatusBadge,
+} from "@features/agreements";
 import { BillingConfig } from "@lib/alga";
 import { useMemo, useState } from "react";
 import { Card } from "@ui/card";
@@ -15,7 +19,6 @@ import {
 } from "@ui/table";
 import { Icon } from "@ui/icon";
 import { RPxYCell } from "@features/rpxy";
-import { useBillingConfigs } from "@features/billing-config";
 
 const NameCell = ({
   name,
@@ -54,22 +57,9 @@ const ProductCell = ({
   );
 };
 
-export function Agreements() {
+export function Statements() {
   const [offset, setOffset] = useState(0);
-  const { agreements, pagination, isFetching } = useAgreements({ offset });
-  const { billingConfigs } = useBillingConfigs(
-    agreements.map((agreement) => agreement.id!)
-  );
-
-  const billingConfigsById =
-    useMemo(
-      () =>
-        billingConfigs?.reduce((acc, billingConfig) => {
-          acc[billingConfig.id!] = billingConfig;
-          return acc;
-        }, {} as Record<string, BillingConfig>),
-      [billingConfigs]
-    ) || {};
+  const { statements, pagination, isFetching } = useStatements({ offset });
 
   return (
     <Card>
