@@ -13,32 +13,9 @@ import {
 } from "@ui/table";
 import { Link } from "@ui/link";
 import { PriceWithMarkupCell } from "@features/markup";
-import { useMemo, useState } from "react";
-import dayjs from "dayjs";
+import { useState } from "react";
 import { useBillingConfig } from "@features/billing-config";
-
-const CreatedCell = ({
-  createdAt,
-}: {
-  createdAt: string | null | undefined;
-}) => {
-  if (!createdAt) return <TableCell>—</TableCell>;
-
-  const date = useMemo(() => {
-    return dayjs(createdAt).format("MM/DD/YYYY");
-  }, [createdAt]);
-
-  const time = useMemo(() => {
-    return dayjs(createdAt).format("HH:mm");
-  }, [createdAt]);
-
-  return (
-    <TableCell className="flex flex-col gap-0.5 items-start">
-      <span>{date}</span>
-      <span className="text-xs text-text-500">{time}</span>
-    </TableCell>
-  );
-};
+import { CreatedCell } from "@features/dates";
 
 export function Orders() {
   const { id } = useParams<{ id: string }>();
@@ -54,12 +31,11 @@ export function Orders() {
 
   return (
     <Card>
-      <Table className="grid-cols-[auto_auto_auto_auto_auto_auto_auto_auto_auto_auto]">
+      <Table className="grid-cols-[auto_auto_auto_auto_auto_auto_auto_auto_auto]">
         <TableHeader>
           <TableRow>
             <TableHeaderCell>Name</TableHeaderCell>
             <TableHeaderCell>Type</TableHeaderCell>
-            <TableHeaderCell>Agreement</TableHeaderCell>
             <TableHeaderCell>Customer</TableHeaderCell>
             <TableHeaderCell>SPxY</TableHeaderCell>
             <TableHeaderCell>Markup</TableHeaderCell>
@@ -82,7 +58,6 @@ export function Orders() {
                 </Link>
               </TableCell>
               <TableCell>{order.type || "—"}</TableCell>
-              <TableCell>AGREEMENT</TableCell>
               <TableCell>CONSUMER</TableCell>
               <TableCell>{order.price?.SPxY || "—"}</TableCell>
               <TableCell>
