@@ -1,37 +1,33 @@
-import { useAgreement } from "@features/agreements";
+import { useStatement } from "@features/statements";
 import { Audit } from "@ui/audit";
 import { Card } from "@ui/card";
-import dayjs from "dayjs";
 import { useParams } from "react-router";
-import { useBillingConfig } from "@features/billing-config";
 
 export function Details() {
   const { id } = useParams<{ id: string }>();
-  const { agreement } = useAgreement(id!);
-  const { billingConfig } = useBillingConfig(id!);
+  const { statement } = useStatement(id!);
 
-  if (!agreement) return <></>;
+  if (!statement) return <></>;
 
-  const { created, updated, active, terminated } = agreement.audit!;
-  const { updatedAt: algaUpdatedAt } = billingConfig || {};
-
-  const updatedAt =
-    algaUpdatedAt &&
-    (!updated?.at || dayjs(algaUpdatedAt).isAfter(dayjs(updated.at)))
-      ? algaUpdatedAt
-      : updated?.at;
-
-  const { note } = billingConfig || {};
+  const {
+    created,
+    updated,
+    generated,
+    queued,
+    error,
+    cancelled,
+    pending,
+    issued,
+    generating,
+  } = statement.audit!;
 
   return (
     <Card className="flex flex-col">
       <div>
         <label className="block text-sm font-semibold text-gray-900">
           Created
-        </label>
-        <div className="text-sm text-gray-500">
-          <Audit at={created?.at} by={created?.by?.name} />
-        </div>
+        </label>{" "}
+        <Audit at={created?.at} by={created?.by?.name} />
       </div>
 
       <div>
@@ -39,33 +35,71 @@ export function Details() {
           Updated
         </label>
         <div className="text-sm text-gray-500">
-          <Audit at={updatedAt} by={updated?.by?.name} />
+          <Audit at={updated?.at} by={updated?.by?.name} />
         </div>
       </div>
 
       <div>
         <label className="block text-sm font-semibold text-gray-900">
-          Activated
+          Queued
         </label>
         <div className="text-sm text-gray-500">
-          <Audit at={active?.at} by={active?.by?.name} />
+          <Audit at={queued?.at} by={queued?.by?.name} />
         </div>
       </div>
 
       <div>
         <label className="block text-sm font-semibold text-gray-900">
-          Terminated
+          Pending
         </label>
         <div className="text-sm text-gray-500">
-          <Audit at={terminated?.at} by={terminated?.by?.name} />
+          <Audit at={pending?.at} by={pending?.by?.name} />
         </div>
       </div>
 
       <div>
         <label className="block text-sm font-semibold text-gray-900">
-          Note
+          Generating
         </label>
-        <div className="text-sm text-gray-500">{note || "—"}</div>
+        <div className="text-sm text-gray-500">
+          <Audit at={generating?.at} by={generating?.by?.name} />
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-gray-900">
+          Generated
+        </label>
+        <div className="text-sm text-gray-500">
+          <Audit at={generated?.at} by={generated?.by?.name} />
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-gray-900">
+          Issued
+        </label>
+        <div className="text-sm text-gray-500">
+          <Audit at={issued?.at} by={issued?.by?.name} />
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-gray-900">
+          Cancelled
+        </label>
+        <div className="text-sm text-gray-500">
+          <Audit at={cancelled?.at} by={cancelled?.by?.name} />
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-gray-900">
+          Error
+        </label>
+        <div className="text-sm text-gray-500">
+          <Audit at={error?.at} by={error?.by?.name} />
+        </div>
       </div>
     </Card>
   );

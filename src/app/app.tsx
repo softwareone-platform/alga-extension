@@ -10,16 +10,21 @@ import {
   Billing,
   Details as AgreementDetails,
 } from "./agreements";
-import { Settings, General, Details } from "./settings";
+import { Settings, General, Details as SettingsDetails } from "./settings";
 import { AccountProvider } from "@features/account";
 import { useExtensionDetails } from "@features/extension";
 import { UserProvider } from "@features/user";
 import { useEffect, useRef } from "react";
 import { runIFrame } from "@lib/swo-navigation";
-import { Statements, StatementsLayout } from "./statements";
+import {
+  Statements,
+  StatementsLayout,
+  Statement,
+  Charges,
+  Details as StatementDetails,
+} from "./statements";
 import { KVStorage } from "@lib/alga";
 import { BillingConfigsProvider } from "@features/billing-config";
-import { Statement, Charges } from "./statements/statement";
 
 const kvStorage = new KVStorage("swo:billing-configs");
 
@@ -53,7 +58,7 @@ export function App() {
             <Route path="settings" element={<Settings />}>
               <Route index element={<Navigate to="general" replace />} />
               <Route path="general" element={<General />} />
-              <Route path="details" element={<Details />} />
+              <Route path="details" element={<SettingsDetails />} />
             </Route>
 
             <Route path="agreements">
@@ -79,6 +84,7 @@ export function App() {
                 <Route path=":id" element={<Statement />}>
                   <Route index element={<Navigate to="charges" replace />} />
                   <Route path="charges" element={<Charges />} />
+                  <Route path="details" element={<StatementDetails />} />
                 </Route>
               </Route>
             </Route>
