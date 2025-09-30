@@ -11,6 +11,20 @@ import {
 import { PriceWithMarkupCell } from "@features/markup";
 import { useBillingConfig } from "@features/billing-config";
 import { useOrder } from "@features/orders";
+import { Badge } from "@alga-psa/ui-kit";
+
+export const ItemStatusBadge = ({ status }: { status?: string }) => {
+  if (!status) return <span>—</span>;
+
+  let tone: "danger" | "default" | "success" | "warning" = "default";
+
+  if (status === "Draft") tone = "default";
+  if (status === "Pending") tone = "warning";
+  if (status === "Published") tone = "success";
+  if (status === "Error") tone = "danger";
+
+  return <Badge tone={tone}>{status}</Badge>;
+};
 
 const NameCell = ({ name, id }: { name?: string; id?: string }) => {
   if (!name && !id) return <TableCell>—</TableCell>;
@@ -64,7 +78,9 @@ export function Items() {
                 price={line.price?.SPxY}
                 markup={billingConfig?.markup}
               />
-              <TableCell>{line.item?.status || "—"}</TableCell>
+              <TableCell>
+                <ItemStatusBadge status={line.item?.status as any} />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
