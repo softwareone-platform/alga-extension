@@ -39,7 +39,7 @@ export function Charges() {
 
   return (
     <Card>
-      <Table className="grid-cols-[auto_auto_auto_auto_auto_auto_auto_auto_auto_auto]">
+      <Table className="grid-cols-[auto_auto_auto_auto_auto_auto_auto_auto]">
         <TableHeader>
           <TableRow>
             <TableHeaderCell>Name</TableHeaderCell>

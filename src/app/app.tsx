@@ -19,7 +19,7 @@ import { runIFrame } from "@lib/swo-navigation";
 import { Statements, StatementsLayout } from "./statements";
 import { KVStorage } from "@lib/alga";
 import { BillingConfigsProvider } from "@features/billing-config";
-import { Statement } from "./statements/statement";
+import { Statement, Charges } from "./statements/statement";
 
 const kvStorage = new KVStorage("swo:billing-configs");
 
@@ -75,7 +75,9 @@ export function App() {
             </Route>
             <Route path="statements" element={<StatementsLayout />}>
               <Route index element={<Statements />} />
-              <Route path=":id" element={<Statement />} />
+              <Route path=":id" element={<Statement />}>
+                <Route path="charges" element={<Charges />} />
+              </Route>
             </Route>
           </Routes>
         </BillingConfigsProvider>
