@@ -6,78 +6,70 @@ import { Tabs } from "@ui/tabs";
 import { useMemo } from "react";
 import { useBillingConfig } from "@features/billing-config";
 import { withMarkup } from "@features/markup";
-import { useStatement } from "@features/statements";
+import { StatementStatusBadge, useStatement } from "@features/statements";
 
-function AgreementSummary({ id }: { id: string }) {
-  const { agreement, isPending: isAgreementPending } = useAgreement(id);
-  const { billingConfig, isPending: isBillingConfigPending } =
-    useBillingConfig(id);
+function StatementSummary({ id }: { id: string }) {
+  const { statement, isPending: isAgreementPending } = useStatement(id);
+  const { billingConfig, isPending: isBillingConfigPending } = useBillingConfig(
+    statement?.agreement?.id
+  );
 
-  const RPxY = useMemo(
-    () => withMarkup(agreement?.price?.SPxY, billingConfig?.markup),
-    [agreement?.price?.SPxY, billingConfig?.markup]
+  const totalRP = useMemo(
+    () => withMarkup(statement?.price?.totalSP, billingConfig?.markup),
+    [statement?.price?.totalSP, billingConfig?.markup]
   );
 
   if (isAgreementPending || isBillingConfigPending)
     return <div>Loading...</div>;
 
-  if (!agreement) return <div>Agreement not found</div>;
+  if (!statement) return <></>;
 
   return (
     <Card className="flex flex-row justify-between">
       <div className="flex flex-col gap-1">
-        <label className="text-sm font-semibold text-black">Agreement ID</label>
+        <label className="text-sm font-semibold text-black">Type</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">{agreement.id}</span>
+          <span className="text-sm text-black">{statement.type}</span>
+        </div>
+      </div>
+      <div className="flex flex-col gap-1">
+        <label className="text-sm font-semibold text-black">Agreement</label>
+        <div className="flex gap-2 items-center grow">
+          <span className="text-sm text-black">{statement.agreement?.id}</span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Product</label>
         <div className="flex gap-2 items-center grow">
           <Icon
-            iconUrl={agreement.product?.icon}
-            alt={agreement.product?.name}
+            iconUrl={statement.product?.icon}
+            alt={statement.product?.name}
             className="size-8"
           />
           <span className="text-sm text-black">
-            {agreement.product?.name || "—"}
+            {statement.product?.name || "—"}
           </span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
-        <label className="text-sm font-semibold text-black">Vendor</label>
+        <label className="text-sm font-semibold text-black">Invoice</label>
         <div className="flex gap-2 items-center grow">
-          <Icon
-            iconUrl={agreement.vendor?.icon}
-            alt={agreement.vendor?.name}
-            className="size-8"
-          />
           <span className="text-sm text-black">
-            {agreement.vendor?.name || "—"}
+            {statement.invoice?.id || "—"}
           </span>
-        </div>
-      </div>
-      <div className="flex flex-col gap-1">
-        <label className="text-sm font-semibold text-black">
-          Billing config
-        </label>
-        <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">{billingConfig?.id || "—"}</span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Consumer</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">
-            {agreement.licensee?.name || "—"}
-          </span>
+          <span className="text-sm text-black">—</span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
-        <label className="text-sm font-semibold text-black">SPxY</label>
+        <label className="text-sm font-semibold text-black">Total SP</label>
         <div className="flex gap-2 items-center grow">
           <span className="text-sm text-black">
-            {agreement.price?.SPxY || "—"}
+            {statement.price?.totalSP || "—"}
           </span>
         </div>
       </div>
@@ -90,24 +82,16 @@ function AgreementSummary({ id }: { id: string }) {
         </div>
       </div>
       <div className="flex flex-col gap-1">
-        <label className="text-sm font-semibold text-black">RPxY</label>
+        <label className="text-sm font-semibold text-black">Total RP</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">{RPxY}</span>
+          <span className="text-sm text-black">{totalRP}</span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Currency</label>
         <div className="flex gap-2 items-center grow">
           <span className="text-sm text-black">
-            {agreement.price?.currency || "—"}
-          </span>
-        </div>
-      </div>
-      <div className="flex flex-col gap-1">
-        <label className="text-sm font-semibold text-black">Operations</label>
-        <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">
-            {billingConfig?.operations || "—"}
+            {statement.price?.currency?.sale || "—"}
           </span>
         </div>
       </div>
@@ -122,23 +106,25 @@ export function Statement() {
 
   if (!statement) return <div>Statement not found</div>;
 
-  const { name, status } = statement;
+  const { status } = statement;
 
   return (
     <div className="w-full flex flex-col p-6 gap-8">
       <header className="w-full flex justify-between">
         <div className="flex items-center gap-6">
-          <h1 className="text-3xl font-semibold">{name}</h1>
-          {!!status && <AgreementStatusBadge status={status} />}
+          <h1 className="text-3xl font-semibold">{id}</h1>
+          {!!status && <StatementStatusBadge status={status} />}
         </div>
         <div className="flex items-center gap-6">
-          <Button onClick={() => setIsOpen(true)}>Edit</Button>
+          <Button variant="white" onClick={() => {}}>
+            View in SoftwareOne
+          </Button>
         </div>
       </header>
-      <AgreementSummary id={id!} />
+      <StatementSummary id={id!} />
       <Tabs>
         <NavLink to="charges">
-          {({ isActive }) => <Tabs.Tab isActive={isActive}>Billing</Tabs.Tab>}
+          {({ isActive }) => <Tabs.Tab isActive={isActive}>Charges</Tabs.Tab>}
         </NavLink>
         <NavLink to="details">
           {({ isActive }) => <Tabs.Tab isActive={isActive}>Details</Tabs.Tab>}

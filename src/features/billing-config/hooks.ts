@@ -15,13 +15,13 @@ export const useBillingConfigs = (agreementsIds: string[]) => {
   return { billingConfigs, ...state };
 };
 
-export const useBillingConfig = (agreementId: string) => {
+export const useBillingConfig = (agreementId?: string) => {
   const { client } = useContext(BillingConfigsContext);
 
   const { data: billingConfig, ...state } = useQuery({
     queryKey: ["billing-configs", agreementId],
-    queryFn: () => client!.getByAgreementId(agreementId),
-    enabled: !!client,
+    queryFn: () => client!.getByAgreementId(agreementId!),
+    enabled: !!client && !!agreementId,
   });
 
   return { billingConfig, ...state };
