@@ -64,7 +64,7 @@ export function Orders() {
 
   return (
     <Card>
-      <Table className="grid-cols-[minmax(192px,auto)_minmax(100px,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)]">
+      <Table className="grid-cols-[minmax(192px,auto)_minmax(100px,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)]">
         <TableHeader>
           <TableRow>
             <TableHeaderCell>Order ID</TableHeaderCell>
@@ -96,7 +96,7 @@ export function Orders() {
                 name={order.product?.name}
                 iconUrl={order.product?.icon}
               />
-              <TableCell>LICENSEE</TableCell>
+              <TableCell></TableCell>
               <TableCell>{order.price?.SPxY || "—"}</TableCell>
               <MarkupCell
                 markup={billingConfigsById[order.agreement?.id!]?.markup}

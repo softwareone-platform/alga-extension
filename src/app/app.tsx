@@ -23,6 +23,7 @@ import {
   Charges,
   Details as StatementDetails,
 } from "./statements";
+import { Orders as AllOrders, OrdersLayout } from "./orders";
 import { KVStorage } from "@lib/alga";
 import { BillingConfigsProvider } from "@features/billing-config";
 
@@ -86,6 +87,11 @@ export function App() {
                   <Route path="charges" element={<Charges />} />
                   <Route path="details" element={<StatementDetails />} />
                 </Route>
+              </Route>
+            </Route>
+            <Route path="orders">
+              <Route element={<OrdersLayout />}>
+                <Route index element={<AllOrders />} />
               </Route>
             </Route>
           </Routes>
