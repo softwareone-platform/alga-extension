@@ -39,6 +39,12 @@ function StatementSummary({ id }: { id: string }) {
         </div>
       </div>
       <div className="flex flex-col gap-1">
+        <label className="text-sm font-semibold text-black">Subscription</label>
+        <div className="flex gap-2 items-center grow">
+          <span className="text-sm text-black"></span>
+        </div>
+      </div>
+      <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Product</label>
         <div className="flex gap-2 items-center grow">
           <Icon

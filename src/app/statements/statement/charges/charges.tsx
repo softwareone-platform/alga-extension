@@ -14,9 +14,20 @@ import { PriceWithMarkupCell } from "@features/markup";
 import { useState } from "react";
 import { useBillingConfig } from "@features/billing-config";
 import { useStatement, useStatementCharges } from "@features/statements";
+import dayjs from "dayjs";
 
-const NameCell = ({ name, id }: { name?: string; id?: string }) => {
+const ItemCell = ({ name, id }: { name?: string; id?: string }) => {
   if (!name && !id) return <TableCell>—</TableCell>;
+  return (
+    <TableCell className="flex flex-col gap-0.5 items-start relative w-full">
+      <span className="truncate w-full">{name || "—"}</span>
+      <span className="text-xs text-text-500 truncate w-full">{id || "—"}</span>
+    </TableCell>
+  );
+};
+
+const SubscriptionCell = ({ name, id }: { name?: string; id?: string }) => {
+  if (!name) return <TableCell>—</TableCell>;
   return (
     <TableCell className="flex flex-col gap-0.5 items-start relative w-full">
       <span className="truncate w-full">{name || "—"}</span>
@@ -44,29 +55,36 @@ export function Charges() {
         <TableHeader>
           <TableRow>
             <TableHeaderCell>Name</TableHeaderCell>
+            <TableHeaderCell>Subscription</TableHeaderCell>
+            <TableHeaderCell>Item</TableHeaderCell>
+            <TableHeaderCell>Start Date</TableHeaderCell>
+            <TableHeaderCell>End Date</TableHeaderCell>
             <TableHeaderCell>Quantity</TableHeaderCell>
-            <TableHeaderCell>Unit</TableHeaderCell>
-            <TableHeaderCell>SPxM</TableHeaderCell>
-            <TableHeaderCell>SPxY</TableHeaderCell>
-            <TableHeaderCell>RPxM</TableHeaderCell>
-            <TableHeaderCell>RPxY</TableHeaderCell>
-            <TableHeaderCell>Status</TableHeaderCell>
+            <TableHeaderCell>SP</TableHeaderCell>
+            <TableHeaderCell>RP</TableHeaderCell>
           </TableRow>
         </TableHeader>
         <TableBody>
           {charges?.map((charge) => (
             <TableRow key={charge.id}>
-              <NameCell name={charge.item?.name} id={charge.item?.id} />
+              <TableCell>{charge.id}</TableCell>
+              <SubscriptionCell
+                name={charge.subscription?.name}
+                id={charge.subscription?.id}
+              />
+              <ItemCell name={charge.item?.name} id={charge.item?.id} />
+              <TableCell>
+                {dayjs(charge.period?.start).format("HH:mm MM/DD/YYYY") || "—"}
+              </TableCell>
+              <TableCell>
+                {dayjs(charge.period?.end).format("HH:mm MM/DD/YYYY") || "—"}
+              </TableCell>
               <TableCell>{charge.quantity || "—"}</TableCell>
-              <TableCell>{charge.item?.unit?.name || "—"}</TableCell>
               <TableCell>{charge.price?.SPx1 || "—"}</TableCell>
-              <TableCell>{"—"}</TableCell>
               <PriceWithMarkupCell
                 price={charge.price?.SPx1}
                 markup={billingConfig?.markup}
               />
-              <TableCell>{"—"}</TableCell>
-              <TableCell>{charge.order?.status || "—"}</TableCell>
             </TableRow>
           ))}
         </TableBody>
