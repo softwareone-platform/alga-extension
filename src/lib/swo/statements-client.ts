@@ -12,9 +12,7 @@ export type StatementsOptions = ListOptions<Statement> & {
   licenseeId?: string;
 };
 
-export type ChargesOptions = ListOptions<Charge> & {
-  statementId: string;
-};
+export type ChargesOptions = ListOptions<Charge>;
 
 export class StatementsClient {
   private axios: AxiosInstance;

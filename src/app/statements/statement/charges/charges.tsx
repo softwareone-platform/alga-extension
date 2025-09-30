@@ -1,5 +1,4 @@
 import { Card } from "@ui/card";
-import { OrderStatusBadge, useAgreementOrders } from "@features/agreements";
 import { useParams } from "react-router";
 import {
   Table,
@@ -11,46 +10,32 @@ import {
   TableRow,
   Pagination,
 } from "@ui/table";
-import { Link } from "@ui/link";
 import { PriceWithMarkupCell } from "@features/markup";
-import { useMemo, useState } from "react";
-import dayjs from "dayjs";
+import { useState } from "react";
 import { useBillingConfig } from "@features/billing-config";
+import { useStatementCharges } from "@features/statements";
 
-const CreatedCell = ({
-  createdAt,
-}: {
-  createdAt: string | null | undefined;
-}) => {
-  if (!createdAt) return <TableCell>—</TableCell>;
-
-  const date = useMemo(() => {
-    return dayjs(createdAt).format("MM/DD/YYYY");
-  }, [createdAt]);
-
-  const time = useMemo(() => {
-    return dayjs(createdAt).format("HH:mm");
-  }, [createdAt]);
-
+const NameCell = ({ name, id }: { name?: string; id?: string }) => {
+  if (!name && !id) return <TableCell>—</TableCell>;
   return (
-    <TableCell className="flex flex-col gap-0.5 items-start">
-      <span>{date}</span>
-      <span className="text-xs text-text-500">{time}</span>
+    <TableCell className="flex flex-col gap-0.5 items-start relative w-full">
+      <span className="truncate w-full">{name || "—"}</span>
+      <span className="text-xs text-text-500 truncate w-full">{id || "—"}</span>
     </TableCell>
   );
 };
 
-export function Orders() {
+export function Charges() {
   const { id } = useParams<{ id: string }>();
   const [offset, setOffset] = useState(0);
-  const { orders, pagination, isFetching } = useAgreementOrders(id!, {
+  const { charges, pagination, isFetching } = useStatementCharges(id!, {
     offset,
   });
   const { billingConfig } = useBillingConfig(id!);
 
-  if (!orders) return <>Loading...</>;
+  if (!charges) return <>Loading...</>;
 
-  if (orders.length === 0) return <>No Orders found.</>;
+  if (charges.length === 0) return <>No Charges found.</>;
 
   return (
     <Card>
@@ -58,45 +43,29 @@ export function Orders() {
         <TableHeader>
           <TableRow>
             <TableHeaderCell>Name</TableHeaderCell>
-            <TableHeaderCell>Type</TableHeaderCell>
-            <TableHeaderCell>Agreement</TableHeaderCell>
-            <TableHeaderCell>Customer</TableHeaderCell>
+            <TableHeaderCell>Quantity</TableHeaderCell>
+            <TableHeaderCell>Unit</TableHeaderCell>
+            <TableHeaderCell>SPxM</TableHeaderCell>
             <TableHeaderCell>SPxY</TableHeaderCell>
-            <TableHeaderCell>Markup</TableHeaderCell>
+            <TableHeaderCell>RPxM</TableHeaderCell>
             <TableHeaderCell>RPxY</TableHeaderCell>
-            <TableHeaderCell>Currency</TableHeaderCell>
-            <TableHeaderCell>Created</TableHeaderCell>
             <TableHeaderCell>Status</TableHeaderCell>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {orders?.map((order) => (
-            <TableRow key={order.id}>
-              <TableCell>
-                <Link
-                  className="truncate"
-                  href={`/agreements/${id}/orders/${order.id}`}
-                  target="_blank"
-                >
-                  {order.id}
-                </Link>
-              </TableCell>
-              <TableCell>{order.type || "—"}</TableCell>
-              <TableCell>AGREEMENT</TableCell>
-              <TableCell>CONSUMER</TableCell>
-              <TableCell>{order.price?.SPxY || "—"}</TableCell>
-              <TableCell>
-                {billingConfig?.markup ? `${billingConfig.markup}%` : "—"}
-              </TableCell>
+          {charges?.map((charge) => (
+            <TableRow key={charge.id}>
+              <NameCell name={charge.item?.name} id={charge.item?.id} />
+              <TableCell>{charge.quantity || "—"}</TableCell>
+              <TableCell>{charge.item?.unit?.name || "—"}</TableCell>
+              <TableCell>{charge.price?.SPx1 || "—"}</TableCell>
               <PriceWithMarkupCell
-                price={order.price?.SPxY}
+                price={charge.price?.SPx1}
                 markup={billingConfig?.markup}
               />
-              <TableCell>{order.price?.currency || "—"}</TableCell>
-              <CreatedCell createdAt={order.audit?.created?.at} />
-              <TableCell>
-                <OrderStatusBadge status={order.status} />
-              </TableCell>
+              <TableCell>{"—"}</TableCell>
+              <TableCell>{"—"}</TableCell>
+              <TableCell>{charge.order?.status || "—"}</TableCell>
             </TableRow>
           ))}
         </TableBody>
