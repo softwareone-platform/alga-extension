@@ -73,10 +73,13 @@ export function App() {
                 </Route>
               </Route>
             </Route>
-            <Route path="statements" element={<StatementsLayout />}>
-              <Route index element={<Statements />} />
-              <Route path=":id" element={<Statement />}>
-                <Route index path="charges" element={<Charges />} />
+            <Route path="statements">
+              <Route element={<StatementsLayout />}>
+                <Route index element={<Statements />} />
+                <Route path=":id" element={<Statement />}>
+                  <Route index element={<Navigate to="charges" replace />} />
+                  <Route path="charges" element={<Charges />} />
+                </Route>
               </Route>
             </Route>
           </Routes>
