@@ -76,7 +76,7 @@ export function App() {
             <Route path="statements" element={<StatementsLayout />}>
               <Route index element={<Statements />} />
               <Route path=":id" element={<Statement />}>
-                <Route path="charges" element={<Charges />} />
+                <Route index path="charges" element={<Charges />} />
               </Route>
             </Route>
           </Routes>

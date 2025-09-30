@@ -13,7 +13,7 @@ import {
 import { PriceWithMarkupCell } from "@features/markup";
 import { useState } from "react";
 import { useBillingConfig } from "@features/billing-config";
-import { useStatementCharges } from "@features/statements";
+import { useStatement, useStatementCharges } from "@features/statements";
 
 const NameCell = ({ name, id }: { name?: string; id?: string }) => {
   if (!name && !id) return <TableCell>—</TableCell>;
@@ -28,10 +28,11 @@ const NameCell = ({ name, id }: { name?: string; id?: string }) => {
 export function Charges() {
   const { id } = useParams<{ id: string }>();
   const [offset, setOffset] = useState(0);
+  const { statement } = useStatement(id!);
   const { charges, pagination, isFetching } = useStatementCharges(id!, {
     offset,
   });
-  const { billingConfig } = useBillingConfig(id!);
+  const { billingConfig } = useBillingConfig(statement?.agreement?.id!);
 
   if (!charges) return <>Loading...</>;
 
@@ -59,24 +60,26 @@ export function Charges() {
               <TableCell>{charge.quantity || "—"}</TableCell>
               <TableCell>{charge.item?.unit?.name || "—"}</TableCell>
               <TableCell>{charge.price?.SPx1 || "—"}</TableCell>
+              <TableCell>{"—"}</TableCell>
               <PriceWithMarkupCell
                 price={charge.price?.SPx1}
                 markup={billingConfig?.markup}
               />
-              <TableCell>{"—"}</TableCell>
               <TableCell>{"—"}</TableCell>
               <TableCell>{charge.order?.status || "—"}</TableCell>
             </TableRow>
           ))}
         </TableBody>
         <TableFooter>
-          <Pagination
-            onPageChange={(page) =>
-              setOffset((page - 1) * (pagination.limit ?? 0))
-            }
-            totalItems={pagination.total ?? 0}
-            isLoading={isFetching}
-          />
+          <TableRow>
+            <Pagination
+              onPageChange={(page) =>
+                setOffset((page - 1) * (pagination.limit ?? 0))
+              }
+              totalItems={pagination.total ?? 0}
+              isLoading={isFetching}
+            />
+          </TableRow>
         </TableFooter>
       </Table>
     </Card>
