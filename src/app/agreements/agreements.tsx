@@ -1,4 +1,5 @@
 import { useAgreements, AgreementStatusBadge } from "@features/agreements";
+import { ProductCell } from "@features/products";
 import { BillingConfig } from "@lib/alga";
 import { useMemo, useState } from "react";
 import { Card } from "@ui/card";
@@ -13,7 +14,6 @@ import {
   TableHeaderCell,
   TableRow,
 } from "@ui/table";
-import { Icon } from "@ui/icon";
 import { MarkupCell, PriceWithMarkupCell } from "@features/markup";
 import { useBillingConfigs } from "@features/billing-config";
 
@@ -35,21 +35,6 @@ const NameCell = ({
         <AgreementStatusBadge status={status} />
       </span>
       <span className="text-xs text-text-500 truncate">{id}</span>
-    </TableCell>
-  );
-};
-
-const ProductCell = ({
-  name,
-  iconUrl,
-}: {
-  name?: string;
-  iconUrl?: string;
-}) => {
-  return (
-    <TableCell className="gap-4 w-full items-center">
-      <Icon iconUrl={iconUrl} alt={name} className="size-8" />
-      <span className="truncate">{name || "—"}</span>
     </TableCell>
   );
 };

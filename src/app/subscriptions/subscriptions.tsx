@@ -10,30 +10,15 @@ import {
   TableHeaderCell,
   TableRow,
 } from "@ui/table";
-import { Icon } from "@ui/icon";
 import { MarkupCell, PriceWithMarkupCell } from "@features/markup";
 import {
   useSubscriptions,
   SubscriptionStatusBadge,
 } from "@features/subscriptions";
 import { AgreementCell } from "@features/agreements";
+import { ProductCell } from "@features/products";
 import { useBillingConfigs } from "@features/billing-config";
 import { BillingConfig } from "@lib/alga";
-
-const ProductCell = ({
-  name,
-  iconUrl,
-}: {
-  name?: string;
-  iconUrl?: string;
-}) => {
-  return (
-    <TableCell className="gap-4 w-full items-center">
-      <Icon iconUrl={iconUrl} alt={name} className="size-8" />
-      <span className="truncate">{name || "—"}</span>
-    </TableCell>
-  );
-};
 
 export function Subscriptions() {
   const [offset, setOffset] = useState(0);
