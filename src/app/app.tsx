@@ -4,7 +4,7 @@ import {
   Agreement,
   AgreementsLayout,
   SoftwareOne,
-  Subscriptions,
+  Subscriptions as AgreementSubscriptions,
   Orders,
   Consumer,
   Billing,
@@ -24,6 +24,7 @@ import {
   Details as StatementDetails,
 } from "./statements";
 import { Orders as AllOrders, OrdersLayout, Order, Items, Details as OrderDetails } from "./orders";
+import { Subscriptions as AllSubscriptions, SubscriptionsLayout } from "./subscriptions";
 import { KVStorage } from "@lib/alga";
 import { BillingConfigsProvider } from "@features/billing-config";
 
@@ -71,7 +72,7 @@ export function App() {
                     element={<Navigate to="softwareone" replace />}
                   />
                   <Route path="softwareone" element={<SoftwareOne />} />
-                  <Route path="subscriptions" element={<Subscriptions />} />
+                  <Route path="subscriptions" element={<AgreementSubscriptions />} />
                   <Route path="orders" element={<Orders />} />
                   <Route path="consumer" element={<Consumer />} />
                   <Route path="billing" element={<Billing />} />
@@ -97,6 +98,11 @@ export function App() {
                   <Route path="items" element={<Items />} />
                   <Route path="details" element={<OrderDetails />} />
                 </Route>
+              </Route>
+            </Route>
+            <Route path="subscriptions">
+              <Route element={<SubscriptionsLayout />}>
+                <Route index element={<AllSubscriptions />} />
               </Route>
             </Route>
           </Routes>
