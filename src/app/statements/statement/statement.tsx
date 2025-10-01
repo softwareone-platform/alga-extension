@@ -6,7 +6,7 @@ import { Tabs } from "@ui/tabs";
 import { useMemo } from "react";
 import { useBillingConfig } from "@features/billing-config";
 import { withMarkup } from "@features/markup";
-import { StatementStatusBadge, useStatement } from "@features/statements";
+import { useStatement } from "@features/statements";
 
 function StatementSummary({ id }: { id: string }) {
   const { statement, isPending: isAgreementPending } = useStatement(id);
@@ -106,14 +106,11 @@ export function Statement() {
 
   if (!statement) return <div>Statement not found</div>;
 
-  const { status } = statement;
-
   return (
     <div className="w-full flex flex-col p-6 gap-8">
       <header className="w-full flex justify-between">
         <div className="flex items-center gap-6">
           <h1 className="text-3xl font-semibold">{id}</h1>
-          {!!status && <StatementStatusBadge status={status} />}
         </div>
         <div className="flex items-center gap-6">
           <Button variant="white" onClick={() => {}}>

@@ -12,7 +12,7 @@ import {
 } from "@ui/table";
 import { Icon } from "@ui/icon";
 import { MarkupCell, PriceWithMarkupCell } from "@features/markup";
-import { useStatements, StatementStatusBadge } from "@features/statements";
+import { useStatements } from "@features/statements";
 import { useBillingConfigs } from "@features/billing-config";
 import { BillingConfig } from "@lib/alga";
 
@@ -64,7 +64,7 @@ export function Statements() {
 
   return (
     <Card>
-      <Table className="grid-cols-[minmax(192px,auto)_minmax(150px,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)]">
+      <Table className="grid-cols-[minmax(192px,auto)_minmax(150px,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)]">
         <TableHeader>
           <TableRow>
             <TableHeaderCell>Name</TableHeaderCell>
@@ -77,7 +77,6 @@ export function Statements() {
             <TableHeaderCell>Markup</TableHeaderCell>
             <TableHeaderCell>Total RP</TableHeaderCell>
             <TableHeaderCell>Currency</TableHeaderCell>
-            <TableHeaderCell>Status</TableHeaderCell>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -109,9 +108,6 @@ export function Statements() {
                 markup={billingConfigsById[statement.agreement?.id!]?.markup}
               />
               <TableCell>{statement.price?.currency?.sale || "—"}</TableCell>
-              <TableCell>
-                <StatementStatusBadge status={statement.status} />
-              </TableCell>
             </TableRow>
           ))}
         </TableBody>
