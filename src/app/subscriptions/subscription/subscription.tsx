@@ -12,6 +12,7 @@ import { withMarkup } from "@features/markup";
 import {
   SubscriptionStatusBadge,
   useSubscription,
+  BILLING_PERIODS,
 } from "@features/subscriptions";
 
 function SubscriptionSummary({ id }: { id: string }) {
@@ -97,7 +98,9 @@ function SubscriptionSummary({ id }: { id: string }) {
         </label>
         <div className="flex gap-2 items-center grow">
           <span className="text-sm text-black">
-            {subscription.terms?.period || "—"}
+            {subscription.terms?.period
+              ? BILLING_PERIODS[subscription.terms?.period]
+              : "—"}
           </span>
         </div>
       </div>
