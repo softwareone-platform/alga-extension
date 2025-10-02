@@ -14,7 +14,6 @@ import { PriceWithMarkupCell } from "@features/markup";
 import { useState } from "react";
 import { useBillingConfig } from "@features/billing-config";
 import { useStatement, useStatementCharges } from "@features/statements";
-import dayjs from "dayjs";
 import { DateTimeCell } from "@features/dates";
 
 const ItemCell = ({ name, id }: { name?: string; id?: string }) => {
