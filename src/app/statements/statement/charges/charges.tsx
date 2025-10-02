@@ -15,6 +15,7 @@ import { useState } from "react";
 import { useBillingConfig } from "@features/billing-config";
 import { useStatement, useStatementCharges } from "@features/statements";
 import dayjs from "dayjs";
+import { DateTimeCell } from "@features/dates";
 
 const ItemCell = ({ name, id }: { name?: string; id?: string }) => {
   if (!name && !id) return <TableCell>—</TableCell>;
@@ -73,12 +74,8 @@ export function Charges() {
                 id={charge.subscription?.id}
               />
               <ItemCell name={charge.item?.name} id={charge.item?.id} />
-              <TableCell>
-                {dayjs(charge.period?.start).format("HH:mm MM/DD/YYYY") || "—"}
-              </TableCell>
-              <TableCell>
-                {dayjs(charge.period?.end).format("HH:mm MM/DD/YYYY") || "—"}
-              </TableCell>
+              <DateTimeCell dateTime={charge.period?.start} />
+              <DateTimeCell dateTime={charge.period?.end} />
               <TableCell>{charge.quantity || "—"}</TableCell>
               <TableCell>{charge.price?.SPx1 || "—"}</TableCell>
               <PriceWithMarkupCell

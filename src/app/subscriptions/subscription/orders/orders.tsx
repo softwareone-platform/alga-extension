@@ -18,7 +18,7 @@ import {
 import { PriceWithMarkupCell } from "@features/markup";
 import { useState } from "react";
 import { OrderStatusBadge } from "@features/orders";
-import { CreatedCell } from "@features/dates";
+import { DateTimeCell } from "@features/dates";
 
 export function Orders() {
   const { id } = useParams<{ id: string }>();
@@ -68,7 +68,7 @@ export function Orders() {
                 markup={billingConfig?.markup}
               />
               <TableCell>{order.price?.currency || "—"}</TableCell>
-              <CreatedCell createdAt={order.audit?.created?.at} />
+              <DateTimeCell dateTime={order.audit?.created?.at} />
               <TableCell>
                 <OrderStatusBadge status={order.status} />
               </TableCell>

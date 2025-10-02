@@ -2,20 +2,20 @@ import { TableCell } from "@ui/table";
 import { useMemo } from "react";
 import dayjs from "dayjs";
 
-export const CreatedCell = ({
-  createdAt,
+export const DateTimeCell = ({
+  dateTime,
 }: {
-  createdAt: string | null | undefined;
+  dateTime: string | null | undefined;
 }) => {
-  if (!createdAt) return <TableCell>—</TableCell>;
+  if (!dateTime) return <TableCell>—</TableCell>;
 
   const date = useMemo(() => {
-    return dayjs(createdAt).format("MM/DD/YYYY");
-  }, [createdAt]);
+    return dayjs(dateTime).format("MM/DD/YYYY");
+  }, [dateTime]);
 
   const time = useMemo(() => {
-    return dayjs(createdAt).format("HH:mm");
-  }, [createdAt]);
+    return dayjs(dateTime).format("HH:mm");
+  }, [dateTime]);
 
   return (
     <TableCell className="flex flex-col gap-0.5 justify-center items-start">
