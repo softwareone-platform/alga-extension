@@ -4,7 +4,10 @@ import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
 import { useMemo } from "react";
-import { useBillingConfig } from "@features/billing-config";
+import {
+  BillingConfigStatusBadge,
+  useBillingConfig,
+} from "@features/billing-config";
 import { withMarkup } from "@features/markup";
 import {
   SubscriptionStatusBadge,
@@ -57,6 +60,7 @@ function SubscriptionSummary({ id }: { id: string }) {
         </label>
         <div className="flex gap-2 items-center grow">
           <span className="text-sm text-black">{billingConfig?.id || "—"}</span>
+          <BillingConfigStatusBadge status={billingConfig?.status} />
         </div>
       </div>
       <div className="flex flex-col gap-1">
