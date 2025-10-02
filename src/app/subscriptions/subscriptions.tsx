@@ -14,6 +14,7 @@ import { MarkupCell, PriceWithMarkupCell } from "@features/markup";
 import {
   useSubscriptions,
   SubscriptionStatusBadge,
+  PeriodCell,
 } from "@features/subscriptions";
 import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
@@ -86,7 +87,7 @@ export function Subscriptions() {
                 price={subscription.price?.SPxY}
                 markup={billingConfigsById[subscription.agreement?.id!]?.markup}
               />
-              <TableCell>{subscription.terms?.period || "—"}</TableCell>
+              <PeriodCell period={subscription.terms?.period} />
               <TableCell>{subscription.terms?.commitment || "—"}</TableCell>
               <TableCell>{subscription.price?.currency || "—"}</TableCell>
               <TableCell>

@@ -19,17 +19,7 @@ import { useMemo, useState } from "react";
 import { TermsEntity } from "@swo/mp-api-model";
 import { PriceWithMarkupCell } from "@features/markup";
 import { useBillingConfig } from "@features/billing-config";
-
-const PeriodCell = ({ period }: { period: TermsEntity["period"] }) => {
-  const text = useMemo(() => {
-    if (period === "1m") return "Monthly";
-    if (period === "1y") return "Yearly";
-    if (period === "one-time") return "One-time";
-    return "—";
-  }, [period]);
-
-  return <TableCell>{text}</TableCell>;
-};
+import { PeriodCell } from "@features/subscriptions";
 
 const CommitmentCell = ({
   commitment,
