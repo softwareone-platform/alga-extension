@@ -66,7 +66,10 @@ export function Subscriptions() {
         </TableHeader>
         <TableBody>
           {subscriptions?.map((subscription) => (
-            <TableRow key={subscription.id}>
+            <TableRow
+              key={subscription.id}
+              link={`/subscriptions/${subscription.id}`}
+            >
               <TableCell>
                 <span className="truncate">{subscription.name || "—"}</span>
               </TableCell>
