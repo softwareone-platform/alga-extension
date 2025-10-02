@@ -18,7 +18,7 @@ export const CreatedCell = ({
   }, [createdAt]);
 
   return (
-    <TableCell className="flex flex-col gap-0.5 items-start">
+    <TableCell className="flex flex-col gap-0.5 justify-center items-start">
       <span>{date}</span>
       <span className="text-xs text-text-500">{time}</span>
     </TableCell>
