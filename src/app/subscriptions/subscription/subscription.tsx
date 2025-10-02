@@ -150,6 +150,9 @@ export function Subscription() {
       </header>
       <SubscriptionSummary id={id!} />
       <Tabs>
+        <NavLink to="items">
+          {({ isActive }) => <Tabs.Tab isActive={isActive}>Items</Tabs.Tab>}
+        </NavLink>
         <NavLink to="orders">
           {({ isActive }) => <Tabs.Tab isActive={isActive}>Orders</Tabs.Tab>}
         </NavLink>

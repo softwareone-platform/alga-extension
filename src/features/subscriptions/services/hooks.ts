@@ -30,3 +30,11 @@ export const useSubscription = (id: string) => {
 
   return { subscription, ...state };
 };
+
+export const useSubscriptionItems = (id: string) => {
+  const { subscription, ...state } = useSubscription(id);
+
+  const items = subscription?.lines || [];
+
+  return { items, subscription, ...state };
+};
