@@ -14,12 +14,12 @@ import { MarkupCell, PriceWithMarkupCell } from "@features/markup";
 import {
   useSubscriptions,
   SubscriptionStatusBadge,
-  PeriodCell,
 } from "@features/subscriptions";
 import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
 import { useBillingConfigs } from "@features/billing-config";
 import { BillingConfig } from "@lib/alga";
+import { BILLING_PERIODS } from "@features/subscriptions";
 
 export function Subscriptions() {
   const [offset, setOffset] = useState(0);
@@ -90,7 +90,11 @@ export function Subscriptions() {
                 price={subscription.price?.SPxY}
                 markup={billingConfigsById[subscription.agreement?.id!]?.markup}
               />
-              <PeriodCell period={subscription.terms?.period} />
+              <TableCell>
+                {subscription.terms?.period
+                  ? BILLING_PERIODS[subscription.terms?.period]
+                  : "—"}
+              </TableCell>
               <TableCell>{subscription.terms?.commitment || "—"}</TableCell>
               <TableCell>{subscription.price?.currency || "—"}</TableCell>
               <TableCell>

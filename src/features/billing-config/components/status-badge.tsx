@@ -6,7 +6,7 @@ export const BillingConfigStatusBadge = ({
 }: {
   status?: BillingConfigStatus;
 }) => {
-  if (!status) return <span>—</span>;
+  status = status ?? "unconfigured";
 
   let tone: "default" | "success" = "default";
 

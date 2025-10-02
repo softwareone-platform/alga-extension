@@ -19,7 +19,7 @@ import { useMemo, useState } from "react";
 import { TermsEntity } from "@swo/mp-api-model";
 import { PriceWithMarkupCell } from "@features/markup";
 import { useBillingConfig } from "@features/billing-config";
-import { PeriodCell } from "@features/subscriptions";
+import { BILLING_PERIODS } from "@features/subscriptions";
 
 const CommitmentCell = ({
   commitment,
@@ -90,7 +90,11 @@ export function Subscriptions() {
                 price={subscription.price?.SPxY}
                 markup={billingConfig?.markup}
               />
-              <PeriodCell period={subscription.terms?.period} />
+              <TableCell>
+                {subscription.terms?.period
+                  ? BILLING_PERIODS[subscription.terms?.period]
+                  : "—"}
+              </TableCell>
               <CommitmentCell commitment={subscription.terms?.commitment} />
               <TableCell>{subscription.price?.currency || "—"}</TableCell>
               <TableCell>
