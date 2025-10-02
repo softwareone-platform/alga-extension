@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { SubscriptionsContext } from "./context";
-import { SubscriptionsOptions } from "@lib/swo";
+import { SubscriptionsOptions, OrdersOptions } from "@lib/swo";
 
 export const useSubscriptions = (options?: SubscriptionsOptions) => {
   const { client } = useContext(SubscriptionsContext);
@@ -37,4 +37,23 @@ export const useSubscriptionItems = (id: string) => {
   const items = subscription?.lines || [];
 
   return { items, subscription, ...state };
+};
+
+export const useSubscriptionOrders = (
+  id: string,
+  options?: OrdersOptions
+) => {
+  const { client } = useContext(SubscriptionsContext);
+
+  const { data, ...state } = useQuery({
+    queryKey: ["subscriptions", id, "orders", options],
+    queryFn: () => client!.getOrders(id, options),
+    enabled: !!client,
+    placeholderData: keepPreviousData,
+  });
+
+  const orders = data?.data || [];
+  const pagination = data?.$meta?.pagination || { total: 0 };
+
+  return { orders, pagination, ...state };
 };
