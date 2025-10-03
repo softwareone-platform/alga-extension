@@ -1,6 +1,18 @@
 import { Link } from "@ui/link";
 
-export const ConsumerLink = ({ id, name }: { id: string; name: string }) => {
-  if (!id || !name) return <span>—</span>;
-  return <Link href={`/consumers/${id}`}>{name}</Link>;
+export const ConsumerLink = ({
+  id,
+  name,
+  className,
+}: {
+  id: string;
+  name: string;
+  className?: string;
+}) => {
+  if (!id || !name) return <span className={className}>—</span>;
+  return (
+    <Link href={`/consumers/${id}`} className={className}>
+      {name}
+    </Link>
+  );
 };
