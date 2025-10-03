@@ -16,6 +16,47 @@ import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
 import { useBillingConfigs } from "@features/billing-config";
 import { BillingConfig } from "@lib/alga";
+import { Statement } from "@swo/mp-api-model/billing";
+import { ConsumerLink } from "@features/consumers";
+
+const StatementRow = ({
+  statement,
+  billingConfig,
+}: {
+  statement: Statement;
+  billingConfig?: BillingConfig;
+}) => (
+  <TableRow link={`/statements/${statement.id}`}>
+    <TableCell>
+      <span className="text-sm text-blue-500 hover:text-blue-600 truncate">
+        {statement.id!}
+      </span>
+    </TableCell>
+    <TableCell>{statement.type || "—"}</TableCell>
+    <AgreementCell
+      name={statement.agreement?.name}
+      id={statement.agreement?.id}
+    />
+    <ProductCell
+      name={statement.product?.name}
+      iconUrl={statement.product?.icon}
+    />
+    <TableCell>
+      <ConsumerLink
+        id={billingConfig?.consumer?.id!}
+        name={billingConfig?.consumer?.name!}
+      />
+    </TableCell>
+    <TableCell></TableCell>
+    <TableCell>{statement.price?.totalSP || "—"}</TableCell>
+    <MarkupCell markup={billingConfig?.markup} />
+    <PriceWithMarkupCell
+      price={statement.price?.totalSP}
+      markup={billingConfig?.markup}
+    />
+    <TableCell>{statement.price?.currency?.sale || "—"}</TableCell>
+  </TableRow>
+);
 
 export function Statements() {
   const [offset, setOffset] = useState(0);
@@ -57,34 +98,11 @@ export function Statements() {
         </TableHeader>
         <TableBody>
           {statements?.map((statement) => (
-            <TableRow key={statement.id} link={`/statements/${statement.id}`}>
-              <TableCell>
-                <span className="text-sm text-blue-500 hover:text-blue-600 truncate">
-                  {statement.id!}
-                </span>
-              </TableCell>
-              <TableCell>{statement.type || "—"}</TableCell>
-              <AgreementCell
-                name={statement.agreement?.name}
-                id={statement.agreement?.id}
-              />
-              <ProductCell
-                name={statement.product?.name}
-                iconUrl={statement.product?.icon}
-              />
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-
-              <TableCell>{statement.price?.totalSP || "—"}</TableCell>
-              <MarkupCell
-                markup={billingConfigsById[statement.agreement?.id!]?.markup}
-              />
-              <PriceWithMarkupCell
-                price={statement.price?.totalSP}
-                markup={billingConfigsById[statement.agreement?.id!]?.markup}
-              />
-              <TableCell>{statement.price?.currency?.sale || "—"}</TableCell>
-            </TableRow>
+            <StatementRow
+              key={statement.id}
+              statement={statement}
+              billingConfig={billingConfigsById[statement.agreement?.id!]}
+            />
           ))}
         </TableBody>
         <TableFooter>

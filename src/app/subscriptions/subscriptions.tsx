@@ -14,12 +14,60 @@ import { MarkupCell, PriceWithMarkupCell } from "@features/markup";
 import {
   useSubscriptions,
   SubscriptionStatusBadge,
+  BILLING_PERIODS,
 } from "@features/subscriptions";
 import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
 import { useBillingConfigs } from "@features/billing-config";
 import { BillingConfig } from "@lib/alga";
-import { BILLING_PERIODS } from "@features/subscriptions";
+import { ConsumerLink } from "@features/consumers";
+import { Subscription } from "@swo/mp-api-model";
+
+const SubscriptionRow = ({
+  subscription,
+  billingConfig,
+}: {
+  subscription: Subscription;
+  billingConfig?: BillingConfig;
+}) => {
+  return (
+    <TableRow link={`/subscriptions/${subscription.id}`}>
+      <TableCell>
+        <span className="truncate">{subscription.name || "—"}</span>
+      </TableCell>
+      <ProductCell
+        name={subscription.product?.name}
+        iconUrl={subscription.product?.icon}
+      />
+      <TableCell>
+        <ConsumerLink
+          id={billingConfig?.consumer?.id!}
+          name={billingConfig?.consumer?.name!}
+        />
+      </TableCell>
+      <AgreementCell
+        name={subscription.agreement?.name}
+        id={subscription.agreement?.id}
+      />
+      <TableCell>{subscription.price?.SPxY || "—"}</TableCell>
+      <MarkupCell markup={billingConfig?.markup} />
+      <PriceWithMarkupCell
+        price={subscription.price?.SPxY}
+        markup={billingConfig?.markup}
+      />
+      <TableCell>
+        {subscription.terms?.period
+          ? BILLING_PERIODS[subscription.terms?.period]
+          : "—"}
+      </TableCell>
+      <TableCell>{subscription.terms?.commitment || "—"}</TableCell>
+      <TableCell>{subscription.price?.currency || "—"}</TableCell>
+      <TableCell>
+        <SubscriptionStatusBadge status={subscription.status} />
+      </TableCell>
+    </TableRow>
+  );
+};
 
 export function Subscriptions() {
   const [offset, setOffset] = useState(0);
@@ -66,41 +114,11 @@ export function Subscriptions() {
         </TableHeader>
         <TableBody>
           {subscriptions?.map((subscription) => (
-            <TableRow
+            <SubscriptionRow
               key={subscription.id}
-              link={`/subscriptions/${subscription.id}`}
-            >
-              <TableCell>
-                <span className="truncate">{subscription.name || "—"}</span>
-              </TableCell>
-              <ProductCell
-                name={subscription.product?.name}
-                iconUrl={subscription.product?.icon}
-              />
-              <TableCell>—</TableCell>
-              <AgreementCell
-                name={subscription.agreement?.name}
-                id={subscription.agreement?.id}
-              />
-              <TableCell>{subscription.price?.SPxY || "—"}</TableCell>
-              <MarkupCell
-                markup={billingConfigsById[subscription.agreement?.id!]?.markup}
-              />
-              <PriceWithMarkupCell
-                price={subscription.price?.SPxY}
-                markup={billingConfigsById[subscription.agreement?.id!]?.markup}
-              />
-              <TableCell>
-                {subscription.terms?.period
-                  ? BILLING_PERIODS[subscription.terms?.period]
-                  : "—"}
-              </TableCell>
-              <TableCell>{subscription.terms?.commitment || "—"}</TableCell>
-              <TableCell>{subscription.price?.currency || "—"}</TableCell>
-              <TableCell>
-                <SubscriptionStatusBadge status={subscription.status} />
-              </TableCell>
-            </TableRow>
+              subscription={subscription}
+              billingConfig={billingConfigsById[subscription.agreement?.id!]}
+            />
           ))}
         </TableBody>
         <TableFooter>

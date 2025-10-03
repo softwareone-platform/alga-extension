@@ -16,6 +16,7 @@ import {
 } from "@ui/table";
 import { MarkupCell, PriceWithMarkupCell } from "@features/markup";
 import { useBillingConfigs } from "@features/billing-config";
+import { ConsumerLink } from "@features/consumers";
 
 const NameCell = ({
   name,
@@ -60,7 +61,12 @@ const AgreementRow = ({
         iconUrl={agreement.product?.icon}
       />
       <TableCell>{billingConfig?.id || "—"}</TableCell>
-      <TableCell>{billingConfig?.consumer?.name || "—"}</TableCell>
+      <TableCell>
+        <ConsumerLink
+          id={billingConfig?.consumer?.id!}
+          name={billingConfig?.consumer?.name!}
+        />
+      </TableCell>
       <TableCell>{agreement.price?.SPxY || "—"}</TableCell>
       <MarkupCell markup={billingConfig?.markup} />
       <PriceWithMarkupCell

@@ -1,9 +1,6 @@
 import { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ConsumersContext } from "./context";
-import type { Company } from "@lib/alga";
-
-export type Consumer = Company;
 
 export const useConsumers = () => {
   const { client } = useContext(ConsumersContext);

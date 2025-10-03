@@ -16,6 +16,43 @@ import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
 import { useBillingConfigs } from "@features/billing-config";
 import { BillingConfig } from "@lib/alga";
+import { Order } from "@swo/mp-api-model";
+import { ConsumerLink } from "@features/consumers";
+
+const OrderRow = ({
+  order,
+  billingConfig,
+}: {
+  order: Order;
+  billingConfig?: BillingConfig;
+}) => (
+  <TableRow link={`/orders/${order.id}`}>
+    <TableCell>
+      <span className="text-sm text-blue-500 hover:text-blue-600 truncate">
+        {order.id!}
+      </span>
+    </TableCell>
+    <TableCell>{order.type || "—"}</TableCell>
+    <AgreementCell name={order.agreement?.name} id={order.agreement?.id} />
+    <ProductCell name={order.product?.name} iconUrl={order.product?.icon} />
+    <TableCell>
+      <ConsumerLink
+        id={billingConfig?.consumer?.id!}
+        name={billingConfig?.consumer?.name!}
+      />
+    </TableCell>
+    <TableCell>{order.price?.SPxY || "—"}</TableCell>
+    <MarkupCell markup={billingConfig?.markup} />
+    <PriceWithMarkupCell
+      price={order.price?.SPxY}
+      markup={billingConfig?.markup}
+    />
+    <TableCell>{order.price?.currency || "—"}</TableCell>
+    <TableCell>
+      <OrderStatusBadge status={order.status} />
+    </TableCell>
+  </TableRow>
+);
 
 export function Orders() {
   const [offset, setOffset] = useState(0);
@@ -57,35 +94,11 @@ export function Orders() {
         </TableHeader>
         <TableBody>
           {orders?.map((order) => (
-            <TableRow key={order.id} link={`/orders/${order.id}`}>
-              <TableCell>
-                <span className="text-sm text-blue-500 hover:text-blue-600 truncate">
-                  {order.id!}
-                </span>
-              </TableCell>
-              <TableCell>{order.type || "—"}</TableCell>
-              <AgreementCell
-                name={order.agreement?.name}
-                id={order.agreement?.id}
-              />
-              <ProductCell
-                name={order.product?.name}
-                iconUrl={order.product?.icon}
-              />
-              <TableCell></TableCell>
-              <TableCell>{order.price?.SPxY || "—"}</TableCell>
-              <MarkupCell
-                markup={billingConfigsById[order.agreement?.id!]?.markup}
-              />
-              <PriceWithMarkupCell
-                price={order.price?.SPxY}
-                markup={billingConfigsById[order.agreement?.id!]?.markup}
-              />
-              <TableCell>{order.price?.currency || "—"}</TableCell>
-              <TableCell>
-                <OrderStatusBadge status={order.status} />
-              </TableCell>
-            </TableRow>
+            <OrderRow
+              key={order.id}
+              order={order}
+              billingConfig={billingConfigsById[order.agreement?.id!]}
+            />
           ))}
         </TableBody>
         <TableFooter>

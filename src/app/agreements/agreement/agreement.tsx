@@ -25,7 +25,7 @@ import {
   ListboxOptions,
 } from "@ui/listbox";
 import { withMarkup } from "@features/markup";
-import { useConsumer, useConsumers } from "@features/consumers";
+import { useConsumers } from "@features/consumers";
 
 function AgreementActions() {
   return (
