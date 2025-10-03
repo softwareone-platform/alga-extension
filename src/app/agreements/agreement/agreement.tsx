@@ -40,6 +40,8 @@ function AgreementSummary({ id }: { id: string }) {
   const { billingConfig, isPending: isBillingConfigPending } =
     useBillingConfig(id);
 
+  const { consumer } = useConsumer(billingConfig?.consumerId ?? "");
+
   const RPxY = useMemo(
     () => withMarkup(agreement?.price?.SPxY, billingConfig?.markup),
     [agreement?.price?.SPxY, billingConfig?.markup]
@@ -95,9 +97,7 @@ function AgreementSummary({ id }: { id: string }) {
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Consumer</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">
-            {agreement.licensee?.name || "—"}
-          </span>
+          <span className="text-sm text-black">{consumer?.name || "—"}</span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
