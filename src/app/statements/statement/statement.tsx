@@ -7,6 +7,7 @@ import { useMemo } from "react";
 import { useBillingConfig } from "@features/billing-config";
 import { withMarkup } from "@features/markup";
 import { useStatement } from "@features/statements";
+import { ConsumerLink } from "@features/consumers";
 
 function StatementSummary({ id }: { id: string }) {
   const { statement, isPending: isAgreementPending } = useStatement(id);
@@ -61,8 +62,11 @@ function StatementSummary({ id }: { id: string }) {
       </div>
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Consumer</label>
-        <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">—</span>
+        <div className="flex gap-2 items-center grow text-sm">
+          <ConsumerLink
+            id={billingConfig?.consumer?.id!}
+            name={billingConfig?.consumer?.name!}
+          />
         </div>
       </div>
       <div className="flex flex-col gap-1">
