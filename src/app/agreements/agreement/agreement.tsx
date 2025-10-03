@@ -25,6 +25,7 @@ import {
   ListboxOptions,
 } from "@ui/listbox";
 import { withMarkup } from "@features/markup";
+import { useConsumers } from "@features/consumers";
 
 function AgreementActions() {
   return (
@@ -142,6 +143,8 @@ function AgreementSummary({ id }: { id: string }) {
 }
 
 const ConsumersListbox = () => {
+  const { consumers } = useConsumers();
+
   return (
     <Listbox>
       <ListboxButton>-</ListboxButton>

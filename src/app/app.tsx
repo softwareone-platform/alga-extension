@@ -39,8 +39,12 @@ import {
 } from "./subscriptions";
 import { KVStorage } from "@lib/alga";
 import { BillingConfigsProvider } from "@features/billing-config";
+import { ConsumersProvider } from "@features/consumers";
 
 const kvStorage = new KVStorage("swo:billing-configs");
+const BASE_URL = "https://algapsa.com/api/v1/";
+const API_KEY =
+  "200aebbceb58e17579c1da81754116d236d1a14872f34f755694e84d3d044518";
 
 export function App() {
   const { details, isPending } = useExtensionDetails();
@@ -66,7 +70,7 @@ export function App() {
     <AccountProvider baseUrl={details?.endpoint} token={details?.token}>
       <UserProvider baseUrl={details?.endpoint} token={details?.token}>
         <BillingConfigsProvider kvStorage={kvStorage}>
-          <CompaniesProvider>
+          <ConsumersProvider baseUrl={BASE_URL} apiKey={API_KEY}>
             <Routes>
               <Route path="/" element={<Navigate to="/agreements" replace />} />
 
@@ -131,7 +135,7 @@ export function App() {
                 </Route>
               </Route>
             </Routes>
-          </CompaniesProvider>
+          </ConsumersProvider>
         </BillingConfigsProvider>
       </UserProvider>
     </AccountProvider>
