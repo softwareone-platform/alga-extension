@@ -1,9 +1,12 @@
 import { useContext } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { StatementsContext } from "./context";
-import { StatementsOptions, ChargesOptions } from "@lib/swo";
+import {
+  StatementsClientStatementsOptions,
+  StatementsClientChargesOptions,
+} from "@lib/swo";
 
-export const useStatements = (options?: StatementsOptions) => {
+export const useStatements = (options?: StatementsClientStatementsOptions) => {
   const { client } = useContext(StatementsContext);
 
   const { data, ...state } = useQuery({
@@ -33,7 +36,7 @@ export const useStatement = (id: string) => {
 
 export const useStatementCharges = (
   statementId: string,
-  options?: ChargesOptions
+  options?: StatementsClientChargesOptions
 ) => {
   const { client } = useContext(StatementsContext);
 

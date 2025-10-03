@@ -3,7 +3,7 @@ import { AxiosInstance, AxiosResponse } from "axios";
 import { Order, OrderListResponse } from "@swo/mp-api-model";
 import { axiosInstance, ListOptions } from "./shared";
 
-export type OrdersOptions = ListOptions<Order> & {
+export type OrdersClientOrdersOptions = ListOptions<Order> & {
   licenseeId?: string;
 };
 
@@ -14,7 +14,9 @@ export class OrdersClient {
     this.axios = axiosInstance(baseUrl, token);
   }
 
-  async getOrders(options?: OrdersOptions): Promise<OrderListResponse> {
+  async getOrders(
+    options?: OrdersClientOrdersOptions
+  ): Promise<OrderListResponse> {
     const { offset = 0, limit = 10, sort, licenseeId } = options || {};
 
     const query = new RqlQuery<Order>();

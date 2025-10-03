@@ -10,13 +10,13 @@ import {
 } from "@swo/mp-api-model";
 import { axiosInstance, ListOptions } from "./shared";
 
-export type AgreementsOptions = ListOptions<Agreement> & {
+export type AgreementsClientAgreementsOptions = ListOptions<Agreement> & {
   licenseeId?: string;
 };
 
-export type OrdersOptions = ListOptions<Order>;
+export type AgreementsClientOrdersOptions = ListOptions<Order>;
 
-export type SubscriptionsOptions = ListOptions<Subscription>;
+export type AgreementsClientSubscriptionsOptions = ListOptions<Subscription>;
 
 export class AgreementsClient {
   private axios: AxiosInstance;
@@ -26,7 +26,7 @@ export class AgreementsClient {
   }
 
   async getAgreements(
-    options?: AgreementsOptions
+    options?: AgreementsClientAgreementsOptions
   ): Promise<AgreementListResponse> {
     const { offset = 0, limit = 10, sort, licenseeId } = options || {};
 
@@ -92,7 +92,7 @@ export class AgreementsClient {
 
   async getSubscriptions(
     agreementId: string,
-    options?: SubscriptionsOptions
+    options?: AgreementsClientSubscriptionsOptions
   ): Promise<SubscriptionListResponse> {
     const { offset = 0, limit = 10, sort } = options || {};
 
@@ -121,7 +121,7 @@ export class AgreementsClient {
 
   async getOrders(
     agreementId: string,
-    options?: OrdersOptions
+    options?: AgreementsClientOrdersOptions
   ): Promise<OrderListResponse> {
     const { offset = 0, limit = 10, sort } = options || {};
 

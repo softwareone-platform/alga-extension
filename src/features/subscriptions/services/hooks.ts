@@ -1,9 +1,14 @@
 import { useContext } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { SubscriptionsContext } from "./context";
-import { SubscriptionsOptions, OrdersOptions } from "@lib/swo";
+import {
+  SubscriptionsClientSubscriptionsOptions,
+  SubscriptionsClientOrdersOptions,
+} from "@lib/swo";
 
-export const useSubscriptions = (options?: SubscriptionsOptions) => {
+export const useSubscriptions = (
+  options?: SubscriptionsClientSubscriptionsOptions
+) => {
   const { client } = useContext(SubscriptionsContext);
 
   const { data, ...state } = useQuery({
@@ -41,7 +46,7 @@ export const useSubscriptionItems = (id: string) => {
 
 export const useSubscriptionOrders = (
   id: string,
-  options?: OrdersOptions
+  options?: SubscriptionsClientOrdersOptions
 ) => {
   const { client } = useContext(SubscriptionsContext);
 

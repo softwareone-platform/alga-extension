@@ -2,12 +2,12 @@ import { useContext } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { AgreementsContext as AgreementsContext } from "./context";
 import {
-  AgreementsOptions,
-  OrdersOptions,
-  SubscriptionsOptions,
+  AgreementsClientAgreementsOptions,
+  AgreementsClientOrdersOptions,
+  AgreementsClientSubscriptionsOptions,
 } from "@lib/swo";
 
-export const useAgreements = (options?: AgreementsOptions) => {
+export const useAgreements = (options?: AgreementsClientAgreementsOptions) => {
   const { client } = useContext(AgreementsContext);
 
   const { data, ...state } = useQuery({
@@ -37,7 +37,7 @@ export const useAgreement = (id: string) => {
 
 export const useAgreementSubscriptions = (
   agreementId: string,
-  options?: SubscriptionsOptions
+  options?: AgreementsClientSubscriptionsOptions
 ) => {
   const { client } = useContext(AgreementsContext);
 
@@ -56,7 +56,7 @@ export const useAgreementSubscriptions = (
 
 export const useAgreementOrders = (
   agreementId: string,
-  options?: OrdersOptions
+  options?: AgreementsClientOrdersOptions
 ) => {
   const { client } = useContext(AgreementsContext);
 

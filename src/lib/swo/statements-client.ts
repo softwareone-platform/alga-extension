@@ -8,11 +8,11 @@ import {
 } from "@swo/mp-api-model/billing";
 import { axiosInstance, ListOptions } from "./shared";
 
-export type StatementsOptions = ListOptions<Statement> & {
+export type StatementsClientStatementsOptions = ListOptions<Statement> & {
   licenseeId?: string;
 };
 
-export type ChargesOptions = ListOptions<Charge>;
+export type StatementsClientChargesOptions = ListOptions<Charge>;
 
 export class StatementsClient {
   private axios: AxiosInstance;
@@ -22,7 +22,7 @@ export class StatementsClient {
   }
 
   async getStatements(
-    options?: StatementsOptions
+    options?: StatementsClientStatementsOptions
   ): Promise<StatementListResponse> {
     const { offset = 0, limit = 10, sort, licenseeId } = options || {};
 

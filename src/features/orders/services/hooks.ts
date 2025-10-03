@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { OrdersContext } from "./context";
-import { OrdersOptions } from "@lib/swo";
+import { OrdersClientOrdersOptions } from "@lib/swo";
 
-export const useOrders = (options?: OrdersOptions) => {
+export const useOrders = (options?: OrdersClientOrdersOptions) => {
   const { client } = useContext(OrdersContext);
 
   const { data, ...state } = useQuery({
