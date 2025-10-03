@@ -137,7 +137,7 @@ export function Subscription() {
 
   return (
     <div className="w-full flex flex-col p-6 gap-8">
-      <header className="w-full flex justify-between">
+      <header className="w-full flex justify-between gap-10">
         <div className="flex items-center gap-6">
           <h1 className="text-3xl font-semibold">{subscription.name}</h1>
           {!!status && <SubscriptionStatusBadge status={status} />}

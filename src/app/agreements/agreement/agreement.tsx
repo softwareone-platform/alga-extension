@@ -148,6 +148,11 @@ const ConsumersListbox = () => {
   return (
     <Listbox>
       <ListboxButton>-</ListboxButton>
+      <ListboxOptions>
+        {consumers?.map((consumer) => (
+          <ListboxOption value={consumer.id}>{consumer.name}</ListboxOption>
+        ))}
+      </ListboxOptions>
     </Listbox>
   );
 };
@@ -203,17 +208,7 @@ function BillingConfigEditor({
         <div className="grid grid-cols-[auto_380px] gap-10 items-center">
           <label className="text-sm font-medium">Consumer</label>
           <div>
-            <Listbox
-              value={edited.consumerId}
-              onChange={(consumerId) =>
-                setEdited({
-                  ...edited,
-                  consumerId,
-                })
-              }
-            >
-              <ListboxButton>-</ListboxButton>
-            </Listbox>
+            <ConsumersListbox />
           </div>
           <label className="text-sm font-medium">Plan Service</label>
           <div>
@@ -308,7 +303,7 @@ export function Agreement() {
 
   return (
     <div className="w-full flex flex-col p-6 gap-8">
-      <header className="w-full flex justify-between">
+      <header className="w-full flex justify-between gap-10">
         <div className="flex items-center gap-6">
           <h1 className="text-3xl font-semibold">{name}</h1>
           {!!status && <AgreementStatusBadge status={status} />}
