@@ -1,4 +1,4 @@
-import { forwardRef, HTMLAttributes, useEffect, useState } from "react";
+import { forwardRef, HTMLAttributes, useState } from "react";
 import { clsx } from "clsx";
 import { useNavigate } from "react-router";
 import { Button } from "./button";
