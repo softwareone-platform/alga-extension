@@ -25,7 +25,7 @@ import {
   ListboxOptions,
 } from "@ui/listbox";
 import { withMarkup } from "@features/markup";
-import { Consumer, useConsumer, useConsumers } from "@features/consumers";
+import { useConsumer, useConsumers } from "@features/consumers";
 
 function AgreementActions() {
   return (
@@ -39,8 +39,6 @@ function AgreementSummary({ id }: { id: string }) {
   const { agreement, isPending: isAgreementPending } = useAgreement(id);
   const { billingConfig, isPending: isBillingConfigPending } =
     useBillingConfig(id);
-
-  const { consumer } = useConsumer(billingConfig?.consumerId ?? "");
 
   const RPxY = useMemo(
     () => withMarkup(agreement?.price?.SPxY, billingConfig?.markup),
@@ -97,7 +95,9 @@ function AgreementSummary({ id }: { id: string }) {
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Consumer</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">{consumer?.name || "—"}</span>
+          <span className="text-sm text-black">
+            {billingConfig?.consumer?.name || "—"}
+          </span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
@@ -146,13 +146,18 @@ const ConsumersListbox = ({
   consumer,
   onConsumerChange,
 }: {
-  consumer?: Consumer | null;
-  onConsumerChange: (consumer: Consumer) => void;
+  consumer?: { id: string; name: string } | null;
+  onConsumerChange: (consumer: { id: string; name: string }) => void;
 }) => {
   const { consumers } = useConsumers();
 
   return (
-    <Listbox value={consumer} onChange={onConsumerChange}>
+    <Listbox
+      value={consumer ?? ""}
+      onChange={({ id, name }: { id: string; name: string }) =>
+        onConsumerChange({ id, name })
+      }
+    >
       <ListboxButton>{consumer?.name ?? "-"}</ListboxButton>
       <ListboxOptions>
         {consumers?.data?.map((consumer) => (
@@ -177,7 +182,6 @@ function BillingConfigEditor({
   const defaults = useMemo<BillingConfigChanges>(
     () => ({
       agreementId,
-      consumerId: "",
       planService: "payg",
       operations: "self-service",
       markup: 0,
@@ -193,7 +197,6 @@ function BillingConfigEditor({
   const [edited, setEdited] = useState<BillingConfigChanges>(
     billingConfig || defaults
   );
-  const { consumer } = useConsumer(edited?.consumerId ?? "");
 
   useEffect(() => {
     setEdited(billingConfig || defaults);
@@ -218,9 +221,9 @@ function BillingConfigEditor({
           <label className="text-sm font-medium">Consumer</label>
           <div>
             <ConsumersListbox
-              consumer={consumer}
+              consumer={edited.consumer}
               onConsumerChange={(consumer) =>
-                setEdited({ ...edited, consumerId: consumer.id })
+                setEdited({ ...edited, consumer })
               }
             />
           </div>

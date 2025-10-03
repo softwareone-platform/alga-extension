@@ -3,7 +3,7 @@ import { ProductCell } from "@features/products";
 import { BillingConfig } from "@lib/alga";
 import { useMemo, useState } from "react";
 import { Card } from "@ui/card";
-import { AgreementStatus } from "@swo/mp-api-model";
+import { Agreement, AgreementStatus } from "@swo/mp-api-model";
 import {
   Pagination,
   Table,
@@ -39,6 +39,46 @@ const NameCell = ({
   );
 };
 
+const AgreementRow = ({
+  agreement,
+  billingConfig,
+}: {
+  agreement: Agreement;
+  billingConfig?: BillingConfig;
+}) => {
+  console.log(billingConfig);
+  return (
+    <TableRow link={`/agreements/${agreement.id}`}>
+      <NameCell
+        name={agreement.name}
+        id={agreement.id!}
+        status={agreement.status}
+      />
+
+      <ProductCell
+        name={agreement.product?.name}
+        iconUrl={agreement.product?.icon}
+      />
+      <TableCell>{billingConfig?.id || "—"}</TableCell>
+      <TableCell>{billingConfig?.consumer?.name || "—"}</TableCell>
+      <TableCell>{agreement.price?.SPxY || "—"}</TableCell>
+      <MarkupCell markup={billingConfig?.markup} />
+      <PriceWithMarkupCell
+        price={agreement.price?.SPxY}
+        markup={billingConfig?.markup}
+      />
+      <TableCell>
+        {billingConfig?.operations == "managed" && <span>Managed</span>}
+        {billingConfig?.operations == "self-service" && (
+          <span>Self-service</span>
+        )}
+        {!billingConfig?.operations && <span>—</span>}
+      </TableCell>
+      <TableCell>{agreement.price?.currency || "—"}</TableCell>
+    </TableRow>
+  );
+};
+
 export function Agreements() {
   const [offset, setOffset] = useState(0);
   const { agreements, pagination, isFetching } = useAgreements({ offset });
@@ -52,7 +92,7 @@ export function Agreements() {
         billingConfigs?.reduce(
           (acc, billingConfig) => ({
             ...acc,
-            [billingConfig.id!]: billingConfig,
+            [billingConfig.agreementId!]: billingConfig,
           }),
           {} as Record<string, BillingConfig>
         ),
@@ -77,37 +117,11 @@ export function Agreements() {
         </TableHeader>
         <TableBody>
           {agreements?.map((agreement) => (
-            <TableRow key={agreement.id} link={`/agreements/${agreement.id}`}>
-              <NameCell
-                name={agreement.name}
-                id={agreement.id!}
-                status={agreement.status}
-              />
-
-              <ProductCell
-                name={agreement.product?.name}
-                iconUrl={agreement.product?.icon}
-              />
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell>{agreement.price?.SPxY || "—"}</TableCell>
-              <MarkupCell markup={billingConfigsById[agreement.id!]?.markup} />
-              <PriceWithMarkupCell
-                price={agreement.price?.SPxY}
-                markup={billingConfigsById[agreement.id!]?.markup}
-              />
-              <TableCell>
-                {billingConfigsById[agreement.id!]?.operations == "managed" && (
-                  <span>Managed</span>
-                )}
-                {billingConfigsById[agreement.id!]?.operations ==
-                  "self-service" && <span>Self-service</span>}
-                {!billingConfigsById[agreement.id!]?.operations && (
-                  <span>—</span>
-                )}
-              </TableCell>
-              <TableCell>{agreement.price?.currency || "—"}</TableCell>
-            </TableRow>
+            <AgreementRow
+              key={agreement.id}
+              agreement={agreement}
+              billingConfig={billingConfigsById[agreement.id!]}
+            />
           ))}
         </TableBody>
         <TableFooter>
