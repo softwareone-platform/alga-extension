@@ -187,13 +187,13 @@ function BillingConfigEditor({
   );
 
   const { billingConfig } = useBillingConfig(agreementId);
-  const { consumer } = useConsumer(billingConfig?.consumerId ?? "");
 
   const { saveBillingConfig } = useBillingConfigMutation();
 
   const [edited, setEdited] = useState<BillingConfigChanges>(
     billingConfig || defaults
   );
+  const { consumer } = useConsumer(edited?.consumerId ?? "");
 
   useEffect(() => {
     setEdited(billingConfig || defaults);
