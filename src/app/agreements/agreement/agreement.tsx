@@ -25,7 +25,7 @@ import {
   ListboxOptions,
 } from "@ui/listbox";
 import { withMarkup } from "@features/markup";
-import { useConsumers } from "@features/consumers";
+import { Consumer, useConsumer, useConsumers } from "@features/consumers";
 
 function AgreementActions() {
   return (
@@ -142,15 +142,23 @@ function AgreementSummary({ id }: { id: string }) {
   );
 }
 
-const ConsumersListbox = () => {
+const ConsumersListbox = ({
+  consumer,
+  onConsumerChange,
+}: {
+  consumer?: Consumer | null;
+  onConsumerChange: (consumer: Consumer) => void;
+}) => {
   const { consumers } = useConsumers();
 
   return (
-    <Listbox>
-      <ListboxButton>-</ListboxButton>
+    <Listbox value={consumer} onChange={onConsumerChange}>
+      <ListboxButton>{consumer?.name ?? "-"}</ListboxButton>
       <ListboxOptions>
-        {consumers?.map((consumer) => (
-          <ListboxOption value={consumer.id}>{consumer.name}</ListboxOption>
+        {consumers?.data?.map((consumer) => (
+          <ListboxOption key={consumer.id} value={consumer}>
+            {consumer.name}
+          </ListboxOption>
         ))}
       </ListboxOptions>
     </Listbox>
@@ -179,6 +187,7 @@ function BillingConfigEditor({
   );
 
   const { billingConfig } = useBillingConfig(agreementId);
+  const { consumer } = useConsumer(billingConfig?.consumerId ?? "");
 
   const { saveBillingConfig } = useBillingConfigMutation();
 
@@ -208,7 +217,12 @@ function BillingConfigEditor({
         <div className="grid grid-cols-[auto_380px] gap-10 items-center">
           <label className="text-sm font-medium">Consumer</label>
           <div>
-            <ConsumersListbox />
+            <ConsumersListbox
+              consumer={consumer}
+              onConsumerChange={(consumer) =>
+                setEdited({ ...edited, consumerId: consumer.id })
+              }
+            />
           </div>
           <label className="text-sm font-medium">Plan Service</label>
           <div>

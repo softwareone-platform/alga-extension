@@ -42,7 +42,7 @@ import { BillingConfigsProvider } from "@features/billing-config";
 import { ConsumersProvider } from "@features/consumers";
 
 const kvStorage = new KVStorage("swo:billing-configs");
-const BASE_URL = "https://algapsa.com/api/v1/";
+const BASE_URL = "http://localhost:8010/proxy/api/v1/";
 const API_KEY =
   "200aebbceb58e17579c1da81754116d236d1a14872f34f755694e84d3d044518";
 

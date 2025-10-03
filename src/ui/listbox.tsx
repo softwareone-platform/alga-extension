@@ -13,8 +13,8 @@ import { clsx } from "clsx";
 import { ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
 
-export const Listbox = ({ ...props }: HeadlessListboxProps) => {
-  return <HeadlessListbox {...props} />;
+export const Listbox = <T,>({ ...props }: HeadlessListboxProps<"div", T>) => {
+  return <HeadlessListbox as="div" {...props} />;
 };
 
 export type ListboxButtonProps = HeadlessListboxButtonProps & {
@@ -57,10 +57,10 @@ export const ListboxOptions = ({
   );
 };
 
-export const ListboxOption = ({
+export const ListboxOption = <T,>({
   className,
   ...props
-}: HeadlessListboxOptionProps) => {
+}: HeadlessListboxOptionProps<"button", T>) => {
   return (
     <HeadlessListboxOption
       as={HeadlessButton}

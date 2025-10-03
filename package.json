@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "build:alga": "npm run build && alga pack",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "alga-proxy": "npx local-cors-proxy --proxyUrl https://algapsa.com --port 8010"
   },
   "dependencies": {
     "@alga-psa/ui-kit": "^0.1.0",
