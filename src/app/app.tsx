@@ -23,13 +23,19 @@ import {
   Charges,
   Details as StatementDetails,
 } from "./statements";
-import { Orders as AllOrders, OrdersLayout, Order, Items, Details as OrderDetails } from "./orders";
+import {
+  Orders as AllOrders,
+  OrdersLayout,
+  Order,
+  Items,
+  Details as OrderDetails,
+} from "./orders";
 import {
   Subscriptions as AllSubscriptions,
   SubscriptionsLayout,
   Subscription,
   Items as SubscriptionItems,
-  Orders as SubscriptionOrders
+  Orders as SubscriptionOrders,
 } from "./subscriptions";
 import { KVStorage } from "@lib/alga";
 import { BillingConfigsProvider } from "@features/billing-config";
@@ -60,64 +66,72 @@ export function App() {
     <AccountProvider baseUrl={details?.endpoint} token={details?.token}>
       <UserProvider baseUrl={details?.endpoint} token={details?.token}>
         <BillingConfigsProvider kvStorage={kvStorage}>
-          <Routes>
-            <Route path="/" element={<Navigate to="/agreements" replace />} />
+          <CompaniesProvider>
+            <Routes>
+              <Route path="/" element={<Navigate to="/agreements" replace />} />
 
-            <Route path="settings" element={<Settings />}>
-              <Route index element={<Navigate to="general" replace />} />
-              <Route path="general" element={<General />} />
-              <Route path="details" element={<SettingsDetails />} />
-            </Route>
+              <Route path="settings" element={<Settings />}>
+                <Route index element={<Navigate to="general" replace />} />
+                <Route path="general" element={<General />} />
+                <Route path="details" element={<SettingsDetails />} />
+              </Route>
 
-            <Route path="agreements">
-              <Route element={<AgreementsLayout />}>
-                <Route index element={<Agreements />} />
-                <Route path=":id" element={<Agreement />}>
-                  <Route
-                    index
-                    element={<Navigate to="softwareone" replace />}
-                  />
-                  <Route path="softwareone" element={<SoftwareOne />} />
-                  <Route path="subscriptions" element={<AgreementSubscriptions />} />
-                  <Route path="orders" element={<Orders />} />
-                  <Route path="consumer" element={<Consumer />} />
-                  <Route path="billing" element={<Billing />} />
-                  <Route path="details" element={<AgreementDetails />} />
+              <Route path="agreements">
+                <Route element={<AgreementsLayout />}>
+                  <Route index element={<Agreements />} />
+                  <Route path=":id" element={<Agreement />}>
+                    <Route
+                      index
+                      element={<Navigate to="softwareone" replace />}
+                    />
+                    <Route path="softwareone" element={<SoftwareOne />} />
+                    <Route
+                      path="subscriptions"
+                      element={<AgreementSubscriptions />}
+                    />
+                    <Route path="orders" element={<Orders />} />
+                    <Route path="consumer" element={<Consumer />} />
+                    <Route path="billing" element={<Billing />} />
+                    <Route path="details" element={<AgreementDetails />} />
+                  </Route>
                 </Route>
               </Route>
-            </Route>
-            <Route path="statements">
-              <Route element={<StatementsLayout />}>
-                <Route index element={<Statements />} />
-                <Route path=":id" element={<Statement />}>
-                  <Route index element={<Navigate to="charges" replace />} />
-                  <Route path="charges" element={<Charges />} />
-                  <Route path="details" element={<StatementDetails />} />
+              <Route path="statements">
+                <Route element={<StatementsLayout />}>
+                  <Route index element={<Statements />} />
+                  <Route path=":id" element={<Statement />}>
+                    <Route index element={<Navigate to="charges" replace />} />
+                    <Route path="charges" element={<Charges />} />
+                    <Route path="details" element={<StatementDetails />} />
+                  </Route>
                 </Route>
               </Route>
-            </Route>
-            <Route path="orders">
-              <Route element={<OrdersLayout />}>
-                <Route index element={<AllOrders />} />
-                <Route path=":id" element={<Order />}>
-                  <Route index element={<Navigate to="items" replace />} />
-                  <Route path="items" element={<Items />} />
-                  <Route path="details" element={<OrderDetails />} />
+              <Route path="orders">
+                <Route element={<OrdersLayout />}>
+                  <Route index element={<AllOrders />} />
+                  <Route path=":id" element={<Order />}>
+                    <Route index element={<Navigate to="items" replace />} />
+                    <Route path="items" element={<Items />} />
+                    <Route path="details" element={<OrderDetails />} />
+                  </Route>
                 </Route>
               </Route>
-            </Route>
-            <Route path="subscriptions">
-              <Route element={<SubscriptionsLayout />}>
-                <Route index element={<AllSubscriptions />} />
-                <Route path=":id" element={<Subscription />}>
-                  <Route index element={<Navigate to="items" replace />} />
-                  <Route path="items" element={<SubscriptionItems />} />
-                  <Route path="orders" element={<SubscriptionOrders />} />
-                  <Route path="details" element={<div>Details placeholder</div>} />
+              <Route path="subscriptions">
+                <Route element={<SubscriptionsLayout />}>
+                  <Route index element={<AllSubscriptions />} />
+                  <Route path=":id" element={<Subscription />}>
+                    <Route index element={<Navigate to="items" replace />} />
+                    <Route path="items" element={<SubscriptionItems />} />
+                    <Route path="orders" element={<SubscriptionOrders />} />
+                    <Route
+                      path="details"
+                      element={<div>Details placeholder</div>}
+                    />
+                  </Route>
                 </Route>
               </Route>
-            </Route>
-          </Routes>
+            </Routes>
+          </CompaniesProvider>
         </BillingConfigsProvider>
       </UserProvider>
     </AccountProvider>

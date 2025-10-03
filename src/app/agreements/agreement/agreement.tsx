@@ -141,6 +141,14 @@ function AgreementSummary({ id }: { id: string }) {
   );
 }
 
+const ConsumersListbox = () => {
+  return (
+    <Listbox>
+      <ListboxButton>-</ListboxButton>
+    </Listbox>
+  );
+};
+
 function BillingConfigEditor({
   isOpen,
   onClose,
