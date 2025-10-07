@@ -34,7 +34,7 @@ export class BillingConfigClient {
   async save(changes: BillingConfigChanges): Promise<BillingConfig> {
     const bc: BillingConfig = {
       id: changes.id || (await this.generateId()),
-      status: changes.consumerId ? "active" : "unconfigured",
+      status: changes.consumer ? "active" : "unconfigured",
       ...changes,
       updatedAt: new Date().toISOString(),
     };
