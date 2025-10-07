@@ -9,7 +9,7 @@ import { useParams } from "react-router";
 
 function Agreement({ agreement }: { agreement: AgreementType }) {
   return (
-    <Card className="w-fit!">
+    <Card className="w-fit">
       <h2 className="text-lg font-semibold text-black mb-4">Agreement</h2>
       <div className="grid grid-cols-[auto_auto] gap-4">
         <label className="text-sm font-semibold text-black">Agreement ID</label>

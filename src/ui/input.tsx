@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { clsx } from "clsx";
+import { cn } from "@utils/cn";
 import {
   Input as HeadlessInput,
   InputProps as HeadlessInputProps,
@@ -12,7 +12,7 @@ export const Input = forwardRef<HTMLInputElement, HeadlessInputProps>(
     return (
       <HeadlessInput
         ref={ref}
-        className={clsx(
+        className={cn(
           className,
           "w-full px-3 py-2 rounded-lg text-sm border border-border-300 focus:outline-2 focus:-outline-offset-1 focus:outline-primary-600"
         )}
@@ -29,7 +29,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, HeadlessTextareaProps>(
     return (
       <HeadlessTextarea
         ref={ref}
-        className={clsx(
+        className={cn(
           className,
           "w-full px-3 py-2 rounded-lg text-sm border border-border-300 focus:outline-2 focus:-outline-offset-1 focus:outline-primary-600"
         )}

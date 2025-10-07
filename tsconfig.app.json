@@ -18,7 +18,8 @@
     "paths": {
       "@lib/*": ["src/lib/*"],
       "@ui/*": ["src/ui/*"],
-      "@features/*": ["src/features/*"]
+      "@features/*": ["src/features/*"],
+      "@utils/*": ["src/utils/*"],
     },
 
     /* Linting */

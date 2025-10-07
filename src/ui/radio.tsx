@@ -14,7 +14,7 @@ export const RadioGroup = forwardRef<HTMLDivElement, HeadlessRadioGroupProps>(
     return (
       <HeadlessRadioGroup
         ref={ref}
-        className={clsx(className, "flex flex-col gap-4")}
+        className={cn(className, "flex flex-col gap-4")}
         {...props}
       />
     );
@@ -30,7 +30,7 @@ export type RadioProps = HeadlessRadioProps & {
 export const Radio = forwardRef<HTMLDivElement, RadioProps>(
   ({ className, key, value, children, ...props }, ref) => {
     return (
-      <Field key={key} className={clsx(className, "flex items-center gap-2")}>
+      <Field key={key} className={cn(className, "flex items-center gap-2")}>
         <HeadlessRadio
           ref={ref}
           value={value}

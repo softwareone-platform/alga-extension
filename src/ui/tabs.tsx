@@ -1,5 +1,5 @@
 import { HTMLAttributes, forwardRef } from "react";
-import { clsx } from "clsx";
+import { cn } from "@utils/cn";
 
 export type TabsProps = HTMLAttributes<HTMLElement>;
 
@@ -10,10 +10,7 @@ const TabsComponent = forwardRef<HTMLElement, TabsProps>(
         aria-orientation="horizontal"
         data-orientation="horizontal"
         ref={ref}
-        className={clsx(
-          "flex items-center border-b border-gray-200",
-          className
-        )}
+        className={cn("flex items-center border-b border-gray-200", className)}
         {...props}
       />
     );
@@ -29,7 +26,7 @@ const TabComponent = forwardRef<HTMLSpanElement, TabProps>(
     return (
       <span
         ref={ref}
-        className={clsx(
+        className={cn(
           "px-4 py-2 block border-b-2",
           {
             "border-transparent": !isActive,

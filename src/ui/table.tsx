@@ -1,5 +1,5 @@
 import { forwardRef, HTMLAttributes, useState } from "react";
-import { clsx } from "clsx";
+import { cn } from "@utils/cn";
 import { useNavigate } from "react-router";
 import { Button } from "./button";
 
@@ -10,7 +10,7 @@ export const Table = forwardRef<
   return (
     <table
       ref={ref}
-      className={clsx(
+      className={cn(
         className,
         "w-full grid border border-border-200 rounded-md"
       )}
@@ -69,7 +69,7 @@ export const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(
 
     return (
       <tr
-        className={clsx("contents group", { "cursor-pointer": !!link })}
+        className={cn("contents group", { "cursor-pointer": !!link })}
         onClick={() => {
           if (link) {
             navigate(link);
@@ -90,7 +90,7 @@ export const TableHeaderCell = forwardRef<
 >(({ className, ...props }, ref) => {
   return (
     <th
-      className={clsx(
+      className={cn(
         "border-b py-3 px-6 border-border-200 text-left text-xs font-medium tracking-wider",
         className
       )}
@@ -108,7 +108,7 @@ export const TableCell = forwardRef<
 >(({ className, ...props }, ref) => {
   return (
     <td
-      className={clsx(
+      className={cn(
         "border-b py-3 px-6 border-border-200 text-left text-sm text-text-700 group-hover:bg-primary-50 flex items-center",
         className
       )}
@@ -156,7 +156,7 @@ export const Pagination = forwardRef<HTMLTableCellElement, PaginationProps>(
       <TableCell
         ref={ref}
         {...props}
-        className={clsx(
+        className={cn(
           "flex justify-between items-center col-span-full border-b-0",
           className
         )}

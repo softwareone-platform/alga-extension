@@ -25,6 +25,7 @@ export default defineConfig({
       "@lib": path.resolve(__dirname, "./src/lib"),
       "@ui": path.resolve(__dirname, "./src/ui"),
       "@features": path.resolve(__dirname, "./src/features"),
+      "@utils": path.resolve(__dirname, "./src/utils"),
     },
   },
   build: {

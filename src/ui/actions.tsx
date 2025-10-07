@@ -35,7 +35,7 @@ export const ActionItem = ({
   return (
     <MenuItem
       as={HeadlessButton}
-      className={clsx(
+      className={cn(
         className,
         "block data-focus:bg-gray-100 data-focus:rounded py-1 px-3 cursor-pointer w-full text-left"
       )}

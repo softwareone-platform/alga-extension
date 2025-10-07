@@ -1,5 +1,5 @@
 import { AnchorHTMLAttributes, forwardRef } from "react";
-import { clsx } from "clsx";
+import { cn } from "@utils/cn";
 
 export const Link = forwardRef<
   HTMLAnchorElement,
@@ -8,7 +8,7 @@ export const Link = forwardRef<
   return (
     <a
       ref={ref}
-      className={clsx("text-blue-500 hover:text-blue-600", className)}
+      className={cn("text-blue-500 hover:text-blue-600", className)}
       {...props}
     />
   );

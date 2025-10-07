@@ -9,7 +9,7 @@ import {
   ListboxOptionProps as HeadlessListboxOptionProps,
   Button as HeadlessButton,
 } from "@headlessui/react";
-import { clsx } from "clsx";
+import { cn } from "@utils/cn";
 import { ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
 
@@ -30,7 +30,7 @@ export const ListboxButton = ({
     <HeadlessListboxButton
       as={HeadlessButton}
       {...({ variant: "white" } as any)}
-      className={clsx(
+      className={cn(
         className,
         "w-full px-3 py-2 rounded-lg text-sm border border-border-300 focus-within:outline-2 focus-within:-outline-offset-1 focus-within:outline-primary-600 flex justify-between items-center cursor-pointer hover:bg-primary-50 hover:text-primary-700"
       )}
@@ -48,7 +48,7 @@ export const ListboxOptions = ({
 }: HeadlessListboxOptionsProps) => {
   return (
     <HeadlessListboxOptions
-      className={clsx(
+      className={cn(
         className,
         "bg-white border border-border-200 rounded-lg p-1 outline-0 mt-1 text-sm shadow-xl absolute min-w-(--button-width) z-10"
       )}
@@ -64,7 +64,7 @@ export const ListboxOption = <T,>({
   return (
     <HeadlessListboxOption
       as={HeadlessButton}
-      className={clsx(
+      className={cn(
         className,
         "block data-focus:bg-gray-100 data-focus:rounded py-1 px-3 cursor-pointer w-full text-left"
       )}

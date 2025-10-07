@@ -6,14 +6,14 @@ import {
   DialogTitle as HeadlessDialogTitle,
   DialogTitleProps as HeadlessDialogTitleProps,
 } from "@headlessui/react";
-import { clsx } from "clsx";
+import { cn } from "@utils/cn";
 import { X } from "lucide-react";
 
 export const Dialog = ({ className, ...props }: HeadlessDialogProps) => {
   return (
     <HeadlessDialog
       {...props}
-      className={clsx(
+      className={cn(
         className,
         "flex justify-center items-center fixed inset-0"
       )}
@@ -28,7 +28,7 @@ export const DialogPanel = ({
   return (
     <HeadlessDialogPanel
       transition
-      className={clsx(
+      className={cn(
         className,
         "w-[600px] bg-white shadow-xl flex flex-col p-6 gap-6 duration-100 ease-out data-[closed]:opacity-0 border border-gray-200 rounded-2xl"
       )}
@@ -50,7 +50,7 @@ export const DialogTitle = ({
 }: DialogTitleProps) => {
   return (
     <HeadlessDialogTitle
-      className={clsx(className, "flex justify-between")}
+      className={cn(className, "flex justify-between")}
       {...props}
     >
       <div className="text-2xl font-semibold">{children}</div>

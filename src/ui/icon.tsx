@@ -1,5 +1,5 @@
 import { forwardRef, ImgHTMLAttributes } from "react";
-import { clsx } from "clsx";
+import { cn } from "@utils/cn";
 import { useExtensionDetails } from "@features/extension";
 
 type IconProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "src"> & {
@@ -18,12 +18,7 @@ export const Icon = forwardRef<HTMLImageElement, IconProps>(
     );
 
     return (
-      <img
-        ref={ref}
-        src={url}
-        className={clsx(className, "size-8")}
-        {...props}
-      />
+      <img ref={ref} src={url} className={cn(className, "size-8")} {...props} />
     );
   }
 );
