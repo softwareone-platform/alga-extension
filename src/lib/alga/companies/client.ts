@@ -1,11 +1,16 @@
 import { AxiosInstance } from "axios";
 import { axiosInstance } from "../shared";
-import {
-  CompanyResponse,
-  Company,
-  ListResponse,
-  SingleResponse,
-} from "./models";
+import { Company, ListResponse, SingleResponse } from "./models";
+
+export type AlgaCompanyResponse = {
+  tenant: string;
+  company_id: string;
+  company_name: string;
+  client_type: "company" | "individual";
+  properties?: {
+    website: string;
+  };
+};
 
 export type CompaniesResponse = ListResponse<Company>;
 
@@ -17,7 +22,7 @@ export class CompaniesClient {
   }
 
   async getCompanies(): Promise<CompaniesResponse> {
-    const { data } = await this.axios.get<ListResponse<CompanyResponse>>(
+    const { data } = await this.axios.get<ListResponse<AlgaCompanyResponse>>(
       "/companies"
     );
     return {
@@ -25,6 +30,8 @@ export class CompaniesClient {
         id: company.company_id,
         tenantId: company.tenant,
         name: company.company_name,
+        type: company.client_type,
+        website: company.properties?.website,
       })),
       pagination: data.pagination,
       meta: data.meta,
@@ -32,7 +39,7 @@ export class CompaniesClient {
   }
 
   async getCompany(id: string): Promise<Company | null> {
-    const { data } = await this.axios.get<SingleResponse<CompanyResponse>>(
+    const { data } = await this.axios.get<SingleResponse<AlgaCompanyResponse>>(
       `/companies/${id}`
     );
     return data.data
@@ -40,6 +47,8 @@ export class CompaniesClient {
           id: data.data.company_id,
           tenantId: data.data.tenant,
           name: data.data.company_name,
+          type: data.data.client_type,
+          website: data.data.properties?.website,
         }
       : null;
   }

@@ -1,13 +1,9 @@
-export type CompanyResponse = {
-  tenant: string;
-  company_id: string;
-  company_name: string;
-};
-
 export type Company = {
   id: string;
   tenantId: string;
   name: string;
+  type: "company" | "individual";
+  website?: string;
 };
 
 export type Pagination = {
