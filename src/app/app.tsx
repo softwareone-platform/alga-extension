@@ -36,6 +36,7 @@ import {
   Subscription,
   Items as SubscriptionItems,
   Orders as SubscriptionOrders,
+  Details as SubscriptionDetails,
 } from "./subscriptions";
 import { KVStorage } from "@lib/alga";
 import { BillingConfigsProvider } from "@features/billing-config";
@@ -127,10 +128,7 @@ export function App() {
                     <Route index element={<Navigate to="items" replace />} />
                     <Route path="items" element={<SubscriptionItems />} />
                     <Route path="orders" element={<SubscriptionOrders />} />
-                    <Route
-                      path="details"
-                      element={<div>Details placeholder</div>}
-                    />
+                    <Route path="details" element={<SubscriptionDetails />} />
                   </Route>
                 </Route>
               </Route>
