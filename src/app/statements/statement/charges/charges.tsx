@@ -40,12 +40,15 @@ export function Charges() {
   const { id } = useParams<{ id: string }>();
   const [offset, setOffset] = useState(0);
   const { statement } = useStatement(id!);
-  const { charges, pagination, isFetching } = useStatementCharges(id!, {
-    offset,
-  });
+  const { charges, pagination, isFetching, isPending } = useStatementCharges(
+    id!,
+    {
+      offset,
+    }
+  );
   const { billingConfig } = useBillingConfig(statement?.agreement?.id!);
 
-  if (!charges) return <>Loading...</>;
+  if (isPending) return <></>;
 
   if (charges.length === 0) return <>No Charges found.</>;
 

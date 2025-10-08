@@ -63,12 +63,15 @@ export function Orders() {
   const { id } = useParams<{ id: string }>();
   const [offset, setOffset] = useState(0);
   const { subscription } = useSubscription(id!);
-  const { orders, pagination, isFetching } = useSubscriptionOrders(id!, {
-    offset,
-  });
+  const { orders, pagination, isFetching, isPending } = useSubscriptionOrders(
+    id!,
+    {
+      offset,
+    }
+  );
   const { billingConfig } = useBillingConfig(subscription?.agreement?.id);
 
-  if (!orders) return <>Loading...</>;
+  if (isPending) return <></>;
 
   if (orders.length === 0) return <>No orders found.</>;
 
@@ -100,13 +103,15 @@ export function Orders() {
           ))}
         </TableBody>
         <TableFooter>
-          <Pagination
-            onPageChange={(page) =>
-              setOffset((page - 1) * (pagination.limit ?? 0))
-            }
-            totalItems={pagination.total ?? 0}
-            isLoading={isFetching}
-          />
+          <TableRow>
+            <Pagination
+              onPageChange={(page) =>
+                setOffset((page - 1) * (pagination.limit ?? 0))
+              }
+              totalItems={pagination.total ?? 0}
+              isLoading={isFetching}
+            />
+          </TableRow>
         </TableFooter>
       </Table>
     </Card>

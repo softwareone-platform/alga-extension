@@ -20,12 +20,15 @@ import { DateTimeCell } from "@features/dates";
 export function Orders() {
   const { id } = useParams<{ id: string }>();
   const [offset, setOffset] = useState(0);
-  const { orders, pagination, isFetching } = useAgreementOrders(id!, {
-    offset,
-  });
+  const { orders, pagination, isFetching, isPending } = useAgreementOrders(
+    id!,
+    {
+      offset,
+    }
+  );
   const { billingConfig } = useBillingConfig(id!);
 
-  if (!orders) return <>Loading...</>;
+  if (isPending) return <></>;
 
   if (orders.length === 0) return <>No Orders found.</>;
 

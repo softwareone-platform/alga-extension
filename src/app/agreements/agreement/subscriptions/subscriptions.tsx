@@ -39,13 +39,11 @@ const CommitmentCell = ({
 export function Subscriptions() {
   const { id } = useParams<{ id: string }>();
   const [offset, setOffset] = useState(0);
-  const { subscriptions, pagination, isFetching } = useAgreementSubscriptions(
-    id!,
-    { offset }
-  );
+  const { subscriptions, pagination, isFetching, isPending } =
+    useAgreementSubscriptions(id!, { offset });
   const { billingConfig } = useBillingConfig(id!);
 
-  if (!subscriptions) return <>Loading...</>;
+  if (isPending) return <></>;
 
   if (subscriptions.length === 0) return <>No Subscriptons found.</>;
 
