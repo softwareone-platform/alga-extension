@@ -102,13 +102,15 @@ export function Subscriptions() {
           ))}
         </TableBody>
         <TableFooter>
-          <Pagination
-            onPageChange={(page) =>
-              setOffset((page - 1) * (pagination.limit ?? 0))
-            }
-            totalItems={pagination.total ?? 0}
-            isLoading={isFetching}
-          />
+          <TableRow>
+            <Pagination
+              onPageChange={(page) =>
+                setOffset((page - 1) * (pagination.limit ?? 0))
+              }
+              totalItems={pagination.total ?? 0}
+              isLoading={isFetching}
+            />
+          </TableRow>
         </TableFooter>
       </Table>
     </Card>
