@@ -9,8 +9,8 @@ import {
   Consumer,
   Billing,
   Details as AgreementDetails,
-} from "./agreements";
-import { Settings, General, Details as SettingsDetails } from "./settings";
+} from "./msp/agreements";
+import { Settings, General, Details as SettingsDetails } from "./msp/settings";
 import { AccountProvider } from "@features/account";
 import { useExtensionDetails } from "@features/extension";
 import { UserProvider } from "@features/user";
@@ -22,14 +22,14 @@ import {
   Statement,
   Charges,
   Details as StatementDetails,
-} from "./statements";
+} from "./msp/statements";
 import {
   Orders as AllOrders,
   OrdersLayout,
   Order,
   Items,
   Details as OrderDetails,
-} from "./orders";
+} from "./msp/orders";
 import {
   Subscriptions as AllSubscriptions,
   SubscriptionsLayout,
@@ -37,7 +37,7 @@ import {
   Items as SubscriptionItems,
   Orders as SubscriptionOrders,
   Details as SubscriptionDetails,
-} from "./subscriptions";
+} from "./msp/subscriptions";
 import { KVStorage } from "@lib/alga";
 import { BillingConfigsProvider } from "@features/billing-config";
 import { ConsumersProvider } from "@features/consumers";
