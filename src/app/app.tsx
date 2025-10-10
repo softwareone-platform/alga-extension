@@ -73,62 +73,67 @@ export function App() {
         <BillingConfigsProvider kvStorage={kvStorage}>
           <ConsumersProvider baseUrl={BASE_URL} apiKey={API_KEY}>
             <Routes>
-              <Route path="/" element={<Navigate to="/agreements" replace />} />
+              <Route path="/msp">
+                <Route index element={<Navigate to="agreements" replace />} />
 
-              <Route path="settings" element={<Settings />}>
-                <Route index element={<Navigate to="general" replace />} />
-                <Route path="general" element={<General />} />
-                <Route path="details" element={<SettingsDetails />} />
-              </Route>
+                <Route path="settings" element={<Settings />}>
+                  <Route index element={<Navigate to="general" replace />} />
+                  <Route path="general" element={<General />} />
+                  <Route path="details" element={<SettingsDetails />} />
+                </Route>
 
-              <Route path="agreements">
-                <Route element={<AgreementsLayout />}>
-                  <Route index element={<Agreements />} />
-                  <Route path=":id" element={<Agreement />}>
-                    <Route
-                      index
-                      element={<Navigate to="softwareone" replace />}
-                    />
-                    <Route path="softwareone" element={<SoftwareOne />} />
-                    <Route
-                      path="subscriptions"
-                      element={<AgreementSubscriptions />}
-                    />
-                    <Route path="orders" element={<Orders />} />
-                    <Route path="consumer" element={<Consumer />} />
-                    <Route path="billing" element={<Billing />} />
-                    <Route path="details" element={<AgreementDetails />} />
+                <Route path="agreements">
+                  <Route element={<AgreementsLayout />}>
+                    <Route index element={<Agreements />} />
+                    <Route path=":id" element={<Agreement />}>
+                      <Route
+                        index
+                        element={<Navigate to="softwareone" replace />}
+                      />
+                      <Route path="softwareone" element={<SoftwareOne />} />
+                      <Route
+                        path="subscriptions"
+                        element={<AgreementSubscriptions />}
+                      />
+                      <Route path="orders" element={<Orders />} />
+                      <Route path="consumer" element={<Consumer />} />
+                      <Route path="billing" element={<Billing />} />
+                      <Route path="details" element={<AgreementDetails />} />
+                    </Route>
                   </Route>
                 </Route>
-              </Route>
-              <Route path="statements">
-                <Route element={<StatementsLayout />}>
-                  <Route index element={<Statements />} />
-                  <Route path=":id" element={<Statement />}>
-                    <Route index element={<Navigate to="charges" replace />} />
-                    <Route path="charges" element={<Charges />} />
-                    <Route path="details" element={<StatementDetails />} />
+                <Route path="statements">
+                  <Route element={<StatementsLayout />}>
+                    <Route index element={<Statements />} />
+                    <Route path=":id" element={<Statement />}>
+                      <Route
+                        index
+                        element={<Navigate to="charges" replace />}
+                      />
+                      <Route path="charges" element={<Charges />} />
+                      <Route path="details" element={<StatementDetails />} />
+                    </Route>
                   </Route>
                 </Route>
-              </Route>
-              <Route path="orders">
-                <Route element={<OrdersLayout />}>
-                  <Route index element={<AllOrders />} />
-                  <Route path=":id" element={<Order />}>
-                    <Route index element={<Navigate to="items" replace />} />
-                    <Route path="items" element={<Items />} />
-                    <Route path="details" element={<OrderDetails />} />
+                <Route path="orders">
+                  <Route element={<OrdersLayout />}>
+                    <Route index element={<AllOrders />} />
+                    <Route path=":id" element={<Order />}>
+                      <Route index element={<Navigate to="items" replace />} />
+                      <Route path="items" element={<Items />} />
+                      <Route path="details" element={<OrderDetails />} />
+                    </Route>
                   </Route>
                 </Route>
-              </Route>
-              <Route path="subscriptions">
-                <Route element={<SubscriptionsLayout />}>
-                  <Route index element={<AllSubscriptions />} />
-                  <Route path=":id" element={<Subscription />}>
-                    <Route index element={<Navigate to="items" replace />} />
-                    <Route path="items" element={<SubscriptionItems />} />
-                    <Route path="orders" element={<SubscriptionOrders />} />
-                    <Route path="details" element={<SubscriptionDetails />} />
+                <Route path="subscriptions">
+                  <Route element={<SubscriptionsLayout />}>
+                    <Route index element={<AllSubscriptions />} />
+                    <Route path=":id" element={<Subscription />}>
+                      <Route index element={<Navigate to="items" replace />} />
+                      <Route path="items" element={<SubscriptionItems />} />
+                      <Route path="orders" element={<SubscriptionOrders />} />
+                      <Route path="details" element={<SubscriptionDetails />} />
+                    </Route>
                   </Route>
                 </Route>
               </Route>
