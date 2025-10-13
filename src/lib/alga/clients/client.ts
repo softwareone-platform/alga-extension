@@ -1,18 +1,16 @@
 import { AxiosInstance } from "axios";
 import { axiosInstance } from "../shared";
-import { Company, ListResponse, SingleResponse } from "./models";
+import { Client, ListResponse, SingleResponse } from "./models";
 
-export type AlgaCompanyResponse = {
+export type AlgaClientResponse = {
   tenant: string;
-  company_id: string;
-  company_name: string;
+  client_id: string;
+  client_name: string;
   client_type: "company" | "individual";
   properties?: {
     website: string;
   };
 };
-
-export type CompaniesResponse = ListResponse<Company>;
 
 export class CompaniesClient {
   private axios: AxiosInstance;
@@ -21,15 +19,15 @@ export class CompaniesClient {
     this.axios = axiosInstance(baseUrl, apiKey);
   }
 
-  async getCompanies(): Promise<CompaniesResponse> {
-    const { data } = await this.axios.get<ListResponse<AlgaCompanyResponse>>(
-      "/companies"
+  async getClients(): Promise<ListResponse<Client>> {
+    const { data } = await this.axios.get<ListResponse<AlgaClientResponse>>(
+      "/clients"
     );
     return {
       data: data.data.map((company) => ({
-        id: company.company_id,
+        id: company.client_id,
         tenantId: company.tenant,
-        name: company.company_name,
+        name: company.client_name,
         type: company.client_type,
         website: company.properties?.website,
       })),
@@ -38,15 +36,15 @@ export class CompaniesClient {
     };
   }
 
-  async getCompany(id: string): Promise<Company | null> {
-    const { data } = await this.axios.get<SingleResponse<AlgaCompanyResponse>>(
-      `/companies/${id}`
+  async getClient(id: string): Promise<Client | null> {
+    const { data } = await this.axios.get<SingleResponse<AlgaClientResponse>>(
+      `/clients/${id}`
     );
     return data.data
       ? {
-          id: data.data.company_id,
+          id: data.data.client_id,
           tenantId: data.data.tenant,
-          name: data.data.company_name,
+          name: data.data.client_name,
           type: data.data.client_type,
           website: data.data.properties?.website,
         }

@@ -1,4 +1,4 @@
-export type Company = {
+export type Client = {
   id: string;
   tenantId: string;
   name: string;

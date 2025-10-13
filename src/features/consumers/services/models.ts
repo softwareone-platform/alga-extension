@@ -1,3 +1,3 @@
-import { Company } from "@lib/alga";
+import { Client } from "@lib/alga";
 
-export type Consumer = Company;
+export type Consumer = Client;

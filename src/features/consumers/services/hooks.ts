@@ -7,7 +7,7 @@ export const useConsumers = () => {
 
   const { data: consumers, ...rest } = useQuery({
     queryKey: ["consumers"],
-    queryFn: () => client!.getCompanies(),
+    queryFn: () => client!.getClients(),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
     enabled: !!client,
@@ -21,7 +21,7 @@ export const useConsumer = (id: string) => {
 
   const { data: consumer, ...rest } = useQuery({
     queryKey: ["consumer", id],
-    queryFn: () => client!.getCompany(id!),
+    queryFn: () => client!.getClient(id!),
     enabled: !!client && !!id,
   });
 
