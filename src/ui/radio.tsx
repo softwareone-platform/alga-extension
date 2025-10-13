@@ -6,7 +6,7 @@ import {
   Field,
   Label,
 } from "@headlessui/react";
-import clsx from "clsx";
+import { cn } from "@utils/cn";
 import { ReactNode, forwardRef } from "react";
 
 export const RadioGroup = forwardRef<HTMLDivElement, HeadlessRadioGroupProps>(

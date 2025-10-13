@@ -26,7 +26,7 @@ const StatementRow = ({
   statement: Statement;
   billingConfig?: BillingConfig;
 }) => (
-  <TableRow link={`/statements/${statement.id}`}>
+  <TableRow link={statement.id}>
     <TableCell>
       <span className="text-sm text-blue-500 hover:text-blue-600 truncate">
         {statement.id!}

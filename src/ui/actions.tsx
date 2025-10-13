@@ -8,8 +8,8 @@ import {
 } from "@headlessui/react";
 import { Button } from "./button";
 import { ReactNode } from "react";
-import clsx from "clsx";
 import { EllipsisVertical } from "lucide-react";
+import { cn } from "@utils/cn";
 
 export const Actions = ({ children }: { children: ReactNode }) => {
   return (

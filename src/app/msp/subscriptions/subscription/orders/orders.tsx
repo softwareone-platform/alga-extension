@@ -22,6 +22,7 @@ import { DateTimeCell } from "@features/dates";
 import { Order } from "@swo/mp-api-model";
 import { BillingConfig } from "@lib/alga";
 import { ConsumerLink } from "@features/consumers";
+import { Link } from "@ui/link";
 
 const OrderRow = ({
   order,
@@ -31,8 +32,12 @@ const OrderRow = ({
   billingConfig?: BillingConfig | null;
 }) => {
   return (
-    <TableRow key={order.id}>
-      <TableCell>{order.id}</TableCell>
+    <TableRow key={order.id} link={`/msp/orders/${order.id}`}>
+      <TableCell>
+        <Link className="truncate" href={`/msp/orders/${order.id}`}>
+          {order.id}
+        </Link>
+      </TableCell>
       <TableCell>{order.type || "—"}</TableCell>
       <TableCell>{order.agreement?.name || "—"}</TableCell>
       <TableCell>{order.product?.name || "—"}</TableCell>

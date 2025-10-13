@@ -46,9 +46,8 @@ const AgreementRow = ({
   agreement: Agreement;
   billingConfig?: BillingConfig;
 }) => {
-  console.log(billingConfig);
   return (
-    <TableRow link={`/agreements/${agreement.id}`}>
+    <TableRow link={"chuj"}>
       <NameCell
         name={agreement.name}
         id={agreement.id!}

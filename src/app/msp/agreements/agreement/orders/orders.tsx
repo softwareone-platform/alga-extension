@@ -52,11 +52,7 @@ export function Orders() {
           {orders?.map((order) => (
             <TableRow key={order.id}>
               <TableCell>
-                <Link
-                  className="truncate"
-                  href={`/agreements/${id}/orders/${order.id}`}
-                  target="_blank"
-                >
+                <Link className="truncate" href={`/msp/orders/${order.id}`}>
                   {order.id}
                 </Link>
               </TableCell>

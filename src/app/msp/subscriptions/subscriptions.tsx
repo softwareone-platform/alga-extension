@@ -31,7 +31,7 @@ const SubscriptionRow = ({
   billingConfig?: BillingConfig;
 }) => {
   return (
-    <TableRow link={`/subscriptions/${subscription.id}`}>
+    <TableRow link={subscription.id}>
       <TableCell>
         <span className="truncate">{subscription.name || "—"}</span>
       </TableCell>
