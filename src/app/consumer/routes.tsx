@@ -3,11 +3,8 @@ import {
   Agreements,
   Agreement,
   AgreementsLayout,
-  SoftwareOne,
   Subscriptions as AgreementSubscriptions,
   Orders,
-  Consumer,
-  Billing,
   Details as AgreementDetails,
 } from "./agreements";
 
@@ -35,11 +32,7 @@ export const consumerRoutes: RouteObject[] = [
                 children: [
                   {
                     index: true,
-                    element: <Navigate to="softwareone" replace />,
-                  },
-                  {
-                    path: "softwareone",
-                    element: <SoftwareOne />,
+                    element: <Navigate to="subscriptions" replace />,
                   },
                   {
                     path: "subscriptions",
@@ -48,14 +41,6 @@ export const consumerRoutes: RouteObject[] = [
                   {
                     path: "orders",
                     element: <Orders />,
-                  },
-                  {
-                    path: "consumer",
-                    element: <Consumer />,
-                  },
-                  {
-                    path: "billing",
-                    element: <Billing />,
                   },
                   {
                     path: "details",
