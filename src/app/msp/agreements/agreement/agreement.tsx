@@ -1,4 +1,3 @@
-import { ActionItem, Actions } from "@ui/actions";
 import { Button } from "@ui/button";
 import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
@@ -26,14 +25,6 @@ import {
 } from "@ui/listbox";
 import { withMarkup } from "@features/markup";
 import { useConsumers } from "@features/consumers";
-
-function AgreementActions() {
-  return (
-    <Actions>
-      <ActionItem>Edit</ActionItem>
-    </Actions>
-  );
-}
 
 function AgreementSummary({ id }: { id: string }) {
   const { agreement, isPending: isAgreementPending } = useAgreement(id);
@@ -327,7 +318,6 @@ export function Agreement() {
         </div>
         <div className="flex items-center gap-6">
           <Button onClick={() => setIsOpen(true)}>Edit</Button>
-          <AgreementActions />
         </div>
       </header>
       <AgreementSummary id={id!} />
