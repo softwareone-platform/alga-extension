@@ -1,7 +1,8 @@
 import { KVStorage } from "@lib/alga";
 import { BillingConfig } from "./models";
 
-const BILLING_CONFIGS_STORAGE_KEY = "billing-configs";
+const BY_AGREEMENTS_KEY = "billing-configs-by-agreements";
+const BY_CUSTOMERS_KEY = "billing-configs-by-customers";
 const MAX_ID_STORAGE_KEY = "max-id";
 
 export type BillingConfigChanges = Omit<
@@ -20,7 +21,7 @@ export class BillingConfigClient {
 
   async getByAgreementId(agreementId: string): Promise<BillingConfig | null> {
     return await this.kvStorage.get<BillingConfig>(
-      `${BILLING_CONFIGS_STORAGE_KEY}:${agreementId}`
+      `${BY_AGREEMENTS_KEY}:${agreementId}`
     );
   }
 
@@ -31,6 +32,14 @@ export class BillingConfigClient {
     ).then((bcs) => bcs.filter((bc) => !!bc));
   }
 
+  async getByCustomerId(customerId: string): Promise<BillingConfig[]> {
+    const current = await this.kvStorage.get<BillingConfig[]>(
+      `${BY_CUSTOMERS_KEY}:${customerId}`
+    );
+
+    return current || [];
+  }
+
   async save(changes: BillingConfigChanges): Promise<BillingConfig> {
     const bc: BillingConfig = {
       id: changes.id || (await this.generateId()),
@@ -39,10 +48,20 @@ export class BillingConfigClient {
       updatedAt: new Date().toISOString(),
     };
 
-    await this.kvStorage.set(
-      `${BILLING_CONFIGS_STORAGE_KEY}:${bc.agreementId}`,
-      bc
-    );
+    await this.kvStorage.set(`${BY_AGREEMENTS_KEY}:${bc.agreementId}`, bc);
+
+    if (!bc.consumer) {
+      return bc;
+    }
+
+    const current =
+      (await this.kvStorage.get<BillingConfig[]>(
+        `${BY_CUSTOMERS_KEY}:${bc.consumer.id}`
+      )) || [];
+
+    current.push(bc);
+
+    await this.kvStorage.set(`${BY_CUSTOMERS_KEY}:${bc.consumer.id}`, current);
 
     return bc;
   }

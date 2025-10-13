@@ -14,7 +14,7 @@ import { MarkupCell, PriceWithMarkupCell } from "@features/markup";
 import { useOrders, OrderStatusBadge } from "@features/orders";
 import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
-import { useBillingConfigs } from "@features/billing-config";
+import { useBillingConfigsByAgreements } from "@features/billing-config";
 import { BillingConfig } from "@lib/alga";
 import { Order } from "@swo/mp-api-model";
 import { ConsumerLink } from "@features/consumers";
@@ -58,7 +58,7 @@ export function Orders() {
   const [offset, setOffset] = useState(0);
   const { orders, pagination, isFetching } = useOrders({ offset });
 
-  const { billingConfigs } = useBillingConfigs(
+  const { billingConfigs } = useBillingConfigsByAgreements(
     orders.map((order) => order.agreement?.id ?? "").filter(Boolean)
   );
 

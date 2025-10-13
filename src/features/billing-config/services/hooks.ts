@@ -3,12 +3,24 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BillingConfigsContext } from "./context";
 import { BillingConfigChanges } from "@lib/alga";
 
-export const useBillingConfigs = (agreementsIds: string[]) => {
+export const useBillingConfigsByAgreements = (agreementsIds: string[]) => {
   const { client } = useContext(BillingConfigsContext);
 
   const { data: billingConfigs, ...state } = useQuery({
     queryKey: ["billing-configs", agreementsIds],
     queryFn: () => client!.getByAgreementsIds(agreementsIds),
+    enabled: !!client,
+  });
+
+  return { billingConfigs, ...state };
+};
+
+export const useBillingConfigsByConsumer = (consumerId: string) => {
+  const { client } = useContext(BillingConfigsContext);
+
+  const { data: billingConfigs, ...state } = useQuery({
+    queryKey: ["billing-configs", consumerId],
+    queryFn: () => client!.getByCustomerId(consumerId),
     enabled: !!client,
   });
 

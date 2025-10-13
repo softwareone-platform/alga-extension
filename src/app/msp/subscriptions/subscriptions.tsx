@@ -18,7 +18,7 @@ import {
 } from "@features/subscriptions";
 import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
-import { useBillingConfigs } from "@features/billing-config";
+import { useBillingConfigsByAgreements } from "@features/billing-config";
 import { BillingConfig } from "@lib/alga";
 import { ConsumerLink } from "@features/consumers";
 import { Subscription } from "@swo/mp-api-model";
@@ -75,7 +75,7 @@ export function Subscriptions() {
     offset,
   });
 
-  const { billingConfigs } = useBillingConfigs(
+  const { billingConfigs } = useBillingConfigsByAgreements(
     subscriptions
       .map((subscription) => subscription.agreement?.id ?? "")
       .filter(Boolean)

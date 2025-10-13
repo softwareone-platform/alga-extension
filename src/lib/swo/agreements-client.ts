@@ -26,7 +26,8 @@ export class AgreementsClient {
   }
 
   async getAgreements(
-    options?: AgreementsClientAgreementsOptions
+    options?: AgreementsClientAgreementsOptions,
+    ids?: string[]
   ): Promise<AgreementListResponse> {
     const { offset = 0, limit = 10, sort, licenseeId } = options || {};
 
@@ -54,6 +55,13 @@ export class AgreementsClient {
         field: "licensee.id",
         value: licenseeId,
         operator: "eq",
+      });
+
+    if (ids)
+      query.filter({
+        field: "id",
+        value: ids,
+        operator: "in",
       });
 
     const { data } = await this.axios.get<AgreementListResponse>(

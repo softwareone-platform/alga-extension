@@ -14,7 +14,7 @@ import { MarkupCell, PriceWithMarkupCell } from "@features/markup";
 import { useStatements } from "@features/statements";
 import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
-import { useBillingConfigs } from "@features/billing-config";
+import { useBillingConfigsByAgreements } from "@features/billing-config";
 import { BillingConfig } from "@lib/alga";
 import { Statement } from "@swo/mp-api-model/billing";
 import { ConsumerLink } from "@features/consumers";
@@ -62,7 +62,7 @@ export function Statements() {
   const [offset, setOffset] = useState(0);
   const { statements, pagination, isFetching } = useStatements({ offset });
 
-  const { billingConfigs } = useBillingConfigs(
+  const { billingConfigs } = useBillingConfigsByAgreements(
     statements.map((statement) => statement.agreement?.id ?? "").filter(Boolean)
   );
 

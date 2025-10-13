@@ -15,7 +15,7 @@ import {
   TableRow,
 } from "@ui/table";
 import { PriceWithMarkupCell } from "@features/markup";
-import { useBillingConfigs } from "@features/billing-config";
+import { useBillingConfigsByConsumer } from "@features/billing-config";
 
 const NameCell = ({
   name,
@@ -69,9 +69,13 @@ const AgreementRow = ({
 
 export function Agreements() {
   const [offset, setOffset] = useState(0);
-  const { agreements, pagination, isFetching } = useAgreements({ offset });
-  const { billingConfigs } = useBillingConfigs(
-    agreements.map((agreement) => agreement.id!)
+
+  const { billingConfigs } = useBillingConfigsByConsumer(
+    "eeca06d2-a0f2-42a5-a33d-ecd7db5430d0"
+  );
+  const { agreements, pagination, isFetching } = useAgreements(
+    { offset },
+    billingConfigs?.map((bc) => bc.agreementId!) ?? []
   );
 
   const billingConfigsById =
