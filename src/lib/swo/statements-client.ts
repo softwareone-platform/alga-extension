@@ -22,7 +22,8 @@ export class StatementsClient {
   }
 
   async getStatements(
-    options?: StatementsClientStatementsOptions
+    options?: StatementsClientStatementsOptions,
+    agreementIds?: string[]
   ): Promise<StatementListResponse> {
     const { offset = 0, limit = 10, sort, licenseeId } = options || {};
 
@@ -54,6 +55,13 @@ export class StatementsClient {
         field: "licensee.id",
         value: licenseeId,
         operator: "eq",
+      });
+
+    if (agreementIds)
+      query.filter({
+        field: "agreement.id",
+        value: agreementIds,
+        operator: "in",
       });
 
     const { data }: AxiosResponse<StatementListResponse> = await this.axios.get(

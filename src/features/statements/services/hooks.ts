@@ -6,13 +6,16 @@ import {
   StatementsClientChargesOptions,
 } from "@lib/swo";
 
-export const useStatements = (options?: StatementsClientStatementsOptions) => {
+export const useStatements = (
+  options?: StatementsClientStatementsOptions,
+  agreementIds?: string[]
+) => {
   const { client } = useContext(StatementsContext);
 
   const { data, ...state } = useQuery({
     queryKey: ["statements", options],
-    queryFn: () => client!.getStatements(options),
-    enabled: !!client,
+    queryFn: () => client!.getStatements(options, agreementIds),
+    enabled: !!client && (!agreementIds || agreementIds.length > 0),
     placeholderData: keepPreviousData,
   });
 

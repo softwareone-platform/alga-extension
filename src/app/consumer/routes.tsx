@@ -22,6 +22,13 @@ import {
   Items,
   Details as OrderDetails,
 } from "./orders";
+import {
+  Statements,
+  StatementsLayout,
+  Statement,
+  Charges,
+  Details as StatementDetails,
+} from "./statements";
 
 export const consumerRoutes: RouteObject[] = [
   {
@@ -128,6 +135,38 @@ export const consumerRoutes: RouteObject[] = [
                   {
                     path: "details",
                     element: <OrderDetails />,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: "statements",
+        children: [
+          {
+            element: <StatementsLayout />,
+            children: [
+              {
+                index: true,
+                element: <Statements />,
+              },
+              {
+                path: ":id",
+                element: <Statement />,
+                children: [
+                  {
+                    index: true,
+                    element: <Navigate to="charges" replace />,
+                  },
+                  {
+                    path: "charges",
+                    element: <Charges />,
+                  },
+                  {
+                    path: "details",
+                    element: <StatementDetails />,
                   },
                 ],
               },
