@@ -7,13 +7,14 @@ import {
 } from "@lib/swo";
 
 export const useSubscriptions = (
-  options?: SubscriptionsClientSubscriptionsOptions
+  options?: SubscriptionsClientSubscriptionsOptions,
+  agreementIds?: string[]
 ) => {
   const { client } = useContext(SubscriptionsContext);
 
   const { data, ...state } = useQuery({
     queryKey: ["subscriptions", options],
-    queryFn: () => client!.getSubscriptions(options),
+    queryFn: () => client!.getSubscriptions(options, agreementIds),
     enabled: !!client,
     placeholderData: keepPreviousData,
   });

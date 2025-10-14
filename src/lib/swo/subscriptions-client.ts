@@ -23,7 +23,8 @@ export class SubscriptionsClient {
   }
 
   async getSubscriptions(
-    options?: SubscriptionsClientSubscriptionsOptions
+    options?: SubscriptionsClientSubscriptionsOptions,
+    agreementIds?: string[]
   ): Promise<SubscriptionListResponse> {
     const { offset = 0, limit = 10, sort, licenseeId } = options || {};
 
@@ -58,6 +59,13 @@ export class SubscriptionsClient {
         field: "licensee.id",
         value: licenseeId,
         operator: "eq",
+      });
+
+    if (agreementIds)
+      query.filter({
+        field: "agreement.id",
+        value: agreementIds,
+        operator: "in",
       });
 
     const { data } = await this.axios.get<SubscriptionListResponse>(

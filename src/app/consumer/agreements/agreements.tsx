@@ -73,6 +73,7 @@ export function Agreements() {
   const { billingConfigs } = useBillingConfigsByConsumer(
     "eeca06d2-a0f2-42a5-a33d-ecd7db5430d0"
   );
+
   const { agreements, pagination, isFetching } = useAgreements(
     { offset },
     billingConfigs?.map((bc) => bc.agreementId!) ?? []

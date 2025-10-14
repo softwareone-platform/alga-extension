@@ -18,7 +18,7 @@ import {
 } from "@features/subscriptions";
 import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
-import { useBillingConfigsByAgreements } from "@features/billing-config";
+import { useBillingConfigsByConsumer } from "@features/billing-config";
 import { BillingConfig } from "@lib/alga";
 import { Subscription } from "@swo/mp-api-model";
 
@@ -62,14 +62,15 @@ const SubscriptionRow = ({
 
 export function Subscriptions() {
   const [offset, setOffset] = useState(0);
-  const { subscriptions, pagination, isFetching } = useSubscriptions({
-    offset,
-  });
+  const { billingConfigs } = useBillingConfigsByConsumer(
+    "eeca06d2-a0f2-42a5-a33d-ecd7db5430d0"
+  );
 
-  const { billingConfigs } = useBillingConfigsByAgreements(
-    subscriptions
-      .map((subscription) => subscription.agreement?.id ?? "")
-      .filter(Boolean)
+  const { subscriptions, pagination, isFetching } = useSubscriptions(
+    {
+      offset,
+    },
+    billingConfigs?.map((bc) => bc.agreementId!) ?? []
   );
 
   const billingConfigsById =
