@@ -15,7 +15,7 @@ export const useSubscriptions = (
   const { data, ...state } = useQuery({
     queryKey: ["subscriptions", options],
     queryFn: () => client!.getSubscriptions(options, agreementIds),
-    enabled: !!client,
+    enabled: !!client && (!agreementIds || agreementIds.length > 0),
     placeholderData: keepPreviousData,
   });
 
