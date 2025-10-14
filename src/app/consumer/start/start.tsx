@@ -1,7 +1,7 @@
 import { Tabs } from "@ui/tabs";
 import { NavLink, Outlet } from "react-router";
 
-export function Consumer() {
+export function Start() {
   return (
     <div className="w-full flex flex-col p-6 gap-8">
       <header className="w-full flex justify-between gap-10">
