@@ -10,6 +10,14 @@ import {
   Billing,
   Details as AgreementDetails,
 } from "./agreements";
+import {
+  Subscriptions as AllSubscriptions,
+  SubscriptionsLayout,
+  Subscription,
+  Items as SubscriptionItems,
+  Orders as SubscriptionOrders,
+  Details as SubscriptionDetails,
+} from "./subscriptions";
 import { Settings, General, Details as SettingsDetails } from "./settings";
 import {
   Statements,
@@ -25,14 +33,6 @@ import {
   Items,
   Details as OrderDetails,
 } from "./orders";
-import {
-  Subscriptions as AllSubscriptions,
-  SubscriptionsLayout,
-  Subscription,
-  Items as SubscriptionItems,
-  Orders as SubscriptionOrders,
-  Details as SubscriptionDetails,
-} from "./subscriptions";
 
 export const mspRoutes: RouteObject[] = [
   {
@@ -109,6 +109,42 @@ export const mspRoutes: RouteObject[] = [
         ],
       },
       {
+        path: "subscriptions",
+        children: [
+          {
+            element: <SubscriptionsLayout />,
+            children: [
+              {
+                index: true,
+                element: <AllSubscriptions />,
+              },
+              {
+                path: ":id",
+                element: <Subscription />,
+                children: [
+                  {
+                    index: true,
+                    element: <Navigate to="items" replace />,
+                  },
+                  {
+                    path: "items",
+                    element: <SubscriptionItems />,
+                  },
+                  {
+                    path: "orders",
+                    element: <SubscriptionOrders />,
+                  },
+                  {
+                    path: "details",
+                    element: <SubscriptionDetails />,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
         path: "statements",
         children: [
           {
@@ -165,42 +201,6 @@ export const mspRoutes: RouteObject[] = [
                   {
                     path: "details",
                     element: <OrderDetails />,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        path: "subscriptions",
-        children: [
-          {
-            element: <SubscriptionsLayout />,
-            children: [
-              {
-                index: true,
-                element: <AllSubscriptions />,
-              },
-              {
-                path: ":id",
-                element: <Subscription />,
-                children: [
-                  {
-                    index: true,
-                    element: <Navigate to="items" replace />,
-                  },
-                  {
-                    path: "items",
-                    element: <SubscriptionItems />,
-                  },
-                  {
-                    path: "orders",
-                    element: <SubscriptionOrders />,
-                  },
-                  {
-                    path: "details",
-                    element: <SubscriptionDetails />,
                   },
                 ],
               },

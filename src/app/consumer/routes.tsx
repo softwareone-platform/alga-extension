@@ -7,6 +7,14 @@ import {
   Orders,
   Details as AgreementDetails,
 } from "./agreements";
+import {
+  Subscriptions as AllSubscriptions,
+  SubscriptionsLayout,
+  Subscription,
+  Items as SubscriptionItems,
+  Orders as SubscriptionOrders,
+  Details as SubscriptionDetails,
+} from "./subscriptions";
 
 export const consumerRoutes: RouteObject[] = [
   {
@@ -45,6 +53,42 @@ export const consumerRoutes: RouteObject[] = [
                   {
                     path: "details",
                     element: <AgreementDetails />,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: "subscriptions",
+        children: [
+          {
+            element: <SubscriptionsLayout />,
+            children: [
+              {
+                index: true,
+                element: <AllSubscriptions />,
+              },
+              {
+                path: ":id",
+                element: <Subscription />,
+                children: [
+                  {
+                    index: true,
+                    element: <Navigate to="items" replace />,
+                  },
+                  {
+                    path: "items",
+                    element: <SubscriptionItems />,
+                  },
+                  {
+                    path: "orders",
+                    element: <SubscriptionOrders />,
+                  },
+                  {
+                    path: "details",
+                    element: <SubscriptionDetails />,
                   },
                 ],
               },
