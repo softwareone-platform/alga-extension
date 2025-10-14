@@ -3,13 +3,16 @@ import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { OrdersContext } from "./context";
 import { OrdersClientOrdersOptions } from "@lib/swo";
 
-export const useOrders = (options?: OrdersClientOrdersOptions) => {
+export const useOrders = (
+  options?: OrdersClientOrdersOptions,
+  agreementIds?: string[]
+) => {
   const { client } = useContext(OrdersContext);
 
   const { data, ...state } = useQuery({
     queryKey: ["orders", options],
-    queryFn: () => client!.getOrders(options),
-    enabled: !!client,
+    queryFn: () => client!.getOrders(options, agreementIds),
+    enabled: !!client && (!agreementIds || agreementIds.length > 0),
     placeholderData: keepPreviousData,
   });
 

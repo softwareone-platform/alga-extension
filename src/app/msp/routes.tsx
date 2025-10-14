@@ -20,19 +20,19 @@ import {
 } from "./subscriptions";
 import { Settings, General, Details as SettingsDetails } from "./settings";
 import {
-  Statements,
-  StatementsLayout,
-  Statement,
-  Charges,
-  Details as StatementDetails,
-} from "./statements";
-import {
   Orders as AllOrders,
   OrdersLayout,
   Order,
   Items,
   Details as OrderDetails,
 } from "./orders";
+import {
+  Statements,
+  StatementsLayout,
+  Statement,
+  Charges,
+  Details as StatementDetails,
+} from "./statements";
 
 export const mspRoutes: RouteObject[] = [
   {
@@ -145,38 +145,6 @@ export const mspRoutes: RouteObject[] = [
         ],
       },
       {
-        path: "statements",
-        children: [
-          {
-            element: <StatementsLayout />,
-            children: [
-              {
-                index: true,
-                element: <Statements />,
-              },
-              {
-                path: ":id",
-                element: <Statement />,
-                children: [
-                  {
-                    index: true,
-                    element: <Navigate to="charges" replace />,
-                  },
-                  {
-                    path: "charges",
-                    element: <Charges />,
-                  },
-                  {
-                    path: "details",
-                    element: <StatementDetails />,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
         path: "orders",
         children: [
           {
@@ -201,6 +169,38 @@ export const mspRoutes: RouteObject[] = [
                   {
                     path: "details",
                     element: <OrderDetails />,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: "statements",
+        children: [
+          {
+            element: <StatementsLayout />,
+            children: [
+              {
+                index: true,
+                element: <Statements />,
+              },
+              {
+                path: ":id",
+                element: <Statement />,
+                children: [
+                  {
+                    index: true,
+                    element: <Navigate to="charges" replace />,
+                  },
+                  {
+                    path: "charges",
+                    element: <Charges />,
+                  },
+                  {
+                    path: "details",
+                    element: <StatementDetails />,
                   },
                 ],
               },

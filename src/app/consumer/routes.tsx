@@ -15,6 +15,13 @@ import {
   Orders as SubscriptionOrders,
   Details as SubscriptionDetails,
 } from "./subscriptions";
+import {
+  Orders as AllOrders,
+  OrdersLayout,
+  Order,
+  Items,
+  Details as OrderDetails,
+} from "./orders";
 
 export const consumerRoutes: RouteObject[] = [
   {
@@ -89,6 +96,38 @@ export const consumerRoutes: RouteObject[] = [
                   {
                     path: "details",
                     element: <SubscriptionDetails />,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: "orders",
+        children: [
+          {
+            element: <OrdersLayout />,
+            children: [
+              {
+                index: true,
+                element: <AllOrders />,
+              },
+              {
+                path: ":id",
+                element: <Order />,
+                children: [
+                  {
+                    index: true,
+                    element: <Navigate to="items" replace />,
+                  },
+                  {
+                    path: "items",
+                    element: <Items />,
+                  },
+                  {
+                    path: "details",
+                    element: <OrderDetails />,
                   },
                 ],
               },

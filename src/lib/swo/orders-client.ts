@@ -15,7 +15,8 @@ export class OrdersClient {
   }
 
   async getOrders(
-    options?: OrdersClientOrdersOptions
+    options?: OrdersClientOrdersOptions,
+    agreementIds?: string[]
   ): Promise<OrderListResponse> {
     const { offset = 0, limit = 10, sort, licenseeId } = options || {};
 
@@ -45,6 +46,13 @@ export class OrdersClient {
         field: "licensee.id",
         value: licenseeId,
         operator: "eq",
+      });
+
+    if (agreementIds)
+      query.filter({
+        field: "agreement.id",
+        value: agreementIds,
+        operator: "in",
       });
 
     const { data }: AxiosResponse<OrderListResponse> = await this.axios.get(
