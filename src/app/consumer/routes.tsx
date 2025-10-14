@@ -29,144 +29,150 @@ import {
   Charges,
   Details as StatementDetails,
 } from "./statements";
+import { Consumer } from "./consumer";
 
 export const consumerRoutes: RouteObject[] = [
   {
     path: "/consumer",
     children: [
       {
-        index: true,
-        element: <Navigate to="agreements" replace />,
-      },
-      {
-        path: "agreements",
+        element: <Consumer />,
         children: [
           {
-            element: <AgreementsLayout />,
+            index: true,
+            element: <Navigate to="agreements" replace />,
+          },
+          {
+            path: "agreements",
             children: [
               {
-                index: true,
-                element: <Agreements />,
-              },
-              {
-                path: ":id",
-                element: <Agreement />,
+                element: <AgreementsLayout />,
                 children: [
                   {
                     index: true,
-                    element: <Navigate to="subscriptions" replace />,
+                    element: <Agreements />,
                   },
                   {
-                    path: "subscriptions",
-                    element: <AgreementSubscriptions />,
-                  },
-                  {
-                    path: "orders",
-                    element: <Orders />,
-                  },
-                  {
-                    path: "details",
-                    element: <AgreementDetails />,
+                    path: ":id",
+                    element: <Agreement />,
+                    children: [
+                      {
+                        index: true,
+                        element: <Navigate to="subscriptions" replace />,
+                      },
+                      {
+                        path: "subscriptions",
+                        element: <AgreementSubscriptions />,
+                      },
+                      {
+                        path: "orders",
+                        element: <Orders />,
+                      },
+                      {
+                        path: "details",
+                        element: <AgreementDetails />,
+                      },
+                    ],
                   },
                 ],
               },
             ],
           },
-        ],
-      },
-      {
-        path: "subscriptions",
-        children: [
           {
-            element: <SubscriptionsLayout />,
+            path: "subscriptions",
             children: [
               {
-                index: true,
-                element: <AllSubscriptions />,
-              },
-              {
-                path: ":id",
-                element: <Subscription />,
+                element: <SubscriptionsLayout />,
                 children: [
                   {
                     index: true,
-                    element: <Navigate to="items" replace />,
+                    element: <AllSubscriptions />,
                   },
                   {
-                    path: "items",
-                    element: <SubscriptionItems />,
-                  },
-                  {
-                    path: "orders",
-                    element: <SubscriptionOrders />,
-                  },
-                  {
-                    path: "details",
-                    element: <SubscriptionDetails />,
+                    path: ":id",
+                    element: <Subscription />,
+                    children: [
+                      {
+                        index: true,
+                        element: <Navigate to="items" replace />,
+                      },
+                      {
+                        path: "items",
+                        element: <SubscriptionItems />,
+                      },
+                      {
+                        path: "orders",
+                        element: <SubscriptionOrders />,
+                      },
+                      {
+                        path: "details",
+                        element: <SubscriptionDetails />,
+                      },
+                    ],
                   },
                 ],
               },
             ],
           },
-        ],
-      },
-      {
-        path: "orders",
-        children: [
           {
-            element: <OrdersLayout />,
+            path: "orders",
             children: [
               {
-                index: true,
-                element: <AllOrders />,
-              },
-              {
-                path: ":id",
-                element: <Order />,
+                element: <OrdersLayout />,
                 children: [
                   {
                     index: true,
-                    element: <Navigate to="items" replace />,
+                    element: <AllOrders />,
                   },
                   {
-                    path: "items",
-                    element: <Items />,
-                  },
-                  {
-                    path: "details",
-                    element: <OrderDetails />,
+                    path: ":id",
+                    element: <Order />,
+                    children: [
+                      {
+                        index: true,
+                        element: <Navigate to="items" replace />,
+                      },
+                      {
+                        path: "items",
+                        element: <Items />,
+                      },
+                      {
+                        path: "details",
+                        element: <OrderDetails />,
+                      },
+                    ],
                   },
                 ],
               },
             ],
           },
-        ],
-      },
-      {
-        path: "statements",
-        children: [
           {
-            element: <StatementsLayout />,
+            path: "statements",
             children: [
               {
-                index: true,
-                element: <Statements />,
-              },
-              {
-                path: ":id",
-                element: <Statement />,
+                element: <StatementsLayout />,
                 children: [
                   {
                     index: true,
-                    element: <Navigate to="charges" replace />,
+                    element: <Statements />,
                   },
                   {
-                    path: "charges",
-                    element: <Charges />,
-                  },
-                  {
-                    path: "details",
-                    element: <StatementDetails />,
+                    path: ":id",
+                    element: <Statement />,
+                    children: [
+                      {
+                        index: true,
+                        element: <Navigate to="charges" replace />,
+                      },
+                      {
+                        path: "charges",
+                        element: <Charges />,
+                      },
+                      {
+                        path: "details",
+                        element: <StatementDetails />,
+                      },
+                    ],
                   },
                 ],
               },
