@@ -22,9 +22,17 @@ export const consumerRoutes: RouteObject[] = [
     element: <Layout />,
     children: [
       {
+        index: true,
+        element: <Navigate to="start" replace />,
+      },
+      {
         path: "start",
         element: <Start />,
         children: [
+          {
+            index: true,
+            element: <Navigate to="agreements" replace />,
+          },
           {
             path: "agreements",
             element: <Agreements />,
