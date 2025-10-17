@@ -7,7 +7,6 @@ import { useMemo } from "react";
 import { useBillingConfig } from "@features/billing-config";
 import { withMarkup } from "@features/markup";
 import { OrderStatusBadge, useOrder } from "@features/orders";
-import { ConsumerLink } from "@features/consumers";
 
 function OrderSummary({ id }: { id: string }) {
   const { order, isPending: isOrderPending } = useOrder(id);
