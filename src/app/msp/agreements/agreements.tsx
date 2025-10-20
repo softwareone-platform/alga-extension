@@ -47,7 +47,6 @@ const AgreementRow = ({
   agreement: Agreement;
   billingConfig?: BillingConfig;
 }) => {
-  console.log(billingConfig);
   return (
     <TableRow link={agreement.id}>
       <NameCell
