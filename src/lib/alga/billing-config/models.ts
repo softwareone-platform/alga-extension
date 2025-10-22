@@ -16,5 +16,8 @@ export type BillingConfig = {
   operations: Operations;
   markup: number;
   note?: string;
-  updatedAt?: string;
+  audit: {
+    createdAt: string;
+    updatedAt?: string;
+  };
 };

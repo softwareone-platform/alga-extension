@@ -5,9 +5,15 @@ const API_KEY =
 
 //${namespace}/records
 
+export type KVStorageObject<T> = {
+  value: T;
+  createdAt: string;
+  updatedAt: string;
+};
+
 const axiosInstance = (baseURL: string, apiKey: string) =>
   axios.create({
-    baseURL: `${baseURL}/api/v1/storage/namespaces/`,
+    baseURL: `${baseURL}api/v1/storage/namespaces/`,
     timeout: 10000,
     headers: {
       "Content-Type": "application/json",
@@ -34,19 +40,28 @@ export class KVStorage {
     this.namespace = namespace;
   }
 
-  async set<T>(key: string, value: T): Promise<void> {
-    await this.axios.put<StoragePutResponse>(
+  async set<T>(key: string, value: T): Promise<KVStorageObject<T>> {
+    const response = await this.axios.put<StoragePutResponse>(
       `${this.namespace}/records/${encodeURIComponent(key)}`,
       toBody(value)
     );
+    return {
+      value,
+      createdAt: response.data.createdAt,
+      updatedAt: response.data.updatedAt,
+    };
   }
 
-  async get<T>(key: string): Promise<T | null> {
+  async get<T>(key: string): Promise<KVStorageObject<T> | null> {
     try {
       const response = await this.axios.get<StorageGetResponse>(
         `${this.namespace}/records/${encodeURIComponent(key)}`
       );
-      return response.data.value as T;
+      return {
+        value: response.data.value as T,
+        createdAt: response.data.createdAt,
+        updatedAt: response.data.updatedAt,
+      };
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 404) {
         return null;
@@ -61,7 +76,7 @@ export class KVStorage {
     );
   }
 
-  async list({
+  async list<T>({
     limit,
     cursor,
     keyPrefix,
@@ -69,7 +84,7 @@ export class KVStorage {
     limit?: number;
     cursor?: string;
     keyPrefix?: string;
-  }): Promise<string[]> {
+  }): Promise<KVStorageObject<T>[]> {
     const params = new URLSearchParams();
     if (limit !== undefined) params.set("limit", String(limit));
     if (cursor) params.set("cursor", cursor);
@@ -80,7 +95,11 @@ export class KVStorage {
       `${this.namespace}/records${query}`
     );
 
-    return response.data.items.map((item) => item.key);
+    return response.data.items.map((item) => ({
+      value: item.value as T,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
+    }));
   }
 
   async has(key: string): Promise<boolean> {
@@ -90,16 +109,16 @@ export class KVStorage {
 }
 
 // Types shared with the API response
-interface StoragePutResponse {
+type StoragePutResponse = {
   namespace: string;
   key: string;
   revision: number;
   ttlExpiresAt: string | null;
   createdAt: string;
   updatedAt: string;
-}
+};
 
-interface StorageGetResponse {
+type StorageGetResponse = {
   namespace: string;
   key: string;
   revision: number;
@@ -108,9 +127,9 @@ interface StorageGetResponse {
   ttlExpiresAt: string | null;
   createdAt: string;
   updatedAt: string;
-}
+};
 
-interface StorageListResponse {
+type StorageListResponse = {
   items: Array<{
     namespace: string;
     key: string;
@@ -122,7 +141,7 @@ interface StorageListResponse {
     updatedAt: string;
   }>;
   nextCursor: string | null;
-}
+};
 
 type JsonPrimitive = string | number | boolean | null;
 type JsonValue = JsonPrimitive | JsonValue[] | { [key: string]: JsonValue };

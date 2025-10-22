@@ -7,10 +7,12 @@ const MAX_ID_STORAGE_KEY = "max-id";
 
 export type BillingConfigChanges = Omit<
   BillingConfig,
-  "updatedAt" | "status" | "id"
+  "audit" | "status" | "id"
 > & {
   id?: string;
 };
+
+type BillingConfigKV = Omit<BillingConfig, "audit">;
 
 export class BillingConfigClient {
   private kvStorage: KVStorage;
@@ -20,9 +22,19 @@ export class BillingConfigClient {
   }
 
   async getByAgreementId(agreementId: string): Promise<BillingConfig | null> {
-    return await this.kvStorage.get<BillingConfig>(
+    const result = await this.kvStorage.get<BillingConfigKV>(
       `${BY_AGREEMENTS_KEY}:${agreementId}`
     );
+
+    return result?.value
+      ? {
+          ...result.value,
+          audit: {
+            createdAt: result.createdAt,
+            updatedAt: result.updatedAt,
+          },
+        }
+      : null;
   }
 
   async getByAgreementsIds(agreementsIds: string[]): Promise<BillingConfig[]> {
@@ -33,22 +45,32 @@ export class BillingConfigClient {
   }
 
   async getByCustomerId(customerId: string): Promise<BillingConfig[]> {
-    const current = await this.kvStorage.get<BillingConfig[]>(
+    const result = await this.kvStorage.get<BillingConfigKV[]>(
       `${BY_CUSTOMERS_KEY}:${customerId}`
     );
 
-    return current || [];
+    return result?.value
+      ? result.value.map((bc) => ({
+          ...bc,
+          audit: {
+            createdAt: result.createdAt,
+            updatedAt: result.updatedAt,
+          },
+        }))
+      : [];
   }
 
   async save(changes: BillingConfigChanges): Promise<BillingConfig> {
-    const bc: BillingConfig = {
+    const bc: BillingConfigKV = {
       id: changes.id || (await this.generateId()),
       status: changes.consumer ? "active" : "unconfigured",
       ...changes,
-      updatedAt: new Date().toISOString(),
     };
 
-    await this.kvStorage.set(`${BY_AGREEMENTS_KEY}:${bc.agreementId}`, bc);
+    const result = await this.kvStorage.set(
+      `${BY_AGREEMENTS_KEY}:${bc.agreementId}`,
+      bc
+    );
 
     if (!bc.consumer) {
       return bc;

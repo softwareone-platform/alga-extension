@@ -28,7 +28,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const BASE_URL = "http://localhost:8010/proxy/api/v1/";
+const BASE_URL = "http://localhost:8010/proxy/";
 const kvStorage = new KVStorage(BASE_URL, "extension");
 
 const router = createBrowserRouter([
