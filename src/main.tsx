@@ -28,7 +28,8 @@ const queryClient = new QueryClient({
   },
 });
 
-const kvStorage = new KVStorage("swo:extension");
+const BASE_URL = "http://localhost:8010/proxy/api/v1/";
+const kvStorage = new KVStorage(BASE_URL, "extension");
 
 const router = createBrowserRouter([
   {

@@ -83,7 +83,10 @@ export class KVStorage {
     return response.data.items.map((item) => item.key);
   }
 
-  // async has(key: string): Promise<boolean> {}
+  async has(key: string): Promise<boolean> {
+    const value = await this.get(key);
+    return value !== null;
+  }
 }
 
 // Types shared with the API response

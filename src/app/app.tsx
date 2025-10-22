@@ -8,10 +8,10 @@ import { KVStorage } from "@lib/alga";
 import { BillingConfigsProvider } from "@features/billing-config";
 import { ConsumersProvider } from "@features/consumers";
 
-const kvStorage = new KVStorage("swo:billing-configs");
 const BASE_URL = "http://localhost:8010/proxy/api/v1/";
 const API_KEY =
   "200aebbceb58e17579c1da81754116d236d1a14872f34f755694e84d3d044518";
+const kvStorage = new KVStorage(BASE_URL, "billing-configs");
 
 export function App() {
   const { details, isPending } = useExtensionDetails();
