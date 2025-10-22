@@ -1,9 +1,9 @@
 import { createContext, useEffect, useMemo, type ReactNode } from "react";
-import { CompaniesClient } from "@lib/alga";
+import { ClientsClient } from "@lib/alga";
 import { useQueryClient } from "@tanstack/react-query";
 
 const ConsumersContext = createContext<{
-  client?: CompaniesClient;
+  client?: ClientsClient;
 }>(null as any);
 
 export type ConsumersProviderProps = {
@@ -18,7 +18,7 @@ export const ConsumersProvider = ({
   apiKey,
 }: ConsumersProviderProps) => {
   const client = useMemo(
-    () => new CompaniesClient(baseUrl, apiKey),
+    () => new ClientsClient(baseUrl, apiKey),
     [baseUrl, apiKey]
   );
 

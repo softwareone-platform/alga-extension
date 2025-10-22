@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import { axiosInstance } from "./shared";
 
 const API_KEY =
   "200aebbceb58e17579c1da81754116d236d1a14872f34f755694e84d3d044518";
@@ -10,16 +11,6 @@ export type KVStorageObject<T> = {
   createdAt: string;
   updatedAt: string;
 };
-
-const axiosInstance = (baseURL: string, apiKey: string) =>
-  axios.create({
-    baseURL: `${baseURL}api/v1/storage/namespaces/`,
-    timeout: 10000,
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-    },
-  });
 
 const toBody = (value: unknown) => {
   return {
@@ -36,7 +27,10 @@ export class KVStorage {
   private axios: AxiosInstance;
 
   constructor(baseUrl: string, namespace: string) {
-    this.axios = axiosInstance(baseUrl, API_KEY);
+    this.axios = axiosInstance(
+      `${baseUrl}/api/v1/storage/namespaces/`,
+      API_KEY
+    );
     this.namespace = namespace;
   }
 
