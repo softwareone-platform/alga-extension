@@ -2,7 +2,7 @@ import { AxiosInstance } from "axios";
 import { axiosInstance, ListResponse, SingleResponse } from "../shared";
 import { Service } from "./models";
 
-export type AlgaClientResponse = {
+type AlgaClientResponse = {
   service_id: string;
   tenant: string;
   service_name: string;
@@ -28,7 +28,7 @@ export class ServicesClient {
     };
   }
 
-  async getClient(id: string): Promise<Service | null> {
+  async getService(id: string): Promise<Service | null> {
     const { data } = await this.axios.get<SingleResponse<AlgaClientResponse>>(
       id
     );

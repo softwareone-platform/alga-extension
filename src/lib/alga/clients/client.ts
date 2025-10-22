@@ -2,7 +2,7 @@ import { AxiosInstance } from "axios";
 import { axiosInstance, ListResponse, SingleResponse } from "../shared";
 import { Client } from "./models";
 
-export type AlgaClientResponse = {
+type AlgaClientResponse = {
   tenant: string;
   client_id: string;
   client_name: string;
