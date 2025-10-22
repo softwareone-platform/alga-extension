@@ -9,9 +9,9 @@ export type ListOptions<T> = {
   };
 };
 
-export const axiosInstance = (baseUrl: string, token: string) =>
+export const axiosInstance = (baseURL: string, token: string) =>
   axios.create({
-    baseURL: baseUrl,
+    baseURL,
     timeout: 10000,
     headers: {
       "Content-Type": "application/json",
