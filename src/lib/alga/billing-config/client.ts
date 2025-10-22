@@ -1,9 +1,8 @@
 import { KVStorage } from "@lib/alga";
 import { BillingConfig } from "./models";
 
-const BY_AGREEMENTS_KEY = "billing-configs-by-agreements";
-const BY_CUSTOMERS_KEY = "billing-configs-by-customers";
-const MAX_ID_STORAGE_KEY = "max-id";
+const BY_AGREEMENT = "billing-configs-by-agreement";
+const BY_CONSUMER = "billing-configs-by-consumer";
 
 export type BillingConfigChanges = Omit<
   BillingConfig,
@@ -12,7 +11,7 @@ export type BillingConfigChanges = Omit<
   id?: string;
 };
 
-type BillingConfigKV = Omit<BillingConfig, "audit">;
+type BillingConfigKV = Omit<BillingConfig, "audit" | "status">;
 
 export class BillingConfigClient {
   private kvStorage: KVStorage;
@@ -23,12 +22,13 @@ export class BillingConfigClient {
 
   async getByAgreementId(agreementId: string): Promise<BillingConfig | null> {
     const result = await this.kvStorage.get<BillingConfigKV>(
-      `${BY_AGREEMENTS_KEY}:${agreementId}`
+      `${BY_AGREEMENT}-${agreementId}-${agreementId}`
     );
 
     return result?.value
       ? {
           ...result.value,
+          status: result.value.consumer ? "active" : "unconfigured",
           audit: {
             createdAt: result.createdAt,
             updatedAt: result.updatedAt,
@@ -37,66 +37,55 @@ export class BillingConfigClient {
       : null;
   }
 
-  async getByAgreementsIds(agreementsIds: string[]): Promise<BillingConfig[]> {
-    // TODO: Temp
-    return await Promise.all(
-      agreementsIds.map((id) => this.getByAgreementId(id))
-    ).then((bcs) => bcs.filter((bc) => !!bc));
-  }
+  async getByConsumerId(consumerId: string): Promise<BillingConfig[]> {
+    const result = await this.kvStorage.list<BillingConfigKV>({
+      keyPrefix: `${BY_CONSUMER}-${consumerId}`,
+    });
 
-  async getByCustomerId(customerId: string): Promise<BillingConfig[]> {
-    const result = await this.kvStorage.get<BillingConfigKV[]>(
-      `${BY_CUSTOMERS_KEY}:${customerId}`
-    );
-
-    return result?.value
-      ? result.value.map((bc) => ({
-          ...bc,
-          audit: {
-            createdAt: result.createdAt,
-            updatedAt: result.updatedAt,
-          },
-        }))
-      : [];
+    return result.map((v) => ({
+      ...v.value,
+      status: v.value.consumer ? "active" : "unconfigured",
+      audit: {
+        createdAt: v.createdAt,
+        updatedAt: v.updatedAt,
+      },
+    }));
   }
 
   async save(changes: BillingConfigChanges): Promise<BillingConfig> {
-    const bc: BillingConfigKV = {
-      id: changes.id || (await this.generateId()),
-      status: changes.consumer ? "active" : "unconfigured",
+    const bcKV: BillingConfigKV = {
+      id: changes.id || changes.agreementId,
       ...changes,
     };
 
     const result = await this.kvStorage.set(
-      `${BY_AGREEMENTS_KEY}:${bc.agreementId}`,
-      bc
+      `${BY_AGREEMENT}-${bcKV.agreementId}-${bcKV.agreementId}`,
+      bcKV
     );
 
-    if (!bc.consumer) {
-      return bc;
+    if (bcKV.consumer) {
+      await this.kvStorage.set(
+        `${BY_CONSUMER}-${bcKV.consumer.id}-${bcKV.agreementId}`,
+        bcKV
+      );
     }
 
-    const current =
-      (await this.kvStorage.get<BillingConfig[]>(
-        `${BY_CUSTOMERS_KEY}:${bc.consumer.id}`
-      )) || [];
+    if (!bcKV.consumer) {
+      const current = await this.getByAgreementId(bcKV.agreementId);
+      if (current?.consumer?.id) {
+        await this.kvStorage.remove(
+          `${BY_CONSUMER}-${current?.consumer?.id}-${current.agreementId}`
+        );
+      }
+    }
 
-    current.push(bc);
-
-    await this.kvStorage.set(`${BY_CUSTOMERS_KEY}:${bc.consumer.id}`, current);
-
-    return bc;
-  }
-
-  private async generateId(): Promise<string> {
-    const maxId = (await this.kvStorage.get<number>(MAX_ID_STORAGE_KEY)) || 1;
-
-    const newId = maxId + 1;
-
-    await this.kvStorage.set(MAX_ID_STORAGE_KEY, newId);
-
-    const paddedStr = newId.toString().padStart(8, "0");
-
-    return `ARL-${paddedStr.slice(0, 4)}-${paddedStr.slice(4)}`;
+    return {
+      ...bcKV,
+      status: bcKV.consumer ? "active" : "unconfigured",
+      audit: {
+        createdAt: result.createdAt,
+        updatedAt: result.updatedAt,
+      },
+    };
   }
 }

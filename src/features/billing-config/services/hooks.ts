@@ -20,7 +20,7 @@ export const useBillingConfigsByConsumer = (consumerId: string) => {
 
   const { data: billingConfigs, ...state } = useQuery({
     queryKey: ["billing-configs", consumerId],
-    queryFn: () => client!.getByCustomerId(consumerId),
+    queryFn: () => client!.getByConsumerId(consumerId),
     enabled: !!client,
   });
 
