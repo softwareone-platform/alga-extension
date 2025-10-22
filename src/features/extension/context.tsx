@@ -1,5 +1,5 @@
 import { createContext, type ReactNode, useContext, useRef } from "react";
-import { ExtensionClient } from "@lib/alga/settings";
+import { ExtensionClient } from "@lib/alga/extension";
 import { KVStorage } from "@lib/alga";
 
 export type ExtensionContextType = {
