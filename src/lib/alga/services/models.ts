@@ -1,7 +1,5 @@
-export type Client = {
+export type Service = {
   id: string;
   tenantId: string;
   name: string;
-  type: "company" | "individual";
-  website?: string;
 };

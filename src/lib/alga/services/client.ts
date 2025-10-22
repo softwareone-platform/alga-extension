@@ -1,50 +1,42 @@
 import { AxiosInstance } from "axios";
 import { axiosInstance, ListResponse, SingleResponse } from "../shared";
-import { Client } from "./models";
+import { Service } from "./models";
 
 export type AlgaClientResponse = {
+  service_id: string;
   tenant: string;
-  client_id: string;
-  client_name: string;
-  client_type: "company" | "individual";
-  properties?: {
-    website: string;
-  };
+  service_name: string;
 };
 
-export class ClientsClient {
+export class ServicesClient {
   private axios: AxiosInstance;
 
   constructor(baseUrl: string, apiKey: string) {
     this.axios = axiosInstance(`${baseUrl}/api/v1/clients/`, apiKey);
   }
 
-  async getClients(): Promise<ListResponse<Client>> {
+  async getServices(): Promise<ListResponse<Service>> {
     const { data } = await this.axios.get<ListResponse<AlgaClientResponse>>("");
     return {
-      data: data.data.map((company) => ({
-        id: company.client_id,
-        tenantId: company.tenant,
-        name: company.client_name,
-        type: company.client_type,
-        website: company.properties?.website,
+      data: data.data.map((service) => ({
+        id: service.service_id,
+        tenantId: service.tenant,
+        name: service.service_name,
       })),
       pagination: data.pagination,
       meta: data.meta,
     };
   }
 
-  async getClient(id: string): Promise<Client | null> {
+  async getClient(id: string): Promise<Service | null> {
     const { data } = await this.axios.get<SingleResponse<AlgaClientResponse>>(
       id
     );
     return data.data
       ? {
-          id: data.data.client_id,
+          id: data.data.service_id,
           tenantId: data.data.tenant,
-          name: data.data.client_name,
-          type: data.data.client_type,
-          website: data.data.properties?.website,
+          name: data.data.service_name,
         }
       : null;
   }
