@@ -34,17 +34,54 @@ export class KVStorage {
     this.namespace = namespace;
   }
 
-  async set<T>(key: string, value: T): Promise<void> {}
+  async set<T>(key: string, value: T): Promise<void> {
+    await this.axios.put<StoragePutResponse>(
+      `${this.namespace}/records/${encodeURIComponent(key)}`,
+      toBody(value)
+    );
+  }
 
-  async get<T>(key: string): Promise<T | null> {}
+  async get<T>(key: string): Promise<T | null> {
+    try {
+      const response = await this.axios.get<StorageGetResponse>(
+        `${this.namespace}/records/${encodeURIComponent(key)}`
+      );
+      return response.data.value as T;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return null;
+      }
+      throw error;
+    }
+  }
 
-  async remove(key: string): Promise<void> {}
+  async remove(key: string): Promise<void> {
+    await this.axios.delete(
+      `${this.namespace}/records/${encodeURIComponent(key)}`
+    );
+  }
 
-  async list({}: {
+  async list({
+    limit,
+    cursor,
+    keyPrefix,
+  }: {
     limit?: number;
     cursor?: string;
     keyPrefix?: string;
-  }): Promise<string[]> {}
+  }): Promise<string[]> {
+    const params = new URLSearchParams();
+    if (limit !== undefined) params.set("limit", String(limit));
+    if (cursor) params.set("cursor", cursor);
+    if (keyPrefix) params.set("keyPrefix", keyPrefix);
+
+    const query = params.toString() ? `?${params.toString()}` : "";
+    const response = await this.axios.get<StorageListResponse>(
+      `${this.namespace}/records${query}`
+    );
+
+    return response.data.items.map((item) => item.key);
+  }
 
   // async has(key: string): Promise<boolean> {}
 }
