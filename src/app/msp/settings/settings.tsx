@@ -6,7 +6,7 @@ import { Tabs } from "@ui/tabs";
 import { ErrorCard } from "@ui/error-card";
 import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
 import { Dialog, DialogPanel, DialogTitle } from "@ui/dialog";
-import { ExtensionDetailsChanges, ExtensionStatus } from "@lib/extension-data";
+import { ExtensionDetailsChanges, ExtensionStatus } from "@lib/alga/settings";
 import {
   useExtensionDetails,
   useExtensionDetailsMutation,
