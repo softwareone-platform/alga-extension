@@ -6,16 +6,12 @@ import { Tabs } from "@ui/tabs";
 import { useEffect, useMemo, useState } from "react";
 import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
 import { Input, Textarea } from "@ui/input";
-import {
-  useAgreement,
-  AgreementStatusBadge,
-  PLAN_SERVICES,
-} from "@features/agreements";
+import { useAgreement, AgreementStatusBadge } from "@features/agreements";
 import {
   useBillingConfig,
   useBillingConfigMutation,
 } from "@features/billing-config";
-import { BillingConfigChanges, Operations, PlanService } from "@lib/alga";
+import { BillingConfigChanges, Operations } from "@lib/alga";
 import { Radio, RadioGroup } from "@ui/radio";
 import {
   Listbox,
@@ -25,6 +21,7 @@ import {
 } from "@ui/listbox";
 import { withMarkup } from "@features/markup";
 import { useConsumers } from "@features/consumers";
+import { useServices } from "@features/services";
 
 function AgreementSummary({ id }: { id: string }) {
   const { agreement, isPending: isAgreementPending } = useAgreement(id);
@@ -161,6 +158,34 @@ const ConsumersListbox = ({
   );
 };
 
+const ServiceListbox = ({
+  service,
+  onServiceChange,
+}: {
+  service?: { id: string; name: string } | null;
+  onServiceChange: (service: { id: string; name: string }) => void;
+}) => {
+  const { services } = useServices();
+
+  return (
+    <Listbox
+      value={service ?? ""}
+      onChange={({ id, name }: { id: string; name: string }) =>
+        onServiceChange({ id, name })
+      }
+    >
+      <ListboxButton>{service?.name ?? "-"}</ListboxButton>
+      <ListboxOptions>
+        {services?.data?.map((service) => (
+          <ListboxOption key={service.id} value={service}>
+            {service.name}
+          </ListboxOption>
+        ))}
+      </ListboxOptions>
+    </Listbox>
+  );
+};
+
 function BillingConfigEditor({
   isOpen,
   onClose,
@@ -173,7 +198,6 @@ function BillingConfigEditor({
   const defaults = useMemo<BillingConfigChanges>(
     () => ({
       agreementId,
-      planService: "payg",
       operations: "self-service",
       markup: 0,
       note: "",
@@ -188,6 +212,8 @@ function BillingConfigEditor({
   const [edited, setEdited] = useState<BillingConfigChanges>(
     billingConfig || defaults
   );
+
+  const { services } = useServices();
 
   useEffect(() => {
     setEdited(billingConfig || defaults);
@@ -220,22 +246,7 @@ function BillingConfigEditor({
           </div>
           <label className="text-sm font-medium">Plan Service</label>
           <div>
-            <Listbox
-              value={edited.planService}
-              onChange={(planService: PlanService) =>
-                setEdited({
-                  ...edited,
-                  planService,
-                })
-              }
-            >
-              <ListboxButton>{PLAN_SERVICES[edited.planService]}</ListboxButton>
-              <ListboxOptions>
-                {Object.entries(PLAN_SERVICES).map(([key, value]) => (
-                  <ListboxOption value={key}>{value}</ListboxOption>
-                ))}
-              </ListboxOptions>
-            </Listbox>
+            <ServiceListbox service={null} onServiceChange={(service) => {}} />
           </div>
           <label className="text-sm font-medium">Markup</label>
           <div className="relative">

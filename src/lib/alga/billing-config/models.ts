@@ -1,4 +1,3 @@
-export type PlanService = "payg";
 export type Operations = "self-service" | "managed";
 export type BillingConfigStatus = "active" | "unconfigured";
 
@@ -12,7 +11,7 @@ export type BillingConfig = {
   agreementId: string;
   status: BillingConfigStatus;
   consumer?: BillingConfigConsumer;
-  planService: PlanService;
+  serviceId?: string;
   operations: Operations;
   markup: number;
   note?: string;

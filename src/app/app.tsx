@@ -7,6 +7,7 @@ import { runIFrame } from "@lib/swo-navigation";
 import { KVStorage } from "@lib/alga";
 import { BillingConfigsProvider } from "@features/billing-config";
 import { ConsumersProvider } from "@features/consumers";
+import { ServicesProvider } from "@features/services";
 
 const BASE_URL = "http://localhost:8010/proxy/";
 const API_KEY =
@@ -40,7 +41,9 @@ export function App() {
       <UserProvider baseUrl={details?.endpoint} token={details?.token}>
         <BillingConfigsProvider kvStorage={kvStorage}>
           <ConsumersProvider baseUrl={BASE_URL} apiKey={API_KEY}>
-            <Outlet />
+            <ServicesProvider baseUrl={BASE_URL} apiKey={API_KEY}>
+              <Outlet />
+            </ServicesProvider>
           </ConsumersProvider>
         </BillingConfigsProvider>
       </UserProvider>
