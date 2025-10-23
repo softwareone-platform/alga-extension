@@ -6,12 +6,17 @@ export type BillingConfigConsumer = {
   name: string;
 };
 
+export type BillingConfigService = {
+  id: string;
+  name: string;
+};
+
 export type BillingConfig = {
   id: string;
   agreementId: string;
   status: BillingConfigStatus;
   consumer?: BillingConfigConsumer;
-  serviceId?: string;
+  service?: BillingConfigService;
   operations: Operations;
   markup: number;
   note?: string;

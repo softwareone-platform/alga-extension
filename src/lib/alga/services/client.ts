@@ -12,7 +12,7 @@ export class ServicesClient {
   private axios: AxiosInstance;
 
   constructor(baseUrl: string, apiKey: string) {
-    this.axios = axiosInstance(`${baseUrl}/api/v1/clients/`, apiKey);
+    this.axios = axiosInstance(`${baseUrl}/api/v1/services/`, apiKey);
   }
 
   async getServices(): Promise<ListResponse<Service>> {

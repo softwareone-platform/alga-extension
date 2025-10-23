@@ -213,8 +213,6 @@ function BillingConfigEditor({
     billingConfig || defaults
   );
 
-  const { services } = useServices();
-
   useEffect(() => {
     setEdited(billingConfig || defaults);
   }, [billingConfig, defaults]);
@@ -244,9 +242,12 @@ function BillingConfigEditor({
               }
             />
           </div>
-          <label className="text-sm font-medium">Plan Service</label>
+          <label className="text-sm font-medium">Service</label>
           <div>
-            <ServiceListbox service={null} onServiceChange={(service) => {}} />
+            <ServiceListbox
+              service={edited.service}
+              onServiceChange={(service) => setEdited({ ...edited, service })}
+            />
           </div>
           <label className="text-sm font-medium">Markup</label>
           <div className="relative">
