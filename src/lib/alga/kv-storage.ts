@@ -83,7 +83,7 @@ export class KVStorage {
     if (limit !== undefined) params.set("limit", String(limit));
     if (cursor) params.set("cursor", cursor);
     if (keyPrefix) params.set("keyPrefix", keyPrefix);
-
+    params.set("includeValues", "true");
     const query = params.toString() ? `?${params.toString()}` : "";
     const response = await this.axios.get<StorageListResponse>(
       `${this.namespace}/records${query}`
