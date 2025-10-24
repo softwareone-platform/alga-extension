@@ -76,7 +76,11 @@ export function Agreements() {
 
   const { agreements, pagination, isFetching } = useAgreements(
     { offset },
-    billingConfigs?.map((bc) => bc.agreementId!) ?? []
+    billingConfigs
+      ?.filter(
+        (bc) => bc.status === "active" && bc.operations === "self-service"
+      )
+      .map((bc) => bc.agreementId!) ?? []
   );
 
   const billingConfigsById =
