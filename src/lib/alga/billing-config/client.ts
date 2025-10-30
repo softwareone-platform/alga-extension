@@ -1,5 +1,6 @@
 import { KVStorage } from "@lib/alga";
 import { BillingConfig } from "./models";
+import { CredentialsClient } from "@lib/swo";
 
 const BY_AGREEMENT = "billing-configs-by-agreement";
 const BY_CONSUMER = "billing-configs-by-consumer";
@@ -15,9 +16,11 @@ type BillingConfigKV = Omit<BillingConfig, "audit" | "status">;
 
 export class BillingConfigClient {
   private kvStorage: KVStorage;
+  private credentialsClient: CredentialsClient;
 
-  constructor(kvStorage: KVStorage) {
+  constructor(kvStorage: KVStorage, credentialsClient: CredentialsClient) {
     this.kvStorage = kvStorage;
+    this.credentialsClient = credentialsClient;
   }
 
   async getByAgreementId(agreementId: string): Promise<BillingConfig | null> {
@@ -65,25 +68,32 @@ export class BillingConfigClient {
       bcKV
     );
 
-    if (bcKV.consumer) {
-      await this.kvStorage.set(
-        `${BY_CONSUMER}-${bcKV.consumer.id}-${bcKV.agreementId}`,
-        bcKV
-      );
+    const status = bcKV.consumer ? "active" : "unconfigured";
+
+    if (status === "active") {
+      await Promise.all([
+        this.kvStorage.set(
+          `${BY_CONSUMER}-${bcKV.consumer!.id}-${bcKV.agreementId}`,
+          bcKV
+        ),
+        this.credentialsClient.upsert(bcKV.agreementId),
+      ]);
     }
 
-    if (!bcKV.consumer) {
+    if (status === "unconfigured") {
       const current = await this.getByAgreementId(bcKV.agreementId);
-      if (current?.consumer?.id) {
-        await this.kvStorage.remove(
-          `${BY_CONSUMER}-${current?.consumer?.id}-${current.agreementId}`
-        );
-      }
+      if (current?.consumer?.id)
+        await Promise.all([
+          this.kvStorage.remove(
+            `${BY_CONSUMER}-${current?.consumer?.id}-${current.agreementId}`
+          ),
+          this.credentialsClient.delete(current.agreementId),
+        ]);
     }
 
     return {
       ...bcKV,
-      status: bcKV.consumer ? "active" : "unconfigured",
+      status,
       audit: {
         createdAt: result.createdAt,
         updatedAt: result.updatedAt,

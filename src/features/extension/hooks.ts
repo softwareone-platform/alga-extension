@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useExtensionClient } from "./context";
-import { SettingsChanges } from "@lib/alga/extension";
+import { ExtensionDetailsChanges } from "@lib/alga/extension";
 
 export const useExtensionDetails = () => {
   const client = useExtensionClient();
@@ -22,7 +22,8 @@ export const useExtensionDetailsMutation = () => {
     mutateAsync: saveDetailsAsync,
     ...state
   } = useMutation({
-    mutationFn: (details: SettingsChanges) => client.saveDetails(details),
+    mutationFn: (details: ExtensionDetailsChanges) =>
+      client.saveDetails(details),
     onSuccess: (details) =>
       queryClient.setQueryData(["extension", "details"], details),
   });
