@@ -54,7 +54,7 @@ export function Orders() {
               <TableCell>
                 <Link
                   className="truncate"
-                  href={`/agreements/${id}/orders/${order.id}`}
+                  href={`/consumer/orders/${order.id}`}
                   target="_blank"
                 >
                   {order.id}
