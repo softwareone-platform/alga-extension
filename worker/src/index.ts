@@ -19,11 +19,7 @@ const toInvoiceData = async (
   charges: Charge[],
   billingConfig: BillingConfig
 ): Promise<CreateInvoiceData | null> => {
-  // const billingConfig = await billingConfigClient.getByAgreementId(
-  //   invoice.agreement.id
-  // );
-
-  const agreementId = statement.agreement!.id;
+  const agreementId = statement.agreement!.id!;
 
   if (!billingConfig) {
     console.warn(`Billing config not found for agreement ${agreementId}`);
@@ -95,6 +91,8 @@ const toInvoiceData = async (
   const migrationsClient = new MigrationsClient(pool);
 
   for (const { agreementId, algaAPIKey, swoAPIToken } of credentials) {
+    console.log(`Migrating agreement ${agreementId}`);
+
     const kvStorage = new KVStorage(
       process.env.ALGA_API_URL!,
       "billing-configs",
@@ -113,53 +111,55 @@ const toInvoiceData = async (
     );
 
     for await (const statement of swoStatementsClient.getStatements({
-      agreementId,
-      from: new Date("2025-08-31"),
+      agreementId: "AGR-9951-1847-7568",
+      from: new Date("2025-06-31"),
       to: new Date("2025-10-01"),
     })) {
       const statementId = statement.id!;
 
       console.log(`Migrating statement ${statementId}`);
 
-      const migration = await migrationsClient.getByStatementId(statementId);
-      if (migration) {
-        console.log(`Statement ${statementId} already migrated`);
-        continue;
-      }
+      // const migration = await migrationsClient.getByStatementId(statementId);
+      // if (migration) {
+      //   console.log(`Statement ${statementId} already migrated`);
+      //   continue;
+      // }
 
-      const billingConfig = await billingConfigClient.getByAgreementId(
-        agreementId
-      );
+      // const billingConfig = await billingConfigClient.getByAgreementId(
+      //   agreementId
+      // );
 
-      if (!billingConfig) {
-        console.error(`Billing config not found for agreement ${agreementId}`);
-        continue;
-      }
+      // if (!billingConfig) {
+      //   console.error(`Billing config not found for agreement ${agreementId}`);
+      //   continue;
+      // }
 
-      const charges = await swoStatementsClient.getAllCharges(statementId);
+      // const charges = await swoStatementsClient.getAllCharges(statementId);
 
-      const invoiceData = await toInvoiceData(
-        statement,
-        charges,
-        billingConfig
-      );
+      // const invoiceData = await toInvoiceData(
+      //   statement,
+      //   charges,
+      //   billingConfig
+      // );
 
-      if (!invoiceData) {
-        console.warn(`No invoice data for statement ${statement.id}`);
-        continue;
-      }
+      // if (!invoiceData) {
+      //   console.warn(`No invoice data for statement ${statement.id}`);
+      //   continue;
+      // }
 
-      await algaInvoicesClient.create(invoiceData);
+      // await algaInvoicesClient.create(invoiceData);
 
-      await migrationsClient.create({
-        swoStatementId: statementId,
-        algaInvoiceId: "dupa",
-        date: new Date(),
-      });
+      // await migrationsClient.create({
+      //   swoStatementId: statementId,
+      //   algaInvoiceId: "dupa",
+      //   date: new Date(),
+      // });
 
-      console.log(`Statement ${statementId} migrated`);
+      // console.log(`Statement ${statementId} migrated`);
     }
   }
+
+  console.log("Done");
 
   await pool.close();
 })();

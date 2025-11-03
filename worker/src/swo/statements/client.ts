@@ -29,32 +29,39 @@ export class StatementsClient {
     let offset = 0;
     let limit = 100;
 
-    const baseQuery = new RqlQuery<Statement>()
-      .expand("id", "type", "agreement.id", "agreement.name")
-      .filter({
-        field: "agreement.id",
-        value: agreementId,
-        operator: "eq",
-      })
-      .filter({
-        field: "audit.created.at",
-        value: encodeURIComponent(from.toISOString()),
-        operator: "ge",
-      })
-      .filter({
-        field: "audit.created.at",
-        value: encodeURIComponent(to.toISOString()),
-        operator: "le",
-      });
-
     while (true) {
-      const query = baseQuery.paging(offset, limit);
+      const query = new RqlQuery<Statement>()
+        .expand("id", "type", "agreement.id", "agreement.name")
+        .filter({
+          value: [
+            {
+              field: "agreement.id",
+              value: agreementId,
+              operator: "eq",
+            },
+            ,
+            {
+              field: "audit.created.at",
+              value: from.toISOString(),
+              operator: "ge",
+            },
+            {
+              field: "audit.created.at",
+              value: to.toISOString(),
+              operator: "le",
+            },
+          ],
+          operator: "and",
+        })
+        .paging(offset, limit);
 
-      const { data }: AxiosResponse<StatementListResponse> =
-        await this.axios.get(`/billing/statements?${query.toString()}`);
+      const response: AxiosResponse<StatementListResponse> =
+        await this.axios.get(`v1/billing/statements?${query.toString()}`);
 
-      const items = data.data || [];
-      const total = data.$meta?.pagination?.total || 0;
+      const items = response.data.data || [];
+      const total = response.data.$meta?.pagination?.total || 0;
+
+      console.log(`Found ${items.length} statements`);
 
       yield* items;
 
@@ -68,19 +75,19 @@ export class StatementsClient {
     let offset = 0;
     let limit = 100;
 
-    const baseQuery = new RqlQuery<Charge>().expand(
-      "id",
-      "subscription.id",
-      "subscription.name",
-      "item.id",
-      "item.name",
-      "description",
-      "quantity",
-      "price.unitSP"
-    );
-
     while (true) {
-      const query = baseQuery.paging(offset, limit);
+      const query = new RqlQuery<Charge>()
+        .expand(
+          "id",
+          "subscription.id",
+          "subscription.name",
+          "item.id",
+          "item.name",
+          "description",
+          "quantity",
+          "price.unitSP"
+        )
+        .paging(offset, limit);
 
       const { data }: AxiosResponse<ChargeListResponse> = await this.axios.get(
         `/billing/statements/${statementId}/charges?${query.toString()}`
