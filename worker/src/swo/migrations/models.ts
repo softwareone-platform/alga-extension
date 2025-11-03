@@ -1,5 +1,5 @@
 export type Migration = {
-  swoInvoiceId: string;
+  swoStatementId: string;
   algaInvoiceId: string;
   date: Date;
 };

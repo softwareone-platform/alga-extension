@@ -7,7 +7,7 @@ type ApiSuccessResponse<T> = {
   meta?: unknown;
 };
 
-export type CreateInvoiceRequest = {
+export type CreateInvoiceData = {
   clientId: string;
   lines: ManualInvoiceLine[];
   externalInvoiceId: string;
@@ -23,7 +23,7 @@ export class InvoicesClient {
   async create({
     clientId,
     lines,
-  }: CreateInvoiceRequest): Promise<ManualInvoice | null> {
+  }: CreateInvoiceData): Promise<ManualInvoice | null> {
     const response = await this.axios.post<ApiSuccessResponse<ManualInvoice>>(
       "/manual",
       {
