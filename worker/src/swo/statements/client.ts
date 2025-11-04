@@ -90,7 +90,7 @@ export class StatementsClient {
         .paging(offset, limit);
 
       const { data }: AxiosResponse<ChargeListResponse> = await this.axios.get(
-        `/billing/statements/${statementId}/charges?${query.toString()}`
+        `v1/billing/statements/${statementId}/charges?${query.toString()}`
       );
 
       const items = data.data || [];

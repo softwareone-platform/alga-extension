@@ -111,36 +111,38 @@ const toInvoiceData = async (
     );
 
     for await (const statement of swoStatementsClient.getStatements({
-      agreementId: "AGR-9951-1847-7568",
-      from: new Date("2025-06-31"),
-      to: new Date("2025-10-01"),
+      agreementId,
+      from: new Date("2025-10-01"),
+      to: new Date("2025-10-31"),
     })) {
       const statementId = statement.id!;
 
       console.log(`Migrating statement ${statementId}`);
 
-      // const migration = await migrationsClient.getByStatementId(statementId);
-      // if (migration) {
-      //   console.log(`Statement ${statementId} already migrated`);
-      //   continue;
-      // }
+      const migration = await migrationsClient.getByStatementId(statementId);
+      if (migration) {
+        console.log(`Statement ${statementId} already migrated`);
+        continue;
+      }
 
-      // const billingConfig = await billingConfigClient.getByAgreementId(
-      //   agreementId
-      // );
+      const billingConfig = await billingConfigClient.getByAgreementId(
+        agreementId
+      );
 
-      // if (!billingConfig) {
-      //   console.error(`Billing config not found for agreement ${agreementId}`);
-      //   continue;
-      // }
+      if (!billingConfig) {
+        console.error(`Billing config not found for agreement ${agreementId}`);
+        continue;
+      }
 
-      // const charges = await swoStatementsClient.getAllCharges(statementId);
+      const charges = await swoStatementsClient.getAllCharges(statementId);
 
-      // const invoiceData = await toInvoiceData(
-      //   statement,
-      //   charges,
-      //   billingConfig
-      // );
+      const invoiceData = await toInvoiceData(
+        statement,
+        charges,
+        billingConfig
+      );
+
+      console.log(charges, invoiceData);
 
       // if (!invoiceData) {
       //   console.warn(`No invoice data for statement ${statement.id}`);
