@@ -94,6 +94,20 @@ export class KVStorage {
     const value = await this.get(key);
     return value !== null;
   }
+
+  async clear({ keyPrefix }: { keyPrefix?: string } = {}): Promise<void> {
+    const params = new URLSearchParams();
+    // params.set("limit", String(1000));
+    if (keyPrefix) params.set("keyPrefix", keyPrefix);
+    const query = params.toString() ? `?${params.toString()}` : "";
+    const response = await this.axios.get<StorageListResponse>(
+      `${this.namespace}/records${query}`
+    );
+
+    for (const item of response.data.items) {
+      await this.remove(item.key);
+    }
+  }
 }
 
 // Types shared with the API response

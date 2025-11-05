@@ -7,7 +7,7 @@ import {
 import { KVStorage } from "./alga/kv-storage";
 import mssql from "mssql";
 import dotenv from "dotenv";
-import { MigrationsClient } from "./swo/migrations";
+import { MigrationsClient } from "./alga/migrations";
 import type { Charge, Statement } from "@swo/mp-api-model/billing";
 import { StatementsClient } from "./swo/statements";
 import { ExtensionClient } from "./alga/extension";
@@ -75,43 +75,44 @@ const toInvoiceData = async (
 };
 
 (async () => {
-  const pool = new mssql.ConnectionPool({
-    user: process.env.DB_USER!,
-    password: process.env.DB_PASSWORD!,
-    server: process.env.DB_SERVER!,
-    database: process.env.DB_NAME!,
-    options: {
-      encrypt: true,
-      trustServerCertificate: true,
-    },
-  });
-
-  await pool.connect();
-
-  const extensionClient = new ExtensionClient(
-    new KVStorage(
-      process.env.ALGA_API_URL!,
-      "extension",
-      process.env.ALGA_API_KEY!
-    )
+  const algaInvoicesClient = new AlgaInvoicesClient(
+    process.env.ALGA_API_URL!,
+    process.env.ALGA_API_KEY!
   );
 
-  const billingConfigClient = new BillingConfigClient(
-    new KVStorage(
-      process.env.ALGA_API_URL!,
-      "billing-configs",
-      process.env.ALGA_API_KEY!
-    )
+  const extensionStorage = new KVStorage(
+    process.env.ALGA_API_URL!,
+    "extension",
+    process.env.ALGA_API_KEY!
   );
+  const extensionClient = new ExtensionClient(extensionStorage);
+
+  const billingConfigsStorage = new KVStorage(
+    process.env.ALGA_API_URL!,
+    "billing-configs",
+    process.env.ALGA_API_KEY!
+  );
+  const billingConfigClient = new BillingConfigClient(billingConfigsStorage);
+
+  const migrationsStorage = new KVStorage(
+    process.env.ALGA_API_URL!,
+    "migrations",
+    process.env.ALGA_API_KEY!
+  );
+  const migrationsClient = new MigrationsClient(migrationsStorage);
+
+  // await billingConfigsStorage.clear();
+  // throw new Error("test");
 
   const details = await extensionClient.getDetails();
   if (!details) {
     throw new Error("Extension details not found");
   }
 
-  const swoAPIToken = details.token;
-
-  const migrationsClient = new MigrationsClient(pool);
+  const swoStatementsClient = new StatementsClient(
+    process.env.MP_API_URL!,
+    details.token
+  );
 
   for (const bc of await billingConfigClient.getAll()) {
     if (bc.status !== "active") {
@@ -121,17 +122,13 @@ const toInvoiceData = async (
 
     const agreementId = bc.agreementId;
 
+    const migration = await migrationsClient.getByAgreementId(agreementId);
+    if (migration) {
+      console.log(`Agreement ${agreementId} already migrated`);
+      continue;
+    }
+
     console.log(`Migrating agreement ${agreementId}`);
-
-    const algaInvoicesClient = new AlgaInvoicesClient(
-      process.env.ALGA_API_URL!,
-      process.env.ALGA_API_KEY!
-    );
-
-    const swoStatementsClient = new StatementsClient(
-      process.env.MP_API_URL!,
-      swoAPIToken
-    );
 
     for await (const statement of swoStatementsClient.getStatements({
       agreementId,
@@ -141,12 +138,6 @@ const toInvoiceData = async (
       const statementId = statement.id!;
 
       console.log(`Migrating statement ${statementId}`);
-
-      const migration = await migrationsClient.getByStatementId(statementId);
-      if (migration) {
-        console.log(`Statement ${statementId} already migrated`);
-        continue;
-      }
 
       const billingConfig = await billingConfigClient.getByAgreementId(
         agreementId
@@ -172,11 +163,7 @@ const toInvoiceData = async (
 
       await algaInvoicesClient.create(invoiceData);
 
-      await migrationsClient.create({
-        swoStatementId: statementId,
-        algaInvoiceId: "dupa",
-        date: new Date(),
-      });
+      await migrationsClient.create(agreementId);
 
       console.log(`Statement ${statementId} migrated`);
     }
