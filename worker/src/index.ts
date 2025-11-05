@@ -40,11 +40,14 @@ const toInvoiceData = async (
 
   const lines = charges
     .map((charge) => {
-      if (!charge.item?.name || !charge.price?.unitSP) {
+      if (!charge.price?.unitSP) {
+        console.warn(`No price for charge ${charge.id}`);
         return null;
       }
 
-      const description = `${charge.item.name} (${charge.id})`;
+      const description = `${
+        charge.item?.name || charge.description?.value1
+      } (${charge.id})`;
 
       const rate = Math.round(
         charge.price.unitSP * (1 + billingConfig.markup / 100) * 100
@@ -142,22 +145,20 @@ const toInvoiceData = async (
         billingConfig
       );
 
-      console.log(charges, invoiceData);
+      if (!invoiceData) {
+        console.warn(`No invoice data for statement ${statement.id}`);
+        continue;
+      }
 
-      // if (!invoiceData) {
-      //   console.warn(`No invoice data for statement ${statement.id}`);
-      //   continue;
-      // }
+      await algaInvoicesClient.create(invoiceData);
 
-      // await algaInvoicesClient.create(invoiceData);
+      await migrationsClient.create({
+        swoStatementId: statementId,
+        algaInvoiceId: "dupa",
+        date: new Date(),
+      });
 
-      // await migrationsClient.create({
-      //   swoStatementId: statementId,
-      //   algaInvoiceId: "dupa",
-      //   date: new Date(),
-      // });
-
-      // console.log(`Statement ${statementId} migrated`);
+      console.log(`Statement ${statementId} migrated`);
     }
   }
 

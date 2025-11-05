@@ -31,4 +31,19 @@ export class BillingConfigClient {
         }
       : null;
   }
+
+  async getAll(): Promise<BillingConfig[]> {
+    const result = await this.kvStorage.list<BillingConfigKV>({
+      keyPrefix: BY_AGREEMENT,
+    });
+
+    return result.map((v) => ({
+      ...v.value,
+      status: v.value.consumer ? "active" : "unconfigured",
+      audit: {
+        createdAt: v.createdAt,
+        updatedAt: v.updatedAt,
+      },
+    }));
+  }
 }

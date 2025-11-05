@@ -45,8 +45,6 @@ export class BillingConfigClient {
       keyPrefix: `${BY_CONSUMER}-${consumerId}`,
     });
 
-    console.log(result);
-
     return result.map((v) => ({
       ...v.value,
       status: v.value.consumer ? "active" : "unconfigured",

@@ -72,7 +72,7 @@ export class KVStorage {
     limit?: number;
     cursor?: string;
     keyPrefix?: string;
-  }): Promise<KVStorageObject<T>[]> {
+  } = {}): Promise<KVStorageObject<T>[]> {
     const params = new URLSearchParams();
     if (limit !== undefined) params.set("limit", String(limit));
     if (cursor) params.set("cursor", cursor);
