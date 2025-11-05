@@ -5,12 +5,12 @@ import {
   type ManualInvoiceLine,
 } from "./alga/invoices";
 import { KVStorage } from "./alga/kv-storage";
-import { CredentialsClient } from "./swo/credentials";
 import mssql from "mssql";
 import dotenv from "dotenv";
 import { MigrationsClient } from "./swo/migrations";
 import type { Charge, Statement } from "@swo/mp-api-model/billing";
 import { StatementsClient } from "./swo/statements";
+import { ExtensionClient } from "./alga/extension";
 
 dotenv.config();
 
@@ -88,24 +88,44 @@ const toInvoiceData = async (
 
   await pool.connect();
 
-  const credentialsClient = new CredentialsClient(pool);
-  const credentials = await credentialsClient.getAll();
+  const extensionClient = new ExtensionClient(
+    new KVStorage(
+      process.env.ALGA_API_URL!,
+      "extension",
+      process.env.ALGA_API_KEY!
+    )
+  );
+
+  const billingConfigClient = new BillingConfigClient(
+    new KVStorage(
+      process.env.ALGA_API_URL!,
+      "billing-configs",
+      process.env.ALGA_API_KEY!
+    )
+  );
+
+  const details = await extensionClient.getDetails();
+  if (!details) {
+    throw new Error("Extension details not found");
+  }
+
+  const swoAPIToken = details.token;
 
   const migrationsClient = new MigrationsClient(pool);
 
-  for (const { agreementId, algaAPIKey, swoAPIToken } of credentials) {
+  for (const bc of await billingConfigClient.getAll()) {
+    if (bc.status !== "active") {
+      console.log(`Billing config ${bc.id} is not active. Skipping...`);
+      continue;
+    }
+
+    const agreementId = bc.agreementId;
+
     console.log(`Migrating agreement ${agreementId}`);
 
-    const kvStorage = new KVStorage(
-      process.env.ALGA_API_URL!,
-      "billing-configs",
-      algaAPIKey
-    );
-
-    const billingConfigClient = new BillingConfigClient(kvStorage);
     const algaInvoicesClient = new AlgaInvoicesClient(
       process.env.ALGA_API_URL!,
-      algaAPIKey
+      process.env.ALGA_API_KEY!
     );
 
     const swoStatementsClient = new StatementsClient(
