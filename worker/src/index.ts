@@ -5,7 +5,6 @@ import {
   type ManualInvoiceLine,
 } from "./alga/invoices";
 import { KVStorage } from "./alga/kv-storage";
-import mssql from "mssql";
 import dotenv from "dotenv";
 import { MigrationsClient } from "./alga/migrations";
 import type { Charge, Statement } from "@swo/mp-api-model/billing";
@@ -114,6 +113,8 @@ const toInvoiceData = async (
     details.token
   );
 
+  const date = new Date("2025-10-01");
+
   for (const bc of await billingConfigClient.getAll()) {
     if (bc.status !== "active") {
       console.log(`Billing config ${bc.id} is not active. Skipping...`);
@@ -122,7 +123,7 @@ const toInvoiceData = async (
 
     const agreementId = bc.agreementId;
 
-    const migration = await migrationsClient.getByAgreementId(agreementId);
+    const migration = await migrationsClient.getMigration(agreementId, date);
     if (migration) {
       console.log(`Agreement ${agreementId} already migrated`);
       continue;
@@ -132,8 +133,7 @@ const toInvoiceData = async (
 
     for await (const statement of swoStatementsClient.getStatements({
       agreementId,
-      from: new Date("2025-10-01"),
-      to: new Date("2025-10-31"),
+      date,
     })) {
       const statementId = statement.id!;
 
@@ -170,6 +170,4 @@ const toInvoiceData = async (
   }
 
   console.log("Done");
-
-  await pool.close();
 })();

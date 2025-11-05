@@ -7,11 +7,11 @@ import type {
 } from "@swo/mp-api-model/billing";
 import { type AxiosInstance, type AxiosResponse } from "axios";
 import { axiosInstance } from "../shared";
+import dayjs from "dayjs";
 
 export type GetStatementsOptions = {
   agreementId: string;
-  from: Date;
-  to: Date;
+  date: Date | string;
 };
 
 export class StatementsClient {
@@ -23,8 +23,7 @@ export class StatementsClient {
 
   async *getStatements({
     agreementId,
-    from,
-    to,
+    date,
   }: GetStatementsOptions): AsyncGenerator<Statement> {
     let offset = 0;
     let limit = 100;
@@ -39,15 +38,18 @@ export class StatementsClient {
               value: agreementId,
               operator: "eq",
             },
-            ,
             {
               field: "audit.created.at",
-              value: from.toISOString(),
+              value: dayjs(date)
+                .startOf("day")
+                .format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
               operator: "ge",
             },
             {
               field: "audit.created.at",
-              value: to.toISOString(),
+              value: dayjs(date)
+                .endOf("day")
+                .format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
               operator: "le",
             },
           ],

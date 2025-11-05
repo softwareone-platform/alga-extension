@@ -16,6 +16,7 @@
     "@swo/mp-api-model": "^5.0.886",
     "@swo/rql-client": "^5.0.8",
     "axios": "^1.13.0",
+    "dayjs": "^1.11.19",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.6",
     "fastify-type-provider-zod": "^6.0.0",
