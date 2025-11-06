@@ -18,8 +18,8 @@ export class MigrationsClient {
     return result?.value || null;
   }
 
-  async create(agreementId: string): Promise<void> {
-    const migrationDate = dayjs().format("YYYY-MM-DD");
+  async create(agreementId: string, date: string | Date): Promise<void> {
+    const migrationDate = dayjs(date).format("YYYY-MM-DD");
     await this.kvStorage.set(`${MIGRATIONS}-${agreementId}-${migrationDate}`, {
       agreementId,
       migrationDate,

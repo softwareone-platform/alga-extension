@@ -10,6 +10,7 @@ import { MigrationsClient } from "./alga/migrations";
 import type { Charge, Statement } from "@swo/mp-api-model/billing";
 import { StatementsClient } from "./swo/statements";
 import { ExtensionClient } from "./alga/extension";
+import dayjs from "dayjs";
 
 dotenv.config();
 
@@ -113,7 +114,7 @@ const toInvoiceData = async (
     details.token
   );
 
-  const date = new Date("2025-10-01");
+  const date = new Date("2025-10-20");
 
   for (const bc of await billingConfigClient.getAll()) {
     if (bc.status !== "active") {
@@ -125,7 +126,11 @@ const toInvoiceData = async (
 
     const migration = await migrationsClient.getMigration(agreementId, date);
     if (migration) {
-      console.log(`Agreement ${agreementId} already migrated`);
+      console.log(
+        `Agreement ${agreementId} on ${dayjs(date).format(
+          "YYYY-MM-DD"
+        )} already migrated`
+      );
       continue;
     }
 
@@ -163,7 +168,7 @@ const toInvoiceData = async (
 
       await algaInvoicesClient.create(invoiceData);
 
-      await migrationsClient.create(agreementId);
+      await migrationsClient.create(agreementId, date);
 
       console.log(`Statement ${statementId} migrated`);
     }
