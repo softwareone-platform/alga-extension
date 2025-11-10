@@ -5,7 +5,8 @@ import dayjs from "dayjs";
 export function Details() {
   const { details } = useExtensionDetails();
 
-  const { createdAt, updatedAt, activatedAt, disabledAt, note } = details || {};
+  const { audit, note } = details || {};
+  const { createdAt, updatedAt, activatedAt, disabledAt } = audit || {};
 
   return (
     <Card className="flex flex-col">
