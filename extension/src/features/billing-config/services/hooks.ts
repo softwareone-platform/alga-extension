@@ -1,46 +1,14 @@
-import { useCallback, useContext } from "react";
+import { useContext, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BillingConfigsContext } from "./context";
-import { BillingConfig, BillingConfigChanges } from "@lib/alga";
+import { BillingConfigChanges } from "@lib/alga";
 
-export const useBillingConfigsByAgreements = (agreementsIds: string[]) => {
-  const { client } = useContext(BillingConfigsContext);
-  const queryClient = useQueryClient();
-
-  const getById = useCallback(
-    async (id: string) => {
-      const cached = queryClient.getQueryData<BillingConfig>([
-        "billing-configs",
-        id,
-      ]);
-      if (cached) return cached;
-
-      const result = await client!.getByAgreementId(id);
-      if (result) queryClient.setQueryData(["billing-configs", id], result);
-
-      return result;
-    },
-    [queryClient]
-  );
-
-  const { data: billingConfigs, ...state } = useQuery({
-    queryKey: ["billing-configs", agreementsIds],
-    queryFn: async () => {
-      const results = await Promise.all(agreementsIds.map(getById));
-      return results.filter((result) => !!result);
-    },
-    enabled: !!client,
-  });
-
-  return { billingConfigs, ...state };
-};
-
-export const useBillingConfigsByConsumer = (consumerId: string) => {
+export const useBillingConfigs = () => {
   const { client } = useContext(BillingConfigsContext);
 
   const { data: billingConfigs, ...state } = useQuery({
-    queryKey: ["billing-configs", consumerId],
-    queryFn: () => client!.getByConsumerId(consumerId),
+    queryKey: ["billing-configs"],
+    queryFn: () => client!.getAll(),
     enabled: !!client,
     staleTime: Infinity,
   });
@@ -49,16 +17,33 @@ export const useBillingConfigsByConsumer = (consumerId: string) => {
 };
 
 export const useBillingConfig = (agreementId?: string) => {
-  const { client } = useContext(BillingConfigsContext);
+  const { billingConfigs, ...state } = useBillingConfigs();
 
-  const { data: billingConfig, ...state } = useQuery({
-    queryKey: ["billing-configs", agreementId],
-    queryFn: () => client!.getByAgreementId(agreementId!),
-    enabled: !!client && !!agreementId,
-    staleTime: Infinity,
-  });
+  const billingConfig = useMemo(() => {
+    return billingConfigs?.find((v) => v.agreementId === agreementId);
+  }, [billingConfigs, agreementId]);
 
   return { billingConfig, ...state };
+};
+
+export const useBillingConfigsByConsumer = (consumerId: string) => {
+  const { billingConfigs: all, ...state } = useBillingConfigs();
+
+  const billingConfigs = useMemo(() => {
+    return all?.filter((v) => v.consumer?.id === consumerId);
+  }, [all, consumerId]);
+
+  return { billingConfigs, ...state };
+};
+
+export const useBillingConfigsByAgreements = (agreementsIds: string[]) => {
+  const { billingConfigs: all, ...state } = useBillingConfigs();
+
+  const billingConfigs = useMemo(() => {
+    return all?.filter((v) => agreementsIds.includes(v.agreementId));
+  }, [all, agreementsIds]);
+
+  return { billingConfigs, ...state };
 };
 
 export const useBillingConfigMutation = () => {
@@ -72,11 +57,8 @@ export const useBillingConfigMutation = () => {
     ...state
   } = useMutation({
     mutationFn: (changes: BillingConfigChanges) => client!.save(changes),
-    onSuccess: (billingConfig) =>
-      queryClient.setQueryData(
-        ["billing-configs", billingConfig.agreementId],
-        billingConfig
-      ),
+    onSuccess: () =>
+      queryClient.resetQueries({ queryKey: ["billing-configs"] }),
   });
 
   return { saveBillingConfig, saveBillingConfigAsync, state };

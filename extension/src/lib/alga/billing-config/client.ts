@@ -1,8 +1,7 @@
 import { KVStorage } from "@lib/alga";
 import { BillingConfig } from "./models";
 
-const BY_AGREEMENT = "billing-configs-by-agreement";
-const BY_CONSUMER = "billing-configs-by-consumer";
+const BILLING_CONFIGS = "billing-configs";
 
 export type BillingConfigChanges = Omit<
   BillingConfig,
@@ -11,8 +10,6 @@ export type BillingConfigChanges = Omit<
   id?: string;
 };
 
-type BillingConfigKV = Omit<BillingConfig, "audit" | "status">;
-
 export class BillingConfigClient {
   private kvStorage: KVStorage;
 
@@ -20,73 +17,43 @@ export class BillingConfigClient {
     this.kvStorage = kvStorage;
   }
 
-  async getByAgreementId(agreementId: string): Promise<BillingConfig | null> {
-    const result = await this.kvStorage.get<BillingConfigKV>(
-      `${BY_AGREEMENT}-${agreementId}-${agreementId}`
+  async getAll(): Promise<BillingConfig[]> {
+    const result = await this.kvStorage.get<{ all: BillingConfig[] } | null>(
+      BILLING_CONFIGS
     );
 
-    return result?.value
-      ? {
-          ...result.value,
-          status: result.value.consumer ? "active" : "unconfigured",
-          audit: {
-            createdAt: result.createdAt,
-            updatedAt: result.updatedAt,
-          },
-        }
-      : null;
-  }
-
-  async getByConsumerId(consumerId: string): Promise<BillingConfig[]> {
-    const result = await this.kvStorage.list<BillingConfigKV>({
-      keyPrefix: `${BY_CONSUMER}-${consumerId}`,
-    });
-
-    return result.map((v) => ({
-      ...v.value,
-      status: v.value.consumer ? "active" : "unconfigured",
-      audit: {
-        createdAt: v.createdAt,
-        updatedAt: v.updatedAt,
-      },
-    }));
+    return result?.value?.all || [];
   }
 
   async save(changes: BillingConfigChanges): Promise<BillingConfig> {
-    const bcKV: BillingConfigKV = {
-      id: changes.id || changes.agreementId,
+    const all = await this.getAll();
+
+    const existing = changes.id ? all.find((v) => v.id === changes.id) : null;
+
+    const merged = {
       ...changes,
+      ...existing,
     };
 
-    const result = await this.kvStorage.set(
-      `${BY_AGREEMENT}-${bcKV.agreementId}-${bcKV.agreementId}`,
-      bcKV
-    );
+    const status =
+      merged.consumer && merged.service ? "active" : "unconfigured";
+    const id = merged.id || merged.agreementId;
+    const audit = {
+      createdAt: existing?.audit.createdAt || new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
 
-    const status = bcKV.consumer ? "active" : "unconfigured";
-
-    if (status === "active") {
-      await this.kvStorage.set(
-        `${BY_CONSUMER}-${bcKV.consumer!.id}-${bcKV.agreementId}`,
-        bcKV
-      );
-    }
-
-    if (status === "unconfigured") {
-      const current = await this.getByAgreementId(bcKV.agreementId);
-      if (current?.consumer?.id)
-        await this.kvStorage.remove(
-          `${BY_CONSUMER}-${current?.consumer?.id}-${current.agreementId}`
-        );
-    }
-
-    return {
-      ...bcKV,
+    const newBillingConfig = {
+      ...merged,
+      id,
       status,
-      audit: {
-        createdAt: result.createdAt,
-        updatedAt: result.updatedAt,
-      },
-    };
+      audit,
+    } satisfies BillingConfig;
+
+    await this.kvStorage.set(BILLING_CONFIGS, {
+      all: [...all.filter((v) => v.id !== id), newBillingConfig],
+    });
+
+    return newBillingConfig;
   }
 }
