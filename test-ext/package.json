@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run build:ui && npm run build:component",
+    "build:ui": "tsc -b && BUILD_TARGET=ui vite build",
+    "build:component": "BUILD_TARGET=component vite build",
     "build:alga": "npm run build && alga pack",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -13,6 +15,7 @@
   },
   "dependencies": {
     "@alga-psa/ui-kit": "^0.1.0",
+    "@bytecodealliance/componentize-js": "^0.19.3",
     "@headlessui/react": "^2.2.7",
     "@tailwindcss/vite": "^4.1.12",
     "react": "^19.1.1",

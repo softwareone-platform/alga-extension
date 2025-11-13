@@ -5,6 +5,8 @@ import { App } from "./app";
 import "./index.css";
 import "@alga-psa/ui-kit/theme.css";
 
+import "./ready-inject.js";
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <App />
