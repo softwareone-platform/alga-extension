@@ -5,8 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
-    "build:alga": "npm run build && alga pack",
+    "build": "npm run build:ui && npm run build:component",
+    "build:ui": "tsc -b && BUILD_TARGET=ui vite build",
+    "build:component": "BUILD_TARGET=component vite build",
+    "build:alga": "npm run build && npm run pack",
+    "pack": "alga pack",
     "lint": "eslint .",
     "preview": "vite preview",
     "alga-proxy": "npx local-cors-proxy --proxyUrl https://algapsa.com --port 8010"

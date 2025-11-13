@@ -16,10 +16,10 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@lib/*": ["src/lib/*"],
-      "@ui/*": ["src/ui/*"],
-      "@features/*": ["src/features/*"],
-      "@utils/*": ["src/utils/*"],
+      "@lib/*": ["src/ui/lib/*"],
+      "@ui/*": ["src/ui/ui/*"],
+      "@features/*": ["src/ui/features/*"],
+      "@utils/*": ["src/ui/utils/*"],
     },
 
     /* Linting */
