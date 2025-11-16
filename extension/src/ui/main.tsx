@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ExtensionProvider } from "@features/extension";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
+import { ALGA_API_URL, ALGA_API_KEY } from "./config.js";
 
 import { KVStorage } from "@lib/alga";
 import { App } from "./app";
@@ -15,10 +16,7 @@ import "@alga-psa/ui-kit/theme.css";
 
 //idt:TKN-3140-4844:hUOoIJsnPNBU4MeruvvLDjcYMboih3al2WXyEnY4IeTpZCF1xhex7p1qNPZVCD4b
 //idt:TKN-2515-5802:gcOsB36nFewgcEXVStNz6n9QsfzPz5nkZaNVW0WWl1VBjTttwUYEBFn8kA9lmnnc
-
 //idt:TKN-3610-0872:IzD4V5gC9T6dBmpMWrZ60eIkzzbzb9OjliIWdrA2Xs2IXU4umyY0e62x7NHOhRgx
-
-//200aebbceb58e17579c1da81754116d236d1a14872f34f755694e84d3d044518
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,8 +30,9 @@ const queryClient = new QueryClient({
   },
 });
 
-const BASE_URL = "http://localhost:8010/proxy/";
-const kvStorage = new KVStorage(BASE_URL, "extension");
+console.log(ALGA_API_URL, ALGA_API_KEY);
+
+const kvStorage = new KVStorage(ALGA_API_URL, ALGA_API_KEY, "extension");
 
 const router = createBrowserRouter([
   {

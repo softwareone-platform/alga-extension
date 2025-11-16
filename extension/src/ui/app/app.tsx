@@ -8,11 +8,9 @@ import { KVStorage } from "@lib/alga";
 import { BillingConfigsProvider } from "@features/billing-config";
 import { ConsumersProvider } from "@features/consumers";
 import { ServicesProvider } from "@features/services";
+import { ALGA_API_URL, ALGA_API_KEY } from "../config";
 
-const ALGA_BASE_URL = "http://localhost:8010/proxy/";
-const API_KEY =
-  "200aebbceb58e17579c1da81754116d236d1a14872f34f755694e84d3d044518";
-const kvStorage = new KVStorage(ALGA_BASE_URL, "billing-configs");
+const kvStorage = new KVStorage(ALGA_API_URL, ALGA_API_KEY, "billing-configs");
 
 export function App() {
   const { details, isPending } = useExtensionDetails();
@@ -40,8 +38,8 @@ export function App() {
     <AccountProvider baseUrl={details?.endpoint} token={details?.token}>
       <UserProvider baseUrl={details?.endpoint} token={details?.token}>
         <BillingConfigsProvider kvStorage={kvStorage}>
-          <ConsumersProvider baseUrl={ALGA_BASE_URL} apiKey={API_KEY}>
-            <ServicesProvider baseUrl={ALGA_BASE_URL} apiKey={API_KEY}>
+          <ConsumersProvider baseUrl={ALGA_API_URL} apiKey={ALGA_API_KEY}>
+            <ServicesProvider baseUrl={ALGA_API_URL} apiKey={ALGA_API_KEY}>
               <Outlet />
             </ServicesProvider>
           </ConsumersProvider>
