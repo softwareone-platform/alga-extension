@@ -40,6 +40,7 @@ export default defineConfig({
   // plugins: [react(), manifestPlugin()],
   plugins: buildTarget === "ui" ? [react(), tailwindcss()] : [],
   root: buildTarget === "ui" ? "./src/ui" : "./src/component",
+  envDir: path.resolve(__dirname, "./"), // Point to project root for .env files
   resolve: {
     alias: {
       "@lib": path.resolve(__dirname, "./src/ui/lib"),
