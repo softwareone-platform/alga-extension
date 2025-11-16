@@ -30,8 +30,6 @@ const queryClient = new QueryClient({
   },
 });
 
-console.log(ALGA_API_URL, ALGA_API_KEY);
-
 const kvStorage = new KVStorage(ALGA_API_URL, ALGA_API_KEY, "extension");
 
 const router = createBrowserRouter([

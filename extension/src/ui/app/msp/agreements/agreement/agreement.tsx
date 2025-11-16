@@ -199,7 +199,6 @@ function BillingConfigEditor({
     () => ({
       agreementId,
       operations: "self-service",
-      markup: 0,
       note: "",
     }),
     [agreementId]
@@ -253,11 +252,11 @@ function BillingConfigEditor({
           <div className="relative">
             <Input
               type="number"
-              value={edited.markup}
+              value={edited.markup ?? ""}
               onChange={(e) =>
                 setEdited({
                   ...edited,
-                  markup: Number(e.target.value),
+                  markup: e.target.value ? Number(e.target.value) : undefined,
                 })
               }
               className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield] pr-13"

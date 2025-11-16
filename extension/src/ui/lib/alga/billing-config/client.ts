@@ -5,9 +5,10 @@ const BILLING_CONFIGS = "billing-configs";
 
 export type BillingConfigChanges = Omit<
   BillingConfig,
-  "audit" | "status" | "id"
+  "audit" | "status" | "id" | "markup"
 > & {
   id?: string;
+  markup?: number;
 };
 
 export class BillingConfigClient {
@@ -31,8 +32,8 @@ export class BillingConfigClient {
     const existing = changes.id ? all.find((v) => v.id === changes.id) : null;
 
     const merged = {
-      ...changes,
       ...existing,
+      ...changes,
     };
 
     const status =
@@ -42,12 +43,14 @@ export class BillingConfigClient {
       createdAt: existing?.audit.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
+    const markup = merged.markup || 0;
 
     const newBillingConfig = {
       ...merged,
       id,
       status,
       audit,
+      markup,
     } satisfies BillingConfig;
 
     await this.kvStorage.set(BILLING_CONFIGS, {
