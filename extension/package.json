@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "npm run build:ui && npm run build:component",
     "build:ui": "tsc -b && BUILD_TARGET=ui vite build",
-    "build:component": "BUILD_TARGET=component vite build",
+    "build:component": "BUILD_TARGET=component vite build && npx jco componentize ./extension/dist/js/handler.js --wit ./extension/src/component/wit/extension-runner.wit --world-name runner --out extension/dist/main.wasm",
     "build:alga": "npm run build && npm run pack",
     "pack": "alga pack",
     "lint": "eslint .",
@@ -32,6 +32,8 @@
   },
   "devDependencies": {
     "@alga-psa/cli": "^0.1.0",
+    "@bytecodealliance/componentize-js": "^0.19.3",
+    "@bytecodealliance/jco": "^1.15.3",
     "@eslint/js": "^9.33.0",
     "@types/node": "^24.3.0",
     "@types/react": "^19.1.10",
