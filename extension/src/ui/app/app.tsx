@@ -12,6 +12,19 @@ import { ALGA_API_URL, ALGA_API_KEY } from "../config";
 
 const kvStorage = new KVStorage(ALGA_API_URL, ALGA_API_KEY, "billing-configs");
 
+// (async () => {
+//   const eid = window.location.host.split(".")[0];
+//   try {
+//     const url = `/api/ext/${eid}/handler`;
+//     const res = await fetch(url);
+//     const data = await res.json();
+
+//     console.log(data);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// })();
+
 export function App() {
   const { details, isPending } = useExtensionDetails();
   const isReady = useRef(false);
