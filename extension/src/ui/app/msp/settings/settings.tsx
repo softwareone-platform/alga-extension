@@ -249,20 +249,6 @@ export function Settings() {
         </NavLink>
       </Tabs>
       <Outlet />
-
-      <Link to="/msp/settings/general">Settings</Link>
-      <Link to="/msp/agreements">Agreements</Link>
-      <Link to="/msp/subscriptions">Subscriptions</Link>
-      <Link to="/msp/orders">Orders</Link>
-      <Link to="/msp/statements">Statements</Link>
-      <Link to="/consumer/orders">Orders</Link>
-      <Link to="/consumer/statements">Statements</Link>
-      <Link to="/consumer/subscriptions">Subscriptions</Link>
-      <Link to="/consumer/agreements">Agreements</Link>
-      <Link to="/consumer/orders">Orders</Link>
-      <Link to="/consumer/statements">Statements</Link>
-      <Link to="/consumer/subscriptions">Subscriptions</Link>
-      <Link to="/consumer/agreements">Agreements</Link>
     </div>
   );
 }

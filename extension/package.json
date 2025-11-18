@@ -9,7 +9,8 @@
     "build:ui": "tsc -b && BUILD_TARGET=ui vite build",
     "build:component": "BUILD_TARGET=component vite build && npx jco componentize ./dist/js/handler.js --wit ./src/component/wit/extension-runner.wit --world-name runner --out ./dist/main.wasm",
     "build:alga": "npm run build && npm run pack",
-    "pack": "tar --zstd -cf bundle.tar.zst manifest.json dist/main.wasm dist/ui",
+    "pack": "alga pack",
+    "pack2": "tar --zstd -cf bundle.tar.zst manifest.json dist/main.wasm dist/ui",
     "lint": "eslint .",
     "preview": "vite preview",
     "alga-proxy": "npx local-cors-proxy --proxyUrl https://algapsa.com --port 8010"

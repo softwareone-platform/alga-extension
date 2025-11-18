@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from "react-router";
+import { Link, NavLink, Outlet, useNavigate } from "react-router";
 import { AccountProvider } from "@features/account";
 import { useExtensionDetails } from "@features/extension";
 import { UserProvider } from "@features/user";
@@ -9,21 +9,9 @@ import { BillingConfigsProvider } from "@features/billing-config";
 import { ConsumersProvider } from "@features/consumers";
 import { ServicesProvider } from "@features/services";
 import { ALGA_API_URL, ALGA_API_KEY } from "../config";
+import { Tabs } from "@ui/tabs";
 
 const kvStorage = new KVStorage(ALGA_API_URL, ALGA_API_KEY, "billing-configs");
-
-// (async () => {
-//   const eid = window.location.host.split(".")[0];
-//   try {
-//     const url = `/api/ext/${eid}/handler`;
-//     const res = await fetch(url);
-//     const data = await res.json();
-
-//     console.log(data);
-//   } catch (error) {
-//     console.error(error);
-//   }
-// })();
 
 export function App() {
   const { details, isPending } = useExtensionDetails();
@@ -48,16 +36,49 @@ export function App() {
   if (isPending) return <></>;
 
   return (
-    <AccountProvider baseUrl={details?.endpoint} token={details?.token}>
-      <UserProvider baseUrl={details?.endpoint} token={details?.token}>
-        <BillingConfigsProvider kvStorage={kvStorage}>
-          <ConsumersProvider baseUrl={ALGA_API_URL} apiKey={ALGA_API_KEY}>
-            <ServicesProvider baseUrl={ALGA_API_URL} apiKey={ALGA_API_KEY}>
-              <Outlet />
-            </ServicesProvider>
-          </ConsumersProvider>
-        </BillingConfigsProvider>
-      </UserProvider>
-    </AccountProvider>
+    <>
+      <Tabs>
+        <NavLink to="/msp/agreements">
+          {({ isActive }) => (
+            <Tabs.Tab isActive={isActive}>Agreements</Tabs.Tab>
+          )}
+        </NavLink>
+        <NavLink to="/msp/subscriptions">
+          {({ isActive }) => (
+            <Tabs.Tab isActive={isActive}>Subscriptions</Tabs.Tab>
+          )}
+        </NavLink>
+        <NavLink to="/msp/orders">
+          {({ isActive }) => <Tabs.Tab isActive={isActive}>Orders</Tabs.Tab>}
+        </NavLink>
+        <NavLink to="/msp/statements">
+          {({ isActive }) => (
+            <Tabs.Tab isActive={isActive}>Statements</Tabs.Tab>
+          )}
+        </NavLink>
+        <NavLink to="/msp/settings/general">
+          {({ isActive }) => <Tabs.Tab isActive={isActive}>Settings</Tabs.Tab>}
+        </NavLink>
+      </Tabs>
+      {/* <Link to="/consumer/orders">Orders</Link>
+        <Link to="/consumer/statements">Statements</Link>
+        <Link to="/consumer/subscriptions">Subscriptions</Link>
+        <Link to="/consumer/agreements">Agreements</Link>
+        <Link to="/consumer/orders">Orders</Link>
+        <Link to="/consumer/statements">Statements</Link>
+        <Link to="/consumer/subscriptions">Subscriptions</Link>
+        <Link to="/consumer/agreements">Agreements</Link> */}
+      <AccountProvider baseUrl={details?.endpoint} token={details?.token}>
+        <UserProvider baseUrl={details?.endpoint} token={details?.token}>
+          <BillingConfigsProvider kvStorage={kvStorage}>
+            <ConsumersProvider baseUrl={ALGA_API_URL} apiKey={ALGA_API_KEY}>
+              <ServicesProvider baseUrl={ALGA_API_URL} apiKey={ALGA_API_KEY}>
+                <Outlet />
+              </ServicesProvider>
+            </ConsumersProvider>
+          </BillingConfigsProvider>
+        </UserProvider>
+      </AccountProvider>
+    </>
   );
 }

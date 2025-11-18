@@ -1,7 +1,7 @@
 {
   "name": "swo-alga-ext",
   "publisher": "SoftwareONE",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "runtime": "wasm-js@1",
   "ui": {
     "type": "iframe",
@@ -10,5 +10,6 @@
       "appMenu": { "label": "swo-alga-ext" }
     }
   },
-  "assets": ["ui/**/*"]
+  "assets": ["ui/**/*"],
+  "api": { "endpoints": [{ "method": "GET", "path": "/", "handler": "handler" }] }
 }

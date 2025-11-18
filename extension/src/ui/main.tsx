@@ -18,6 +18,19 @@ import "@alga-psa/ui-kit/theme.css";
 //idt:TKN-2515-5802:gcOsB36nFewgcEXVStNz6n9QsfzPz5nkZaNVW0WWl1VBjTttwUYEBFn8kA9lmnnc
 //idt:TKN-3610-0872:IzD4V5gC9T6dBmpMWrZ60eIkzzbzb9OjliIWdrA2Xs2IXU4umyY0e62x7NHOhRgx
 
+// (async () => {
+//   const eid = window.location.host.split(".")[0];
+//   try {
+//     const url = `/api/ext/${eid}/handler`;
+//     const res = await fetch(url);
+//     const data = await res.json();
+
+//     console.log(data);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// })();
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
