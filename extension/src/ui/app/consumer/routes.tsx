@@ -14,12 +14,10 @@ import {
 import { Order, Items, Details as OrderDetails } from "./orders";
 import { Statement, Charges, Details as StatementDetails } from "./statements";
 import { Start, Agreements, Subscriptions, Orders, Statements } from "./start";
-import { Layout } from "./layout";
 
 export const consumerRoutes: RouteObject[] = [
   {
     path: "/consumer",
-    element: <Layout />,
     children: [
       {
         index: true,

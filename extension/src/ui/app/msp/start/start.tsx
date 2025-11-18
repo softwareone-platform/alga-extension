@@ -241,11 +241,26 @@ export function Settings() {
       <SettingsEditor isOpen={isOpen} onClose={() => setIsOpen(false)} />
 
       <Tabs>
-        <NavLink to="general">
-          {({ isActive }) => <Tabs.Tab isActive={isActive}>General</Tabs.Tab>}
+        <NavLink to="/msp/agreements">
+          {({ isActive }) => (
+            <Tabs.Tab isActive={isActive}>Agreements</Tabs.Tab>
+          )}
         </NavLink>
-        <NavLink to="details">
-          {({ isActive }) => <Tabs.Tab isActive={isActive}>Details</Tabs.Tab>}
+        <NavLink to="/msp/subscriptions">
+          {({ isActive }) => (
+            <Tabs.Tab isActive={isActive}>Subscriptions</Tabs.Tab>
+          )}
+        </NavLink>
+        <NavLink to="/msp/orders">
+          {({ isActive }) => <Tabs.Tab isActive={isActive}>Orders</Tabs.Tab>}
+        </NavLink>
+        <NavLink to="/msp/statements">
+          {({ isActive }) => (
+            <Tabs.Tab isActive={isActive}>Statements</Tabs.Tab>
+          )}
+        </NavLink>
+        <NavLink to="/msp/settings/general">
+          {({ isActive }) => <Tabs.Tab isActive={isActive}>Settings</Tabs.Tab>}
         </NavLink>
       </Tabs>
       <Outlet />

@@ -1,7 +1,7 @@
 import { Card } from "@ui/card";
 import { useAccount } from "@features/account";
 
-export function General() {
+export function Settings() {
   const { data: account } = useAccount();
 
   return (

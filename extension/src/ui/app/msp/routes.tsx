@@ -1,38 +1,29 @@
 import { Navigate, RouteObject } from "react-router";
 import {
-  Agreements,
   Agreement,
-  AgreementsLayout,
   SoftwareOne,
   Subscriptions as AgreementSubscriptions,
-  Orders,
+  Orders as AgreementOrders,
   Consumer,
   Billing,
   Details as AgreementDetails,
 } from "./agreements";
 import {
-  Subscriptions as AllSubscriptions,
-  SubscriptionsLayout,
   Subscription,
   Items as SubscriptionItems,
   Orders as SubscriptionOrders,
   Details as SubscriptionDetails,
 } from "./subscriptions";
-import { Settings, General, Details as SettingsDetails } from "./settings";
+import { Order, Items, Details as OrderDetails } from "./orders";
+import { Statement, Charges, Details as StatementDetails } from "./statements";
+import { Start } from "../consumer/start";
 import {
-  Orders as AllOrders,
-  OrdersLayout,
-  Order,
-  Items,
-  Details as OrderDetails,
-} from "./orders";
-import {
+  Agreements,
+  Orders,
+  Settings,
   Statements,
-  StatementsLayout,
-  Statement,
-  Charges,
-  Details as StatementDetails,
-} from "./statements";
+  Subscriptions,
+} from "./start";
 
 export const mspRoutes: RouteObject[] = [
   {
@@ -43,168 +34,124 @@ export const mspRoutes: RouteObject[] = [
         element: <Navigate to="agreements" replace />,
       },
       {
-        path: "settings",
-        element: <Settings />,
+        path: "start",
+        element: <Start />,
         children: [
           {
             index: true,
-            element: <Navigate to="general" replace />,
+            element: <Navigate to="agreements" replace />,
           },
           {
-            path: "general",
-            element: <General />,
+            path: "agreements",
+            element: <Agreements />,
+          },
+          {
+            path: "subscriptions",
+            element: <Subscriptions />,
+          },
+          {
+            path: "orders",
+            element: <Orders />,
+          },
+          {
+            path: "statements",
+            element: <Statements />,
+          },
+          {
+            path: "settings",
+            element: <Settings />,
+          },
+        ],
+      },
+      {
+        path: "agreements/:id",
+        element: <Agreement />,
+        children: [
+          {
+            index: true,
+            element: <Navigate to="softwareone" replace />,
+          },
+          {
+            path: "softwareone",
+            element: <SoftwareOne />,
+          },
+          {
+            path: "subscriptions",
+            element: <AgreementSubscriptions />,
+          },
+          {
+            path: "orders",
+            element: <AgreementOrders />,
+          },
+          {
+            path: "consumer",
+            element: <Consumer />,
+          },
+          {
+            path: "billing",
+            element: <Billing />,
           },
           {
             path: "details",
-            element: <SettingsDetails />,
+            element: <AgreementDetails />,
           },
         ],
       },
       {
-        path: "agreements",
+        path: "subscriptions/:id",
+        element: <Subscription />,
         children: [
           {
-            element: <AgreementsLayout />,
-            children: [
-              {
-                index: true,
-                element: <Agreements />,
-              },
-              {
-                path: ":id",
-                element: <Agreement />,
-                children: [
-                  {
-                    index: true,
-                    element: <Navigate to="softwareone" replace />,
-                  },
-                  {
-                    path: "softwareone",
-                    element: <SoftwareOne />,
-                  },
-                  {
-                    path: "subscriptions",
-                    element: <AgreementSubscriptions />,
-                  },
-                  {
-                    path: "orders",
-                    element: <Orders />,
-                  },
-                  {
-                    path: "consumer",
-                    element: <Consumer />,
-                  },
-                  {
-                    path: "billing",
-                    element: <Billing />,
-                  },
-                  {
-                    path: "details",
-                    element: <AgreementDetails />,
-                  },
-                ],
-              },
-            ],
+            index: true,
+            element: <Navigate to="items" replace />,
+          },
+          {
+            path: "items",
+            element: <SubscriptionItems />,
+          },
+          {
+            path: "orders",
+            element: <SubscriptionOrders />,
+          },
+          {
+            path: "details",
+            element: <SubscriptionDetails />,
           },
         ],
       },
       {
-        path: "subscriptions",
+        path: "orders/:id",
+        element: <Order />,
         children: [
           {
-            element: <SubscriptionsLayout />,
-            children: [
-              {
-                index: true,
-                element: <AllSubscriptions />,
-              },
-              {
-                path: ":id",
-                element: <Subscription />,
-                children: [
-                  {
-                    index: true,
-                    element: <Navigate to="items" replace />,
-                  },
-                  {
-                    path: "items",
-                    element: <SubscriptionItems />,
-                  },
-                  {
-                    path: "orders",
-                    element: <SubscriptionOrders />,
-                  },
-                  {
-                    path: "details",
-                    element: <SubscriptionDetails />,
-                  },
-                ],
-              },
-            ],
+            index: true,
+            element: <Navigate to="items" replace />,
+          },
+          {
+            path: "items",
+            element: <Items />,
+          },
+          {
+            path: "details",
+            element: <OrderDetails />,
           },
         ],
       },
       {
-        path: "orders",
+        path: "statements/:id",
+        element: <Statement />,
         children: [
           {
-            element: <OrdersLayout />,
-            children: [
-              {
-                index: true,
-                element: <AllOrders />,
-              },
-              {
-                path: ":id",
-                element: <Order />,
-                children: [
-                  {
-                    index: true,
-                    element: <Navigate to="items" replace />,
-                  },
-                  {
-                    path: "items",
-                    element: <Items />,
-                  },
-                  {
-                    path: "details",
-                    element: <OrderDetails />,
-                  },
-                ],
-              },
-            ],
+            index: true,
+            element: <Navigate to="charges" replace />,
           },
-        ],
-      },
-      {
-        path: "statements",
-        children: [
           {
-            element: <StatementsLayout />,
-            children: [
-              {
-                index: true,
-                element: <Statements />,
-              },
-              {
-                path: ":id",
-                element: <Statement />,
-                children: [
-                  {
-                    index: true,
-                    element: <Navigate to="charges" replace />,
-                  },
-                  {
-                    path: "charges",
-                    element: <Charges />,
-                  },
-                  {
-                    path: "details",
-                    element: <StatementDetails />,
-                  },
-                ],
-              },
-            ],
+            path: "charges",
+            element: <Charges />,
+          },
+          {
+            path: "details",
+            element: <StatementDetails />,
           },
         ],
       },

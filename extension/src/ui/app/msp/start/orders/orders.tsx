@@ -11,59 +11,55 @@ import {
   TableRow,
 } from "@ui/table";
 import { MarkupCell, PriceWithMarkupCell } from "@features/markup";
-import { useStatements } from "@features/statements";
+import { useOrders, OrderStatusBadge } from "@features/orders";
 import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
 import { useBillingConfigsByAgreements } from "@features/billing-config";
 import { BillingConfig } from "@lib/alga";
-import { Statement } from "@swo/mp-api-model/billing";
+import { Order } from "@swo/mp-api-model";
 import { ConsumerLink } from "@features/consumers";
 
-const StatementRow = ({
-  statement,
+const OrderRow = ({
+  order,
   billingConfig,
 }: {
-  statement: Statement;
+  order: Order;
   billingConfig?: BillingConfig;
 }) => (
-  <TableRow link={statement.id}>
+  <TableRow link={`/msp/orders/${order.id}`}>
     <TableCell>
       <span className="text-sm text-blue-500 hover:text-blue-600 truncate">
-        {statement.id!}
+        {order.id!}
       </span>
     </TableCell>
-    <TableCell>{statement.type || "—"}</TableCell>
-    <AgreementCell
-      name={statement.agreement?.name}
-      id={statement.agreement?.id}
-    />
-    <ProductCell
-      name={statement.product?.name}
-      iconUrl={statement.product?.icon}
-    />
+    <TableCell>{order.type || "—"}</TableCell>
+    <AgreementCell name={order.agreement?.name} id={order.agreement?.id} />
+    <ProductCell name={order.product?.name} iconUrl={order.product?.icon} />
     <TableCell>
       <ConsumerLink
         id={billingConfig?.consumer?.id!}
         name={billingConfig?.consumer?.name!}
       />
     </TableCell>
-    <TableCell></TableCell>
-    <TableCell>{statement.price?.totalSP || "—"}</TableCell>
+    <TableCell>{order.price?.SPxY || "—"}</TableCell>
     <MarkupCell markup={billingConfig?.markup} />
     <PriceWithMarkupCell
-      price={statement.price?.totalSP}
+      price={order.price?.SPxY}
       markup={billingConfig?.markup}
     />
-    <TableCell>{statement.price?.currency?.sale || "—"}</TableCell>
+    <TableCell>{order.price?.currency || "—"}</TableCell>
+    <TableCell>
+      <OrderStatusBadge status={order.status} />
+    </TableCell>
   </TableRow>
 );
 
-export function Statements() {
+export function Orders() {
   const [offset, setOffset] = useState(0);
-  const { statements, pagination, isFetching } = useStatements({ offset });
+  const { orders, pagination, isFetching } = useOrders({ offset });
 
   const { billingConfigs } = useBillingConfigsByAgreements(
-    statements.map((statement) => statement.agreement?.id ?? "").filter(Boolean)
+    orders.map((order) => order.agreement?.id ?? "").filter(Boolean)
   );
 
   const billingConfigsById =
@@ -81,27 +77,27 @@ export function Statements() {
 
   return (
     <Card>
-      <Table className="grid-cols-[minmax(192px,auto)_minmax(150px,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)]">
+      <Table className="grid-cols-[minmax(192px,auto)_minmax(100px,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)]">
         <TableHeader>
           <TableRow>
-            <TableHeaderCell>Name</TableHeaderCell>
-            <TableHeaderCell>Statement Type</TableHeaderCell>
+            <TableHeaderCell>Order ID</TableHeaderCell>
+            <TableHeaderCell>Type</TableHeaderCell>
             <TableHeaderCell>Agreement</TableHeaderCell>
             <TableHeaderCell>Product</TableHeaderCell>
             <TableHeaderCell>Consumer</TableHeaderCell>
-            <TableHeaderCell>Invoice</TableHeaderCell>
-            <TableHeaderCell>Total SP</TableHeaderCell>
-            <TableHeaderCell>Markup</TableHeaderCell>
-            <TableHeaderCell>Total RP</TableHeaderCell>
+            <TableHeaderCell>SPxY</TableHeaderCell>
+            <TableHeaderCell>Margin</TableHeaderCell>
+            <TableHeaderCell>RPxY</TableHeaderCell>
             <TableHeaderCell>Currency</TableHeaderCell>
+            <TableHeaderCell>Status</TableHeaderCell>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {statements?.map((statement) => (
-            <StatementRow
-              key={statement.id}
-              statement={statement}
-              billingConfig={billingConfigsById[statement.agreement?.id!]}
+          {orders?.map((order) => (
+            <OrderRow
+              key={order.id}
+              order={order}
+              billingConfig={billingConfigsById[order.agreement?.id!]}
             />
           ))}
         </TableBody>
