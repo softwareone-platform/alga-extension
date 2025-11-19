@@ -16,11 +16,11 @@ import {
 } from "./subscriptions";
 import { Order, Items, Details as OrderDetails } from "./orders";
 import { Statement, Charges, Details as StatementDetails } from "./statements";
-import { Start } from "../consumer/start";
 import {
   Agreements,
   Orders,
   Settings,
+  Start,
   Statements,
   Subscriptions,
 } from "./start";

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Outlet, NavLink, Link } from "react-router";
+import { Outlet, NavLink } from "react-router";
 import { Button } from "@ui/button";
 import { useAccount } from "@features/account";
 import { Tabs } from "@ui/tabs";
@@ -210,7 +210,7 @@ function SettingsEditor({
   );
 }
 
-export function Settings() {
+export function Start() {
   const { error } = useAccount();
   const { details, isLoading } = useExtensionDetails();
 
@@ -241,25 +241,25 @@ export function Settings() {
       <SettingsEditor isOpen={isOpen} onClose={() => setIsOpen(false)} />
 
       <Tabs>
-        <NavLink to="/msp/agreements">
+        <NavLink to="/msp/start/agreements">
           {({ isActive }) => (
             <Tabs.Tab isActive={isActive}>Agreements</Tabs.Tab>
           )}
         </NavLink>
-        <NavLink to="/msp/subscriptions">
+        <NavLink to="/msp/start/subscriptions">
           {({ isActive }) => (
             <Tabs.Tab isActive={isActive}>Subscriptions</Tabs.Tab>
           )}
         </NavLink>
-        <NavLink to="/msp/orders">
+        <NavLink to="/msp/start/orders">
           {({ isActive }) => <Tabs.Tab isActive={isActive}>Orders</Tabs.Tab>}
         </NavLink>
-        <NavLink to="/msp/statements">
+        <NavLink to="/msp/start/statements">
           {({ isActive }) => (
             <Tabs.Tab isActive={isActive}>Statements</Tabs.Tab>
           )}
         </NavLink>
-        <NavLink to="/msp/settings/general">
+        <NavLink to="/msp/start/settings">
           {({ isActive }) => <Tabs.Tab isActive={isActive}>Settings</Tabs.Tab>}
         </NavLink>
       </Tabs>
