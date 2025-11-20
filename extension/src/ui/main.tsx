@@ -54,7 +54,7 @@ const router = createBrowserRouter([
       ...consumerRoutes,
       {
         index: true,
-        element: <Navigate to="/msp/settings/general" replace />,
+        element: <Navigate to="/msp/start" replace />,
       },
     ],
   },

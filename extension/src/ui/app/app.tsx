@@ -32,7 +32,7 @@ export function App() {
   useEffect(() => {
     if (isPending) return;
     if (!details?.token || !details?.endpoint) {
-      navigate("/msp/settings/general", { replace: true });
+      navigate("/msp/start/settings", { replace: true });
     }
   }, [details, isPending]);
 
