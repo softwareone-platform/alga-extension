@@ -26,7 +26,7 @@ export class BillingConfigClient {
     return result?.value?.all || [];
   }
 
-  async save(changes: BillingConfigChanges): Promise<BillingConfig> {
+  async save(changes: BillingConfigChanges): Promise<BillingConfig[]> {
     const all = await this.getAll();
 
     const existing = changes.id ? all.find((v) => v.id === changes.id) : null;
@@ -53,10 +53,12 @@ export class BillingConfigClient {
       markup,
     } satisfies BillingConfig;
 
+    const newAll = [...all.filter((v) => v.id !== id), newBillingConfig];
+
     await this.kvStorage.set(BILLING_CONFIGS, {
-      all: [...all.filter((v) => v.id !== id), newBillingConfig],
+      all: newAll,
     });
 
-    return newBillingConfig;
+    return newAll;
   }
 }

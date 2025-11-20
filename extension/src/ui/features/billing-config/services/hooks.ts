@@ -57,8 +57,7 @@ export const useBillingConfigMutation = () => {
     ...state
   } = useMutation({
     mutationFn: (changes: BillingConfigChanges) => client!.save(changes),
-    onSuccess: () =>
-      queryClient.resetQueries({ queryKey: ["billing-configs"] }),
+    onSuccess: (bc) => queryClient.setQueryData(["billing-configs"], bc)
   });
 
   return { saveBillingConfig, saveBillingConfigAsync, state };
