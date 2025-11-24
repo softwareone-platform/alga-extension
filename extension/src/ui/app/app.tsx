@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router";
 import { AccountProvider } from "@features/account";
 import { UserProvider } from "@features/user";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { runIFrame } from "@lib/swo-navigation";
 import { KVStorage } from "@lib/alga";
 import { BillingConfigsProvider } from "@features/billing-config";
@@ -21,6 +21,10 @@ export function App() {
   const isReady = useRef(false);
 
   const navigate = useNavigate();
+
+  const testAlga = useCallback(() => {
+
+  }, [])
 
   useEffect(() => {
     if (window.top === window || !window.top || isReady.current) return;

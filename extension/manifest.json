@@ -7,9 +7,12 @@
     "type": "iframe",
     "entry": "ui/index.html",
     "hooks": {
-      "appMenu": { "label": "swo-alga-ext" }
+      "appMenu": {
+        "label": "swo-alga-ext"
+      }
     }
   },
-  "assets": ["ui/**/*"],
-  "api": { "endpoints": [{ "method": "GET", "path": "/", "handler": "handler" }] }
+  "assets": [
+    "ui/**/*"
+  ]
 }
