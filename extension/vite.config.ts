@@ -43,6 +43,7 @@ export default defineConfig({
   envDir: path.resolve(__dirname, "./"), // Point to project root for .env files
   resolve: {
     alias: {
+      "@": path.resolve(__dirname, "./src"),
       "@lib": path.resolve(__dirname, "./src/ui/lib"),
       "@ui": path.resolve(__dirname, "./src/ui/ui"),
       "@features": path.resolve(__dirname, "./src/ui/features"),

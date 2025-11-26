@@ -15,7 +15,7 @@ import {
   BILLING_PERIODS,
 } from "@features/subscriptions";
 import { ConsumerLink } from "@features/consumers";
-import { SWO_PORTAL_URL } from "@/config";
+import { SWO_PORTAL_URL } from "@/ui/config";
 
 function SubscriptionSummary({ id }: { id: string }) {
   const { subscription, isPending: isSubscriptionPending } =

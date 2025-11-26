@@ -24,7 +24,7 @@ export function App() {
 
   const testAlga = useCallback(() => {
     console.log("testAlga");
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (window.top === window || !window.top || isReady.current) return;
@@ -65,7 +65,9 @@ export function App() {
                       token={details?.token}
                     >
                       <Outlet />
-                      <button onClick={testAlga}>Test Alga</button>
+                      <button className="opacity-0" onClick={testAlga}>
+                        Test Alga
+                      </button>
                     </SubscriptionsProvider>
                   </StatementsProvider>
                 </OrdersProvider>
