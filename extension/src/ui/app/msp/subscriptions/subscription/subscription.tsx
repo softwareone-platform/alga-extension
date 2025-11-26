@@ -1,4 +1,4 @@
-import { Button } from "@ui/button";
+import { LinkButton } from "@ui/button";
 import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
@@ -15,6 +15,7 @@ import {
   BILLING_PERIODS,
 } from "@features/subscriptions";
 import { ConsumerLink } from "@features/consumers";
+import { SWO_PORTAL_URL } from "@/config";
 
 function SubscriptionSummary({ id }: { id: string }) {
   const { subscription, isPending: isSubscriptionPending } =
@@ -147,9 +148,14 @@ export function Subscription() {
           {!!status && <SubscriptionStatusBadge status={status} />}
         </div>
         <div className="flex items-center gap-6">
-          <Button variant="white" onClick={() => {}}>
+          <LinkButton
+            variant="white"
+            href={`${SWO_PORTAL_URL}/commerce/subscriptions/${id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             View in SoftwareOne
-          </Button>
+          </LinkButton>
         </div>
       </header>
       <SubscriptionSummary id={id!} />

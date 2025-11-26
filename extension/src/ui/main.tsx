@@ -18,8 +18,9 @@ import "@alga-psa/ui-kit/theme.css";
 //idt:TKN-2515-5802:gcOsB36nFewgcEXVStNz6n9QsfzPz5nkZaNVW0WWl1VBjTttwUYEBFn8kA9lmnnc
 //idt:TKN-3610-0872:IzD4V5gC9T6dBmpMWrZ60eIkzzbzb9OjliIWdrA2Xs2IXU4umyY0e62x7NHOhRgx
 
-
 //idt:TKN-8557-7823:Rv3ltKu4js3bVvR6Ok6n0JmIfruCTusirs1nI1UDF3T4AzuiHPPkuMG90gHAsNrR
+
+//https://portal.s1.live/commerce/subscriptions/SUB-5390-6511-9769
 
 // (async () => {
 //   const eid = window.location.host.split(".")[0];
