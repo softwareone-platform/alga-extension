@@ -7,7 +7,6 @@
     "dev": "vite",
     "build": "npm run build:ui && npm run build:component",
     "build:ui": "tsc -b && BUILD_TARGET=ui vite build",
-    "build:component2": "BUILD_TARGET=component vite build && npx jco componentize ./dist/js/handler.js --wit ./src/component/wit/extension-runner.wit --world-name runner --out ./dist/main.wasm",
     "build:alga": "npm run build && npm run pack",
     "build:backend": "tsup src/backend/index.ts --format esm --out-dir dist/js --clean --external alga:extension/secrets --external alga:extension/http --external alga:extension/storage --external alga:extension/logging --external alga:extension/ui-proxy --external alga:extension/context",
     "build:component": "jco componentize dist/js/index.js --wit ./wit/extension-runner.wit --world-name runner --disable all --out dist/component.wasm",

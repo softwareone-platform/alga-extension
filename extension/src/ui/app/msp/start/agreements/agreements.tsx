@@ -112,7 +112,7 @@ export function Agreements() {
             <TableHeaderCell>Name</TableHeaderCell>
             <TableHeaderCell>Product</TableHeaderCell>
             <TableHeaderCell>Billing config ID</TableHeaderCell>
-            <TableHeaderCell>Customer</TableHeaderCell>
+            <TableHeaderCell>Consumer</TableHeaderCell>
             <TableHeaderCell>SPxY</TableHeaderCell>
             <TableHeaderCell>Markup</TableHeaderCell>
             <TableHeaderCell>RPxY</TableHeaderCell>

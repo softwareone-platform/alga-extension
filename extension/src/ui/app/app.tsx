@@ -23,7 +23,7 @@ export function App() {
   const navigate = useNavigate();
 
   const testAlga = useCallback(() => {
-
+    console.log("testAlga");
   }, [])
 
   useEffect(() => {
@@ -65,6 +65,7 @@ export function App() {
                       token={details?.token}
                     >
                       <Outlet />
+                      <button onClick={testAlga}>Test Alga</button>
                     </SubscriptionsProvider>
                   </StatementsProvider>
                 </OrdersProvider>
