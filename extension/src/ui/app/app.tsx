@@ -16,14 +16,70 @@ import { ALGA_API_URL, ALGA_API_KEY } from "../config";
 
 const kvStorage = new KVStorage(ALGA_API_URL, ALGA_API_KEY, "billing-configs");
 
+function resolveHostOrigin() {
+  const referrer = document.referrer;
+  if (referrer) {
+    try {
+      return new URL(referrer).origin;
+    } catch {
+      // ignore invalid referrer
+    }
+  }
+
+  try {
+    if (window.parent && window.parent !== window && window.parent.location) {
+      return window.parent.location.origin;
+    }
+  } catch {
+    // cross-origin access throws
+  }
+
+  return window.location.origin;
+}
+
+function resolveExtensionId(searchParams: URLSearchParams) {
+  const fromQuery = searchParams.get("extensionId");
+  if (fromQuery && fromQuery !== "unknown") {
+    return fromQuery;
+  }
+
+  const segments = window.location.pathname.split("/").filter(Boolean);
+  const extUiIndex = segments.indexOf("ext-ui");
+  if (extUiIndex >= 0 && segments[extUiIndex + 1]) {
+    try {
+      return decodeURIComponent(segments[extUiIndex + 1]);
+    } catch {
+      return segments[extUiIndex + 1];
+    }
+  }
+  return null;
+}
+
+const EXT_ID = resolveExtensionId(new URLSearchParams(window.location.search));
+console.log(EXT_ID);
+
 export function App() {
   const { details, isPending } = useExtensionDetails();
   const isReady = useRef(false);
 
   const navigate = useNavigate();
 
-  const testAlga = useCallback(() => {
-    console.log("testAlga");
+  const testAlga = useCallback(async () => {
+    debugger;
+    const hostOrigin = resolveHostOrigin();
+    const apiUrl = new URL(`/api/ext/${EXT_ID}/`, hostOrigin).toString();
+
+    const response = await fetch(apiUrl, {
+      method: "GET",
+      mode: "cors",
+      credentials: "include",
+      cache: "no-cache",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log(response);
   }, []);
 
   useEffect(() => {
@@ -65,7 +121,7 @@ export function App() {
                       token={details?.token}
                     >
                       <Outlet />
-                      <button className="opacity-0" onClick={testAlga}>
+                      <button className="opacity-50" onClick={testAlga}>
                         Test Alga
                       </button>
                     </SubscriptionsProvider>

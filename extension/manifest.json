@@ -1,16 +1,20 @@
 {
-  "name": "swo-alga-ext",
+  "name": "com.alga.alga.extension",
   "publisher": "SoftwareONE",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "runtime": "wasm-js@1",
   "ui": {
     "type": "iframe",
     "entry": "ui/index.html",
     "hooks": {
-      "appMenu": {
-        "label": "swo-alga-ext"
-      }
+      "appMenu": { "label": "SoftwareONE" },
+      "clientPortalMenu": { "label": "SoftwareONE" }
     }
+  },
+  "api": {
+    "endpoints": [
+      { "method": "GET", "path": "/", "handler": "dist/main" }
+    ]
   },
   "assets": [
     "ui/**/*"

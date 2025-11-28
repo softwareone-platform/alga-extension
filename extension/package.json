@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:ui && npm run build:component",
+    "build": "npm run build:ui && npm run build:backend && npm run build:wasm",
     "build:ui": "tsc -b && BUILD_TARGET=ui vite build",
     "build:alga": "npm run build && npm run pack",
     "build:backend": "tsup src/backend/index.ts --format esm --out-dir dist/js --clean --external alga:extension/secrets --external alga:extension/http --external alga:extension/storage --external alga:extension/logging --external alga:extension/ui-proxy --external alga:extension/context",
-    "build:component": "jco componentize dist/js/index.js --wit ./wit/extension-runner.wit --world-name runner --disable all --out dist/component.wasm",
+    "build:wasm": "jco componentize dist/js/index.js --wit ./wit/extension-runner.wit --world-name runner --disable all --out dist/component.wasm",
     "pack": "alga pack",
     "pack2": "tar --zstd -cf bundle.tar.zst manifest.json dist/main.wasm dist/ui",
     "lint": "eslint .",
@@ -17,6 +17,7 @@
     "alga-proxy": "npx local-cors-proxy --proxyUrl https://algapsa.com --port 8010"
   },
   "dependencies": {
+    "@alga-psa/extension-runtime": "^0.2.1",
     "@alga-psa/ui-kit": "^0.1.0",
     "@headlessui/react": "^2.2.7",
     "@swo/mp-api-model": "^5.0.428",
@@ -33,7 +34,7 @@
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
-    "@alga-psa/cli": "^0.1.0",
+    "@alga-psa/cli": "^0.2.0",
     "@bytecodealliance/componentize-js": "^0.19.3",
     "@bytecodealliance/jco": "^1.15.3",
     "@eslint/js": "^9.33.0",
