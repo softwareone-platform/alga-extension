@@ -67,9 +67,9 @@ export function App() {
   const testAlga = useCallback(async () => {
     debugger;
     const hostOrigin = resolveHostOrigin();
-    const apiUrl = new URL(`/api/ext/${EXT_ID}/`, hostOrigin).toString();
+    const apiUrl = new URL(`/api/ext/${EXT_ID}/`, hostOrigin);
 
-    const response = await fetch(apiUrl, {
+    const response = await fetch(apiUrl.toString(), {
       method: "GET",
       mode: "cors",
       credentials: "include",

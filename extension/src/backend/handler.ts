@@ -1,5 +1,10 @@
-import type { ExecuteResponse, Handler } from "@alga-psa/extension-runtime";
+import type {
+  ExecuteRequest,
+  ExecuteResponse,
+  HostBindings,
+} from "@alga-psa/extension-runtime";
 
+// Inline jsonResponse to avoid external dependency for jco componentize
 const encoder = new TextEncoder();
 function jsonResponse(
   body: unknown,
@@ -16,10 +21,16 @@ function jsonResponse(
   };
 }
 
-export const handler: Handler = async (request, host) => {
+export async function handler(
+  request: ExecuteRequest,
+  host: HostBindings
+): Promise<ExecuteResponse> {
   const secret = await host.secrets.get("api_key");
-  return jsonResponse({
-    message: `Hello, world! ${secret}`,
-    tenantId: request.context.tenantId,
-  });
-};
+  return jsonResponse(
+    {
+      tenantId: request.context.tenantId,
+      secret,
+    },
+    { status: 200 }
+  );
+}
