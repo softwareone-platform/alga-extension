@@ -65,9 +65,8 @@ export function App() {
   const navigate = useNavigate();
 
   const testAlga = useCallback(async () => {
-    debugger;
     const hostOrigin = resolveHostOrigin();
-    const apiUrl = new URL(`/api/ext/${EXT_ID}/`, hostOrigin);
+    const apiUrl = new URL(`/api/ext/${EXT_ID}/swo`, hostOrigin);
 
     const response = await fetch(apiUrl.toString(), {
       method: "GET",
