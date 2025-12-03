@@ -31,5 +31,5 @@ export async function handler(
 
   const response = await proxySWO<unknown>(request.http.url);
 
-  return jsonResponse(response, { status: 200 });
+  return jsonResponse({ response }, { status: 200 });
 }

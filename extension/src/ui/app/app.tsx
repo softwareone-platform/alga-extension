@@ -66,7 +66,10 @@ export function App() {
 
   const testAlga = useCallback(async () => {
     const hostOrigin = resolveHostOrigin();
-    const apiUrl = new URL(`/api/ext/${EXT_ID}/swo`, hostOrigin);
+    const apiUrl = new URL(
+      `/api/ext/${EXT_ID}/swo/accounts/accounts`,
+      hostOrigin
+    );
 
     const response = await fetch(apiUrl.toString(), {
       method: "GET",

@@ -7,8 +7,7 @@ const getAPIToken = async (): Promise<string> => {
 };
 
 const toSWOUrl = (baseUrl: string, url: string): string => {
-  const { pathname, search } = new URL(url);
-  return `${baseUrl}${pathname}?${search}`;
+  return `${baseUrl}${url.replace("/swo", "")}`;
 };
 
 const proxyMSP = async <T>(url: string): Promise<T> => {
