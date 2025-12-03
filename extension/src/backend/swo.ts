@@ -1,39 +1,26 @@
-import type {
-  ExecuteRequest,
-  ExecuteResponse,
-  HostBindings,
-} from "@alga-psa/extension-runtime";
+const getAPIBaseUrl = async (): Promise<string> => {
+  return "https://portal.s1.live/public/v1";
+};
 
-// Inline jsonResponse to avoid external dependency for jco componentize
-const encoder = new TextEncoder();
-function jsonResponse(
-  body: unknown,
-  init: Partial<ExecuteResponse> = {},
-): ExecuteResponse {
-  const encoded =
-    body instanceof Uint8Array ? body : encoder.encode(JSON.stringify(body));
-  return {
-    status: init.status ?? 200,
-    headers: init.headers ?? [
-      { name: "content-type", value: "application/json" },
-    ],
-    body: encoded,
-  };
-}
+const getAPIToken = async (): Promise<string> => {
+  return "idt:TKN-8557-7823:Rv3ltKu4js3bVvR6Ok6n0JmIfruCTusirs1nI1UDF3T4AzuiHPPkuMG90gHAsNrR";
+};
 
-export async function handler(
-  request: ExecuteRequest,
-  _: HostBindings,
-): Promise<ExecuteResponse> {
-  // const secret = await host.secrets.list();
-  // const path = new URL(request.http.url).pathname;
+const toSWOUrl = (baseUrl: string, url: string): string => {
+  const { pathname, search } = new URL(url);
+  return `${baseUrl}${pathname}?${search}`;
+};
 
-  return jsonResponse(
-    {
-      tenantId: request.context.tenantId,
-      url: request.http.url,
-      // path,
+const proxyMSP = async <T>(url: string): Promise<T> => {
+  const [baseUrl, token] = await Promise.all([getAPIBaseUrl(), getAPIToken()]);
+  const swoUrl = toSWOUrl(baseUrl, url);
+
+  const response = await fetch(swoUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
-    { status: 200 },
-  );
-}
+  });
+
+  return response.json();
+};
