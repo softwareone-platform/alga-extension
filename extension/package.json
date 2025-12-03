@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "npm run build:ui && npm run build:backend && npm run build:wasm",
+    "postbuild": "node scripts/postbuild.mjs",
     "build:ui": "tsc -b && BUILD_TARGET=ui vite build",
     "build:alga": "npm run build && npm run pack",
     "build:backend": "tsup src/backend/handler.ts --format esm --out-dir dist/js --clean --external alga:extension/secrets --external alga:extension/http --external alga:extension/storage --external alga:extension/logging --external alga:extension/ui-proxy --external alga:extension/context",

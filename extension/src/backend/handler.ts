@@ -3,12 +3,13 @@ import type {
   ExecuteResponse,
   HostBindings,
 } from "@alga-psa/extension-runtime";
+import { proxySWO } from "./swo";
 
 // Inline jsonResponse to avoid external dependency for jco componentize
 const encoder = new TextEncoder();
 function jsonResponse(
   body: unknown,
-  init: Partial<ExecuteResponse> = {},
+  init: Partial<ExecuteResponse> = {}
 ): ExecuteResponse {
   const encoded =
     body instanceof Uint8Array ? body : encoder.encode(JSON.stringify(body));
@@ -23,17 +24,12 @@ function jsonResponse(
 
 export async function handler(
   request: ExecuteRequest,
-  _: HostBindings,
+  _: HostBindings
 ): Promise<ExecuteResponse> {
   // const secret = await host.secrets.list();
   // const path = new URL(request.http.url).pathname;
 
-  return jsonResponse(
-    {
-      tenantId: request.context.tenantId,
-      url: request.http.url,
-      // path,
-    },
-    { status: 200 },
-  );
+  const response = await proxySWO<unknown>(request.http.url);
+
+  return jsonResponse(response, { status: 200 });
 }

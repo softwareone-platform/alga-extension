@@ -24,3 +24,7 @@ const proxyMSP = async <T>(url: string): Promise<T> => {
 
   return response.json();
 };
+
+export const proxySWO = async <T>(url: string): Promise<T> => {
+  return proxyMSP<T>(url);
+};
