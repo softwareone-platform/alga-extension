@@ -1,5 +1,8 @@
+import type { ExecuteRequest, HostBindings } from "@alga-psa/extension-runtime";
+
 const getAPIBaseUrl = async (): Promise<string> => {
-  return "https://portal.s1.live/public/v1";
+  return "https://chipmunk-relevant-externally.ngrok-free.app";
+  // return "https://portal.s1.live/public/v1";
 };
 
 const getAPIToken = async (): Promise<string> => {
@@ -10,20 +13,20 @@ const toSWOUrl = (baseUrl: string, url: string): string => {
   return `${baseUrl}${url.replace("/swo", "")}`;
 };
 
-const proxyMSP = async <T>(url: string): Promise<T> => {
+export const proxySWO = async <T>(
+  request: ExecuteRequest,
+  host: HostBindings
+): Promise<T> => {
   const [baseUrl, token] = await Promise.all([getAPIBaseUrl(), getAPIToken()]);
-  const swoUrl = toSWOUrl(baseUrl, url);
+  const url = toSWOUrl(baseUrl, request.http.url);
 
-  const response = await fetch(swoUrl, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
+  console.log(token, url);
+
+  const response = await host.http.fetch({
+    method: "GET",
+    url: "https://chipmunk-relevant-externally.ngrok-free.app/accounts/accounts",
+    headers: [],
   });
 
-  return response.json();
-};
-
-export const proxySWO = async <T>(url: string): Promise<T> => {
-  return proxyMSP<T>(url);
+  return { response: response.body?.toString() } as T;
 };

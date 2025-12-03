@@ -24,12 +24,12 @@ function jsonResponse(
 
 export async function handler(
   request: ExecuteRequest,
-  _: HostBindings
+  host: HostBindings
 ): Promise<ExecuteResponse> {
   // const secret = await host.secrets.list();
   // const path = new URL(request.http.url).pathname;
 
-  const response = await proxySWO<unknown>(request.http.url);
+  const response = await proxySWO<unknown>(request, host);
 
   return jsonResponse({ response }, { status: 200 });
 }

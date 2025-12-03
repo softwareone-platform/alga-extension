@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "rimraf dist",
     "build": "npm run build:ui && npm run build:backend && npm run build:wasm",
     "postbuild": "node scripts/postbuild.mjs",
     "build:ui": "tsc -b && BUILD_TARGET=ui vite build",
@@ -47,6 +48,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
+    "rimraf": "^6.1.2",
     "tailwindcss": "^4.1.12",
     "tsup": "^8.5.1",
     "typescript": "~5.8.3",
