@@ -60,8 +60,7 @@ export const handleSWO = async (
     return jsonResponse({}, { status: response.status });
   }
 
-  const parsedResponse = JSON.parse(responseBody);
+  const body = filterResponse(JSON.parse(responseBody), rule);
 
-  const filteredResponse = filterResponse(parsedResponse, rule);
-  return jsonResponse(filteredResponse, { status: response.status });
+  return jsonResponse(body, { status: response.status });
 };
