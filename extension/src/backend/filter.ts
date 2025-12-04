@@ -11,9 +11,17 @@ export type Filter = {
 
 export type Filters = Record<UserType, Filter>;
 
-export type ListResponse = {
-  data?: unknown[];
-  [key: string]: unknown;
+export type Response<T extends object = {}> = T | { data: T[] };
+
+const isListResponse = <T extends object>(
+  body: Response<T>
+): body is { data: T[] } => {
+  return (
+    typeof body === "object" &&
+    body !== null &&
+    "data" in body &&
+    Array.isArray((body as { data: unknown[] }).data)
+  );
 };
 
 function extractPathname(url: string): string {
@@ -21,45 +29,45 @@ function extractPathname(url: string): string {
   return queryIndex === -1 ? url : url.substring(0, queryIndex);
 }
 
-function isListResponse(obj: unknown): obj is ListResponse {
-  return (
-    typeof obj === "object" &&
-    obj !== null &&
-    "data" in obj &&
-    Array.isArray((obj as ListResponse).data)
-  );
-}
-
-function removeFields(obj: unknown, fieldPaths: string[]): void {
-  if (!obj || typeof obj !== "object") {
-    return;
+function filterObjectProps(
+  filtered: unknown | unknown[],
+  path: string[] | string
+): unknown | unknown[] {
+  if (!filtered) {
+    return filtered;
   }
 
-  for (const fieldPath of fieldPaths) {
-    removeFieldByPath(obj, fieldPath);
+  if (Array.isArray(filtered)) {
+    return filtered.map((item) => filterObjectProps(item, path));
   }
-}
 
-function removeFieldByPath(obj: unknown, path: string): void {
-  if (!obj || typeof obj !== "object") {
-    return;
+  if (Array.isArray(path)) {
+    let current: unknown = filtered;
+    for (const p of path) {
+      current = filterObjectProps(current, p);
+    }
+    return current;
   }
 
   const parts = path.split(".");
-  const lastPart = parts[parts.length - 1];
-
-  let current: any = obj;
-  for (let i = 0; i < parts.length - 1; i++) {
-    const part = parts[i];
-    if (!current[part] || typeof current[part] !== "object") {
-      return;
+  if (parts.length > 1) {
+    const [first, ...rest] = parts;
+    const inFiltered = filtered[first as keyof typeof filtered];
+    if (!inFiltered) {
+      return filtered;
     }
-    current = current[part];
+    return {
+      ...filtered,
+      [first]: filterObjectProps(inFiltered, rest.join(".")),
+    };
   }
 
-  if (current && typeof current === "object" && lastPart in current) {
-    delete current[lastPart];
-  }
+  const newFiltered = {
+    ...filtered,
+  };
+
+  delete newFiltered[path as keyof typeof newFiltered];
+  return newFiltered;
 }
 
 export function getRule(
@@ -73,20 +81,20 @@ export function getRule(
 }
 
 export function filterResponse(
-  body: object,
+  body: Response,
   { filteredFields = [] }: Rule
 ): unknown {
-  if (filteredFields.length === 0) {
+  if (!filteredFields.length || !body) {
     return body;
   }
 
   if (isListResponse(body)) {
-    body.data?.forEach((item: unknown) => {
-      removeFields(item, filteredFields);
-    });
-    return body;
+    const { data, ...rest } = body;
+    return {
+      ...rest,
+      data: filterObjectProps(data, filteredFields),
+    };
   }
 
-  removeFields(body, filteredFields);
-  return body;
+  return filterObjectProps(body, filteredFields);
 }
