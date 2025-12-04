@@ -1,5 +1,6 @@
 import type { ExecuteRequest, HostBindings } from "@alga-psa/extension-runtime";
-import { UserType } from "./filter";
+import { UserType, checkRequestAllowed, filterResponse } from "./filter";
+import { filters } from "./filters";
 
 const getAPIBaseUrl = async (): Promise<string> => {
   return "https://chipmunk-relevant-externally.ngrok-free.app";
@@ -22,6 +23,19 @@ export const proxySWO = async <T>(
   request: ExecuteRequest,
   host: HostBindings
 ): Promise<T> => {
+  const userType = await getUserType();
+
+  const requestPath = new URL(request.http.url, "http://dummy").pathname;
+  const filterResult = checkRequestAllowed(requestPath, userType, filters);
+
+  if (!filterResult.allowed) {
+    return {
+      error: "Forbidden",
+      code: "PATH_NOT_ALLOWED",
+      message: filterResult.reason,
+    } as T;
+  }
+
   const [baseUrl, token] = await Promise.all([getAPIBaseUrl(), getAPIToken()]);
   const url = toSWOUrl(baseUrl, request.http.url);
 
@@ -34,14 +48,22 @@ export const proxySWO = async <T>(
     ],
   });
 
-  return { response: response.body?.toString() } as T;
+  const responseBody = response.body?.toString();
+  if (!responseBody) {
+    return { response: "" } as T;
+  }
 
-  // console.log(token, url);
-  // const response = await host.http.fetch({
-  //   method: "GET",
-  //   url: "https://chipmunk-relevant-externally.ngrok-free.app",
-  //   headers: [],
-  // });
+  let parsedResponse: unknown;
+  try {
+    parsedResponse = JSON.parse(responseBody);
+  } catch {
+    return { response: responseBody } as T;
+  }
 
-  // return {} as T;
+  const filteredData = filterResponse(
+    parsedResponse,
+    filterResult.allowedPath.filteredFields
+  );
+
+  return { response: JSON.stringify(filteredData) } as T;
 };
