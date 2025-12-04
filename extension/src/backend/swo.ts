@@ -1,6 +1,11 @@
-import type { ExecuteRequest, HostBindings } from "@alga-psa/extension-runtime";
-import { UserType, checkRequestAllowed, filterResponse } from "./filter";
+import type {
+  ExecuteRequest,
+  ExecuteResponse,
+  HostBindings,
+} from "@alga-psa/extension-runtime";
+import { UserType, filterResponse, getRule } from "./filter";
 import { filters } from "./filters";
+import { jsonResponse } from "./utils";
 
 const getAPIBaseUrl = async (): Promise<string> => {
   return "https://chipmunk-relevant-externally.ngrok-free.app";
@@ -19,21 +24,23 @@ const toSWOUrl = (baseUrl: string, url: string): string => {
   return `${baseUrl}${url.replace("/swo", "")}`;
 };
 
-export const proxySWO = async <T>(
+export const handleSWO = async (
   request: ExecuteRequest,
   host: HostBindings
-): Promise<T> => {
+): Promise<ExecuteResponse> => {
   const userType = await getUserType();
 
   const requestPath = new URL(request.http.url, "http://dummy").pathname;
-  const filterResult = checkRequestAllowed(requestPath, userType, filters);
+  const rule = getRule(requestPath, userType, filters);
 
-  if (!filterResult.allowed) {
-    return {
-      error: "Forbidden",
-      code: "PATH_NOT_ALLOWED",
-      message: filterResult.reason,
-    } as T;
+  if (!rule) {
+    return jsonResponse(
+      {
+        error: "Forbidden",
+        message: `Request not allowed for user type ${userType}: ${requestPath}`,
+      },
+      { status: 403 }
+    );
   }
 
   const [baseUrl, token] = await Promise.all([getAPIBaseUrl(), getAPIToken()]);
@@ -50,20 +57,11 @@ export const proxySWO = async <T>(
 
   const responseBody = response.body?.toString();
   if (!responseBody) {
-    return { response: "" } as T;
+    return jsonResponse({}, { status: response.status });
   }
 
-  let parsedResponse: unknown;
-  try {
-    parsedResponse = JSON.parse(responseBody);
-  } catch {
-    return { response: responseBody } as T;
-  }
+  const parsedResponse = JSON.parse(responseBody);
 
-  const filteredData = filterResponse(
-    parsedResponse,
-    filterResult.allowedPath.filteredFields
-  );
-
-  return { response: JSON.stringify(filteredData) } as T;
+  const filteredResponse = filterResponse(parsedResponse, rule);
+  return jsonResponse(filteredResponse, { status: response.status });
 };

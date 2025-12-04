@@ -1,12 +1,12 @@
 export type UserType = "msp" | "customer";
 
-export type AllowedPath = {
+export type Rule = {
   path: string;
   filteredFields?: string[];
 };
 
 export type Filter = {
-  allowed: AllowedPath[];
+  allowed: Rule[];
 };
 
 export type Filters = Record<UserType, Filter>;
@@ -15,10 +15,6 @@ export type ListResponse = {
   data?: unknown[];
   [key: string]: unknown;
 };
-
-export type RequestFilterResult =
-  | { allowed: true; allowedPath: AllowedPath }
-  | { allowed: false; reason: string };
 
 function extractPathname(url: string): string {
   const queryIndex = url.indexOf("?");
@@ -32,6 +28,16 @@ function isListResponse(obj: unknown): obj is ListResponse {
     "data" in obj &&
     Array.isArray((obj as ListResponse).data)
   );
+}
+
+function removeFields(obj: unknown, fieldPaths: string[]): void {
+  if (!obj || typeof obj !== "object") {
+    return;
+  }
+
+  for (const fieldPath of fieldPaths) {
+    removeFieldByPath(obj, fieldPath);
+  }
 }
 
 function removeFieldByPath(obj: unknown, path: string): void {
@@ -56,70 +62,31 @@ function removeFieldByPath(obj: unknown, path: string): void {
   }
 }
 
-function removeFields(obj: unknown, fieldPaths: string[]): void {
-  if (!obj || typeof obj !== "object") {
-    return;
-  }
-
-  for (const fieldPath of fieldPaths) {
-    removeFieldByPath(obj, fieldPath);
-  }
-}
-
-export function checkRequestAllowed(
+export function getRule(
   requestPath: string,
   userType: UserType,
   filters: Filters
-): RequestFilterResult {
-  const userFilter = filters[userType];
-
-  if (!userFilter) {
-    return {
-      allowed: false,
-      reason: `No filter configuration found for user type: ${userType}`,
-    };
-  }
-
+): Rule | undefined {
+  const filter = filters[userType];
   const pathname = extractPathname(requestPath);
-
-  const allowedPath = userFilter.allowed.find((ap) => ap.path === pathname);
-
-  if (!allowedPath) {
-    return {
-      allowed: false,
-      reason: `Path not allowed for user type ${userType}: ${pathname}`,
-    };
-  }
-
-  return {
-    allowed: true,
-    allowedPath,
-  };
+  return filter?.allowed.find((ap) => ap.path === pathname);
 }
 
 export function filterResponse(
-  response: unknown,
-  filteredFields?: string[]
+  body: object,
+  { filteredFields = [] }: Rule
 ): unknown {
-  if (!filteredFields || filteredFields.length === 0) {
-    return response;
+  if (filteredFields.length === 0) {
+    return body;
   }
 
-  if (!response || typeof response !== "object") {
-    return response;
+  if (isListResponse(body)) {
+    body.data?.forEach((item: unknown) => {
+      removeFields(item, filteredFields);
+    });
+    return body;
   }
 
-  const filteredResponse = JSON.parse(JSON.stringify(response));
-
-  if (isListResponse(filteredResponse)) {
-    if (Array.isArray(filteredResponse.data)) {
-      filteredResponse.data.forEach((item: unknown) => {
-        removeFields(item, filteredFields);
-      });
-    }
-    return filteredResponse;
-  }
-
-  removeFields(filteredResponse, filteredFields);
-  return filteredResponse;
+  removeFields(body, filteredFields);
+  return body;
 }
