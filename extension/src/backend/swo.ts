@@ -1,4 +1,5 @@
 import type { ExecuteRequest, HostBindings } from "@alga-psa/extension-runtime";
+import { UserType } from "./filter";
 
 const getAPIBaseUrl = async (): Promise<string> => {
   return "https://chipmunk-relevant-externally.ngrok-free.app";
@@ -7,6 +8,10 @@ const getAPIBaseUrl = async (): Promise<string> => {
 
 const getAPIToken = async (): Promise<string> => {
   return "idt:TKN-8557-7823:Rv3ltKu4js3bVvR6Ok6n0JmIfruCTusirs1nI1UDF3T4AzuiHPPkuMG90gHAsNrR";
+};
+
+const getUserType = async (): Promise<UserType> => {
+  return "msp";
 };
 
 const toSWOUrl = (baseUrl: string, url: string): string => {
