@@ -3,7 +3,7 @@
   "publisher": "SoftwareONE",
   "version": "0.0.2",
   "runtime": "wasm-js@1",
-  "capabilities": ["cap:context.read", "cap:log.emit", "cap:ui.proxy", "cap:secrets.get", "cap:storage.kv"],
+  "capabilities": ["cap:context.read", "cap:log.emit", "cap:ui.proxy", "cap:secrets.get", "cap:storage.kv", "cap:http.fetch"],
   "ui": {
     "type": "iframe",
     "entry": "ui/index.html",

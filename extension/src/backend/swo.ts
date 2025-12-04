@@ -1,8 +1,8 @@
 import type { ExecuteRequest, HostBindings } from "@alga-psa/extension-runtime";
 
 const getAPIBaseUrl = async (): Promise<string> => {
-  // return "https://chipmunk-relevant-externally.ngrok-free.app";
-  return "https://portal.s1.live/public/v1";
+  return "https://chipmunk-relevant-externally.ngrok-free.app";
+  // return "https://portal.s1.live/public/v1";
 };
 
 const getAPIToken = async (): Promise<string> => {
@@ -30,4 +30,13 @@ export const proxySWO = async <T>(
   });
 
   return { response: response.body?.toString() } as T;
+
+  // console.log(token, url);
+  // const response = await host.http.fetch({
+  //   method: "GET",
+  //   url: "https://chipmunk-relevant-externally.ngrok-free.app",
+  //   headers: [],
+  // });
+
+  // return {} as T;
 };
