@@ -33,7 +33,7 @@ export const handleSWO = async (
   const requestPath = new URL(request.http.url, "http://dummy").pathname;
   const rule = getRule(requestPath, userType, filters);
 
-  if (!rule) {
+  if (!rule)
     return jsonResponse(
       {
         error: "Forbidden",
@@ -41,7 +41,6 @@ export const handleSWO = async (
       },
       { status: 403 }
     );
-  }
 
   const [baseUrl, token] = await Promise.all([getAPIBaseUrl(), getAPIToken()]);
   const url = toSWOUrl(baseUrl, request.http.url);

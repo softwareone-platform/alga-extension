@@ -1,15 +1,21 @@
 {
   "name": "com.swo.extension",
-  "publisher": "SoftwareONE",
-  "version": "0.0.2",
+  "publisher": "SoftwareSIX",
+  "version": "0.0.4",
   "runtime": "wasm-js@1",
-  "capabilities": ["cap:context.read", "cap:log.emit", "cap:ui.proxy", "cap:secrets.get", "cap:storage.kv", "cap:http.fetch"],
+  "capabilities": [
+    "cap:context.read",
+    "cap:log.emit",
+    "cap:secrets.get",
+    "cap:http.fetch",
+    "cap:ui.proxy"
+  ],
   "ui": {
     "type": "iframe",
     "entry": "ui/index.html",
     "hooks": {
-      "appMenu": { "label": "SoftwareONE" },
-      "clientPortalMenu": { "label": "SoftwareONE" }
+      "appMenu": { "label": "SoftwareSIX" },
+      "clientPortalMenu": { "label": "SoftwareSIX" }
     }
   },
   "assets": ["ui/**/*"]

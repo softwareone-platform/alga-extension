@@ -1,16 +1,39 @@
-import type {
-  ExecuteRequest,
-  ExecuteResponse,
-  HostBindings,
+import "./polyfill";
+
+import {
+  type ExecuteRequest,
+  type ExecuteResponse,
+  type HostBindings,
 } from "@alga-psa/extension-runtime";
-import { handleSWO } from "./swo";
+import { jsonResponse } from "./utils";
+// import { handleSWO } from "./swo";
 
 export async function handler(
-  request: ExecuteRequest,
+  _: ExecuteRequest,
   host: HostBindings
 ): Promise<ExecuteResponse> {
-  // const secret = await host.secrets.list();
-  // const path = new URL(request.http.url).pathname;
+  try {
+    await host.logging.info(`test log`);
 
-  return handleSWO(request, host);
+    const response = await host.http.fetch({
+      method: "GET",
+      url: "https://google.com",
+      headers: [],
+    });
+    return jsonResponse(
+      {
+        message: "test message",
+      },
+      { status: response.status }
+    );
+  } catch (error) {
+    await host.logging.error(`[service-proxy-demo] error: ${error}`);
+  }
+
+  return jsonResponse(
+    {
+      message: "it didnt quite work",
+    },
+    { status: 500 }
+  );
 }

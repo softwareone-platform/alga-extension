@@ -124,7 +124,7 @@ export function App() {
                     >
                       <Outlet />
                       <button className="opacity-50" onClick={testAlga}>
-                        Test Alga
+                        Test Backend
                       </button>
                     </SubscriptionsProvider>
                   </StatementsProvider>
