@@ -1,4 +1,3 @@
-import { Button } from "@ui/button";
 import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
@@ -107,11 +106,6 @@ export function Subscription() {
         <div className="flex items-center gap-6">
           <h1 className="text-3xl font-semibold">{subscription.name}</h1>
           {!!status && <SubscriptionStatusBadge status={status} />}
-        </div>
-        <div className="flex items-center gap-6">
-          <Button variant="white" onClick={() => {}}>
-            View in SoftwareOne
-          </Button>
         </div>
       </header>
       <SubscriptionSummary id={id!} />

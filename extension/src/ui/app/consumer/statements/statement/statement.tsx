@@ -1,4 +1,4 @@
-import { Button } from "@ui/button";
+import { Button, LinkButton } from "@ui/button";
 import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
@@ -7,6 +7,7 @@ import { useMemo } from "react";
 import { useBillingConfig } from "@features/billing-config";
 import { withMarkup } from "@features/markup";
 import { useStatement } from "@features/statements";
+import { SWO_PORTAL_URL } from "@/ui/config";
 
 function StatementSummary({ id }: { id: string }) {
   const { statement, isPending: isAgreementPending } = useStatement(id);
@@ -89,11 +90,6 @@ export function Statement() {
       <header className="w-full flex justify-between gap-10">
         <div className="flex items-center gap-6">
           <h1 className="text-3xl font-semibold">{id}</h1>
-        </div>
-        <div className="flex items-center gap-6">
-          <Button variant="white" onClick={() => {}}>
-            View in SoftwareOne
-          </Button>
         </div>
       </header>
       <StatementSummary id={id!} />

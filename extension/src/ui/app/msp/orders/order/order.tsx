@@ -1,4 +1,4 @@
-import { Button } from "@ui/button";
+import { Button, LinkButton } from "@ui/button";
 import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
@@ -8,6 +8,7 @@ import { useBillingConfig } from "@features/billing-config";
 import { withMarkup } from "@features/markup";
 import { OrderStatusBadge, useOrder } from "@features/orders";
 import { ConsumerLink } from "@features/consumers";
+import { SWO_PORTAL_URL } from "@/ui/config";
 
 function OrderSummary({ id }: { id: string }) {
   const { order, isPending: isOrderPending } = useOrder(id);
@@ -119,9 +120,14 @@ export function Order() {
           {!!status && <OrderStatusBadge status={status} />}
         </div>
         <div className="flex items-center gap-6">
-          <Button variant="white" onClick={() => {}}>
+          <LinkButton
+            variant="white"
+            href={`${SWO_PORTAL_URL}/commerce/orders/${id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             View in SoftwareOne
-          </Button>
+          </LinkButton>
         </div>
       </header>
       <OrderSummary id={id!} />

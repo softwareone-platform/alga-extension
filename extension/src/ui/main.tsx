@@ -64,6 +64,8 @@ const router = createBrowserRouter([
   },
 ]);
 
+console.log(ALGA_API_URL, ALGA_API_KEY);
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
