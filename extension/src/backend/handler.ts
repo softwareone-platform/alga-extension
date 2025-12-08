@@ -12,28 +12,30 @@ export async function handler(
   _: ExecuteRequest,
   host: HostBindings
 ): Promise<ExecuteResponse> {
-  try {
-    await host.logging.info(`test log`);
+  await host.logging.info(`test log`);
 
-    const response = await host.http.fetch({
-      method: "GET",
-      url: "https://google.com",
-      headers: [],
-    });
-    return jsonResponse(
-      {
-        message: "test message",
-      },
-      { status: response.status }
-    );
-  } catch (error) {
-    await host.logging.error(`[service-proxy-demo] error: ${error}`);
-  }
+  // try {
+  //   await host.logging.info(`test log`);
+
+  //   const response = await host.http.fetch({
+  //     method: "GET",
+  //     url: "https://google.com",
+  //     headers: [],
+  //   });
+  //   return jsonResponse(
+  //     {
+  //       message: "test message",
+  //     },
+  //     { status: response.status }
+  //   );
+  // } catch (error) {
+  //   await host.logging.error(`[service-proxy-demo] error: ${error}`);
+  // }
 
   return jsonResponse(
     {
-      message: "it didnt quite work",
+      message: "DONE",
     },
-    { status: 500 }
+    { status: 200 }
   );
 }

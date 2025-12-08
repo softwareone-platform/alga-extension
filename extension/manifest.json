@@ -1,7 +1,7 @@
 {
   "name": "com.swo.extension",
-  "publisher": "SoftwareSIX",
-  "version": "0.0.4",
+  "publisher": "SoftwareNINE",
+  "version": "0.0.9",
   "runtime": "wasm-js@1",
   "capabilities": [
     "cap:context.read",
@@ -14,8 +14,8 @@
     "type": "iframe",
     "entry": "ui/index.html",
     "hooks": {
-      "appMenu": { "label": "SoftwareSIX" },
-      "clientPortalMenu": { "label": "SoftwareSIX" }
+      "appMenu": { "label": "SoftwareNINE" },
+      "clientPortalMenu": { "label": "SoftwareNINE" }
     }
   },
   "assets": ["ui/**/*"]
