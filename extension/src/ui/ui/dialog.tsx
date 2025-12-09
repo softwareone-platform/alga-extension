@@ -29,8 +29,8 @@ export const DialogPanel = ({
     <HeadlessDialogPanel
       transition
       className={cn(
-        className,
-        "w-[600px] bg-white shadow-xl flex flex-col p-6 gap-6 duration-100 ease-out data-[closed]:opacity-0 border border-gray-200 rounded-2xl"
+        "w-[600px] bg-white shadow-xl flex flex-col p-6 gap-6 duration-100 ease-out data-[closed]:opacity-0 border border-gray-200 rounded-2xl",
+        className
       )}
       {...props}
     />

@@ -1,15 +1,17 @@
 import { RqlQuery } from "@swo/rql-client";
 import { AxiosInstance } from "axios";
 import {
-  Subscription,
+  Subscription as SubscriptionModel,
   SubscriptionListResponse,
   Order,
   OrderListResponse,
 } from "@swo/mp-api-model";
 import { axiosInstance, ListOptions } from "./shared";
 
+export type Subscription = SubscriptionModel;
+
 export type SubscriptionsClientSubscriptionsOptions =
-  ListOptions<Subscription> & {
+  ListOptions<SubscriptionModel> & {
     licenseeId?: string;
   };
 
@@ -28,7 +30,7 @@ export class SubscriptionsClient {
   ): Promise<SubscriptionListResponse> {
     const { offset = 0, limit = 10, sort, licenseeId } = options || {};
 
-    const query = new RqlQuery<Subscription>();
+    const query = new RqlQuery<SubscriptionModel>();
 
     query
       .expand(
@@ -75,8 +77,8 @@ export class SubscriptionsClient {
     return data;
   }
 
-  async getSubscription(id: string): Promise<Subscription> {
-    const query = new RqlQuery<Subscription>();
+  async getSubscription(id: string): Promise<SubscriptionModel> {
+    const query = new RqlQuery<SubscriptionModel>();
 
     query.expand(
       "id",
@@ -111,7 +113,7 @@ export class SubscriptionsClient {
       "audit"
     );
 
-    const { data } = await this.axios.get<Subscription>(
+    const { data } = await this.axios.get<SubscriptionModel>(
       `/commerce/subscriptions/${id}?${query.toString()}`
     );
     return data;
@@ -160,11 +162,11 @@ export class SubscriptionsClient {
   }
 
   async terminateSubscription(id: string, notes?: string): Promise<void> {
-    const query = new RqlQuery<Subscription>();
+    const query = new RqlQuery<SubscriptionModel>();
 
     query.expand("agreement.id");
 
-    const { data: subscription } = await this.axios.get<Subscription>(
+    const { data: subscription } = await this.axios.get<SubscriptionModel>(
       `/commerce/subscriptions/${id}?${query.toString()}`
     );
 
