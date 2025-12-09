@@ -9,8 +9,8 @@ import {
   TableRow,
 } from "@ui/table";
 import { useBillingConfig } from "@features/billing-config";
-import { useSubscriptionItems } from "@features/subscriptions";
 import { PriceWithMarkupCell } from "@features/markup";
+import { useSubscription } from "@/ui/features/subscriptions";
 
 const ItemCell = ({ name, id }: { name?: string; id?: string }) => {
   if (!name && !id) return <TableCell>—</TableCell>;
@@ -24,8 +24,9 @@ const ItemCell = ({ name, id }: { name?: string; id?: string }) => {
 
 export function Items() {
   const { id } = useParams<{ id: string }>();
-  const { items, subscription, isPending } = useSubscriptionItems(id!);
+  const { subscription, isPending } = useSubscription(id!);
   const { billingConfig } = useBillingConfig(subscription?.agreement?.id!);
+  const items = subscription?.lines || [];
 
   if (isPending) return <>Loading...</>;
 
@@ -48,7 +49,7 @@ export function Items() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {items?.map((item) => (
+          {items.map((item) => (
             <TableRow key={item.id}>
               <ItemCell name={item.item?.name} id={item.item?.id} />
               <TableCell>{item.quantity || "—"}</TableCell>

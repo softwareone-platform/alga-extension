@@ -37,13 +37,13 @@ export const useSubscription = (id: string) => {
   return { subscription, ...state };
 };
 
-export const useSubscriptionItems = (id: string) => {
-  const { subscription, ...state } = useSubscription(id);
+// export const useSubscriptionItems = (id: string) => {
+//   const { subscription, ...state } = useSubscription(id);
 
-  const items = subscription?.lines || [];
+//   const items = subscription?.lines || [];
 
-  return { items, subscription, ...state };
-};
+//   return { items, subscription, ...state };
+// };
 
 export const useSubscriptionOrders = (
   id: string,

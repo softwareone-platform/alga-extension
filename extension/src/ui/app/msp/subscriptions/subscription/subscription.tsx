@@ -16,11 +16,10 @@ import {
   BillingConfigStatusBadge,
   useBillingConfig,
 } from "@features/billing-config";
-import { withMarkup } from "@features/markup";
+import { PriceWithMarkupCell, withMarkup } from "@features/markup";
 import {
   SubscriptionStatusBadge,
   useSubscription,
-  useSubscriptionItems,
   BILLING_PERIODS,
 } from "@features/subscriptions";
 import { ConsumerLink } from "@features/consumers";
@@ -152,7 +151,8 @@ function Manage({
   subscription: Subscription;
 }) {
   const { billingConfig } = useBillingConfig(subscription.agreement?.id!);
-  const { items } = useSubscriptionItems(subscription.id!);
+
+  const items = subscription.lines || [];
 
   return (
     <Dialog open={isOpen} onClose={onClose}>
@@ -172,39 +172,30 @@ function Manage({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {items?.map((item) => {
-              const rpxM = withMarkup(item.price?.SPxM, billingConfig?.markup);
-              const rpxY = withMarkup(item.price?.SPxY, billingConfig?.markup);
-
-              return (
-                <TableRow key={item.id}>
-                  <TableCell className="text-gray-500">
-                    {item.item?.name || "—"}
-                  </TableCell>
-                  <TableCell className="text-gray-500">
-                    {item.quantity || "—"}
-                  </TableCell>
-                  <TableCell className="text-gray-500">
-                    <input
-                      type="number"
-                      defaultValue={item.quantity}
-                      className="border border-gray-300 rounded px-3 py-2 text-sm"
-                    />
-                  </TableCell>
-                  <TableCell className="text-gray-500">
-                    {item.item?.unit?.name || "—"}
-                  </TableCell>
-                  <TableCell className="text-gray-500">
-                    {item.price?.SPxM || "—"}
-                  </TableCell>
-                  <TableCell className="text-gray-500">
-                    {item.price?.SPxY || "—"}
-                  </TableCell>
-                  <TableCell className="text-gray-500">{rpxM}</TableCell>
-                  <TableCell className="text-gray-500">{rpxY}</TableCell>
-                </TableRow>
-              );
-            })}
+            {items.map((item) => (
+              <TableRow key={item.id}>
+                <TableCell>{item.item?.name || "—"}</TableCell>
+                <TableCell>{item.quantity || "—"}</TableCell>
+                <TableCell>
+                  <input
+                    type="number"
+                    defaultValue={item.quantity}
+                    className="border border-gray-300 rounded px-3 py-2 text-sm"
+                  />
+                </TableCell>
+                <TableCell>{item.item?.unit?.name || "—"}</TableCell>
+                <TableCell>{item.price?.SPxM || "—"}</TableCell>
+                <TableCell>{item.price?.SPxY || "—"}</TableCell>
+                <PriceWithMarkupCell
+                  price={item.price?.SPxM}
+                  markup={billingConfig?.markup}
+                />
+                <PriceWithMarkupCell
+                  price={item.price?.SPxY}
+                  markup={billingConfig?.markup}
+                />
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
 
@@ -227,6 +218,8 @@ export function Subscription() {
 
   const { status } = subscription;
 
+  const canManage = subscription.lines && subscription.lines.length > 0;
+
   return (
     <>
       <div className="w-full flex flex-col p-6 gap-8">
@@ -248,11 +241,13 @@ export function Subscription() {
           </div>
         </header>
         <SubscriptionSummary id={id!} />
-        <Manage
-          subscription={subscription}
-          isOpen={isManageOpen}
-          onClose={() => setIsManageOpen(false)}
-        />
+        {canManage && (
+          <Manage
+            subscription={subscription}
+            isOpen={isManageOpen}
+            onClose={() => setIsManageOpen(false)}
+          />
+        )}
         <Tabs>
           <NavLink to="items">
             {({ isActive }) => <Tabs.Tab isActive={isActive}>Items</Tabs.Tab>}
