@@ -5,6 +5,14 @@ import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
 import { useMemo, useState } from "react";
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableHeaderCell,
+  TableRow,
+} from "@ui/table";
+import {
   BillingConfigStatusBadge,
   useBillingConfig,
 } from "@features/billing-config";
@@ -12,6 +20,7 @@ import { withMarkup } from "@features/markup";
 import {
   SubscriptionStatusBadge,
   useSubscription,
+  useSubscriptionItems,
   BILLING_PERIODS,
 } from "@features/subscriptions";
 import { ConsumerLink } from "@features/consumers";
@@ -143,42 +152,61 @@ function Manage({
   subscription: Subscription;
 }) {
   const { billingConfig } = useBillingConfig(subscription.agreement?.id!);
+  const { items } = useSubscriptionItems(subscription.id!);
 
   return (
     <Dialog open={isOpen} onClose={onClose}>
       <DialogPanel className="w-[90vw]">
         <DialogTitle onClose={onClose}>Manage Subscription</DialogTitle>
-        <table>
-          <thead>
-            <tr className="border-b border-gray-200">
-              <th className="text-left text-sm font-bold text-gray-600 px-2 py-4">
-                Name
-              </th>
-              <th className="text-left text-sm font-bold text-gray-500 px-2 py-4">
-                Current Qty
-              </th>
-              <th className="text-left text-sm font-bold text-gray-500 px-2 py-4">
-                New Qty
-              </th>
-              <th className="text-left text-sm font-bold text-gray-500 px-2 py-4">
-                Unit
-              </th>
-              <th className="text-left text-sm font-bold text-gray-500 px-2 py-4">
-                SPxM
-              </th>
-              <th className="text-left text-sm font-bold text-gray-500 px-2 py-4">
-                SPxY
-              </th>
-              <th className="text-left text-sm font-bold text-gray-500 px-2 py-4">
-                RPxM
-              </th>
-              <th className="text-left text-sm font-bold text-gray-500 px-2 py-4">
-                RPxY
-              </th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <Table className="grid-cols-[auto_auto_auto_auto_auto_auto_auto_auto]">
+          <TableHeader>
+            <TableRow>
+              <TableHeaderCell>Name</TableHeaderCell>
+              <TableHeaderCell>Current Qty</TableHeaderCell>
+              <TableHeaderCell>New Qty</TableHeaderCell>
+              <TableHeaderCell>Unit</TableHeaderCell>
+              <TableHeaderCell>SPxM</TableHeaderCell>
+              <TableHeaderCell>SPxY</TableHeaderCell>
+              <TableHeaderCell>RPxM</TableHeaderCell>
+              <TableHeaderCell>RPxY</TableHeaderCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {items?.map((item) => {
+              const rpxM = withMarkup(item.price?.SPxM, billingConfig?.markup);
+              const rpxY = withMarkup(item.price?.SPxY, billingConfig?.markup);
+
+              return (
+                <TableRow key={item.id}>
+                  <TableCell className="text-gray-500">
+                    {item.item?.name || "—"}
+                  </TableCell>
+                  <TableCell className="text-gray-500">
+                    {item.quantity || "—"}
+                  </TableCell>
+                  <TableCell className="text-gray-500">
+                    <input
+                      type="number"
+                      defaultValue={item.quantity}
+                      className="border border-gray-300 rounded px-3 py-2 text-sm"
+                    />
+                  </TableCell>
+                  <TableCell className="text-gray-500">
+                    {item.item?.unit?.name || "—"}
+                  </TableCell>
+                  <TableCell className="text-gray-500">
+                    {item.price?.SPxM || "—"}
+                  </TableCell>
+                  <TableCell className="text-gray-500">
+                    {item.price?.SPxY || "—"}
+                  </TableCell>
+                  <TableCell className="text-gray-500">{rpxM}</TableCell>
+                  <TableCell className="text-gray-500">{rpxY}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
 
         <div className="flex justify-end gap-6">
           <Button onClick={() => alert("감사합니다.")}>Place Order</Button>
