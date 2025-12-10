@@ -1,28 +1,30 @@
+import { logError } from "alga:extension/logging";
 import "./polyfill";
+import { handleSWO } from "./swo";
 
 // WIT imports - these are the actual runtime bindings
-import { logInfo } from "alga:extension/logging";
-import { ExecuteRequest, ExecuteResponse } from "@alga-psa/extension-runtime";
+// import { logInfo } from "alga:extension/logging";
+import type {
+  ExecuteRequest,
+  ExecuteResponse,
+} from "@alga-psa/extension-runtime";
+import { jsonResponse } from "./utils";
 // import { fetch as httpFetch } from "alga:extension/http";
 
-import { jsonResponse, parseBody } from "./utils";
+// import { jsonResponse, parseBody } from "./utils";
 
 export function handler(request: ExecuteRequest): ExecuteResponse {
-  logInfo(`test log!!!!`);
+  try {
+    return handleSWO(request);
+  } catch (error) {
+    logError(`Error: ${error}`);
 
-  // const algaApiKey = getSecret("ALGA_API_KEY");
-  // const swoApiToken = getSecret("SWO_API_TOKEN");
-
-  const body = parseBody(request.http.body);
-
-  return jsonResponse(
-    {
-      message: "DONE",
-      url: request.http.url,
-      body,
-      // algaApiKey,
-      // swoApiToken,
-    },
-    { status: 200 }
-  );
+    return jsonResponse(
+      {
+        error: "Internal Server Error",
+        message: "An unexpected error occurred",
+      },
+      { status: 500 }
+    );
+  }
 }

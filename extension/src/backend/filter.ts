@@ -24,11 +24,6 @@ const isListResponse = <T extends object>(
   );
 };
 
-function extractPathname(url: string): string {
-  const queryIndex = url.indexOf("?");
-  return queryIndex === -1 ? url : url.substring(0, queryIndex);
-}
-
 function filterObjectProps(
   filtered: unknown | unknown[],
   path: string[] | string
@@ -71,12 +66,12 @@ function filterObjectProps(
 }
 
 export function getRule(
-  requestPath: string,
+  url: string,
   userType: UserType,
   filters: Filters
 ): Rule | undefined {
   const filter = filters[userType];
-  const pathname = extractPathname(requestPath);
+  const { pathname } = new URL(url, "http://dummy.com");
   return filter?.allowed.find((ap) => ap.path === pathname);
 }
 

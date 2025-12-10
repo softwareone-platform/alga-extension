@@ -10,33 +10,31 @@ import { UserType, filterResponse, getRule } from "./filter";
 import { filters } from "./filters";
 import { jsonResponse, parseBody } from "./utils";
 
-const toSWOUrl = (baseUrl: string, url: string): string =>
-  `${baseUrl}${url.replace("/swo", "")}`;
-
 export const handleSWO = (request: ExecuteRequest): ExecuteResponse => {
   const userType: UserType = "msp";
 
-  const requestPath = new URL(request.http.url, "http://dummy").pathname;
-  const rule = getRule(requestPath, userType, filters);
+  const path = request.http.url.replace("/swo", "");
+
+  const rule = getRule(path, userType, filters);
 
   if (!rule)
     return jsonResponse(
       {
         error: "Forbidden",
-        message: `Request not allowed for user type ${userType}: ${requestPath}`,
+        message: `Request not allowed for user type ${userType}: ${request.http.url}`,
       },
       { status: 403 }
     );
 
-  const swoAPIUrl = "https://portal.s1.live/public/v1";
   const swoAPIToken =
     "idt:TKN-8557-7823:Rv3ltKu4js3bVvR6Ok6n0JmIfruCTusirs1nI1UDF3T4AzuiHPPkuMG90gHAsNrR";
 
-  const url = toSWOUrl(swoAPIUrl, request.http.url);
+  logInfo(`https://portal.s1.live/public/v1${path}`);
+  logInfo(`rule: ${request.http.method}`);
 
   const response = httpFetch({
     method: "GET",
-    url,
+    url: `https://portal.s1.live/public/v1${path}`,
     headers: [
       { name: "Authorization", value: `Bearer ${swoAPIToken}` },
       { name: "Content-Type", value: "application/json" },
