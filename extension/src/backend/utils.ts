@@ -1,7 +1,8 @@
 import { ExecuteResponse } from "@alga-psa/extension-runtime";
 
-// Inline jsonResponse to avoid external dependency for jco componentize
+const decoder = new TextDecoder();
 const encoder = new TextEncoder();
+
 export function jsonResponse(
   body: unknown,
   init: Partial<ExecuteResponse> = {}
@@ -16,3 +17,22 @@ export function jsonResponse(
     body: encoded,
   };
 }
+
+function decodeBody(body?: Uint8Array | null): string {
+  if (!body || body.length === 0) return "";
+  return decoder.decode(body);
+}
+
+export const parseBody = (body?: Uint8Array | null) => {
+  const text = decodeBody(body);
+  if (!text) return {};
+  try {
+    const value = JSON.parse(text);
+    if (typeof value === "object" && value !== null) {
+      return value as Record<string, unknown>;
+    }
+  } catch {
+    // Payload parsing errors should not throw
+  }
+  return {};
+};

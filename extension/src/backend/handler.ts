@@ -1,40 +1,28 @@
 import "./polyfill";
 
-import {
-  type ExecuteRequest,
-  type ExecuteResponse,
-  type HostBindings,
-} from "@alga-psa/extension-runtime";
-import { jsonResponse } from "./utils";
-// import { handleSWO } from "./swo";
+// WIT imports - these are the actual runtime bindings
+import { logInfo } from "alga:extension/logging";
+// import { get as getSecret } from "alga:extension/secrets";
+import { fetch as httpFetch } from "alga:extension/http";
+import { ExecuteRequest, ExecuteResponse } from "@alga-psa/extension-runtime";
 
-export async function handler(
-  _: ExecuteRequest,
-  host: HostBindings
-): Promise<ExecuteResponse> {
-  await host.logging.info(`test log`);
+import { jsonResponse, parseBody } from "./utils";
 
-  // try {
-  //   await host.logging.info(`test log`);
+export function handler(_: ExecuteRequest): ExecuteResponse {
+  logInfo(`test log!!!!`);
 
-  //   const response = await host.http.fetch({
-  //     method: "GET",
-  //     url: "https://google.com",
-  //     headers: [],
-  //   });
-  //   return jsonResponse(
-  //     {
-  //       message: "test message",
-  //     },
-  //     { status: response.status }
-  //   );
-  // } catch (error) {
-  //   await host.logging.error(`[service-proxy-demo] error: ${error}`);
-  // }
+  const response = httpFetch({
+    method: "GET",
+    url: "https://google.com",
+    headers: [],
+  });
+
+  const text = parseBody(response.body);
 
   return jsonResponse(
     {
       message: "DONE",
+      text,
     },
     { status: 200 }
   );
