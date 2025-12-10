@@ -28,9 +28,7 @@ export const parseBody = (body?: Uint8Array | null) => {
   if (!text) return {};
   try {
     const value = JSON.parse(text);
-    if (typeof value === "object" && value !== null) {
-      return value as Record<string, unknown>;
-    }
+    if (typeof value === "object" && value !== null) return value;
   } catch {
     // Payload parsing errors should not throw
   }
