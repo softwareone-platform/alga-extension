@@ -1,6 +1,7 @@
 import { createContext, useEffect, useMemo, type ReactNode } from "react";
-import { SubscriptionsClient } from "@lib/swo";
+import { SubscriptionsClient } from "@lib/swo-proxy";
 import { useQueryClient } from "@tanstack/react-query";
+import { useUiProxy } from "@lib/proxy";
 
 export const SubscriptionsContext = createContext<{
   client?: SubscriptionsClient;
@@ -8,24 +9,21 @@ export const SubscriptionsContext = createContext<{
 
 export type SubscriptionsProviderProps = {
   children: ReactNode;
-  baseUrl?: string;
-  token?: string;
 };
 
 export const SubscriptionsProvider = ({
   children,
-  baseUrl,
-  token,
 }: SubscriptionsProviderProps) => {
+  const uiProxy = useUiProxy();
   const client = useMemo(
-    () => (baseUrl && token ? new SubscriptionsClient(baseUrl, token) : undefined),
-    [baseUrl, token]
+    () => new SubscriptionsClient({ uiProxy }),
+    [uiProxy]
   );
   const queryClient = useQueryClient();
 
   useEffect(() => {
     queryClient.resetQueries({ queryKey: ["subscriptions"] });
-  }, [client]);
+  }, [client, queryClient]);
 
   return (
     <SubscriptionsContext.Provider value={{ client }}>

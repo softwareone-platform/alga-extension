@@ -1,4 +1,4 @@
-import { KVStorage } from "@lib/alga";
+import { KVStorage } from "../kv-storage";
 import { ExtensionDetails } from "./models";
 
 const SETTINGS_STORAGE_KEY = "settings";
@@ -98,7 +98,7 @@ export class ExtensionClient {
     const update: ExtensionDetailsKV = {
       ...details,
       note: note || "",
-      status: "disabled",
+      status: "active",
       audit: {
         disabledAt: details.audit?.disabledAt,
         activatedAt: new Date().toISOString(),

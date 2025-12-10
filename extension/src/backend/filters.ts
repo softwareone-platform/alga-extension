@@ -1,4 +1,6 @@
-import type { Filters } from "./filter";
+import type { Filters, UserType } from "./filter";
+
+export type { UserType };
 
 export const filters: Filters = {
   msp: {

@@ -1,4 +1,4 @@
-import { KVStorage } from "@lib/alga";
+import { KVStorage } from "../kv-storage";
 import { BillingConfig } from "./models";
 
 const BILLING_CONFIGS = "billing-configs";

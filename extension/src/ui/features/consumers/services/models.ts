@@ -1,3 +1,3 @@
-import { Client } from "@lib/alga";
+import { Client } from "@lib/alga-proxy";
 
 export type Consumer = Client;

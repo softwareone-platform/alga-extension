@@ -20,7 +20,7 @@ import { useState } from "react";
 import { OrderStatusBadge } from "@features/orders";
 import { DateTimeCell } from "@features/dates";
 import { Order } from "@swo/mp-api-model";
-import { BillingConfig } from "@lib/alga";
+import { BillingConfig } from "@lib/alga-proxy";
 import { Link } from "@ui/link";
 
 const OrderRow = ({

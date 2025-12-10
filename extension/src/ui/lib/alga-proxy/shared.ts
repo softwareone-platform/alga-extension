@@ -1,14 +1,8 @@
-import axios from "axios";
+import type { UiProxyHost } from "@lib/proxy";
 
-export const axiosInstance = (baseUrl: string, apiKey: string) =>
-  axios.create({
-    baseURL: baseUrl,
-    timeout: 10000,
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-    },
-  });
+export type ProxyClientConfig = {
+  uiProxy: UiProxyHost;
+};
 
 export type Pagination = {
   page: number;

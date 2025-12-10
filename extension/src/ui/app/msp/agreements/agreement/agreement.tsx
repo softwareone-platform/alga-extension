@@ -11,7 +11,7 @@ import {
   useBillingConfig,
   useBillingConfigMutation,
 } from "@features/billing-config";
-import { BillingConfigChanges, Operations } from "@lib/alga";
+import { BillingConfigChanges, Operations } from "@lib/alga-proxy";
 import { Radio, RadioGroup } from "@ui/radio";
 import {
   Listbox,
@@ -141,7 +141,7 @@ const ConsumersListbox = ({
 
   return (
     <Listbox
-      value={consumer ?? ""}
+      value={consumer ?? undefined}
       onChange={({ id, name }: { id: string; name: string }) =>
         onConsumerChange({ id, name })
       }
@@ -169,7 +169,7 @@ const ServiceListbox = ({
 
   return (
     <Listbox
-      value={service ?? ""}
+      value={service ?? undefined}
       onChange={({ id, name }: { id: string; name: string }) =>
         onServiceChange({ id, name })
       }
@@ -269,10 +269,10 @@ function BillingConfigEditor({
           <label className="text-sm font-medium self-start">Operations</label>
           <RadioGroup
             value={edited.operations}
-            onChange={(operations: Operations) =>
+            onChange={(operations) =>
               setEdited({
                 ...edited,
-                operations,
+                operations: operations as Operations,
               })
             }
             aria-label="Operations"

@@ -1,5 +1,5 @@
-import { AxiosInstance } from "axios";
-import { axiosInstance, ListResponse, SingleResponse } from "../shared";
+import { callProxy, type UiProxyHost } from "@lib/proxy";
+import { ListResponse, SingleResponse } from "../shared";
 import { Client } from "./models";
 
 type AlgaClientResponse = {
@@ -13,14 +13,17 @@ type AlgaClientResponse = {
 };
 
 export class ClientsClient {
-  private axios: AxiosInstance;
+  private uiProxy: UiProxyHost;
 
-  constructor(baseUrl: string, apiKey: string) {
-    this.axios = axiosInstance(`${baseUrl}/api/v1/clients/`, apiKey);
+  constructor(uiProxy: UiProxyHost) {
+    this.uiProxy = uiProxy;
   }
 
   async getClients(): Promise<ListResponse<Client>> {
-    const { data } = await this.axios.get<ListResponse<AlgaClientResponse>>("");
+    const data = await callProxy<ListResponse<AlgaClientResponse>>(
+      this.uiProxy,
+      "/alga/clients/list"
+    );
     return {
       data: data.data.map((company) => ({
         id: company.client_id,
@@ -35,8 +38,10 @@ export class ClientsClient {
   }
 
   async getClient(id: string): Promise<Client | null> {
-    const { data } = await this.axios.get<SingleResponse<AlgaClientResponse>>(
-      id
+    const data = await callProxy<SingleResponse<AlgaClientResponse>>(
+      this.uiProxy,
+      "/alga/clients/get",
+      { id }
     );
     return data.data
       ? {

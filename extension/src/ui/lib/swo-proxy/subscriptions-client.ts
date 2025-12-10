@@ -1,12 +1,12 @@
 import { RqlQuery } from "@swo/rql-client";
-import { AxiosInstance } from "axios";
 import {
   Subscription,
   SubscriptionListResponse,
   Order,
   OrderListResponse,
 } from "@swo/mp-api-model";
-import { axiosInstance, ListOptions } from "./shared";
+import { callProxy, type UiProxyHost } from "@lib/proxy";
+import { ListOptions, ProxyClientConfig } from "./shared";
 
 export type SubscriptionsClientSubscriptionsOptions =
   ListOptions<Subscription> & {
@@ -16,10 +16,10 @@ export type SubscriptionsClientSubscriptionsOptions =
 export type SubscriptionsClientOrdersOptions = ListOptions<Order>;
 
 export class SubscriptionsClient {
-  private axios: AxiosInstance;
+  private uiProxy: UiProxyHost;
 
-  constructor(baseUrl: string, token: string) {
-    this.axios = axiosInstance(baseUrl, token);
+  constructor(config: ProxyClientConfig) {
+    this.uiProxy = config.uiProxy;
   }
 
   async getSubscriptions(
@@ -68,11 +68,9 @@ export class SubscriptionsClient {
         operator: "in",
       });
 
-    const { data } = await this.axios.get<SubscriptionListResponse>(
-      `/commerce/subscriptions?${query.toString()}`
-    );
-
-    return data;
+    return callProxy<SubscriptionListResponse>(this.uiProxy, "/swo/subscriptions/list", {
+      query: query.toString(),
+    });
   }
 
   async getSubscription(id: string): Promise<Subscription> {
@@ -111,10 +109,10 @@ export class SubscriptionsClient {
       "audit"
     );
 
-    const { data } = await this.axios.get<Subscription>(
-      `/commerce/subscriptions/${id}?${query.toString()}`
-    );
-    return data;
+    return callProxy<Subscription>(this.uiProxy, "/swo/subscriptions/get", {
+      id,
+      query: query.toString(),
+    });
   }
 
   async getOrders(
@@ -153,36 +151,38 @@ export class SubscriptionsClient {
       .orderBy([sort?.by || "audit.created.at", sort?.order || "desc"])
       .paging(offset, limit);
 
-    const { data } = await this.axios.get<OrderListResponse>(
-      `/commerce/orders?${query.toString()}`
-    );
-    return data;
+    return callProxy<OrderListResponse>(this.uiProxy, "/swo/orders/list", {
+      query: query.toString(),
+    });
   }
 
   async terminateSubscription(id: string, notes?: string): Promise<void> {
     const query = new RqlQuery<Subscription>();
-
     query.expand("agreement.id");
 
-    const { data: subscription } = await this.axios.get<Subscription>(
-      `/commerce/subscriptions/${id}?${query.toString()}`
-    );
+    const subscription = await callProxy<Subscription>(this.uiProxy, "/swo/subscriptions/get", {
+      id,
+      query: query.toString(),
+    });
 
     const agreementId = subscription.agreement?.id;
     if (!agreementId) {
       throw new Error("Subscription does not have an agreement");
     }
 
-    const { data: order } = await this.axios.post<Order>(`/commerce/orders`, {
-      status: "Draft",
-      type: "Termination",
-      agreement: { id: agreementId },
-      subscriptions: [{ id }],
-      notes,
+    const order = await callProxy<Order>(this.uiProxy, "/swo/orders/create", {
+      body: {
+        status: "Draft",
+        type: "Termination",
+        agreement: { id: agreementId },
+        subscriptions: [{ id }],
+        notes,
+      },
     });
 
-    await this.axios.post(`/commerce/orders/${order.id!}/process`, {
-      type: "Termination",
+    await callProxy(this.uiProxy, "/swo/orders/process", {
+      id: order.id!,
+      body: { type: "Termination" },
     });
   }
 }

@@ -1,6 +1,7 @@
 import { createContext, useEffect, useMemo, type ReactNode } from "react";
-import { StatementsClient } from "@lib/swo";
+import { StatementsClient } from "@lib/swo-proxy";
 import { useQueryClient } from "@tanstack/react-query";
+import { useUiProxy } from "@lib/proxy";
 
 export const StatementsContext = createContext<{
   client?: StatementsClient;
@@ -8,24 +9,21 @@ export const StatementsContext = createContext<{
 
 export type StatementsProviderProps = {
   children: ReactNode;
-  baseUrl?: string;
-  token?: string;
 };
 
 export const StatementsProvider = ({
   children,
-  baseUrl,
-  token,
 }: StatementsProviderProps) => {
+  const uiProxy = useUiProxy();
   const client = useMemo(
-    () => (baseUrl && token ? new StatementsClient(baseUrl, token) : undefined),
-    [baseUrl, token]
+    () => new StatementsClient({ uiProxy }),
+    [uiProxy]
   );
   const queryClient = useQueryClient();
 
   useEffect(() => {
     queryClient.resetQueries({ queryKey: ["statements"] });
-  }, [client]);
+  }, [client, queryClient]);
 
   return (
     <StatementsContext.Provider value={{ client }}>

@@ -1,12 +1,12 @@
 import { RqlQuery } from "@swo/rql-client";
-import { AxiosInstance, AxiosResponse } from "axios";
 import {
   Statement,
   StatementListResponse,
   ChargeListResponse,
   Charge,
 } from "@swo/mp-api-model/billing";
-import { axiosInstance, ListOptions } from "./shared";
+import { callProxy, type UiProxyHost } from "@lib/proxy";
+import { ListOptions, ProxyClientConfig } from "./shared";
 
 export type StatementsClientStatementsOptions = ListOptions<Statement> & {
   licenseeId?: string;
@@ -15,10 +15,10 @@ export type StatementsClientStatementsOptions = ListOptions<Statement> & {
 export type StatementsClientChargesOptions = ListOptions<Charge>;
 
 export class StatementsClient {
-  private axios: AxiosInstance;
+  private uiProxy: UiProxyHost;
 
-  constructor(baseUrl: string, token: string) {
-    this.axios = axiosInstance(baseUrl, token);
+  constructor(config: ProxyClientConfig) {
+    this.uiProxy = config.uiProxy;
   }
 
   async getStatements(
@@ -64,11 +64,9 @@ export class StatementsClient {
         operator: "in",
       });
 
-    const { data }: AxiosResponse<StatementListResponse> = await this.axios.get(
-      `/billing/statements?${query.toString()}`
-    );
-
-    return data;
+    return callProxy<StatementListResponse>(this.uiProxy, "/swo/statements/list", {
+      query: query.toString(),
+    });
   }
 
   async getStatement(id: string): Promise<Statement> {
@@ -91,11 +89,10 @@ export class StatementsClient {
       "audit"
     );
 
-    const { data }: AxiosResponse<Statement> = await this.axios.get(
-      `/billing/statements/${id}?${query.toString()}`
-    );
-
-    return data;
+    return callProxy<Statement>(this.uiProxy, "/swo/statements/get", {
+      id,
+      query: query.toString(),
+    });
   }
 
   async getCharges(
@@ -123,10 +120,9 @@ export class StatementsClient {
 
     if (sort) query.orderBy([sort.by, sort.order || "asc"]);
 
-    const { data }: AxiosResponse<ChargeListResponse> = await this.axios.get(
-      `/billing/statements/${statementId}/charges?${query.toString()}`
-    );
-
-    return data;
+    return callProxy<ChargeListResponse>(this.uiProxy, "/swo/statements/charges", {
+      statementId,
+      query: query.toString(),
+    });
   }
 }

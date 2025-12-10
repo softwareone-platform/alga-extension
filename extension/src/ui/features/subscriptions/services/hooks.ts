@@ -4,7 +4,7 @@ import { SubscriptionsContext } from "./context";
 import {
   SubscriptionsClientSubscriptionsOptions,
   SubscriptionsClientOrdersOptions,
-} from "@lib/swo";
+} from "@lib/swo-proxy";
 
 export const useSubscriptions = (
   options?: SubscriptionsClientSubscriptionsOptions,

@@ -1,4 +1,3 @@
-import { Button, LinkButton } from "@ui/button";
 import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
@@ -7,7 +6,6 @@ import { useMemo } from "react";
 import { useBillingConfig } from "@features/billing-config";
 import { withMarkup } from "@features/markup";
 import { useStatement } from "@features/statements";
-import { SWO_PORTAL_URL } from "@/ui/config";
 
 function StatementSummary({ id }: { id: string }) {
   const { statement, isPending: isAgreementPending } = useStatement(id);

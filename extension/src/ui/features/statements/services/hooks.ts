@@ -4,7 +4,7 @@ import { StatementsContext } from "./context";
 import {
   StatementsClientStatementsOptions,
   StatementsClientChargesOptions,
-} from "@lib/swo";
+} from "@lib/swo-proxy";
 
 export const useStatements = (
   options?: StatementsClientStatementsOptions,

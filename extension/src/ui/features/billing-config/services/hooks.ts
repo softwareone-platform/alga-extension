@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BillingConfigsContext } from "./context";
-import { BillingConfigChanges } from "@lib/alga";
+import { BillingConfigChanges } from "@lib/alga-proxy";
 
 export const useBillingConfigs = () => {
   const { client } = useContext(BillingConfigsContext);

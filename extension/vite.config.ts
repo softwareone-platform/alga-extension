@@ -44,10 +44,16 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@lib/swo-proxy": path.resolve(__dirname, "./src/ui/lib/swo-proxy"),
+      "@lib/alga-proxy": path.resolve(__dirname, "./src/ui/lib/alga-proxy"),
+      "@lib/proxy": path.resolve(__dirname, "./src/ui/lib/proxy"),
       "@lib": path.resolve(__dirname, "./src/ui/lib"),
       "@ui": path.resolve(__dirname, "./src/ui/ui"),
       "@features": path.resolve(__dirname, "./src/ui/features"),
       "@utils": path.resolve(__dirname, "./src/ui/utils"),
+      "@swo/rql-client": path.resolve(__dirname, "./src/shims/swo-rql-client.ts"),
+      "@swo/mp-api-model/billing": path.resolve(__dirname, "./src/shims/swo-mp-api-model-billing.ts"),
+      "@swo/mp-api-model": path.resolve(__dirname, "./src/shims/swo-mp-api-model.ts"),
     },
   },
   build: {

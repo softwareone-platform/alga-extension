@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useExtensionClient } from "./context";
-import { ExtensionDetailsChanges } from "@lib/alga/extension";
+import { ExtensionDetailsChanges } from "@lib/alga-proxy";
 
 export const useExtensionDetails = () => {
   const client = useExtensionClient();

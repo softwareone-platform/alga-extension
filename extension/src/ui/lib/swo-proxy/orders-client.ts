@@ -1,17 +1,17 @@
 import { RqlQuery } from "@swo/rql-client";
-import { AxiosInstance, AxiosResponse } from "axios";
 import { Order, OrderListResponse } from "@swo/mp-api-model";
-import { axiosInstance, ListOptions } from "./shared";
+import { callProxy, type UiProxyHost } from "@lib/proxy";
+import { ListOptions, ProxyClientConfig } from "./shared";
 
 export type OrdersClientOrdersOptions = ListOptions<Order> & {
   licenseeId?: string;
 };
 
 export class OrdersClient {
-  private axios: AxiosInstance;
+  private uiProxy: UiProxyHost;
 
-  constructor(baseUrl: string, token: string) {
-    this.axios = axiosInstance(baseUrl, token);
+  constructor(config: ProxyClientConfig) {
+    this.uiProxy = config.uiProxy;
   }
 
   async getOrders(
@@ -55,10 +55,9 @@ export class OrdersClient {
         operator: "in",
       });
 
-    const { data }: AxiosResponse<OrderListResponse> = await this.axios.get(
-      `/commerce/orders?${query.toString()}`
-    );
-    return data;
+    return callProxy<OrderListResponse>(this.uiProxy, "/swo/orders/list", {
+      query: query.toString(),
+    });
   }
 
   async getOrder(id: string): Promise<Order> {
@@ -90,10 +89,9 @@ export class OrdersClient {
       "lines.item.status"
     );
 
-    const { data }: AxiosResponse<Order> = await this.axios.get(
-      `/commerce/orders/${id}?${query.toString()}`
-    );
-
-    return data;
+    return callProxy<Order>(this.uiProxy, "/swo/orders/get", {
+      id,
+      query: query.toString(),
+    });
   }
 }

@@ -1,7 +1,7 @@
 import { createContext, useEffect, useMemo, type ReactNode } from "react";
-import { BillingConfigClient } from "@lib/alga";
+import { BillingConfigClient, KVStorage } from "@lib/alga-proxy";
 import { useQueryClient } from "@tanstack/react-query";
-import { KVStorage } from "@lib/alga";
+import { useUiProxy } from "@lib/proxy";
 
 export const BillingConfigsContext = createContext<{
   client?: BillingConfigClient;
@@ -9,20 +9,24 @@ export const BillingConfigsContext = createContext<{
 
 export type BillingConfigsProviderProps = {
   children: ReactNode;
-  kvStorage: KVStorage;
+  namespace?: string;
 };
 
 export const BillingConfigsProvider = ({
   children,
-  kvStorage,
+  namespace = "extension",
 }: BillingConfigsProviderProps) => {
-  const client = useMemo(() => new BillingConfigClient(kvStorage), [kvStorage]);
+  const uiProxy = useUiProxy();
+  const client = useMemo(() => {
+    const kvStorage = new KVStorage(uiProxy, namespace);
+    return new BillingConfigClient(kvStorage);
+  }, [uiProxy, namespace]);
 
   const queryClient = useQueryClient();
 
   useEffect(() => {
     queryClient.resetQueries({ queryKey: ["billing-configs"] });
-  }, [client]);
+  }, [client, queryClient]);
 
   if (!client) return null;
 

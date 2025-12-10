@@ -1,6 +1,6 @@
 import { useAgreements, AgreementStatusBadge } from "@features/agreements";
 import { ProductCell } from "@features/products";
-import { BillingConfig } from "@lib/alga";
+import { BillingConfig } from "@lib/alga-proxy";
 import { useMemo, useState } from "react";
 import { Card } from "@ui/card";
 import { Agreement, AgreementStatus } from "@swo/mp-api-model";

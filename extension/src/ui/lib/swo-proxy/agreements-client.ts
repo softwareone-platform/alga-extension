@@ -1,5 +1,4 @@
 import { RqlQuery } from "@swo/rql-client";
-import { AxiosInstance } from "axios";
 import {
   Agreement,
   AgreementListResponse,
@@ -8,7 +7,8 @@ import {
   Order,
   OrderListResponse,
 } from "@swo/mp-api-model";
-import { axiosInstance, ListOptions } from "./shared";
+import { callProxy, type UiProxyHost } from "@lib/proxy";
+import { ListOptions, ProxyClientConfig } from "./shared";
 
 export type AgreementsClientAgreementsOptions = ListOptions<Agreement> & {
   licenseeId?: string;
@@ -19,10 +19,10 @@ export type AgreementsClientOrdersOptions = ListOptions<Order>;
 export type AgreementsClientSubscriptionsOptions = ListOptions<Subscription>;
 
 export class AgreementsClient {
-  private axios: AxiosInstance;
+  private uiProxy: UiProxyHost;
 
-  constructor(baseUrl: string, token: string) {
-    this.axios = axiosInstance(baseUrl, token);
+  constructor(config: ProxyClientConfig) {
+    this.uiProxy = config.uiProxy;
   }
 
   async getAgreements(
@@ -64,10 +64,9 @@ export class AgreementsClient {
         operator: "in",
       });
 
-    const { data } = await this.axios.get<AgreementListResponse>(
-      `/commerce/agreements?${query.toString()}`
-    );
-    return data;
+    return callProxy<AgreementListResponse>(this.uiProxy, "/swo/agreements/list", {
+      query: query.toString(),
+    });
   }
 
   async getAgreement(id: string): Promise<Agreement | null> {
@@ -92,10 +91,10 @@ export class AgreementsClient {
       )
       .exclude("subscriptions", "lines");
 
-    const { data } = await this.axios.get<Agreement>(
-      `/commerce/agreements/${id}?${query.toString()}`
-    );
-    return data;
+    return callProxy<Agreement>(this.uiProxy, "/swo/agreements/get", {
+      id,
+      query: query.toString(),
+    });
   }
 
   async getSubscriptions(
@@ -121,10 +120,9 @@ export class AgreementsClient {
       .orderBy([sort?.by || "audit.created.at", sort?.order || "desc"])
       .paging(offset, limit);
 
-    const { data } = await this.axios.get<SubscriptionListResponse>(
-      `/commerce/subscriptions?agreement.id=${agreementId}&${query.toString()}`
-    );
-    return data;
+    return callProxy<SubscriptionListResponse>(this.uiProxy, "/swo/subscriptions/list", {
+      query: `agreement.id=${agreementId}&${query.toString()}`,
+    });
   }
 
   async getOrders(
@@ -155,9 +153,8 @@ export class AgreementsClient {
       .orderBy([sort?.by || "audit.created.at", sort?.order || "desc"])
       .paging(offset, limit);
 
-    const { data } = await this.axios.get<OrderListResponse>(
-      `/commerce/orders?agreement.id=${agreementId}&${query.toString()}`
-    );
-    return data;
+    return callProxy<OrderListResponse>(this.uiProxy, "/swo/orders/list", {
+      query: `agreement.id=${agreementId}&${query.toString()}`,
+    });
   }
 }

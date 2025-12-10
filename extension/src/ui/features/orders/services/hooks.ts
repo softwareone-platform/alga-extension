@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { OrdersContext } from "./context";
-import { OrdersClientOrdersOptions } from "@lib/swo";
+import { OrdersClientOrdersOptions } from "@lib/swo-proxy";
 
 export const useOrders = (
   options?: OrdersClientOrdersOptions,

@@ -5,7 +5,7 @@ import {
   AgreementsClientAgreementsOptions,
   AgreementsClientOrdersOptions,
   AgreementsClientSubscriptionsOptions,
-} from "@lib/swo";
+} from "@lib/swo-proxy";
 
 export const useAgreements = (
   options?: AgreementsClientAgreementsOptions,

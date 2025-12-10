@@ -1,6 +1,7 @@
 import { createContext, useEffect, useMemo, type ReactNode } from "react";
-import { AccountsClient } from "@lib/swo";
+import { AccountsClient } from "@lib/swo-proxy";
 import { useQueryClient } from "@tanstack/react-query";
+import { useUiProxy } from "@lib/proxy";
 
 const AccountContext = createContext<{
   client?: AccountsClient;
@@ -8,25 +9,22 @@ const AccountContext = createContext<{
 
 export type AccountProviderProps = {
   children: ReactNode;
-  baseUrl?: string;
-  token?: string;
 };
 
 export const AccountProvider = ({
   children,
-  baseUrl,
-  token,
 }: AccountProviderProps) => {
+  const uiProxy = useUiProxy();
   const client = useMemo(
-    () => (baseUrl && token ? new AccountsClient(baseUrl, token) : undefined),
-    [baseUrl, token]
+    () => new AccountsClient({ uiProxy }),
+    [uiProxy]
   );
 
   const queryClient = useQueryClient();
 
   useEffect(() => {
     queryClient.resetQueries({ queryKey: ["account"] });
-  }, [client]);
+  }, [client, queryClient]);
 
   return (
     <AccountContext.Provider value={{ client }}>

@@ -1,6 +1,7 @@
 import { createContext, useEffect, useMemo, type ReactNode } from "react";
-import { OrdersClient } from "@lib/swo";
+import { OrdersClient } from "@lib/swo-proxy";
 import { useQueryClient } from "@tanstack/react-query";
+import { useUiProxy } from "@lib/proxy";
 
 export const OrdersContext = createContext<{
   client?: OrdersClient;
@@ -8,24 +9,21 @@ export const OrdersContext = createContext<{
 
 export type OrdersProviderProps = {
   children: ReactNode;
-  baseUrl?: string;
-  token?: string;
 };
 
 export const OrdersProvider = ({
   children,
-  baseUrl,
-  token,
 }: OrdersProviderProps) => {
+  const uiProxy = useUiProxy();
   const client = useMemo(
-    () => (baseUrl && token ? new OrdersClient(baseUrl, token) : undefined),
-    [baseUrl, token]
+    () => new OrdersClient({ uiProxy }),
+    [uiProxy]
   );
   const queryClient = useQueryClient();
 
   useEffect(() => {
     queryClient.resetQueries({ queryKey: ["orders"] });
-  }, [client]);
+  }, [client, queryClient]);
 
   return (
     <OrdersContext.Provider value={{ client }}>

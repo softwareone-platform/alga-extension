@@ -15,7 +15,7 @@ import { useStatements } from "@features/statements";
 import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
 import { useBillingConfigsByAgreements } from "@features/billing-config";
-import { BillingConfig } from "@lib/alga";
+import { BillingConfig } from "@lib/alga-proxy";
 import { Statement } from "@swo/mp-api-model/billing";
 import { ConsumerLink } from "@features/consumers";
 

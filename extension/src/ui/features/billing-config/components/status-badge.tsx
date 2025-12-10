@@ -1,4 +1,4 @@
-import { BillingConfigStatus } from "@lib/alga/billing-config/models";
+import { BillingConfigStatus } from "@lib/alga-proxy";
 import { Badge } from "@alga-psa/ui-kit";
 
 export const BillingConfigStatusBadge = ({

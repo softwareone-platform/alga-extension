@@ -15,7 +15,7 @@ import { useOrders, OrderStatusBadge } from "@features/orders";
 import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
 import { useBillingConfigsByConsumer } from "@features/billing-config";
-import { BillingConfig } from "@lib/alga";
+import { BillingConfig } from "@lib/alga-proxy";
 import { Order } from "@swo/mp-api-model";
 
 const OrderRow = ({

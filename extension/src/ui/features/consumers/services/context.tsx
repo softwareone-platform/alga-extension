@@ -1,6 +1,7 @@
 import { createContext, useEffect, useMemo, type ReactNode } from "react";
-import { ClientsClient } from "@lib/alga";
+import { ClientsClient } from "@lib/alga-proxy";
 import { useQueryClient } from "@tanstack/react-query";
+import { useUiProxy } from "@lib/proxy";
 
 const ConsumersContext = createContext<{
   client?: ClientsClient;
@@ -8,25 +9,22 @@ const ConsumersContext = createContext<{
 
 export type ConsumersProviderProps = {
   children: ReactNode;
-  baseUrl: string;
-  apiKey: string;
 };
 
 export const ConsumersProvider = ({
   children,
-  baseUrl,
-  apiKey,
 }: ConsumersProviderProps) => {
+  const uiProxy = useUiProxy();
   const client = useMemo(
-    () => new ClientsClient(baseUrl, apiKey),
-    [baseUrl, apiKey]
+    () => new ClientsClient(uiProxy),
+    [uiProxy]
   );
 
   const queryClient = useQueryClient();
 
   useEffect(() => {
     queryClient.resetQueries({ queryKey: ["consumers"] });
-  }, [client]);
+  }, [client, queryClient]);
 
   return (
     <ConsumersContext.Provider value={{ client }}>

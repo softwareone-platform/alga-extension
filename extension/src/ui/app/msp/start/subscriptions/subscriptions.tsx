@@ -19,7 +19,7 @@ import {
 import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
 import { useBillingConfigsByAgreements } from "@features/billing-config";
-import { BillingConfig } from "@lib/alga";
+import { BillingConfig } from "@lib/alga-proxy";
 import { ConsumerLink } from "@features/consumers";
 import { Subscription } from "@swo/mp-api-model";
 
