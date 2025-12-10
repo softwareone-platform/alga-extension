@@ -5,8 +5,8 @@ export const ProductCell = ({
   name,
   iconUrl,
 }: {
-  name?: string;
-  iconUrl?: string;
+  name?: string | null;
+  iconUrl?: string | null;
 }) => {
   return (
     <TableCell className="gap-4 w-full items-center">

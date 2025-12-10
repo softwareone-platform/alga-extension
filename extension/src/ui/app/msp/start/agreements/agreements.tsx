@@ -23,9 +23,9 @@ const NameCell = ({
   id,
   status,
 }: {
-  name?: string;
+  name?: string | null;
   id: string;
-  status?: AgreementStatus;
+  status?: AgreementStatus | null;
 }) => {
   return (
     <TableCell className="grid grid-cols-[auto_auto] gap-y-0.5 gap-x-2 w-full">

@@ -1,4 +1,4 @@
-import { Button, LinkButton } from "@ui/button";
+import { LinkButton } from "@ui/button";
 import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";

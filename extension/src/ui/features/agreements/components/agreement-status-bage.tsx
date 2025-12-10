@@ -4,7 +4,7 @@ import { Badge } from "@alga-psa/ui-kit";
 export const AgreementStatusBadge = ({
   status,
 }: {
-  status?: AgreementStatus;
+  status?: AgreementStatus | null;
 }) => {
   if (!status) return <span>—</span>;
 

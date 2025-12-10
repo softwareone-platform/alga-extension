@@ -1,4 +1,4 @@
-import { Button, LinkButton } from "@ui/button";
+import { LinkButton } from "@ui/button";
 import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
@@ -50,14 +50,6 @@ function StatementSummary({ id }: { id: string }) {
           />
           <span className="text-sm text-black">
             {statement.product?.name || "—"}
-          </span>
-        </div>
-      </div>
-      <div className="flex flex-col gap-1">
-        <label className="text-sm font-semibold text-black">Invoice</label>
-        <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">
-            {statement.invoice?.id || "—"}
           </span>
         </div>
       </div>

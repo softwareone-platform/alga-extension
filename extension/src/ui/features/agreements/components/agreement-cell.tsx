@@ -1,6 +1,6 @@
 import { TableCell } from "@ui/table";
 
-export const AgreementCell = ({ name, id }: { name?: string; id?: string }) => {
+export const AgreementCell = ({ name, id }: { name?: string | null; id?: string | null }) => {
   if (!name && !id) return <TableCell>—</TableCell>;
   return (
     <TableCell className="flex flex-col gap-0.5 items-start relative w-full">
