@@ -48,7 +48,7 @@ export const handleSWO = (request: ExecuteRequest): ExecuteResponse => {
     return jsonResponse({}, { status: response.status });
   }
 
-  const body = filterResponse(JSON.parse(responseBody), rule);
+  const body = filterResponse(responseBody, rule);
 
   return jsonResponse(body, { status: response.status });
 };
