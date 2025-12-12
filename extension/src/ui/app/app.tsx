@@ -8,7 +8,6 @@ import { ConsumersProvider } from "@features/consumers";
 import { ServicesProvider } from "@features/services";
 import { AgreementsProvider } from "@features/agreements";
 import { useExtensionDetails } from "@features/extension";
-import { OrdersProvider } from "@features/orders";
 import { StatementsProvider } from "@features/statements";
 import { SubscriptionsProvider } from "@features/subscriptions";
 import { ALGA_API_URL, ALGA_API_KEY } from "../config";
@@ -61,25 +60,20 @@ export function App() {
               baseUrl={details?.endpoint}
               token={details?.token}
             >
-              <OrdersProvider
+              <StatementsProvider
                 baseUrl={details?.endpoint}
                 token={details?.token}
               >
-                <StatementsProvider
+                <SubscriptionsProvider
                   baseUrl={details?.endpoint}
                   token={details?.token}
                 >
-                  <SubscriptionsProvider
-                    baseUrl={details?.endpoint}
-                    token={details?.token}
-                  >
-                    <Outlet />
-                    <button className="opacity-50" onClick={testAlga}>
-                      Test Backend
-                    </button>
-                  </SubscriptionsProvider>
-                </StatementsProvider>
-              </OrdersProvider>
+                  <Outlet />
+                  <button className="opacity-50" onClick={testAlga}>
+                    Test Backend
+                  </button>
+                </SubscriptionsProvider>
+              </StatementsProvider>
             </AgreementsProvider>
           </ServicesProvider>
         </ConsumersProvider>

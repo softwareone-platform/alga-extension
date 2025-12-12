@@ -72,7 +72,7 @@ export function getRule(
 ): Rule | undefined {
   const filter = filters[userType];
   const { pathname } = new URL(url, "http://dummy.com");
-  return filter?.allowed.find((ap) => ap.path === pathname);
+  return filter?.allowed.find((ap) => pathname.startsWith(ap.path));
 }
 
 export function filterResponse(
