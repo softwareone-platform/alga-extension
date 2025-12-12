@@ -2,7 +2,7 @@ import { Card } from "@ui/card";
 import { useAccount } from "@features/account";
 
 export function Settings() {
-  const { data: account } = useAccount();
+  const { account } = useAccount();
 
   return (
     <Card className="flex flex-col">

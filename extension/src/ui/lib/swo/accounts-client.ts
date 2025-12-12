@@ -1,5 +1,4 @@
-import { AxiosInstance } from "axios";
-import { axiosInstance } from "./shared";
+import axios, { AxiosInstance } from "axios";
 import {
   AccountQueryModelListResponse,
   AccountQueryModel,
@@ -8,8 +7,8 @@ import {
 export class AccountsClient {
   private axios: AxiosInstance;
 
-  constructor(baseUrl: string, token: string) {
-    this.axios = axiosInstance(baseUrl, token);
+  constructor(baseURL: string) {
+    this.axios = axios.create({ baseURL });
   }
 
   async getAccount(): Promise<AccountQueryModel> {
