@@ -10,9 +10,10 @@ import {
 import { backendClient } from "@/ui/lib/alga";
 import { ListOptions } from "@/ui/lib/swo";
 
-export type SubscriptionsClientSubscriptionsOptions = ListOptions<Subscription> & {
-  licenseeId?: string;
-};
+export type SubscriptionsClientSubscriptionsOptions =
+  ListOptions<Subscription> & {
+    licenseeId?: string;
+  };
 
 export type SubscriptionsClientOrdersOptions = ListOptions<Order>;
 

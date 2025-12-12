@@ -25,7 +25,7 @@ import {
 import { ConsumerLink } from "@features/consumers";
 import { SWO_PORTAL_URL } from "@/ui/config";
 import { Dialog, DialogPanel, DialogTitle } from "@/ui/ui";
-import type { Subscription } from "@lib/swo";
+import type { Subscription } from "@swo/mp-api-model";
 
 function SubscriptionSummary({ id }: { id: string }) {
   const { subscription, isPending: isSubscriptionPending } =

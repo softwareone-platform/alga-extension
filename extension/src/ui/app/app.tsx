@@ -1,12 +1,10 @@
 import { Outlet, useNavigate } from "react-router";
-import { UserProvider } from "@features/user";
 import { useCallback, useEffect, useRef } from "react";
 import { runIFrame } from "@lib/swo-navigation";
 import { backendClient, KVStorage } from "@lib/alga";
 import { BillingConfigsProvider } from "@features/billing-config";
 import { ConsumersProvider } from "@features/consumers";
 import { ServicesProvider } from "@features/services";
-import { AgreementsProvider } from "@features/agreements";
 import { useExtensionDetails } from "@features/extension";
 import { ALGA_API_URL, ALGA_API_KEY } from "../config";
 
@@ -50,22 +48,15 @@ export function App() {
   if (isPending) return <></>;
 
   return (
-    <UserProvider baseUrl={details?.endpoint} token={details?.token}>
-      <BillingConfigsProvider kvStorage={kvStorage}>
-        <ConsumersProvider baseUrl={ALGA_API_URL} apiKey={ALGA_API_KEY}>
-          <ServicesProvider baseUrl={ALGA_API_URL} apiKey={ALGA_API_KEY}>
-            <AgreementsProvider
-              baseUrl={details?.endpoint}
-              token={details?.token}
-            >
-              <Outlet />
-              <button className="opacity-50" onClick={testAlga}>
-                Test Backend
-              </button>
-            </AgreementsProvider>
-          </ServicesProvider>
-        </ConsumersProvider>
-      </BillingConfigsProvider>
-    </UserProvider>
+    <BillingConfigsProvider kvStorage={kvStorage}>
+      <ConsumersProvider baseUrl={ALGA_API_URL} apiKey={ALGA_API_KEY}>
+        <ServicesProvider baseUrl={ALGA_API_URL} apiKey={ALGA_API_KEY}>
+          <Outlet />
+          <button className="opacity-50" onClick={testAlga}>
+            Test Backend
+          </button>
+        </ServicesProvider>
+      </ConsumersProvider>
+    </BillingConfigsProvider>
   );
 }
