@@ -1,22 +1,62 @@
-import { useContext } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { AgreementsContext as AgreementsContext } from "./context";
+import { useExtensionDetails } from "@features/extension";
+import { RqlQuery } from "@swo/rql-client";
 import {
-  AgreementsClientAgreementsOptions,
-  AgreementsClientOrdersOptions,
-  AgreementsClientSubscriptionsOptions,
-} from "@lib/swo";
+  Agreement,
+  AgreementListResponse,
+  Order,
+  OrderListResponse,
+  Subscription,
+  SubscriptionListResponse,
+} from "@swo/mp-api-model";
+import { backendClient } from "@/ui/lib/alga";
+import { ListOptions } from "@/ui/lib/swo";
+
+export type AgreementsClientAgreementsOptions = ListOptions<Agreement> & {
+  licenseeId?: string;
+};
+
+export type AgreementsClientOrdersOptions = ListOptions<Order>;
+
+export type AgreementsClientSubscriptionsOptions = ListOptions<Subscription>;
 
 export const useAgreements = (
   options?: AgreementsClientAgreementsOptions,
   ids?: string[]
 ) => {
-  const { client } = useContext(AgreementsContext);
+  const { details } = useExtensionDetails();
+  const isConfigured = !!details?.token && !!details?.endpoint;
 
   const { data, ...state } = useQuery({
     queryKey: ["agreements", options, ids],
-    queryFn: () => client!.getAgreements(options, ids),
-    enabled: !!client && (!ids || ids.length > 0),
+    queryFn: async () => {
+      const { offset = 0, limit = 10, sort } = options || {};
+
+      const query = new RqlQuery<Agreement>();
+
+      query
+        .expand(
+          "id",
+          "name",
+          "product.id",
+          "product.name",
+          "product.icon",
+          "licensee.id",
+          "licensee.name",
+          "price.SPxM",
+          "price.SPxY",
+          "price.currency",
+          "audit"
+        )
+        .orderBy([sort?.by || "audit.created.at", sort?.order || "desc"])
+        .paging(offset, limit);
+
+      const { data } = await backendClient.get<AgreementListResponse>(
+        `/swo/commerce/agreements?${query.toString()}`
+      );
+      return data;
+    },
+    enabled: isConfigured && (!ids || ids.length > 0),
     placeholderData: keepPreviousData,
   });
 
@@ -27,12 +67,39 @@ export const useAgreements = (
 };
 
 export const useAgreement = (id: string) => {
-  const { client } = useContext(AgreementsContext);
+  const { details } = useExtensionDetails();
+  const isConfigured = !!details?.token && !!details?.endpoint;
 
   const { data: agreement, ...state } = useQuery({
     queryKey: ["agreements", id],
-    queryFn: () => client!.getAgreement(id),
-    enabled: !!client,
+    queryFn: async () => {
+      const query = new RqlQuery<Agreement>();
+
+      query
+        .expand(
+          "id",
+          "name",
+          "product.id",
+          "product.name",
+          "product.icon",
+          "licensee.id",
+          "licensee.name",
+          "price.SPxM",
+          "price.SPxY",
+          "price.currency",
+          "audit",
+          "seller.id",
+          "seller.name",
+          "seller.address"
+        )
+        .exclude("subscriptions", "lines");
+
+      const { data } = await backendClient.get<Agreement>(
+        `/swo/commerce/agreements/${id}?${query.toString()}`
+      );
+      return data;
+    },
+    enabled: isConfigured && !!id,
   });
 
   return { agreement, ...state };
@@ -42,12 +109,38 @@ export const useAgreementSubscriptions = (
   agreementId: string,
   options?: AgreementsClientSubscriptionsOptions
 ) => {
-  const { client } = useContext(AgreementsContext);
+  const { details } = useExtensionDetails();
+  const isConfigured = !!details?.token && !!details?.endpoint;
 
   const { data, ...state } = useQuery({
     queryKey: ["agreements", agreementId, "subscriptions", options],
-    queryFn: () => client!.getSubscriptions(agreementId, options),
-    enabled: !!client,
+    queryFn: async () => {
+      const { offset = 0, limit = 10, sort } = options || {};
+
+      const query = new RqlQuery<Subscription>();
+
+      query
+        .expand(
+          "id",
+          "name",
+          "price.SPxM",
+          "price.SPxY",
+          "price.currency",
+          "terms.period",
+          "terms.commitment",
+          "status",
+          "audit"
+        )
+        .orderBy([sort?.by || "audit.created.at", sort?.order || "desc"])
+        .paging(offset, limit);
+
+      const { data } = await backendClient.get<SubscriptionListResponse>(
+        `/swo/commerce/subscriptions?agreement.id=${agreementId}&${query.toString()}`
+      );
+
+      return data;
+    },
+    enabled: isConfigured && !!agreementId,
     placeholderData: keepPreviousData,
   });
 
@@ -61,12 +154,42 @@ export const useAgreementOrders = (
   agreementId: string,
   options?: AgreementsClientOrdersOptions
 ) => {
-  const { client } = useContext(AgreementsContext);
+  const { details } = useExtensionDetails();
+  const isConfigured = !!details?.token && !!details?.endpoint;
 
   const { data, ...state } = useQuery({
     queryKey: ["agreements", agreementId, "orders", options],
-    queryFn: () => client!.getOrders(agreementId, options),
-    enabled: !!client,
+    queryFn: async () => {
+      const { offset = 0, limit = 10, sort } = options || {};
+
+      const query = new RqlQuery<Order>();
+
+      query
+        .expand(
+          "id",
+          "type",
+          "agreement.id",
+          "agreement.name",
+          "product.id",
+          "product.name",
+          "product.icon",
+          "licensee.id",
+          "licensee.name",
+          "price.SPxM",
+          "price.SPxY",
+          "price.currency",
+          "status",
+          "audit"
+        )
+        .orderBy([sort?.by || "audit.created.at", sort?.order || "desc"])
+        .paging(offset, limit);
+
+      const { data } = await backendClient.get<OrderListResponse>(
+        `/swo/commerce/orders?agreement.id=${agreementId}&${query.toString()}`
+      );
+      return data;
+    },
+    enabled: isConfigured && !!agreementId,
     placeholderData: keepPreviousData,
   });
 
