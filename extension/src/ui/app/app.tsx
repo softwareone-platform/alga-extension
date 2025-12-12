@@ -18,16 +18,6 @@ export function App() {
 
   const testAlga = useCallback(async () => {
     const response = await backendClient.get<any>(`/swo/accounts/accounts`);
-    // const response = await fetch(`${ALGA_BACKEND_URL}/swo/accounts/accounts`, {
-    //   method: "GET",
-    //   mode: "cors",
-    //   credentials: "include",
-    //   cache: "no-cache",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-
     console.log(response);
   }, []);
 

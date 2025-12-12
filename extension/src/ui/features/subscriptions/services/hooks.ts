@@ -8,14 +8,14 @@ import {
   OrderListResponse,
 } from "@swo/mp-api-model";
 import { backendClient } from "@/ui/lib/alga";
-import { ListOptions } from "@/ui/lib/swo";
+import { SWOListOptions } from "@/ui/features/shared";
 
 export type SubscriptionsClientSubscriptionsOptions =
-  ListOptions<Subscription> & {
+  SWOListOptions<Subscription> & {
     licenseeId?: string;
   };
 
-export type SubscriptionsClientOrdersOptions = ListOptions<Order>;
+export type SubscriptionsClientOrdersOptions = SWOListOptions<Order>;
 
 export const useSubscriptions = (
   options?: SubscriptionsClientSubscriptionsOptions,

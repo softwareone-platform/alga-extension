@@ -1,14 +1,11 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useExtensionDetails } from "@features/extension";
 import { RqlQuery } from "@swo/rql-client";
-import {
-  Order,
-  OrderListResponse,
-} from "@swo/mp-api-model";
+import { Order, OrderListResponse } from "@swo/mp-api-model";
 import { backendClient } from "@/ui/lib/alga";
-import { ListOptions } from "@/ui/lib/swo";
+import { SWOListOptions } from "@/ui/features/shared";
 
-export type OrdersClientOrdersOptions = ListOptions<Order> & {
+export type OrdersClientOrdersOptions = SWOListOptions<Order> & {
   licenseeId?: string;
 };
 

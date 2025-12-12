@@ -10,15 +10,15 @@ import {
   SubscriptionListResponse,
 } from "@swo/mp-api-model";
 import { backendClient } from "@/ui/lib/alga";
-import { ListOptions } from "@/ui/lib/swo";
+import { SWOListOptions } from "@/ui/features/shared";
 
-export type AgreementsClientAgreementsOptions = ListOptions<Agreement> & {
+export type AgreementsClientAgreementsOptions = SWOListOptions<Agreement> & {
   licenseeId?: string;
 };
 
-export type AgreementsClientOrdersOptions = ListOptions<Order>;
+export type AgreementsClientOrdersOptions = SWOListOptions<Order>;
 
-export type AgreementsClientSubscriptionsOptions = ListOptions<Subscription>;
+export type AgreementsClientSubscriptionsOptions = SWOListOptions<Subscription>;
 
 export const useAgreements = (
   options?: AgreementsClientAgreementsOptions,

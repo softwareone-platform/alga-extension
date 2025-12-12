@@ -8,13 +8,13 @@ import {
   ChargeListResponse,
 } from "@swo/mp-api-model/billing";
 import { backendClient } from "@/ui/lib/alga";
-import { ListOptions } from "@/ui/lib/swo";
+import { SWOListOptions } from "@/ui/features/shared";
 
-export type StatementsClientStatementsOptions = ListOptions<Statement> & {
+export type StatementsClientStatementsOptions = SWOListOptions<Statement> & {
   licenseeId?: string;
 };
 
-export type StatementsClientChargesOptions = ListOptions<Charge>;
+export type StatementsClientChargesOptions = SWOListOptions<Charge>;
 
 export const useStatements = (
   options?: StatementsClientStatementsOptions,

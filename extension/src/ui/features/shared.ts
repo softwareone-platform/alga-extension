@@ -1,4 +1,4 @@
-export type ListOptions<T> = {
+export type SWOListOptions<T> = {
   offset?: number;
   limit?: number;
   sort?: {
