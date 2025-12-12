@@ -8,7 +8,8 @@
     "cap:log.emit",
     "cap:secrets.get",
     "cap:http.fetch",
-    "cap:ui.proxy"
+    "cap:ui.proxy",
+    "cap:storage.kv"
   ],
   "ui": {
     "type": "iframe",

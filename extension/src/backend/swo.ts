@@ -3,14 +3,23 @@ import type {
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
 import { logInfo } from "alga:extension/logging";
-// import { get as getSecret } from "alga:extension/secrets";
 import { fetch as httpFetch } from "alga:extension/http";
+import { get as getStorage } from "alga:extension/storage";
+
+// import { get as getSecret } from "alga:extension/secrets";
 
 import { UserType, filterResponse, getRule } from "./filter";
 import { filters } from "./filters";
 import { jsonResponse, parseBody } from "./utils";
 
-export const handleSWO = (request: ExecuteRequest): ExecuteResponse => {
+export const swoHandler = (request: ExecuteRequest): ExecuteResponse => {
+  try {
+    const extSettings = getStorage("extension", "settings");
+    logInfo(`extSettings: ${JSON.stringify(extSettings)}`);
+  } catch (error) {
+    logInfo(`Error getting extension settings: ${error}`);
+  }
+
   const userType: UserType = "msp";
 
   const path = request.http.url.replace("/swo", "");
@@ -29,11 +38,10 @@ export const handleSWO = (request: ExecuteRequest): ExecuteResponse => {
   const swoAPIToken =
     "idt:TKN-8557-7823:Rv3ltKu4js3bVvR6Ok6n0JmIfruCTusirs1nI1UDF3T4AzuiHPPkuMG90gHAsNrR";
 
-  logInfo(`https://portal.s1.live/public/v1${path}`);
-  logInfo(`rule: ${request.http.method}`);
+  logInfo(`Requesting: https://portal.s1.live/public/v1${path}`);
 
   const response = httpFetch({
-    method: "GET",
+    method: request.http.method,
     url: `https://portal.s1.live/public/v1${path}`,
     headers: [
       { name: "Authorization", value: `Bearer ${swoAPIToken}` },
@@ -42,13 +50,8 @@ export const handleSWO = (request: ExecuteRequest): ExecuteResponse => {
   });
 
   const responseBody = parseBody(response.body);
-  logInfo(`responseBody: ${JSON.stringify(responseBody)}`);
-
-  if (!responseBody) {
-    return jsonResponse({}, { status: response.status });
-  }
+  if (!responseBody) return jsonResponse({}, { status: response.status });
 
   const body = filterResponse(responseBody, rule);
-
   return jsonResponse(body, { status: response.status });
 };

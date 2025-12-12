@@ -1,21 +1,30 @@
-import { logError } from "alga:extension/logging";
 import "./polyfill";
-import { handleSWO } from "./swo";
 
-// WIT imports - these are the actual runtime bindings
-// import { logInfo } from "alga:extension/logging";
+import { logError } from "alga:extension/logging";
+import { swoHandler } from "./swo";
 import type {
   ExecuteRequest,
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
 import { jsonResponse } from "./utils";
-// import { fetch as httpFetch } from "alga:extension/http";
 
-// import { jsonResponse, parseBody } from "./utils";
+const routes = [{ path: "/swo", handler: swoHandler }];
 
 export function handler(request: ExecuteRequest): ExecuteResponse {
+  const route = routes.find((route) => request.http.url.startsWith(route.path));
+
+  if (!route) {
+    return jsonResponse(
+      {
+        error: "Not Found",
+        message: `Route not found: ${request.http.url}`,
+      },
+      { status: 404 }
+    );
+  }
+
   try {
-    return handleSWO(request);
+    return route.handler(request);
   } catch (error) {
     logError(`Error: ${error}`);
 
