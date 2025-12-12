@@ -1,21 +1,80 @@
-import { useContext } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { SubscriptionsContext } from "./context";
+import { useExtensionDetails } from "@features/extension";
+import { RqlQuery } from "@swo/rql-client";
 import {
-  SubscriptionsClientSubscriptionsOptions,
-  SubscriptionsClientOrdersOptions,
-} from "@lib/swo";
+  Subscription,
+  SubscriptionListResponse,
+  Order,
+  OrderListResponse,
+} from "@swo/mp-api-model";
+import { backendClient } from "@/ui/lib/alga";
+import { ListOptions } from "@/ui/lib/swo";
+
+export type SubscriptionsClientSubscriptionsOptions = ListOptions<Subscription> & {
+  licenseeId?: string;
+};
+
+export type SubscriptionsClientOrdersOptions = ListOptions<Order>;
 
 export const useSubscriptions = (
   options?: SubscriptionsClientSubscriptionsOptions,
   agreementIds?: string[]
 ) => {
-  const { client } = useContext(SubscriptionsContext);
+  const { details } = useExtensionDetails();
+  const isConfigured = !!details?.token && !!details?.endpoint;
 
   const { data, ...state } = useQuery({
-    queryKey: ["subscriptions", options],
-    queryFn: () => client!.getSubscriptions(options, agreementIds),
-    enabled: !!client && (!agreementIds || agreementIds.length > 0),
+    queryKey: ["subscriptions", options, agreementIds],
+    queryFn: async () => {
+      const { offset = 0, limit = 10, sort, licenseeId } = options || {};
+
+      const query = new RqlQuery<Subscription>();
+
+      query
+        .expand(
+          "id",
+          "name",
+          "agreement.id",
+          "agreement.name",
+          "product.id",
+          "product.name",
+          "product.icon",
+          "licensee.id",
+          "licensee.name",
+          "agreement.id",
+          "agreement.name",
+          "price.SPxM",
+          "price.SPxY",
+          "price.currency",
+          "terms.period",
+          "terms.commitment",
+          "status",
+          "audit"
+        )
+        .orderBy([sort?.by || "audit.created.at", sort?.order || "desc"])
+        .paging(offset, limit);
+
+      if (licenseeId)
+        query.filter({
+          field: "licensee.id",
+          value: licenseeId,
+          operator: "eq",
+        });
+
+      if (agreementIds)
+        query.filter({
+          field: "agreement.id",
+          value: agreementIds,
+          operator: "in",
+        });
+
+      const { data } = await backendClient.get<SubscriptionListResponse>(
+        `/swo/commerce/subscriptions?${query.toString()}`
+      );
+
+      return data;
+    },
+    enabled: isConfigured && (!agreementIds || agreementIds.length > 0),
     placeholderData: keepPreviousData,
   });
 
@@ -26,35 +85,106 @@ export const useSubscriptions = (
 };
 
 export const useSubscription = (id: string) => {
-  const { client } = useContext(SubscriptionsContext);
+  const { details } = useExtensionDetails();
+  const isConfigured = !!details?.token && !!details?.endpoint;
 
   const { data: subscription, ...state } = useQuery({
     queryKey: ["subscriptions", id],
-    queryFn: () => client!.getSubscription(id),
-    enabled: !!client,
+    queryFn: async () => {
+      const query = new RqlQuery<Subscription>();
+
+      query.expand(
+        "id",
+        "name",
+        "agreement.id",
+        "agreement.name",
+        "product.id",
+        "product.name",
+        "product.icon",
+        "licensee.id",
+        "licensee.name",
+        "agreement.id",
+        "agreement.name",
+        "price.SPxM",
+        "price.SPxY",
+        "price.currency",
+        "terms.period",
+        "terms.commitment",
+        "lines.id",
+        "lines.item.id",
+        "lines.item.name",
+        "lines.item.unit.name",
+        "lines.item.terms.period",
+        "lines.item.terms.commitment",
+        "lines.quantity",
+        "lines.price.SPxM",
+        "lines.price.SPxY",
+        "lines.price.currency",
+        "lines.price.unitSP",
+        "lines.status",
+        "status",
+        "audit"
+      );
+
+      const { data } = await backendClient.get<Subscription>(
+        `/swo/commerce/subscriptions/${id}?${query.toString()}`
+      );
+      return data;
+    },
+    enabled: isConfigured && !!id,
   });
 
   return { subscription, ...state };
 };
 
-// export const useSubscriptionItems = (id: string) => {
-//   const { subscription, ...state } = useSubscription(id);
-
-//   const items = subscription?.lines || [];
-
-//   return { items, subscription, ...state };
-// };
-
 export const useSubscriptionOrders = (
   id: string,
   options?: SubscriptionsClientOrdersOptions
 ) => {
-  const { client } = useContext(SubscriptionsContext);
+  const { details } = useExtensionDetails();
+  const isConfigured = !!details?.token && !!details?.endpoint;
 
   const { data, ...state } = useQuery({
     queryKey: ["subscriptions", id, "orders", options],
-    queryFn: () => client!.getOrders(id, options),
-    enabled: !!client,
+    queryFn: async () => {
+      const { offset = 0, limit = 10, sort } = options || {};
+
+      const query = new RqlQuery<Order>();
+
+      query
+        .expand(
+          "id",
+          "type",
+          "agreement.id",
+          "agreement.name",
+          "product.id",
+          "product.name",
+          "product.icon",
+          "licensee.id",
+          "licensee.name",
+          "price.SPxM",
+          "price.SPxY",
+          "price.currency",
+          "status",
+          "audit"
+        )
+        .applyNamedFilter("group.buyers")
+        .filter(
+          query.operators.any("subscriptions" as any, {
+            field: "id",
+            value: id,
+            operator: "eq",
+          })
+        )
+        .orderBy([sort?.by || "audit.created.at", sort?.order || "desc"])
+        .paging(offset, limit);
+
+      const { data } = await backendClient.get<OrderListResponse>(
+        `/swo/commerce/orders?${query.toString()}`
+      );
+      return data;
+    },
+    enabled: isConfigured && !!id,
     placeholderData: keepPreviousData,
   });
 

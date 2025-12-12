@@ -8,8 +8,6 @@ import { ConsumersProvider } from "@features/consumers";
 import { ServicesProvider } from "@features/services";
 import { AgreementsProvider } from "@features/agreements";
 import { useExtensionDetails } from "@features/extension";
-import { StatementsProvider } from "@features/statements";
-import { SubscriptionsProvider } from "@features/subscriptions";
 import { ALGA_API_URL, ALGA_API_KEY } from "../config";
 
 const kvStorage = new KVStorage(ALGA_API_URL, ALGA_API_KEY, "billing-configs");
@@ -60,20 +58,10 @@ export function App() {
               baseUrl={details?.endpoint}
               token={details?.token}
             >
-              <StatementsProvider
-                baseUrl={details?.endpoint}
-                token={details?.token}
-              >
-                <SubscriptionsProvider
-                  baseUrl={details?.endpoint}
-                  token={details?.token}
-                >
-                  <Outlet />
-                  <button className="opacity-50" onClick={testAlga}>
-                    Test Backend
-                  </button>
-                </SubscriptionsProvider>
-              </StatementsProvider>
+              <Outlet />
+              <button className="opacity-50" onClick={testAlga}>
+                Test Backend
+              </button>
             </AgreementsProvider>
           </ServicesProvider>
         </ConsumersProvider>

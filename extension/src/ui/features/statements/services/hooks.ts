@@ -1,21 +1,77 @@
-import { useContext } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { StatementsContext } from "./context";
+import { useExtensionDetails } from "@features/extension";
+import { RqlQuery } from "@swo/rql-client";
 import {
-  StatementsClientStatementsOptions,
-  StatementsClientChargesOptions,
-} from "@lib/swo";
+  Statement,
+  StatementListResponse,
+  Charge,
+  ChargeListResponse,
+} from "@swo/mp-api-model/billing";
+import { backendClient } from "@/ui/lib/alga";
+import { ListOptions } from "@/ui/lib/swo";
+
+export type StatementsClientStatementsOptions = ListOptions<Statement> & {
+  licenseeId?: string;
+};
+
+export type StatementsClientChargesOptions = ListOptions<Charge>;
 
 export const useStatements = (
   options?: StatementsClientStatementsOptions,
   agreementIds?: string[]
 ) => {
-  const { client } = useContext(StatementsContext);
+  const { details } = useExtensionDetails();
+  const isConfigured = !!details?.token && !!details?.endpoint;
 
   const { data, ...state } = useQuery({
-    queryKey: ["statements", options],
-    queryFn: () => client!.getStatements(options, agreementIds),
-    enabled: !!client && (!agreementIds || agreementIds.length > 0),
+    queryKey: ["statements", options, agreementIds],
+    queryFn: async () => {
+      const { offset = 0, limit = 10, sort, licenseeId } = options || {};
+
+      const query = new RqlQuery<Statement>();
+
+      query
+        .expand(
+          "id",
+          "type",
+          "agreement.id",
+          "agreement.name",
+          "product.id",
+          "product.name",
+          "product.icon",
+          "licensee.id",
+          "licensee.name",
+          "price.currency",
+          "price.totalSP",
+          "status",
+          "audit"
+        )
+        .orderBy([sort?.by || "audit.created.at", sort?.order || "desc"])
+        .paging(offset, limit);
+
+      if (sort) query.orderBy([sort.by, sort.order || "asc"]);
+
+      if (licenseeId)
+        query.filter({
+          field: "licensee.id",
+          value: licenseeId,
+          operator: "eq",
+        });
+
+      if (agreementIds)
+        query.filter({
+          field: "agreement.id",
+          value: agreementIds,
+          operator: "in",
+        });
+
+      const { data } = await backendClient.get<StatementListResponse>(
+        `/swo/billing/statements?${query.toString()}`
+      );
+
+      return data;
+    },
+    enabled: isConfigured && (!agreementIds || agreementIds.length > 0),
     placeholderData: keepPreviousData,
   });
 
@@ -26,12 +82,38 @@ export const useStatements = (
 };
 
 export const useStatement = (id: string) => {
-  const { client } = useContext(StatementsContext);
+  const { details } = useExtensionDetails();
+  const isConfigured = !!details?.token && !!details?.endpoint;
 
   const { data: statement, ...state } = useQuery({
     queryKey: ["statements", id],
-    queryFn: () => client!.getStatement(id),
-    enabled: !!client,
+    queryFn: async () => {
+      const query = new RqlQuery<Statement>();
+
+      query.expand(
+        "id",
+        "type",
+        "agreement.id",
+        "agreement.name",
+        "product.id",
+        "product.name",
+        "product.icon",
+        "licensee.id",
+        "licensee.name",
+        "price.currency",
+        "price.totalSP",
+        "invoice" as any,
+        "status",
+        "audit"
+      );
+
+      const { data } = await backendClient.get<Statement>(
+        `/swo/billing/statements/${id}?${query.toString()}`
+      );
+
+      return data;
+    },
+    enabled: isConfigured && !!id,
   });
 
   return { statement, ...state };
@@ -41,12 +123,40 @@ export const useStatementCharges = (
   statementId: string,
   options?: StatementsClientChargesOptions
 ) => {
-  const { client } = useContext(StatementsContext);
+  const { details } = useExtensionDetails();
+  const isConfigured = !!details?.token && !!details?.endpoint;
 
   const { data, ...state } = useQuery({
     queryKey: ["statements", statementId, "charges", options],
-    queryFn: () => client!.getCharges(statementId, options),
-    enabled: !!client,
+    queryFn: async () => {
+      const { offset = 0, limit = 10, sort } = options || {};
+
+      const query = new RqlQuery<Charge>();
+
+      query
+        .expand(
+          "id",
+          "subscription.id",
+          "subscription.name",
+          "item.id",
+          "item.name",
+          "period.start",
+          "period.end",
+          "quantity",
+          "price.SPx1",
+          "price.unitSP"
+        )
+        .paging(offset, limit);
+
+      if (sort) query.orderBy([sort.by, sort.order || "asc"]);
+
+      const { data } = await backendClient.get<ChargeListResponse>(
+        `/swo/billing/statements/${statementId}/charges?${query.toString()}`
+      );
+
+      return data;
+    },
+    enabled: isConfigured && !!statementId,
     placeholderData: keepPreviousData,
   });
 
