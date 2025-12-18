@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router";
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { runIFrame } from "@lib/swo-navigation";
-import { backendClient, KVStorage } from "@lib/alga";
+import { KVStorage } from "@lib/alga";
 import { BillingConfigsProvider } from "@features/billing-config";
 import { ConsumersProvider } from "@features/consumers";
 import { ServicesProvider } from "@features/services";
@@ -15,11 +15,6 @@ export function App() {
   const isReady = useRef(false);
 
   const navigate = useNavigate();
-
-  const testAlga = useCallback(async () => {
-    const response = await backendClient.get<any>(`/swo/accounts/accounts`);
-    console.log(response);
-  }, []);
 
   useEffect(() => {
     if (window.top === window || !window.top || isReady.current) return;
@@ -42,9 +37,6 @@ export function App() {
       <ConsumersProvider baseUrl={ALGA_API_URL} apiKey={ALGA_API_KEY}>
         <ServicesProvider baseUrl={ALGA_API_URL} apiKey={ALGA_API_KEY}>
           <Outlet />
-          <button className="opacity-50" onClick={testAlga}>
-            Test Backend
-          </button>
         </ServicesProvider>
       </ConsumersProvider>
     </BillingConfigsProvider>

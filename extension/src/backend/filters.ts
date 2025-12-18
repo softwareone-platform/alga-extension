@@ -13,14 +13,9 @@ export const filters: Filters = {
   },
   customer: {
     allowed: [
-      {
-        path: "/commerce/agreements",
-        filteredFields: ["price.SPxM", "seller.address"],
-      },
-      {
-        path: "/commerce/orders",
-        filteredFields: ["price.SPxM"],
-      },
+      { path: "/commerce/agreements" },
+      { path: "/commerce/orders" },
+      { path: "/commerce/subscriptions" },
       { path: "/billing/statements" },
     ],
   },
