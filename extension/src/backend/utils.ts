@@ -1,4 +1,7 @@
+import { BillingConfig } from "@/lib/alga";
 import { ExecuteResponse } from "@alga-psa/extension-runtime";
+import { logError } from "alga:extension/logging";
+import { get as getStorage } from "alga:extension/storage";
 
 const decoder = new TextDecoder();
 const encoder = new TextEncoder();
@@ -32,4 +35,17 @@ export const parseBody = (
     // Payload parsing errors should not throw
   }
   return {};
+};
+
+export const getBillingConfigs = (): BillingConfig[] => {
+  try {
+    const entry = getStorage("billing-configs", "billing-configs");
+    if (entry) {
+      return parseBody(entry.value);
+    }
+    return [];
+  } catch (error) {
+    logError(`Error getting billing configs: ${error}`);
+    return [];
+  }
 };

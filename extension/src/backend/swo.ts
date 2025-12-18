@@ -10,8 +10,11 @@ import { get as getStorage } from "alga:extension/storage";
 
 import { UserType, filterResponse, getRule } from "./filter";
 import { filters } from "./filters";
-import { jsonResponse, parseBody } from "./utils";
+import { getBillingConfigs, jsonResponse, parseBody } from "./utils";
 import type { BillingConfig } from "@/lib/alga";
+import type { AgreementListResponse, Agreement } from "@swo/mp-api-model";
+import { MSPAgreement } from "@/lib/shared/agreements";
+import { priceWithMarkup } from "@/lib/shared/price";
 
 export const swoHandler = (request: ExecuteRequest): ExecuteResponse => {
   try {
@@ -57,25 +60,88 @@ export const swoHandler = (request: ExecuteRequest): ExecuteResponse => {
   return jsonResponse(body, { status: response.status });
 };
 
-const mspAgreementsHandler = (request: ExecuteRequest): ExecuteResponse => {
-  const path = request.http.url.replace("/swo/commerce/agreements", "");
+const agreementsHandler = (request: ExecuteRequest): ExecuteResponse => {
+  const billingConfigs = getBillingConfigs();
+
+  const billingConfigsById = billingConfigs.reduce((acc, billingConfig) => {
+    acc[billingConfig.agreementId] = billingConfig;
+    return acc;
+  }, {} as Record<string, BillingConfig>);
 
   const swoAPIToken =
     "idt:TKN-8557-7823:Rv3ltKu4js3bVvR6Ok6n0JmIfruCTusirs1nI1UDF3T4AzuiHPPkuMG90gHAsNrR";
 
-  const algaAPIKey =
-    "200aebbceb58e17579c1da81754116d236d1a14872f34f755694e84d3d044518";
+  const response = httpFetch({
+    method: "GET",
+    url: request.http.url.replace("/swo", "https://portal.s1.live/public/v1"),
+    headers: [
+      { name: "Authorization", value: `Bearer ${swoAPIToken}` },
+      { name: "Content-Type", value: "application/json" },
+    ],
+  });
 
-  let billingConfigs: BillingConfig[] = [];
-
-  try {
-    const entry = getStorage("billing-configs", "billing-configs");
-    if (entry) {
-      billingConfigs = parseBody(entry.value) as BillingConfig[];
-    }
-  } catch (error) {
-    logInfo(`Error getting billing configs: ${error}`);
+  if (response.status !== 200) {
+    return jsonResponse({}, { status: response.status });
   }
 
-  return jsonResponse(billingConfigs, { status: 200 });
+  const agreements = parseBody(response.body) as AgreementListResponse;
+
+  const mspAgreements: MSPAgreement[] =
+    agreements.data?.map((agreement) => ({
+      ...agreement,
+      price: {
+        ...agreement.price,
+        RPxY: priceWithMarkup(
+          agreement.price?.SPxY,
+          billingConfigsById[agreement.id!]?.markup
+        ),
+        RPxM: priceWithMarkup(
+          agreement.price?.SPxM,
+          billingConfigsById[agreement.id!]?.markup
+        ),
+      },
+    })) ?? [];
+
+  return jsonResponse(
+    {
+      $meta: agreements.$meta,
+      data: mspAgreements,
+    },
+    { status: 200 }
+  );
+};
+
+const agreementHandler = (request: ExecuteRequest): ExecuteResponse => {
+  const billingConfigs = getBillingConfigs();
+
+  const swoAPIToken =
+    "idt:TKN-8557-7823:Rv3ltKu4js3bVvR6Ok6n0JmIfruCTusirs1nI1UDF3T4AzuiHPPkuMG90gHAsNrR";
+
+  const response = httpFetch({
+    method: "GET",
+    url: request.http.url.replace("/swo", "https://portal.s1.live/public/v1"),
+    headers: [
+      { name: "Authorization", value: `Bearer ${swoAPIToken}` },
+      { name: "Content-Type", value: "application/json" },
+    ],
+  });
+
+  if (response.status !== 200) {
+    return jsonResponse({}, { status: response.status });
+  }
+
+  const agreement = parseBody(response.body) as Agreement;
+
+  const mspAgreement: MSPAgreement = {
+    ...agreement,
+    price: {
+      ...agreement.price,
+      RPxY: priceWithMarkup(
+        agreement.price?.SPxY,
+        billingConfigs.find((bc) => bc.agreementId === agreement.id)?.markup
+      ),
+    },
+  };
+
+  return jsonResponse(mspAgreement, { status: 200 });
 };
