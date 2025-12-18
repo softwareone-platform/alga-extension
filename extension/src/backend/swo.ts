@@ -11,6 +11,7 @@ import { get as getStorage } from "alga:extension/storage";
 import { UserType, filterResponse, getRule } from "./filter";
 import { filters } from "./filters";
 import { jsonResponse, parseBody } from "./utils";
+import type { BillingConfig } from "@/lib/alga";
 
 export const swoHandler = (request: ExecuteRequest): ExecuteResponse => {
   try {
@@ -54,4 +55,27 @@ export const swoHandler = (request: ExecuteRequest): ExecuteResponse => {
 
   const body = filterResponse(responseBody, rule);
   return jsonResponse(body, { status: response.status });
+};
+
+const mspAgreementsHandler = (request: ExecuteRequest): ExecuteResponse => {
+  const path = request.http.url.replace("/swo/commerce/agreements", "");
+
+  const swoAPIToken =
+    "idt:TKN-8557-7823:Rv3ltKu4js3bVvR6Ok6n0JmIfruCTusirs1nI1UDF3T4AzuiHPPkuMG90gHAsNrR";
+
+  const algaAPIKey =
+    "200aebbceb58e17579c1da81754116d236d1a14872f34f755694e84d3d044518";
+
+  let billingConfigs: BillingConfig[] = [];
+
+  try {
+    const entry = getStorage("billing-configs", "billing-configs");
+    if (entry) {
+      billingConfigs = parseBody(entry.value) as BillingConfig[];
+    }
+  } catch (error) {
+    logInfo(`Error getting billing configs: ${error}`);
+  }
+
+  return jsonResponse(billingConfigs, { status: 200 });
 };
