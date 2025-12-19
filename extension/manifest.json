@@ -1,6 +1,6 @@
 {
   "name": "com.swo.extension",
-  "publisher": "SoftwareTEN",
+  "publisher": "SoftwareFOURTEEN",
   "version": "0.0.9",
   "runtime": "wasm-js@1",
   "capabilities": [
@@ -15,8 +15,8 @@
     "type": "iframe",
     "entry": "ui/index.html",
     "hooks": {
-      "appMenu": { "label": "SoftwareTEN" },
-      "clientPortalMenu": { "label": "SoftwareTEN" }
+      "appMenu": { "label": "SoftwareFOURTEEN" },
+      "clientPortalMenu": { "label": "SoftwareFOURTEEN" }
     }
   },
   "assets": ["ui/**/*"]

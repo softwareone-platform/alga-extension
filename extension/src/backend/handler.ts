@@ -2,13 +2,17 @@ import "./polyfill";
 
 import { logError } from "alga:extension/logging";
 import { swoHandler } from "./handlers";
+import { extensionHandler } from "./handlers";
 import type {
   ExecuteRequest,
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
 import { jsonResponse } from "./utils";
 
-const routes = [{ path: "/swo", handler: swoHandler }];
+const routes = [
+  { path: "/swo", handler: swoHandler },
+  { path: "/extension", handler: extensionHandler },
+];
 
 export function handler(request: ExecuteRequest): ExecuteResponse {
   const route = routes.find((route) => request.http.url.startsWith(route.path));
