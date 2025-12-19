@@ -12,9 +12,7 @@ import {
 import { backendClient } from "@/ui/lib/alga";
 import { SWOListOptions } from "@/ui/features/shared";
 
-export type AgreementsClientAgreementsOptions = SWOListOptions<Agreement> & {
-  licenseeId?: string;
-};
+export type AgreementsClientAgreementsOptions = SWOListOptions<Agreement>;
 
 export type AgreementsClientOrdersOptions = SWOListOptions<Order>;
 
@@ -22,13 +20,13 @@ export type AgreementsClientSubscriptionsOptions = SWOListOptions<Subscription>;
 
 export const useAgreements = (
   options?: AgreementsClientAgreementsOptions,
-  ids?: string[]
+  agreementIds?: string[]
 ) => {
   const { details } = useExtensionDetails();
   const isConfigured = !!details?.token && !!details?.endpoint;
 
   const { data, ...state } = useQuery({
-    queryKey: ["agreements", options, ids],
+    queryKey: ["agreements", options, agreementIds],
     queryFn: async () => {
       const { offset = 0, limit = 10, sort } = options || {};
 
@@ -51,12 +49,19 @@ export const useAgreements = (
         .orderBy([sort?.by || "audit.created.at", sort?.order || "desc"])
         .paging(offset, limit);
 
+      if (agreementIds)
+        query.filter({
+          field: "agreement.id",
+          value: agreementIds,
+          operator: "in",
+        });
+
       const { data } = await backendClient.get<AgreementListResponse>(
         `/swo/commerce/agreements?${query.toString()}`
       );
       return data;
     },
-    enabled: isConfigured && (!ids || ids.length > 0),
+    enabled: isConfigured && (!agreementIds || agreementIds.length > 0),
     placeholderData: keepPreviousData,
   });
 

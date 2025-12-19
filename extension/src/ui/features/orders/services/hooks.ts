@@ -10,7 +10,7 @@ export type OrdersClientOrdersOptions = SWOListOptions<Order> & {
 };
 
 export const useOrders = (
-  options?: OrdersClientOrdersOptions,
+  options?: SWOListOptions<Order>,
   agreementIds?: string[]
 ) => {
   const { details } = useExtensionDetails();
@@ -19,7 +19,7 @@ export const useOrders = (
   const { data, ...state } = useQuery({
     queryKey: ["orders", options, agreementIds],
     queryFn: async () => {
-      const { offset = 0, limit = 10, sort, licenseeId } = options || {};
+      const { offset = 0, limit = 10, sort } = options || {};
 
       const query = new RqlQuery<Order>();
 
@@ -41,13 +41,6 @@ export const useOrders = (
         )
         .orderBy([sort?.by || "audit.created.at", sort?.order || "desc"])
         .paging(offset, limit);
-
-      if (licenseeId)
-        query.filter({
-          field: "licensee.id",
-          value: licenseeId,
-          operator: "eq",
-        });
 
       if (agreementIds)
         query.filter({
