@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, NavLink } from "react-router";
 import { Button } from "@ui/button";
 import { useAccount } from "@features/account";
@@ -6,52 +6,50 @@ import { Tabs } from "@ui/tabs";
 import { ErrorCard } from "@ui/error-card";
 import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
 import { Dialog, DialogPanel, DialogTitle } from "@ui/dialog";
-import { ExtensionDetailsChanges, ExtensionStatus } from "@lib/alga";
 import {
   useExtensionDetails,
   useExtensionDetailsMutation,
-  useExtensionStatusMutations,
 } from "@features/extension";
 import { Badge } from "@alga-psa/ui-kit";
 import { ActionItem, Actions } from "@ui/actions";
 import { Input, Textarea } from "@ui/input";
 
-function StatusBadge({ status }: { status?: ExtensionStatus | "error" }) {
-  if (!status) return <></>;
+function StatusBadge() {
+  const { details, isLoading, error } = useExtensionDetails();
 
-  if (status === "error") return <Badge tone="danger">Error</Badge>;
-  if (status === "unconfigured")
+  if (isLoading) return <></>;
+
+  if (error) return <Badge tone="danger">Error</Badge>;
+  if (!details?.status || details.status === "unconfigured")
     return <Badge tone="default">Unconfigured</Badge>;
-  if (status === "disabled") return <Badge tone="warning">Disabled</Badge>;
+  if (details.status === "disabled")
+    return <Badge tone="warning">Disabled</Badge>;
+  if (details.status === "active") return <Badge tone="success">Active</Badge>;
 
-  return <Badge tone="success">Active</Badge>;
+  return <></>;
 }
 
-function SettingsActions({
-  status,
-}: {
-  status: ExtensionStatus | "error" | undefined;
-}) {
-  const { enable, disable } = useExtensionStatusMutations();
+function SettingsActions() {
+  const { details } = useExtensionDetails();
+
+  const { saveDetails } = useExtensionDetailsMutation();
 
   const [isDisabledOpen, setIsDisabledOpen] = useState(false);
   const [isEnabledOpen, setIsEnabledOpen] = useState(false);
 
   const [note, setNote] = useState("");
 
-  const canEnable = status === "disabled";
-  const canDisable = status === "active";
+  const canEnable = details?.status === "disabled";
+  const canDisable = details?.status === "active";
 
-  const enableExtension = () => {
-    enable(note);
+  const setStatus = (status: "active" | "disabled") => {
+    saveDetails({
+      ...(details || {}),
+      note,
+      status,
+    });
     setNote("");
     setIsEnabledOpen(false);
-  };
-
-  const disableExtension = () => {
-    disable(note);
-    setNote("");
-    setIsDisabledOpen(false);
   };
 
   return (
@@ -89,7 +87,7 @@ function SettingsActions({
             <Button variant="white" onClick={() => setIsEnabledOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={enableExtension}>Enable</Button>
+            <Button onClick={() => setStatus("active")}>Enable</Button>
           </div>
         </DialogPanel>
       </Dialog>
@@ -115,7 +113,7 @@ function SettingsActions({
             <Button variant="white" onClick={() => setIsDisabledOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={disableExtension}>Disable</Button>
+            <Button onClick={() => setStatus("disabled")}>Disable</Button>
           </div>
         </DialogPanel>
       </Dialog>
@@ -132,27 +130,29 @@ function SettingsEditor({
   const { details } = useExtensionDetails();
   const { saveDetails } = useExtensionDetailsMutation();
 
-  const defaults = useRef<ExtensionDetailsChanges>({
-    endpoint: "",
-    token: "",
-    note: "",
-  });
-
-  const [editedDetails, setEditedDetails] = useState<ExtensionDetailsChanges>(
-    details || defaults.current
-  );
+  const [endpoint, setEndpoint] = useState<string>(details?.endpoint || "");
+  const [token, setToken] = useState<string>(details?.token || "");
+  const [note, setNote] = useState<string>(details?.note || "");
 
   useEffect(() => {
-    setEditedDetails(details || defaults.current);
+    setEndpoint(details?.endpoint || "");
+    setToken(details?.token || "");
+    setNote(details?.note || "");
   }, [details]);
 
   const handleSave = () => {
-    saveDetails(editedDetails);
+    saveDetails({
+      endpoint,
+      token,
+      note,
+    });
     onClose();
   };
 
   const handleCancel = () => {
-    setEditedDetails(details || defaults.current);
+    setEndpoint(details?.endpoint || "");
+    setToken(details?.token || "");
+    setNote(details?.note || "");
     onClose();
   };
 
@@ -165,36 +165,21 @@ function SettingsEditor({
           <label className="text-sm font-medium">API Endpoint</label>
           <Input
             type="text"
-            value={editedDetails.endpoint}
-            onChange={(e) =>
-              setEditedDetails((v) => ({
-                ...v,
-                endpoint: e.target.value,
-              }))
-            }
+            value={endpoint}
+            onChange={(e) => setEndpoint(e.target.value)}
           />
 
           <label className="text-sm font-medium">API Token</label>
           <Input
             type="password"
-            value={editedDetails.token}
-            onChange={(e) =>
-              setEditedDetails((v) => ({
-                ...v,
-                token: e.target.value,
-              }))
-            }
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
           />
 
           <label className="text-sm font-medium self-start">Note</label>
           <Textarea
-            value={editedDetails.note}
-            onChange={(e) =>
-              setEditedDetails((v) => ({
-                ...v,
-                note: e.target.value,
-              }))
-            }
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
             rows={4}
           />
         </div>
@@ -212,12 +197,7 @@ function SettingsEditor({
 
 export function Start() {
   const { error } = useAccount();
-  const { details, isLoading } = useExtensionDetails();
-
-  const status = useMemo<ExtensionStatus | "error" | undefined>(
-    () => (error ? "error" : details?.status),
-    [details?.status, error]
-  );
+  const { isLoading } = useExtensionDetails();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -228,11 +208,11 @@ export function Start() {
       <header className="w-full flex justify-between">
         <div className="flex items-center gap-6">
           <h1 className="text-3xl font-semibold">SoftwareOne</h1>
-          {!!status && <StatusBadge status={status} />}
+          <StatusBadge />
         </div>
         <div className="flex items-center gap-6">
           <Button onClick={() => setIsOpen(true)}>Edit</Button>
-          <SettingsActions status={status} />
+          <SettingsActions />
         </div>
       </header>
 

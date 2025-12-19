@@ -1,11 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ExtensionProvider } from "@features/extension";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
 import { ALGA_API_URL, ALGA_API_KEY } from "./config.js";
 
-import { KVStorage } from "@lib/alga";
 import { App } from "./app";
 import { mspRoutes } from "./app/msp";
 import { consumerRoutes } from "./app/consumer";
@@ -47,8 +45,6 @@ const queryClient = new QueryClient({
   },
 });
 
-const kvStorage = new KVStorage(ALGA_API_URL, ALGA_API_KEY, "extension");
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -69,9 +65,7 @@ console.log(ALGA_API_URL, ALGA_API_KEY);
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ExtensionProvider kvStorage={kvStorage}>
-        <RouterProvider router={router} />
-      </ExtensionProvider>
+      <RouterProvider router={router} />
     </QueryClientProvider>
   </StrictMode>
 );
