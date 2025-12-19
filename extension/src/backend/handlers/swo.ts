@@ -4,10 +4,10 @@ import type {
 } from "@alga-psa/extension-runtime";
 import { logInfo } from "alga:extension/logging";
 import { fetch as httpFetch } from "alga:extension/http";
-import { UserType, filterResponse, getRule } from "./filter";
-import { filters } from "./filters";
+import { UserType, filterResponse, getRule } from "../filter";
+import { filters } from "../filters";
 
-import { jsonResponse, parseBody } from "./utils";
+import { jsonResponse, parseBody } from "../utils";
 
 // import { getBillingConfigs, jsonResponse, parseBody } from "./utils";
 // import { get as getStorage } from "alga:extension/storage";

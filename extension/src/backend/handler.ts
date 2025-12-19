@@ -1,7 +1,7 @@
 import "./polyfill";
 
 import { logError } from "alga:extension/logging";
-import { swoHandler } from "./swo";
+import { swoHandler } from "./handlers";
 import type {
   ExecuteRequest,
   ExecuteResponse,
