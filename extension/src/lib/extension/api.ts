@@ -7,4 +7,6 @@ export type ExtensionRequestBody = Pick<
   status?: "active" | "disabled";
 };
 
-export type ExtensionResponseBody = ExtensionDetails;
+export type ExtensionResponseBody = Omit<ExtensionDetails, "token"> & {
+  hasToken: boolean;
+};

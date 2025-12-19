@@ -15,8 +15,7 @@ export const extensionHandler = (request: ExecuteRequest): ExecuteResponse => {
   return jsonResponse(
     {
       endpoint: "https://portal.s1.live/public/v1",
-      token:
-        "idt:TKN-8557-7823:Rv3ltKu4js3bVvR6Ok6n0JmIfruCTusirs1nI1UDF3T4AzuiHPPkuMG90gHAsNrR",
+      hasToken: true,
       status: "active",
       audit: {
         createdAt: new Date().toISOString(),

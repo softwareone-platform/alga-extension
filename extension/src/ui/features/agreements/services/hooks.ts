@@ -23,7 +23,7 @@ export const useAgreements = (
   agreementIds?: string[]
 ) => {
   const { details } = useExtensionDetails();
-  const isConfigured = !!details?.token && !!details?.endpoint;
+  const isConfigured = !!details?.hasToken && !!details?.endpoint;
 
   const { data, ...state } = useQuery({
     queryKey: ["agreements", options, agreementIds],
@@ -73,7 +73,7 @@ export const useAgreements = (
 
 export const useAgreement = (id: string) => {
   const { details } = useExtensionDetails();
-  const isConfigured = !!details?.token && !!details?.endpoint;
+  const isConfigured = !!details?.hasToken && !!details?.endpoint;
 
   const { data: agreement, ...state } = useQuery({
     queryKey: ["agreements", id],
@@ -115,7 +115,7 @@ export const useAgreementSubscriptions = (
   options?: AgreementsClientSubscriptionsOptions
 ) => {
   const { details } = useExtensionDetails();
-  const isConfigured = !!details?.token && !!details?.endpoint;
+  const isConfigured = !!details?.hasToken && !!details?.endpoint;
 
   const { data, ...state } = useQuery({
     queryKey: ["agreements", agreementId, "subscriptions", options],
@@ -160,7 +160,7 @@ export const useAgreementOrders = (
   options?: AgreementsClientOrdersOptions
 ) => {
   const { details } = useExtensionDetails();
-  const isConfigured = !!details?.token && !!details?.endpoint;
+  const isConfigured = !!details?.hasToken && !!details?.endpoint;
 
   const { data, ...state } = useQuery({
     queryKey: ["agreements", agreementId, "orders", options],

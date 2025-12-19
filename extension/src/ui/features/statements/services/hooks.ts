@@ -21,7 +21,7 @@ export const useStatements = (
   agreementIds?: string[]
 ) => {
   const { details } = useExtensionDetails();
-  const isConfigured = !!details?.token && !!details?.endpoint;
+  const isConfigured = !!details?.hasToken && !!details?.endpoint;
 
   const { data, ...state } = useQuery({
     queryKey: ["statements", options, agreementIds],
@@ -83,7 +83,7 @@ export const useStatements = (
 
 export const useStatement = (id: string) => {
   const { details } = useExtensionDetails();
-  const isConfigured = !!details?.token && !!details?.endpoint;
+  const isConfigured = !!details?.hasToken && !!details?.endpoint;
 
   const { data: statement, ...state } = useQuery({
     queryKey: ["statements", id],
@@ -124,7 +124,7 @@ export const useStatementCharges = (
   options?: StatementsClientChargesOptions
 ) => {
   const { details } = useExtensionDetails();
-  const isConfigured = !!details?.token && !!details?.endpoint;
+  const isConfigured = !!details?.hasToken && !!details?.endpoint;
 
   const { data, ...state } = useQuery({
     queryKey: ["statements", statementId, "charges", options],

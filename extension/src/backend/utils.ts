@@ -1,4 +1,4 @@
-import { BillingConfig } from "@/lib/alga";
+import { BillingConfig } from "@/lib/billing-config";
 import { ExecuteResponse } from "@alga-psa/extension-runtime";
 import { logError } from "alga:extension/logging";
 import { get as getStorage } from "alga:extension/storage";

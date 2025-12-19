@@ -131,12 +131,14 @@ function SettingsEditor({
   const { saveDetails } = useExtensionDetailsMutation();
 
   const [endpoint, setEndpoint] = useState<string>(details?.endpoint || "");
-  const [token, setToken] = useState<string>(details?.token || "");
+  const [token, setToken] = useState<string>(
+    details?.hasToken ? "token-placeholder" : ""
+  );
   const [note, setNote] = useState<string>(details?.note || "");
 
   useEffect(() => {
     setEndpoint(details?.endpoint || "");
-    setToken(details?.token || "");
+    setToken(details?.hasToken ? "token-placeholder" : "");
     setNote(details?.note || "");
   }, [details]);
 
@@ -151,7 +153,7 @@ function SettingsEditor({
 
   const handleCancel = () => {
     setEndpoint(details?.endpoint || "");
-    setToken(details?.token || "");
+    setToken(details?.hasToken ? "token-placeholder" : "");
     setNote(details?.note || "");
     onClose();
   };

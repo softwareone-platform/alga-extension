@@ -16,7 +16,7 @@ export const useAccount = () => {
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
-    enabled: !!details?.token && !!details?.endpoint,
+    enabled: !!details?.hasToken && !!details?.endpoint,
   });
 
   return { account, ...rest };
