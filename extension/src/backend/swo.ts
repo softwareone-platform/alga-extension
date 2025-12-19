@@ -4,26 +4,19 @@ import type {
 } from "@alga-psa/extension-runtime";
 import { logInfo } from "alga:extension/logging";
 import { fetch as httpFetch } from "alga:extension/http";
-import { get as getStorage } from "alga:extension/storage";
 import { UserType, filterResponse, getRule } from "./filter";
 import { filters } from "./filters";
 
 import { jsonResponse, parseBody } from "./utils";
 
 // import { getBillingConfigs, jsonResponse, parseBody } from "./utils";
+// import { get as getStorage } from "alga:extension/storage";
 // import type { BillingConfig } from "@/lib/alga";
 // import type { AgreementListResponse, Agreement } from "@swo/mp-api-model";
 // import { MSPAgreement } from "@/lib/shared/agreements";
 // import { priceWithMarkup } from "@/lib/shared/price";
 
 export const swoHandler = (request: ExecuteRequest): ExecuteResponse => {
-  try {
-    const extSettings = getStorage("extension", "settings");
-    logInfo(`extSettings: ${JSON.stringify(extSettings)}`);
-  } catch (error) {
-    logInfo(`Error getting extension settings: ${error}`);
-  }
-
   const userType: UserType = "msp";
 
   const path = request.http.url.replace("/swo", "");
