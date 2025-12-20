@@ -1,16 +1,15 @@
-import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { backendClient } from "@/ui/lib/alga";
 import {
-  BillingConfigRequestBody,
-  BillingConfigResponseBody,
+  BillingConfigsRequestBody,
+  BillingConfigsResponseBody,
 } from "@/lib/billing-config";
 
 export const useBillingConfigs = () => {
   const { data: billingConfigs, ...state } = useQuery({
     queryKey: ["billing-configs"],
     queryFn: async () => {
-      const { data } = await backendClient.get<BillingConfigResponseBody>(
+      const { data } = await backendClient.get<BillingConfigsResponseBody>(
         "/billing-configs"
       );
       return data;
@@ -23,29 +22,27 @@ export const useBillingConfigs = () => {
 
 export const useBillingConfig = (agreementId?: string) => {
   const { billingConfigs, ...state } = useBillingConfigs();
-
-  const billingConfig = useMemo(() => {
-    return billingConfigs?.find((v) => v.agreementId === agreementId);
-  }, [billingConfigs, agreementId]);
-
-  return { billingConfig, ...state };
+  return {
+    billingConfig: billingConfigs?.find((v) => v.agreementId === agreementId),
+    ...state,
+  };
 };
 
-export const useBillingConfigMutation = () => {
+export const useBillingConfigsMutation = () => {
   const queryClient = useQueryClient();
 
   const {
-    mutate: saveBillingConfig,
-    mutateAsync: saveBillingConfigAsync,
+    mutate: saveBillingConfigs,
+    mutateAsync: saveBillingConfigsAsync,
     ...state
   } = useMutation({
-    mutationFn: (changes: BillingConfigRequestBody) =>
-      backendClient.post<BillingConfigResponseBody>(
+    mutationFn: (changes: BillingConfigsRequestBody) =>
+      backendClient.post<BillingConfigsResponseBody>(
         "/billing-configs",
         changes
       ),
     onSuccess: (bc) => queryClient.setQueryData(["billing-configs"], bc),
   });
 
-  return { saveBillingConfig, saveBillingConfigAsync, state };
+  return { saveBillingConfigs, saveBillingConfigsAsync, state };
 };

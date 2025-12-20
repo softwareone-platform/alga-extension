@@ -4,10 +4,10 @@ export type BillingConfigStatus = "active" | "unconfigured";
 export type BillingConfig = {
   id: string;
   agreementId: string;
+  operations: Operations;
   status: BillingConfigStatus;
   consumerId: string;
   serviceId: string;
-  operations: Operations;
   markup: number;
   note?: string;
   audit: {

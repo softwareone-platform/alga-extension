@@ -1,8 +1,10 @@
 import { BillingConfig } from "./model";
 
-export type BillingConfigRequestBody = Omit<
+export type BillingConfigChanges = Omit<
   BillingConfig,
   "audit" | "status" | "id"
->[];
+>;
 
-export type BillingConfigResponseBody = BillingConfig[];
+export type BillingConfigsRequestBody = BillingConfigChanges[];
+
+export type BillingConfigsResponseBody = BillingConfig[];

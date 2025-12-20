@@ -3,13 +3,13 @@ import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
 import { Input, Textarea } from "@ui/input";
 import { useAgreement, AgreementStatusBadge } from "@features/agreements";
 import {
-  useBillingConfig,
-  useBillingConfigMutation,
+  useBillingConfigsMutation,
+  useBillingConfigs,
 } from "@features/billing-config";
 import { Operations } from "@/lib/billing-config";
 import { Radio, RadioGroup } from "@ui/radio";
@@ -21,12 +21,16 @@ import {
 } from "@ui/listbox";
 import { withMarkup } from "@features/markup";
 import { useConsumer, useConsumers } from "@features/consumers";
-import { useServices } from "@features/services";
+import { useService, useServices } from "@features/services";
 
 function AgreementSummary({ id }: { id: string }) {
   const { agreement, isPending: isAgreementPending } = useAgreement(id);
-  const { billingConfig, isPending: isBillingConfigPending } =
-    useBillingConfig(id);
+  const { billingConfigs, isPending: isBillingConfigPending } =
+    useBillingConfigs();
+
+  const billingConfig = useMemo(() => {
+    return billingConfigs?.find((v) => v.agreementId === id);
+  }, [billingConfigs, id]);
 
   const { consumer } = useConsumer(billingConfig?.consumerId);
 
@@ -195,44 +199,46 @@ function BillingConfigEditor({
   onClose: () => void;
   agreementId: string;
 }) {
+  const { billingConfigs } = useBillingConfigs();
+  const billingConfig = useMemo(() => {
+    return billingConfigs?.find((v) => v.agreementId === agreementId);
+  }, [billingConfigs, agreementId]);
+
+  const { saveBillingConfigs } = useBillingConfigsMutation();
+  const { consumer } = useConsumer(billingConfig?.consumerId);
+  const { service } = useService(billingConfig?.serviceId);
+
   const [note, setNote] = useState("");
-  const [markup, setMarkup] = useState<number>(0);
-  const [operations, setOperations] = useState<Operations>("self-service");
-  const [consumerId, setConsumerId] = useState<string | undefined>(undefined);
-  const [serviceId, setServiceId] = useState<string | undefined>(undefined);
-
-  const defaults = useMemo<BillingConfigChanges>(
-    () => ({
-      agreementId,
-      operations: "self-service",
-      note: "",
-    }),
-    [agreementId]
+  const [markup, setMarkup] = useState<string>(
+    billingConfig?.markup?.toString() ?? ""
   );
-
-  const { billingConfig } = useBillingConfig(agreementId);
-
-  const { saveBillingConfig } = useBillingConfigMutation();
-
-  const [edited, setEdited] = useState<BillingConfigChanges>(
-    billingConfig || defaults
+  const [operations, setOperations] = useState<Operations>(
+    billingConfig?.operations ?? "self-service"
   );
-
-  useEffect(() => {
-    setEdited(billingConfig || defaults);
-  }, [billingConfig, defaults]);
+  const [consumerId, setConsumerId] = useState<string>("");
+  const [serviceId, setServiceId] = useState<string>("");
 
   const handleSave = () => {
-    saveBillingConfig(edited);
+    saveBillingConfigs([
+      ...billingConfigs!.filter((v) => v.agreementId !== agreementId),
+      {
+        agreementId,
+        consumerId,
+        serviceId,
+        markup: Number(markup) || 0,
+        operations,
+        note,
+      },
+    ]);
     onClose();
   };
 
   const handleCancel = () => {
     setNote("");
-    setMarkup(0);
+    setMarkup("");
     setOperations("self-service");
-    setConsumerId(undefined);
-    setServiceId(undefined);
+    setConsumerId("");
+    setServiceId("");
     onClose();
   };
 
@@ -245,30 +251,23 @@ function BillingConfigEditor({
           <label className="text-sm font-medium">Consumer</label>
           <div>
             <ConsumersListbox
-              consumer={edited.consumer}
-              onConsumerChange={(consumer) =>
-                setEdited({ ...edited, consumer })
-              }
+              consumer={consumer}
+              onConsumerChange={(consumer) => setConsumerId(consumer.id)}
             />
           </div>
           <label className="text-sm font-medium">Service</label>
           <div>
             <ServiceListbox
-              service={edited.service}
-              onServiceChange={(service) => setEdited({ ...edited, service })}
+              service={service}
+              onServiceChange={(service) => setServiceId(service.id)}
             />
           </div>
           <label className="text-sm font-medium">Markup</label>
           <div className="relative">
             <Input
               type="number"
-              value={edited.markup ?? ""}
-              onChange={(e) =>
-                setEdited({
-                  ...edited,
-                  markup: e.target.value ? Number(e.target.value) : undefined,
-                })
-              }
+              value={markup ?? ""}
+              onChange={(e) => setMarkup(e.target.value)}
               className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield] pr-13"
             />
             <span className="absolute right-0 top-[1px] h-[calc(100%-2px)] flex items-center justify-center text-sm border-l border-gray-300 w-10 px-2">
@@ -278,13 +277,8 @@ function BillingConfigEditor({
 
           <label className="text-sm font-medium self-start">Operations</label>
           <RadioGroup
-            value={edited.operations}
-            onChange={(operations: Operations) =>
-              setEdited({
-                ...edited,
-                operations,
-              })
-            }
+            value={operations}
+            onChange={(operations: Operations) => setOperations(operations)}
             aria-label="Operations"
           >
             <Radio value="self-service">
@@ -297,13 +291,8 @@ function BillingConfigEditor({
 
           <label className="text-sm font-medium self-start">Note</label>
           <Textarea
-            value={edited.note}
-            onChange={(e) =>
-              setEdited({
-                ...edited,
-                note: e.target.value,
-              })
-            }
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
             rows={4}
           />
         </div>

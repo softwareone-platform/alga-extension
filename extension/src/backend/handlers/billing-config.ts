@@ -7,8 +7,8 @@ import { get as getStorage, put as putStorage } from "alga:extension/storage";
 import { decode, encode, jsonResponse } from "../utils";
 import type {
   BillingConfig,
-  BillingConfigRequestBody,
-  BillingConfigResponseBody,
+  BillingConfigsRequestBody,
+  BillingConfigsResponseBody,
 } from "@/lib/billing-config";
 
 const STORAGE_KEY = "billing-configs";
@@ -43,14 +43,14 @@ export const billingConfigHandler = (
 
   if (method === "GET") {
     const configs = getBillingConfigs();
-    const response: BillingConfigResponseBody = configs;
+    const response: BillingConfigsResponseBody = configs;
     return jsonResponse(response, { status: 200 });
   }
 
   if (method === "POST") {
     try {
       const newConfigsRequestData =
-        decode<BillingConfigRequestBody>(request.http.body) || [];
+        decode<BillingConfigsRequestBody>(request.http.body) || [];
 
       if (!Array.isArray(newConfigsRequestData)) {
         return jsonResponse(

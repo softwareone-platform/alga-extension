@@ -14,7 +14,7 @@ export const useServices = () => {
   return { services, ...rest };
 };
 
-export const useService = (id: string) => {
+export const useService = (id?: string) => {
   const { servicesClient } = useContext(ServicesContext);
 
   const { data: service, ...rest } = useQuery({
