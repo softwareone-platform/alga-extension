@@ -12,7 +12,7 @@ export function Consumer() {
   const { id } = useParams<{ id: string }>();
   const { billingConfig } = useBillingConfig(id);
 
-  const { consumer } = useConsumer(billingConfig?.consumer?.id!);
+  const { consumer } = useConsumer(billingConfig?.consumerId);
 
   return (
     <Card>

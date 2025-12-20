@@ -11,7 +11,7 @@ import {
   useBillingConfig,
   useBillingConfigMutation,
 } from "@features/billing-config";
-import { BillingConfigChanges, Operations } from "@lib/alga";
+import { Operations } from "@/lib/billing-config";
 import { Radio, RadioGroup } from "@ui/radio";
 import {
   Listbox,
@@ -20,13 +20,15 @@ import {
   ListboxOptions,
 } from "@ui/listbox";
 import { withMarkup } from "@features/markup";
-import { useConsumers } from "@features/consumers";
+import { useConsumer, useConsumers } from "@features/consumers";
 import { useServices } from "@features/services";
 
 function AgreementSummary({ id }: { id: string }) {
   const { agreement, isPending: isAgreementPending } = useAgreement(id);
   const { billingConfig, isPending: isBillingConfigPending } =
     useBillingConfig(id);
+
+  const { consumer } = useConsumer(billingConfig?.consumerId);
 
   const RPxY = useMemo(
     () => withMarkup(agreement?.price?.SPxY, billingConfig?.markup),
@@ -83,9 +85,7 @@ function AgreementSummary({ id }: { id: string }) {
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Consumer</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">
-            {billingConfig?.consumer?.name || "—"}
-          </span>
+          <span className="text-sm text-black">{consumer?.name || "—"}</span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
@@ -195,6 +195,12 @@ function BillingConfigEditor({
   onClose: () => void;
   agreementId: string;
 }) {
+  const [note, setNote] = useState("");
+  const [markup, setMarkup] = useState<number>(0);
+  const [operations, setOperations] = useState<Operations>("self-service");
+  const [consumerId, setConsumerId] = useState<string | undefined>(undefined);
+  const [serviceId, setServiceId] = useState<string | undefined>(undefined);
+
   const defaults = useMemo<BillingConfigChanges>(
     () => ({
       agreementId,
@@ -222,7 +228,11 @@ function BillingConfigEditor({
   };
 
   const handleCancel = () => {
-    setEdited(billingConfig || defaults);
+    setNote("");
+    setMarkup(0);
+    setOperations("self-service");
+    setConsumerId(undefined);
+    setServiceId(undefined);
     onClose();
   };
 

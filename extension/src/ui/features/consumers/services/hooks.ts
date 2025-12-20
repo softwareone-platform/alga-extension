@@ -14,7 +14,7 @@ export const useConsumers = () => {
   return { consumers, ...rest };
 };
 
-export const useConsumer = (id: string) => {
+export const useConsumer = (id?: string) => {
   const { client } = useContext(ConsumersContext);
 
   const { data: consumer, ...rest } = useQuery({
