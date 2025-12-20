@@ -18,7 +18,7 @@ import { Link } from "@ui/link";
 import { useMemo, useState } from "react";
 import { TermsEntity } from "@swo/mp-api-model";
 import { PriceWithMarkupCell } from "@features/markup";
-import { useBillingConfig } from "@features/billing-config";
+import { useBillingConfigByAgreement } from "@features/billing-config";
 import { BILLING_PERIODS } from "@features/subscriptions";
 
 const CommitmentCell = ({
@@ -41,7 +41,7 @@ export function Subscriptions() {
   const [offset, setOffset] = useState(0);
   const { subscriptions, pagination, isFetching, isPending } =
     useAgreementSubscriptions(id!, { offset });
-  const { billingConfig } = useBillingConfig(id!);
+  const { billingConfig } = useBillingConfigByAgreement(id!);
 
   if (isPending) return <></>;
 

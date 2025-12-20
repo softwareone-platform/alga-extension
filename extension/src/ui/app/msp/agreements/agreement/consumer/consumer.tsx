@@ -1,4 +1,4 @@
-import { useBillingConfig } from "@features/billing-config";
+import { useBillingConfigByAgreement } from "@features/billing-config";
 import { useConsumer } from "@features/consumers";
 import { Card } from "@ui/card";
 import { useParams } from "react-router";
@@ -10,7 +10,7 @@ const COMPANY_TYPES = {
 
 export function Consumer() {
   const { id } = useParams<{ id: string }>();
-  const { billingConfig } = useBillingConfig(id);
+  const { billingConfig } = useBillingConfigByAgreement(id);
 
   const { consumer } = useConsumer(billingConfig?.consumerId);
 

@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@ui/table";
 import { PriceWithMarkupCell } from "@features/markup";
-import { useBillingConfig } from "@features/billing-config";
+import { useBillingConfigByAgreement } from "@features/billing-config";
 import { useOrder } from "@features/orders";
 import { Badge } from "@alga-psa/ui-kit";
 
@@ -39,7 +39,7 @@ const NameCell = ({ name, id }: { name?: string; id?: string }) => {
 export function Items() {
   const { id } = useParams<{ id: string }>();
   const { order } = useOrder(id!);
-  const { billingConfig } = useBillingConfig(order?.agreement?.id!);
+  const { billingConfig } = useBillingConfigByAgreement(order?.agreement?.id!);
 
   if (!order) return <>Loading...</>;
 

@@ -3,15 +3,14 @@ import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
 import { useMemo } from "react";
-import { useBillingConfig } from "@features/billing-config";
+import { useBillingConfigByAgreement } from "@features/billing-config";
 import { withMarkup } from "@features/markup";
 import { OrderStatusBadge, useOrder } from "@features/orders";
 
 function OrderSummary({ id }: { id: string }) {
   const { order, isPending: isOrderPending } = useOrder(id);
-  const { billingConfig, isPending: isBillingConfigPending } = useBillingConfig(
-    order?.agreement?.id
-  );
+  const { billingConfig, isPending: isBillingConfigPending } =
+    useBillingConfigByAgreement(order?.agreement?.id);
 
   const totalRP = useMemo(
     () => withMarkup(order?.price?.SPxY, billingConfig?.markup),

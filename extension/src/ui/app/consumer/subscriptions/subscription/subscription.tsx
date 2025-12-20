@@ -3,7 +3,7 @@ import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
 import { useMemo } from "react";
-import { useBillingConfig } from "@features/billing-config";
+import { useBillingConfigByAgreement } from "@features/billing-config";
 import { withMarkup } from "@features/markup";
 import {
   SubscriptionStatusBadge,
@@ -14,9 +14,8 @@ import {
 function SubscriptionSummary({ id }: { id: string }) {
   const { subscription, isPending: isSubscriptionPending } =
     useSubscription(id);
-  const { billingConfig, isPending: isBillingConfigPending } = useBillingConfig(
-    subscription?.agreement?.id
-  );
+  const { billingConfig, isPending: isBillingConfigPending } =
+    useBillingConfigByAgreement(subscription?.agreement?.id);
 
   const totalRP = useMemo(
     () => withMarkup(subscription?.price?.SPxY, billingConfig?.markup),

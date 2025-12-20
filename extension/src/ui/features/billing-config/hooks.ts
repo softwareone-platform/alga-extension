@@ -20,10 +20,18 @@ export const useBillingConfigs = () => {
   return { billingConfigs, ...state };
 };
 
-export const useBillingConfig = (agreementId?: string) => {
+export const useBillingConfigByAgreement = (agreementId?: string) => {
   const { billingConfigs, ...state } = useBillingConfigs();
   return {
     billingConfig: billingConfigs?.find((v) => v.agreementId === agreementId),
+    ...state,
+  };
+};
+
+export const useBillingConfigByConsumer = (consumerId?: string) => {
+  const { billingConfigs, ...state } = useBillingConfigs();
+  return {
+    billingConfig: billingConfigs?.find((v) => v.consumerId === consumerId),
     ...state,
   };
 };

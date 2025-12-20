@@ -8,7 +8,7 @@ import {
   TableHeaderCell,
   TableRow,
 } from "@ui/table";
-import { useBillingConfig } from "@features/billing-config";
+import { useBillingConfigByAgreement } from "@features/billing-config";
 import { PriceWithMarkupCell } from "@features/markup";
 import { useSubscription } from "@/ui/features/subscriptions";
 
@@ -25,7 +25,9 @@ const ItemCell = ({ name, id }: { name?: string; id?: string }) => {
 export function Items() {
   const { id } = useParams<{ id: string }>();
   const { subscription, isPending } = useSubscription(id!);
-  const { billingConfig } = useBillingConfig(subscription?.agreement?.id!);
+  const { billingConfig } = useBillingConfigByAgreement(
+    subscription?.agreement?.id!
+  );
   const items = subscription?.lines || [];
 
   if (isPending) return <>Loading...</>;

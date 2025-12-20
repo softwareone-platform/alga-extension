@@ -14,7 +14,7 @@ import {
 } from "@ui/table";
 import {
   BillingConfigStatusBadge,
-  useBillingConfig,
+  useBillingConfigByAgreement,
 } from "@features/billing-config";
 import { PriceWithMarkupCell, withMarkup } from "@features/markup";
 import {
@@ -22,7 +22,7 @@ import {
   useSubscription,
   BILLING_PERIODS,
 } from "@features/subscriptions";
-import { ConsumerLink } from "@features/consumers";
+import { ConsumerLink, useConsumer } from "@features/consumers";
 import { SWO_PORTAL_URL } from "@/ui/config";
 import { Dialog, DialogPanel, DialogTitle } from "@/ui/ui";
 import type { Subscription } from "@swo/mp-api-model";
@@ -30,9 +30,9 @@ import type { Subscription } from "@swo/mp-api-model";
 function SubscriptionSummary({ id }: { id: string }) {
   const { subscription, isPending: isSubscriptionPending } =
     useSubscription(id);
-  const { billingConfig, isPending: isBillingConfigPending } = useBillingConfig(
-    subscription?.agreement?.id
-  );
+  const { billingConfig, isPending: isBillingConfigPending } =
+    useBillingConfigByAgreement(subscription?.agreement?.id);
+  const { consumer } = useConsumer(billingConfig?.consumerId!);
 
   const totalRP = useMemo(
     () => withMarkup(subscription?.price?.SPxY, billingConfig?.markup),
@@ -79,10 +79,7 @@ function SubscriptionSummary({ id }: { id: string }) {
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Consumer</label>
         <div className="flex gap-2 items-center grow text-sm">
-          <ConsumerLink
-            id={billingConfig?.consumer?.id!}
-            name={billingConfig?.consumer?.name!}
-          />
+          <ConsumerLink id={consumer?.id!} name={consumer?.name!} />
         </div>
       </div>
       <div className="flex flex-col gap-1">
@@ -150,7 +147,9 @@ function Manage({
   onClose: () => void;
   subscription: Subscription;
 }) {
-  const { billingConfig } = useBillingConfig(subscription.agreement?.id!);
+  const { billingConfig } = useBillingConfigByAgreement(
+    subscription.agreement?.id!
+  );
 
   const items = subscription.lines || [];
 

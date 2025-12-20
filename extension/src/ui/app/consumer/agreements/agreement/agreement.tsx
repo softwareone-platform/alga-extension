@@ -4,13 +4,13 @@ import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
 import { useMemo } from "react";
 import { useAgreement, AgreementStatusBadge } from "@features/agreements";
-import { useBillingConfig } from "@features/billing-config";
+import { useBillingConfigByAgreement } from "@features/billing-config";
 import { withMarkup } from "@features/markup";
 
 function AgreementSummary({ id }: { id: string }) {
   const { agreement, isPending: isAgreementPending } = useAgreement(id);
   const { billingConfig, isPending: isBillingConfigPending } =
-    useBillingConfig(id);
+    useBillingConfigByAgreement(id);
 
   const RPxY = useMemo(
     () => withMarkup(agreement?.price?.SPxY, billingConfig?.markup),

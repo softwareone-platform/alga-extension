@@ -14,7 +14,7 @@ import {
 import { Link } from "@ui/link";
 import { PriceWithMarkupCell } from "@features/markup";
 import { useState } from "react";
-import { useBillingConfig } from "@features/billing-config";
+import { useBillingConfigByAgreement } from "@features/billing-config";
 import { DateTimeCell } from "@features/dates";
 
 export function Orders() {
@@ -26,7 +26,7 @@ export function Orders() {
       offset,
     }
   );
-  const { billingConfig } = useBillingConfig(id!);
+  const { billingConfig } = useBillingConfigByAgreement(id!);
 
   if (isPending) return <></>;
 

@@ -12,7 +12,7 @@ import {
 } from "@ui/table";
 import { PriceWithMarkupCell } from "@features/markup";
 import { useState } from "react";
-import { useBillingConfig } from "@features/billing-config";
+import { useBillingConfigByAgreement } from "@features/billing-config";
 import { useStatement, useStatementCharges } from "@features/statements";
 import { DateTimeCell } from "@features/dates";
 
@@ -46,7 +46,9 @@ export function Charges() {
       offset,
     }
   );
-  const { billingConfig } = useBillingConfig(statement?.agreement?.id!);
+  const { billingConfig } = useBillingConfigByAgreement(
+    statement?.agreement?.id!
+  );
 
   if (isPending) return <></>;
 

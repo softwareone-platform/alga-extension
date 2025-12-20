@@ -4,7 +4,7 @@ import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
 import { useMemo } from "react";
-import { useBillingConfig } from "@features/billing-config";
+import { useBillingConfigByAgreement } from "@features/billing-config";
 import { withMarkup } from "@features/markup";
 import { OrderStatusBadge, useOrder } from "@features/orders";
 import { ConsumerLink, useConsumer } from "@features/consumers";
@@ -12,9 +12,8 @@ import { SWO_PORTAL_URL } from "@/ui/config";
 
 function OrderSummary({ id }: { id: string }) {
   const { order, isPending: isOrderPending } = useOrder(id);
-  const { billingConfig, isPending: isBillingConfigPending } = useBillingConfig(
-    order?.agreement?.id
-  );
+  const { billingConfig, isPending: isBillingConfigPending } =
+    useBillingConfigByAgreement(order?.agreement?.id);
 
   const { consumer } = useConsumer(billingConfig?.consumerId);
 

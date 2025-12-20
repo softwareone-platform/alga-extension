@@ -2,7 +2,7 @@ import { Card } from "@ui/card";
 import { useAgreement } from "@features/agreements";
 import { Link } from "@ui/link";
 import { useParams } from "react-router";
-import { useBillingConfig } from "@features/billing-config";
+import { useBillingConfigByAgreement } from "@features/billing-config";
 
 function PlanService({
   serviceName,
@@ -57,7 +57,7 @@ function Markup({ markup }: { markup?: number }) {
 
 export function Billing() {
   const { id } = useParams<{ id: string }>();
-  const { billingConfig } = useBillingConfig(id!);
+  const { billingConfig } = useBillingConfigByAgreement(id!);
   const { agreement } = useAgreement(id!);
 
   return (

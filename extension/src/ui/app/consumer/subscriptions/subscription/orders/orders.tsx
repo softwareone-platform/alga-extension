@@ -10,7 +10,7 @@ import {
   TableRow,
   Pagination,
 } from "@ui/table";
-import { useBillingConfig } from "@features/billing-config";
+import { useBillingConfigByAgreement } from "@features/billing-config";
 import {
   useSubscription,
   useSubscriptionOrders,
@@ -20,7 +20,7 @@ import { useState } from "react";
 import { OrderStatusBadge } from "@features/orders";
 import { DateTimeCell } from "@features/dates";
 import { Order } from "@swo/mp-api-model";
-import { BillingConfig } from "@lib/alga";
+import { BillingConfig } from "@/lib/billing-config";
 import { Link } from "@ui/link";
 
 const OrderRow = ({
@@ -63,7 +63,9 @@ export function Orders() {
       offset,
     }
   );
-  const { billingConfig } = useBillingConfig(subscription?.agreement?.id);
+  const { billingConfig } = useBillingConfigByAgreement(
+    subscription?.agreement?.id
+  );
 
   if (isPending) return <></>;
 

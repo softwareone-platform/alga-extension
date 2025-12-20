@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Card } from "@ui/card";
 import {
   Pagination,
@@ -18,18 +18,15 @@ import {
 } from "@features/subscriptions";
 import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
-import { useBillingConfigsByAgreements } from "@features/billing-config";
-import { BillingConfig } from "@lib/alga";
-import { ConsumerLink } from "@features/consumers";
+import { useBillingConfigByAgreement } from "@/ui/features/billing-config";
+import { ConsumerLink, useConsumer } from "@features/consumers";
 import { Subscription } from "@swo/mp-api-model";
 
-const SubscriptionRow = ({
-  subscription,
-  billingConfig,
-}: {
-  subscription: Subscription;
-  billingConfig?: BillingConfig;
-}) => {
+const SubscriptionRow = ({ subscription }: { subscription: Subscription }) => {
+  const { billingConfig } = useBillingConfigByAgreement(
+    subscription?.agreement?.id
+  );
+  const { consumer } = useConsumer(billingConfig?.consumerId);
   return (
     <TableRow link={`/msp/subscriptions/${subscription.id}`}>
       <TableCell>
@@ -40,10 +37,7 @@ const SubscriptionRow = ({
         iconUrl={subscription.product?.icon}
       />
       <TableCell>
-        <ConsumerLink
-          id={billingConfig?.consumer?.id!}
-          name={billingConfig?.consumer?.name!}
-        />
+        <ConsumerLink id={consumer?.id!} name={consumer?.name!} />
       </TableCell>
       <AgreementCell
         name={subscription.agreement?.name}
@@ -75,25 +69,6 @@ export function Subscriptions() {
     offset,
   });
 
-  const { billingConfigs } = useBillingConfigsByAgreements(
-    subscriptions
-      .map((subscription) => subscription.agreement?.id ?? "")
-      .filter(Boolean)
-  );
-
-  const billingConfigsById =
-    useMemo(
-      () =>
-        billingConfigs?.reduce(
-          (acc, billingConfig) => ({
-            ...acc,
-            [billingConfig!.agreementId!]: billingConfig,
-          }),
-          {} as Record<string, BillingConfig>
-        ),
-      [billingConfigs]
-    ) || {};
-
   return (
     <Card>
       <Table className="grid-cols-[minmax(192px,auto)_minmax(100px,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)]">
@@ -117,7 +92,6 @@ export function Subscriptions() {
             <SubscriptionRow
               key={subscription.id}
               subscription={subscription}
-              billingConfig={billingConfigsById[subscription.agreement?.id!]}
             />
           ))}
         </TableBody>

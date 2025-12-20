@@ -3,15 +3,14 @@ import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
 import { useMemo } from "react";
-import { useBillingConfig } from "@features/billing-config";
+import { useBillingConfigByAgreement } from "@features/billing-config";
 import { withMarkup } from "@features/markup";
 import { useStatement } from "@features/statements";
 
 function StatementSummary({ id }: { id: string }) {
   const { statement, isPending: isAgreementPending } = useStatement(id);
-  const { billingConfig, isPending: isBillingConfigPending } = useBillingConfig(
-    statement?.agreement?.id
-  );
+  const { billingConfig, isPending: isBillingConfigPending } =
+    useBillingConfigByAgreement(statement?.agreement?.id);
 
   const totalRP = useMemo(
     () => withMarkup(statement?.price?.totalSP, billingConfig?.markup),

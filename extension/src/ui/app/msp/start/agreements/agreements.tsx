@@ -1,7 +1,6 @@
 import { useAgreements, AgreementStatusBadge } from "@features/agreements";
 import { ProductCell } from "@features/products";
-import { BillingConfig } from "@lib/alga";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Card } from "@ui/card";
 import { Agreement, AgreementStatus } from "@swo/mp-api-model";
 import {
@@ -15,8 +14,8 @@ import {
   TableRow,
 } from "@ui/table";
 import { MarkupCell, PriceWithMarkupCell } from "@features/markup";
-import { useBillingConfigsByAgreements } from "@features/billing-config";
-import { ConsumerLink } from "@features/consumers";
+import { ConsumerLink, useConsumer } from "@features/consumers";
+import { useBillingConfigByAgreement } from "@/ui/features/billing-config";
 
 const NameCell = ({
   name,
@@ -40,13 +39,10 @@ const NameCell = ({
   );
 };
 
-const AgreementRow = ({
-  agreement,
-  billingConfig,
-}: {
-  agreement: Agreement;
-  billingConfig?: BillingConfig;
-}) => {
+const AgreementRow = ({ agreement }: { agreement: Agreement }) => {
+  const { billingConfig } = useBillingConfigByAgreement(agreement?.id);
+  const { consumer } = useConsumer(billingConfig?.consumerId);
+
   return (
     <TableRow link={`/msp/agreements/${agreement.id}`}>
       <NameCell
@@ -61,10 +57,7 @@ const AgreementRow = ({
       />
       <TableCell>{billingConfig?.id || "—"}</TableCell>
       <TableCell>
-        <ConsumerLink
-          id={billingConfig?.consumer?.id!}
-          name={billingConfig?.consumer?.name!}
-        />
+        <ConsumerLink id={consumer?.id!} name={consumer?.name!} />
       </TableCell>
       <TableCell>{agreement.price?.SPxY || "—"}</TableCell>
       <MarkupCell markup={billingConfig?.markup} />
@@ -87,23 +80,6 @@ const AgreementRow = ({
 export function Agreements() {
   const [offset, setOffset] = useState(0);
   const { agreements, pagination, isFetching } = useAgreements({ offset });
-  const { billingConfigs } = useBillingConfigsByAgreements(
-    agreements.map((agreement) => agreement.id!)
-  );
-
-  const billingConfigsById =
-    useMemo(
-      () =>
-        billingConfigs?.reduce(
-          (acc, billingConfig) => ({
-            ...acc,
-            [billingConfig.agreementId!]: billingConfig,
-          }),
-          {} as Record<string, BillingConfig>
-        ),
-      [billingConfigs]
-    ) || {};
-
   return (
     <Card>
       <Table className="grid-cols-[minmax(192px,auto)_minmax(192px,auto)_minmax(150px,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)]">
@@ -122,11 +98,7 @@ export function Agreements() {
         </TableHeader>
         <TableBody>
           {agreements?.map((agreement) => (
-            <AgreementRow
-              key={agreement.id}
-              agreement={agreement}
-              billingConfig={billingConfigsById[agreement.id!]}
-            />
+            <AgreementRow key={agreement.id} agreement={agreement} />
           ))}
         </TableBody>
         <TableFooter>

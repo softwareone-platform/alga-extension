@@ -10,27 +10,19 @@ import {
   TableRow,
   Pagination,
 } from "@ui/table";
-import { useBillingConfig } from "@features/billing-config";
-import {
-  useSubscription,
-  useSubscriptionOrders,
-} from "@features/subscriptions";
+import { useBillingConfigByAgreement } from "@features/billing-config";
+import { useSubscriptionOrders } from "@features/subscriptions";
 import { PriceWithMarkupCell } from "@features/markup";
 import { useState } from "react";
 import { OrderStatusBadge } from "@features/orders";
 import { DateTimeCell } from "@features/dates";
 import { Order } from "@swo/mp-api-model";
-import { BillingConfig } from "@lib/alga";
-import { ConsumerLink } from "@features/consumers";
+import { ConsumerLink, useConsumer } from "@features/consumers";
 import { Link } from "@ui/link";
 
-const OrderRow = ({
-  order,
-  billingConfig,
-}: {
-  order: Order;
-  billingConfig?: BillingConfig | null;
-}) => {
+const OrderRow = ({ order }: { order: Order }) => {
+  const { billingConfig } = useBillingConfigByAgreement(order?.agreement?.id);
+  const { consumer } = useConsumer(billingConfig?.consumerId!);
   return (
     <TableRow key={order.id} link={`/msp/orders/${order.id}`}>
       <TableCell>
@@ -42,10 +34,7 @@ const OrderRow = ({
       <TableCell>{order.agreement?.name || "—"}</TableCell>
       <TableCell>{order.product?.name || "—"}</TableCell>
       <TableCell>
-        <ConsumerLink
-          id={billingConfig?.consumer?.id!}
-          name={billingConfig?.consumer?.name!}
-        />
+        <ConsumerLink id={consumer?.id!} name={consumer?.name!} />
       </TableCell>
       <TableCell>{order.price?.SPxY || "—"}</TableCell>
       <TableCell>
@@ -67,14 +56,12 @@ const OrderRow = ({
 export function Orders() {
   const { id } = useParams<{ id: string }>();
   const [offset, setOffset] = useState(0);
-  const { subscription } = useSubscription(id!);
   const { orders, pagination, isFetching, isPending } = useSubscriptionOrders(
     id!,
     {
       offset,
     }
   );
-  const { billingConfig } = useBillingConfig(subscription?.agreement?.id);
 
   if (isPending) return <></>;
 
@@ -100,11 +87,7 @@ export function Orders() {
         </TableHeader>
         <TableBody>
           {orders?.map((order) => (
-            <OrderRow
-              key={order.id}
-              order={order}
-              billingConfig={billingConfig}
-            />
+            <OrderRow key={order.id} order={order} />
           ))}
         </TableBody>
         <TableFooter>
