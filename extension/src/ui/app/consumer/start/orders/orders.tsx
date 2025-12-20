@@ -14,9 +14,9 @@ import { PriceWithMarkupCell } from "@features/markup";
 import { useOrders, OrderStatusBadge } from "@features/orders";
 import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
-import { useBillingConfigsByConsumer } from "@features/billing-config";
-import { BillingConfig } from "@lib/alga";
+import { BillingConfig } from "@/lib/billing-config";
 import { Order } from "@swo/mp-api-model";
+import { useBillingConfigs } from "@/ui/features/billing-config";
 
 const OrderRow = ({
   order,
@@ -47,29 +47,34 @@ const OrderRow = ({
 
 export function Orders() {
   const [offset, setOffset] = useState(0);
-  const { billingConfigs } = useBillingConfigsByConsumer(
-    "eeca06d2-a0f2-42a5-a33d-ecd7db5430d0"
-  );
+
+  const { billingConfigs } = useBillingConfigs();
+  const billingConfigsById =
+    useMemo(
+      () =>
+        billingConfigs
+          ?.filter(
+            (bc) =>
+              bc.consumerId === "eeca06d2-a0f2-42a5-a33d-ecd7db5430d0" &&
+              bc.status === "active" &&
+              bc.operations === "self-service"
+          )
+          .reduce(
+            (acc, billingConfig) => ({
+              ...acc,
+              [billingConfig.agreementId!]: billingConfig,
+            }),
+            {} as Record<string, BillingConfig>
+          ),
+      [billingConfigs]
+    ) || {};
 
   const { orders, pagination, isFetching } = useOrders(
     {
       offset,
     },
-    billingConfigs?.map((bc) => bc.agreementId!) ?? []
+    Object.keys(billingConfigsById)
   );
-
-  const billingConfigsById =
-    useMemo(
-      () =>
-        billingConfigs?.reduce(
-          (acc, billingConfig) => ({
-            ...acc,
-            [billingConfig!.agreementId!]: billingConfig,
-          }),
-          {} as Record<string, BillingConfig>
-        ),
-      [billingConfigs]
-    ) || {};
 
   return (
     <Card>

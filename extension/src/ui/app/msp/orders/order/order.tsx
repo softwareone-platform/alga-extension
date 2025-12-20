@@ -7,7 +7,7 @@ import { useMemo } from "react";
 import { useBillingConfig } from "@features/billing-config";
 import { withMarkup } from "@features/markup";
 import { OrderStatusBadge, useOrder } from "@features/orders";
-import { ConsumerLink } from "@features/consumers";
+import { ConsumerLink, useConsumer } from "@features/consumers";
 import { SWO_PORTAL_URL } from "@/ui/config";
 
 function OrderSummary({ id }: { id: string }) {
@@ -15,6 +15,8 @@ function OrderSummary({ id }: { id: string }) {
   const { billingConfig, isPending: isBillingConfigPending } = useBillingConfig(
     order?.agreement?.id
   );
+
+  const { consumer } = useConsumer(billingConfig?.consumerId);
 
   const totalRP = useMemo(
     () => withMarkup(order?.price?.SPxY, billingConfig?.markup),
@@ -55,10 +57,7 @@ function OrderSummary({ id }: { id: string }) {
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Consumer</label>
         <div className="flex gap-2 items-center grow text-sm">
-          <ConsumerLink
-            id={billingConfig?.consumer?.id!}
-            name={billingConfig?.consumer?.name!}
-          />
+          <ConsumerLink id={consumer?.id!} name={consumer?.name!} />
         </div>
       </div>
       <div className="flex flex-col gap-1">

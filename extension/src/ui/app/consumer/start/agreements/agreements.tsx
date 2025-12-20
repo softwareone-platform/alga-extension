@@ -1,6 +1,6 @@
 import { useAgreements, AgreementStatusBadge } from "@features/agreements";
 import { ProductCell } from "@features/products";
-import { BillingConfig } from "@lib/alga";
+import { BillingConfig } from "@/lib/billing-config";
 import { useMemo, useState } from "react";
 import { Card } from "@ui/card";
 import { Agreement, AgreementStatus } from "@swo/mp-api-model";
@@ -15,7 +15,7 @@ import {
   TableRow,
 } from "@ui/table";
 import { PriceWithMarkupCell } from "@features/markup";
-import { useBillingConfigsByConsumer } from "@features/billing-config";
+import { useBillingConfigs } from "@/ui/features/billing-config";
 
 const NameCell = ({
   name,
@@ -70,31 +70,31 @@ const AgreementRow = ({
 export function Agreements() {
   const [offset, setOffset] = useState(0);
 
-  const { billingConfigs } = useBillingConfigsByConsumer(
-    "eeca06d2-a0f2-42a5-a33d-ecd7db5430d0"
-  );
-
-  const { agreements, pagination, isFetching } = useAgreements(
-    { offset },
-    billingConfigs
-      ?.filter(
-        (bc) => bc.status === "active" && bc.operations === "self-service"
-      )
-      .map((bc) => bc.agreementId!) ?? []
-  );
-
+  const { billingConfigs } = useBillingConfigs();
   const billingConfigsById =
     useMemo(
       () =>
-        billingConfigs?.reduce(
-          (acc, billingConfig) => ({
-            ...acc,
-            [billingConfig.agreementId!]: billingConfig,
-          }),
-          {} as Record<string, BillingConfig>
-        ),
+        billingConfigs
+          ?.filter(
+            (bc) =>
+              bc.consumerId === "eeca06d2-a0f2-42a5-a33d-ecd7db5430d0" &&
+              bc.status === "active" &&
+              bc.operations === "self-service"
+          )
+          .reduce(
+            (acc, billingConfig) => ({
+              ...acc,
+              [billingConfig.agreementId!]: billingConfig,
+            }),
+            {} as Record<string, BillingConfig>
+          ),
       [billingConfigs]
     ) || {};
+
+  const { agreements, pagination, isFetching } = useAgreements(
+    { offset },
+    Object.keys(billingConfigsById)
+  );
 
   return (
     <Card>
