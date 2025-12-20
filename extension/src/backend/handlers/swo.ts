@@ -7,7 +7,7 @@ import { fetch as httpFetch } from "alga:extension/http";
 import { UserType, filterResponse, getRule } from "../filter";
 import { filters } from "../filters";
 
-import { jsonResponse, parseBody } from "../utils";
+import { decode, jsonResponse } from "../utils";
 
 // import { getBillingConfigs, jsonResponse, parseBody } from "./utils";
 // import { get as getStorage } from "alga:extension/storage";
@@ -46,7 +46,7 @@ export const swoHandler = (request: ExecuteRequest): ExecuteResponse => {
     ],
   });
 
-  const responseBody = parseBody(response.body);
+  const responseBody = decode(response.body);
   if (!responseBody) return jsonResponse({}, { status: response.status });
 
   const body = filterResponse(responseBody, rule);

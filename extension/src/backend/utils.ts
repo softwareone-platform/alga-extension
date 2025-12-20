@@ -1,51 +1,31 @@
-import { BillingConfig } from "@/lib/billing-config";
 import { ExecuteResponse } from "@alga-psa/extension-runtime";
-import { logError } from "alga:extension/logging";
-import { get as getStorage } from "alga:extension/storage";
 
 const decoder = new TextDecoder();
 const encoder = new TextEncoder();
+
+export const encode = (o: unknown): Uint8Array => {
+  return encoder.encode(JSON.stringify(o));
+};
+
+export const decode = <T = unknown>(u8a?: Uint8Array | null): T | null => {
+  if (!u8a) return null;
+
+  try {
+    return JSON.parse(decoder.decode(u8a));
+  } catch (error) {
+    return null;
+  }
+};
 
 export function jsonResponse(
   body: unknown,
   init: Partial<ExecuteResponse> = {}
 ): ExecuteResponse {
-  const encoded =
-    body instanceof Uint8Array ? body : encoder.encode(JSON.stringify(body));
   return {
     status: init.status ?? 200,
     headers: init.headers ?? [
       { name: "content-type", value: "application/json" },
     ],
-    body: encoded,
+    body: encode(body),
   };
 }
-
-export const parseBody = (
-  body?: Uint8Array<ArrayBufferLike> | null | undefined
-) => {
-  if (!body || body.length === 0) return "";
-
-  const text = decoder.decode(body);
-  if (!text) return {};
-  try {
-    const value = JSON.parse(text);
-    if (typeof value === "object" && value !== null) return value;
-  } catch {
-    // Payload parsing errors should not throw
-  }
-  return {};
-};
-
-export const getBillingConfigs = (): BillingConfig[] => {
-  try {
-    const entry = getStorage("billing-configs", "billing-configs");
-    if (entry) {
-      return parseBody(entry.value);
-    }
-    return [];
-  } catch (error) {
-    logError(`Error getting billing configs: ${error}`);
-    return [];
-  }
-};
