@@ -28,7 +28,7 @@ const getBillingConfigs = (): BillingConfig[] => {
   }
 };
 
-const saveBillingConfigs = (configs: BillingConfig[]): void => {
+export const saveBillingConfigs = (configs: BillingConfig[]): void => {
   putStorage({
     namespace: STORAGE_NAMESPACE,
     key: STORAGE_KEY,
@@ -87,7 +87,7 @@ export const billingConfigHandler = (
           };
         }
       );
-      saveBillingConfigs(newConfigs);
+      // saveBillingConfigs(newConfigs);
       return jsonResponse(newConfigs, { status: 200 });
     } catch (error) {
       logError(`Error handling POST request: ${error}`);

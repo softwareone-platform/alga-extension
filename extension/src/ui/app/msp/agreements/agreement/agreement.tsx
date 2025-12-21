@@ -29,6 +29,7 @@ function AgreementSummary({ id }: { id: string }) {
     useBillingConfigs();
 
   const billingConfig = useMemo(() => {
+    console.log("billingConfigs", billingConfigs);
     return billingConfigs?.find((v) => v.agreementId === id);
   }, [billingConfigs, id]);
 
@@ -200,9 +201,10 @@ function BillingConfigEditor({
   agreementId: string;
 }) {
   const { billingConfigs } = useBillingConfigs();
-  const billingConfig = useMemo(() => {
-    return billingConfigs?.find((v) => v.agreementId === agreementId);
-  }, [billingConfigs, agreementId]);
+  const billingConfig = useMemo(
+    () => billingConfigs?.find((v) => v.agreementId === agreementId),
+    [billingConfigs, agreementId]
+  );
 
   const { saveBillingConfigs } = useBillingConfigsMutation();
   const { consumer } = useConsumer(billingConfig?.consumerId);

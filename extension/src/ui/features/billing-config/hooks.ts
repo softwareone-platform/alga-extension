@@ -49,7 +49,8 @@ export const useBillingConfigsMutation = () => {
         "/billing-configs",
         changes
       ),
-    onSuccess: (bc) => queryClient.setQueryData(["billing-configs"], bc),
+    onSuccess: (response) =>
+      queryClient.setQueryData(["billing-configs"], response.data),
   });
 
   return { saveBillingConfigs, saveBillingConfigsAsync, state };
