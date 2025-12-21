@@ -209,8 +209,8 @@ function BillingConfigEditor({
         note: "",
         markup: 0,
         operations: "self-service",
-        consumerId: undefined,
-        serviceId: undefined,
+        consumerId: "",
+        serviceId: "",
       },
     });
 
@@ -223,8 +223,8 @@ function BillingConfigEditor({
         note: billingConfig.note ?? "",
         markup: billingConfig.markup ?? 0,
         operations: billingConfig.operations ?? "self-service",
-        consumerId: billingConfig.consumerId,
-        serviceId: billingConfig.serviceId,
+        consumerId: billingConfig.consumerId ?? "",
+        serviceId: billingConfig.serviceId ?? "",
       });
     }
   }, [billingConfigs]);
