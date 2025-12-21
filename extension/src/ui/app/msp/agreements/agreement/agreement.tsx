@@ -3,7 +3,7 @@ import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
 import { Input, Textarea } from "@ui/input";
 import { useAgreement, AgreementStatusBadge } from "@features/agreements";
@@ -11,7 +11,7 @@ import {
   useBillingConfigsMutation,
   useBillingConfigs,
 } from "@features/billing-config";
-import { Operations } from "@/lib/billing-config";
+import { BillingConfigChanges } from "@/lib/billing-config";
 import { Radio, RadioGroup } from "@ui/radio";
 import {
   Listbox,
@@ -21,7 +21,8 @@ import {
 } from "@ui/listbox";
 import { withMarkup } from "@features/markup";
 import { useConsumer, useConsumers } from "@features/consumers";
-import { useService, useServices } from "@features/services";
+import { useServices } from "@features/services";
+import { useForm, Controller } from "react-hook-form";
 
 function AgreementSummary({ id }: { id: string }) {
   const { agreement, isPending: isAgreementPending } = useAgreement(id);
@@ -136,25 +137,25 @@ function AgreementSummary({ id }: { id: string }) {
 }
 
 const ConsumersListbox = ({
-  consumer,
-  onConsumerChange,
+  consumerId,
+  onConsumerIdChange,
 }: {
-  consumer?: { id: string; name: string } | null;
-  onConsumerChange: (consumer: { id: string; name: string }) => void;
+  consumerId: string;
+  onConsumerIdChange: (id: string) => void;
 }) => {
   const { consumers } = useConsumers();
 
+  const consumer = useMemo(
+    () => consumers?.data?.find((v) => v.id === consumerId),
+    [consumers, consumerId]
+  );
+
   return (
-    <Listbox
-      value={consumer ?? ""}
-      onChange={({ id, name }: { id: string; name: string }) =>
-        onConsumerChange({ id, name })
-      }
-    >
+    <Listbox value={consumerId} onChange={onConsumerIdChange}>
       <ListboxButton>{consumer?.name ?? "-"}</ListboxButton>
       <ListboxOptions>
         {consumers?.data?.map((consumer) => (
-          <ListboxOption key={consumer.id} value={consumer}>
+          <ListboxOption key={consumer.id} value={consumer.id}>
             {consumer.name}
           </ListboxOption>
         ))}
@@ -164,25 +165,25 @@ const ConsumersListbox = ({
 };
 
 const ServiceListbox = ({
-  service,
-  onServiceChange,
+  serviceId,
+  onServiceIdChange,
 }: {
-  service?: { id: string; name: string } | null;
-  onServiceChange: (service: { id: string; name: string }) => void;
+  serviceId: string;
+  onServiceIdChange: (id: string) => void;
 }) => {
   const { services } = useServices();
 
+  const service = useMemo(
+    () => services?.data?.find((v) => v.id === serviceId),
+    [services, serviceId]
+  );
+
   return (
-    <Listbox
-      value={service ?? ""}
-      onChange={({ id, name }: { id: string; name: string }) =>
-        onServiceChange({ id, name })
-      }
-    >
+    <Listbox value={serviceId} onChange={onServiceIdChange}>
       <ListboxButton>{service?.name ?? "-"}</ListboxButton>
       <ListboxOptions>
         {services?.data?.map((service) => (
-          <ListboxOption key={service.id} value={service}>
+          <ListboxOption key={service.id} value={service.id}>
             {service.name}
           </ListboxOption>
         ))}
@@ -201,46 +202,48 @@ function BillingConfigEditor({
   agreementId: string;
 }) {
   const { billingConfigs } = useBillingConfigs();
-  const billingConfig = useMemo(
-    () => billingConfigs?.find((v) => v.agreementId === agreementId),
-    [billingConfigs, agreementId]
-  );
+
+  const { control, handleSubmit, reset, register } =
+    useForm<BillingConfigChanges>({
+      defaultValues: {
+        note: "",
+        markup: 0,
+        operations: "self-service",
+        consumerId: undefined,
+        serviceId: undefined,
+      },
+    });
+
+  useEffect(() => {
+    const billingConfig = billingConfigs?.find(
+      (v) => v.agreementId === agreementId
+    );
+    if (billingConfig) {
+      reset({
+        note: billingConfig.note ?? "",
+        markup: billingConfig.markup ?? 0,
+        operations: billingConfig.operations ?? "self-service",
+        consumerId: billingConfig.consumerId,
+        serviceId: billingConfig.serviceId,
+      });
+    }
+  }, [billingConfigs]);
 
   const { saveBillingConfigs } = useBillingConfigsMutation();
-  const { consumer } = useConsumer(billingConfig?.consumerId);
-  const { service } = useService(billingConfig?.serviceId);
 
-  const [note, setNote] = useState("");
-  const [markup, setMarkup] = useState<string>(
-    billingConfig?.markup?.toString() ?? ""
-  );
-  const [operations, setOperations] = useState<Operations>(
-    billingConfig?.operations ?? "self-service"
-  );
-  const [consumerId, setConsumerId] = useState<string>("");
-  const [serviceId, setServiceId] = useState<string>("");
-
-  const handleSave = () => {
+  const onSubmit = handleSubmit((data) => {
     saveBillingConfigs([
       ...billingConfigs!.filter((v) => v.agreementId !== agreementId),
       {
+        ...data,
         agreementId,
-        consumerId,
-        serviceId,
-        markup: Number(markup) || 0,
-        operations,
-        note,
       },
     ]);
     onClose();
-  };
+  });
 
   const handleCancel = () => {
-    setNote("");
-    setMarkup("");
-    setOperations("self-service");
-    setConsumerId("");
-    setServiceId("");
+    reset();
     onClose();
   };
 
@@ -249,62 +252,80 @@ function BillingConfigEditor({
       <DrawerPanel>
         <DrawerTitle onClose={handleCancel}>SoftwareOne Settings</DrawerTitle>
 
-        <div className="grid grid-cols-[auto_380px] gap-10 items-center">
-          <label className="text-sm font-medium">Consumer</label>
-          <div>
-            <ConsumersListbox
-              consumer={consumer}
-              onConsumerChange={(consumer) => setConsumerId(consumer.id)}
+        <form onSubmit={onSubmit}>
+          <div className="grid grid-cols-[auto_380px] gap-10 items-center">
+            <label className="text-sm font-medium">Consumer</label>
+            <div>
+              <Controller
+                name="consumerId"
+                control={control}
+                render={({ field }) => (
+                  <ConsumersListbox
+                    consumerId={field.value}
+                    onConsumerIdChange={field.onChange}
+                  />
+                )}
+              />
+            </div>
+            <label className="text-sm font-medium">Service</label>
+            <div>
+              <Controller
+                name="serviceId"
+                control={control}
+                render={({ field }) => (
+                  <ServiceListbox
+                    serviceId={field.value}
+                    onServiceIdChange={field.onChange}
+                  />
+                )}
+              />
+            </div>
+            <label className="text-sm font-medium">Markup</label>
+            <div className="relative">
+              <Input
+                type="number"
+                min={0}
+                {...register("markup", { valueAsNumber: true })}
+                className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield] pr-13"
+              />
+              <span className="absolute right-0 top-[1px] h-[calc(100%-2px)] flex items-center justify-center text-sm border-l border-gray-300 w-10 px-2">
+                %
+              </span>
+            </div>
+
+            <label className="text-sm font-medium self-start">Operations</label>
+            <Controller
+              name="operations"
+              control={control}
+              render={({ field }) => (
+                <RadioGroup
+                  value={field.value}
+                  onChange={field.onChange}
+                  aria-label="Operations"
+                >
+                  <Radio value="self-service">
+                    <span>
+                      Self-service (Clients will see Agreement details)
+                    </span>
+                  </Radio>
+                  <Radio value="managed">
+                    <span>Managed (Not visible to Clients)</span>
+                  </Radio>
+                </RadioGroup>
+              )}
             />
-          </div>
-          <label className="text-sm font-medium">Service</label>
-          <div>
-            <ServiceListbox
-              service={service}
-              onServiceChange={(service) => setServiceId(service.id)}
-            />
-          </div>
-          <label className="text-sm font-medium">Markup</label>
-          <div className="relative">
-            <Input
-              type="number"
-              value={markup ?? ""}
-              onChange={(e) => setMarkup(e.target.value)}
-              className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield] pr-13"
-            />
-            <span className="absolute right-0 top-[1px] h-[calc(100%-2px)] flex items-center justify-center text-sm border-l border-gray-300 w-10 px-2">
-              %
-            </span>
+
+            <label className="text-sm font-medium self-start">Note</label>
+            <Textarea {...register("note")} rows={4} />
           </div>
 
-          <label className="text-sm font-medium self-start">Operations</label>
-          <RadioGroup
-            value={operations}
-            onChange={(operations: Operations) => setOperations(operations)}
-            aria-label="Operations"
-          >
-            <Radio value="self-service">
-              <span>Self-service (Clients will see Agreement details)</span>
-            </Radio>
-            <Radio value="managed">
-              <span>Managed (Not visible to Clients)</span>
-            </Radio>
-          </RadioGroup>
-
-          <label className="text-sm font-medium self-start">Note</label>
-          <Textarea
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            rows={4}
-          />
-        </div>
-
-        <div className="flex justify-end gap-6">
-          <Button variant="white" onClick={handleCancel}>
-            Cancel
-          </Button>
-          <Button onClick={handleSave}>Save</Button>
-        </div>
+          <div className="flex justify-end gap-6">
+            <Button variant="white" onClick={handleCancel} type="button">
+              Cancel
+            </Button>
+            <Button type="submit">Save</Button>
+          </div>
+        </form>
       </DrawerPanel>
     </Drawer>
   );
