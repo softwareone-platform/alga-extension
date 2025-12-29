@@ -2,7 +2,7 @@ import type {
   ExecuteRequest,
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
-import { logError } from "alga:extension/logging";
+import { logError, logInfo, logWarn } from "alga:extension/logging";
 import { get as getStorage, put as putStorage } from "alga:extension/storage";
 import { decode, encode, jsonResponse } from "../utils";
 import type {
@@ -23,12 +23,12 @@ const getBillingConfigs = (): BillingConfig[] => {
     }
     return [];
   } catch (error) {
-    logError(`Error getting billing configs: ${error}`);
+    logWarn(`Could not getbilling configs: ${error}`);
     return [];
   }
 };
 
-export const saveBillingConfigs = (configs: BillingConfig[]): void => {
+const saveBillingConfigs = (configs: BillingConfig[]): void => {
   putStorage({
     namespace: STORAGE_NAMESPACE,
     key: STORAGE_KEY,
@@ -42,24 +42,26 @@ export const billingConfigHandler = (
   const method = request.http.method;
 
   if (method === "GET") {
+    logInfo(`Getting billing configs...`);
     const configs = getBillingConfigs();
     const response: BillingConfigsResponseBody = configs;
     return jsonResponse(response, { status: 200 });
   }
 
   if (method === "POST") {
+    logInfo(`Saving billing configs...`);
     try {
       const newConfigsRequestData =
         decode<BillingConfigsRequestBody>(request.http.body) || [];
 
       if (!Array.isArray(newConfigsRequestData)) {
+        logWarn(`Invalid request body, expected array`);
         return jsonResponse(
           { error: "Invalid request body, expected array" },
           { status: 400 }
         );
       }
 
-      // Transform request body to full BillingConfig objects
       const now = new Date().toISOString();
       const existingConfigs = getBillingConfigs();
 
@@ -87,7 +89,7 @@ export const billingConfigHandler = (
           };
         }
       );
-      // saveBillingConfigs(newConfigs);
+      saveBillingConfigs(newConfigs);
       return jsonResponse(newConfigs, { status: 200 });
     } catch (error) {
       logError(`Error handling POST request: ${error}`);
