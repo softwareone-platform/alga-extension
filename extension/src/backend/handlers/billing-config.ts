@@ -62,13 +62,19 @@ export const billingConfigHandler = (
         );
       }
 
+      logInfo(`1`);
+
       const now = new Date().toISOString();
       const existingConfigs = getBillingConfigs();
+
+      logInfo(`2`);
 
       const existingConfigsById = existingConfigs.reduce((acc, config) => {
         acc[config.id] = config;
         return acc;
       }, {} as Record<string, BillingConfig>);
+
+      logInfo(`3`);
 
       const newConfigs: BillingConfig[] = newConfigsRequestData.map(
         (config) => {
@@ -89,7 +95,9 @@ export const billingConfigHandler = (
           };
         }
       );
+      logInfo(`4`);
       saveBillingConfigs(newConfigs);
+      logInfo(`5`);
       return jsonResponse(newConfigs, { status: 200 });
     } catch (error) {
       logError(`Error handling POST request: ${error}`);
