@@ -29,11 +29,15 @@ const getBillingConfigs = (): BillingConfig[] => {
 };
 
 const saveBillingConfigs = (configs: BillingConfig[]): void => {
+  logInfo(`Encoding`);
+  const value = encode({ all: configs });
+  logInfo(`Encoded. Saving`);
   putStorage({
     namespace: STORAGE_NAMESPACE,
     key: STORAGE_KEY,
-    value: encode({ all: configs }),
+    value,
   });
+  logInfo(`Saved`);
 };
 
 export const billingConfigHandler = (
@@ -62,19 +66,13 @@ export const billingConfigHandler = (
         );
       }
 
-      logInfo(`1`);
-
       const now = new Date().toISOString();
       const existingConfigs = getBillingConfigs();
-
-      logInfo(`2`);
 
       const existingConfigsById = existingConfigs.reduce((acc, config) => {
         acc[config.id] = config;
         return acc;
       }, {} as Record<string, BillingConfig>);
-
-      logInfo(`3`);
 
       const newConfigs: BillingConfig[] = newConfigsRequestData.map(
         (config) => {
@@ -95,9 +93,7 @@ export const billingConfigHandler = (
           };
         }
       );
-      logInfo(`4`);
       saveBillingConfigs(newConfigs);
-      logInfo(`5`);
       return jsonResponse(newConfigs, { status: 200 });
     } catch (error) {
       logError(`Error handling POST request: ${error}`);

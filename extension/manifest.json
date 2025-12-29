@@ -1,6 +1,6 @@
 {
   "name": "com.swo.extension",
-  "publisher": "Software18",
+  "publisher": "Software19",
   "version": "0.0.9",
   "runtime": "wasm-js@1",
   "capabilities": [
@@ -15,8 +15,8 @@
     "type": "iframe",
     "entry": "ui/index.html",
     "hooks": {
-      "appMenu": { "label": "Software18" },
-      "clientPortalMenu": { "label": "Software18" }
+      "appMenu": { "label": "Software19" },
+      "clientPortalMenu": { "label": "Software19" }
     }
   },
   "assets": ["ui/**/*"]
