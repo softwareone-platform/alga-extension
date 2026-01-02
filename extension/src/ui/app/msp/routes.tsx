@@ -28,7 +28,7 @@ import {
 export const mspRoutes: RouteObject[] = [
   {
     index: true,
-    element: <Navigate to="agreements" replace />,
+    element: <Navigate to="start" replace />,
   },
   {
     path: "start",
@@ -36,7 +36,7 @@ export const mspRoutes: RouteObject[] = [
     children: [
       {
         index: true,
-        element: <Navigate to="/start/agreements" replace />,
+        element: <Navigate to="agreements" replace />,
       },
       {
         path: "agreements",
