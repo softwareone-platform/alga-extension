@@ -1,4 +1,5 @@
-import { Link } from "@ui/link";
+import { Link } from "react-router";
+import { cn } from "@/ui/utils/cn";
 
 export const ConsumerLink = ({
   id,
@@ -11,7 +12,10 @@ export const ConsumerLink = ({
 }) => {
   if (!id || !name) return <span className={className}>—</span>;
   return (
-    <Link href={`/consumers/${id}`} className={className}>
+    <Link
+      to={`/consumers/${id}`}
+      className={cn("text-blue-500 hover:text-blue-600", className)}
+    >
       {name}
     </Link>
   );

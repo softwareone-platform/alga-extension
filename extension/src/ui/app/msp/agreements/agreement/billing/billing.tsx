@@ -1,6 +1,5 @@
 import { Card } from "@ui/card";
 import { useAgreement } from "@features/agreements";
-import { Link } from "@ui/link";
 import { useParams } from "react-router";
 import { useBillingConfigByAgreement } from "@features/billing-config";
 
@@ -19,14 +18,14 @@ function PlanService({
         <div className="flex gap-2 items-center">
           {!serviceName && <span className="text-sm text-black">—</span>}
           {serviceName && (
-            <Link
+            <a
               href={serviceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm"
+              className="text-sm text-blue-500 hover:text-blue-600"
             >
               {serviceName}
-            </Link>
+            </a>
           )}
         </div>
         <label className="text-sm font-semibold text-black">Service</label>

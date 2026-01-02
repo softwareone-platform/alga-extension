@@ -3,7 +3,7 @@ import {
   SubscriptionStatusBadge,
   useAgreementSubscriptions,
 } from "@features/agreements";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import {
   Table,
   TableBody,
@@ -14,7 +14,6 @@ import {
   TableRow,
   Pagination,
 } from "@ui/table";
-import { Link } from "@ui/link";
 import { useMemo, useState } from "react";
 import { TermsEntity } from "@swo/mp-api-model";
 import { PriceWithMarkupCell } from "@features/markup";
@@ -68,8 +67,8 @@ export function Subscriptions() {
             <TableRow key={subscription.id}>
               <TableCell className="flex flex-col gap-0.5 items-start">
                 <Link
-                  className="truncate"
-                  href={`/agreements/${id}/subscriptions/${subscription.id}`}
+                  className="truncate text-blue-500 hover:text-blue-600"
+                  to={`/agreements/${id}/subscriptions/${subscription.id}`}
                   target="_blank"
                 >
                   {subscription.name}

@@ -1,5 +1,5 @@
 import { Card } from "@ui/card";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import {
   Table,
   TableBody,
@@ -18,7 +18,6 @@ import { OrderStatusBadge } from "@features/orders";
 import { DateTimeCell } from "@features/dates";
 import { Order } from "@swo/mp-api-model";
 import { ConsumerLink, useConsumer } from "@features/consumers";
-import { Link } from "@ui/link";
 
 const OrderRow = ({ order }: { order: Order }) => {
   const { billingConfig } = useBillingConfigByAgreement(order?.agreement?.id);
@@ -26,7 +25,10 @@ const OrderRow = ({ order }: { order: Order }) => {
   return (
     <TableRow key={order.id} link={`/orders/${order.id}`}>
       <TableCell>
-        <Link className="truncate" href={`/orders/${order.id}`}>
+        <Link
+          to={`/orders/${order.id}`}
+          className="text-blue-500 hover:text-blue-600 truncate"
+        >
           {order.id}
         </Link>
       </TableCell>

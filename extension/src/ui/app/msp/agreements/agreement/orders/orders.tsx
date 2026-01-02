@@ -1,6 +1,6 @@
 import { Card } from "@ui/card";
 import { OrderStatusBadge, useAgreementOrders } from "@features/agreements";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import {
   Table,
   TableBody,
@@ -11,7 +11,6 @@ import {
   TableRow,
   Pagination,
 } from "@ui/table";
-import { Link } from "@ui/link";
 import { PriceWithMarkupCell } from "@features/markup";
 import { useState } from "react";
 import { useBillingConfigByAgreement } from "@features/billing-config";
@@ -52,7 +51,10 @@ export function Orders() {
           {orders?.map((order) => (
             <TableRow key={order.id}>
               <TableCell>
-                <Link className="truncate" href={`/orders/${order.id}`}>
+                <Link
+                  to={`/orders/${order.id}`}
+                  className="text-blue-500 hover:text-blue-600 truncate"
+                >
                   {order.id}
                 </Link>
               </TableCell>
