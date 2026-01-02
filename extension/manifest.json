@@ -1,6 +1,6 @@
 {
   "name": "com.swo.extension",
-  "publisher": "Software24",
+  "publisher": "Software25",
   "version": "0.1.0",
   "runtime": "wasm-js@1",
   "capabilities": [
@@ -15,8 +15,8 @@
     "type": "iframe",
     "entry": "ui/index.html",
     "hooks": {
-      "appMenu": { "label": "Software24" },
-      "clientPortalMenu": { "label": "Software24" }
+      "appMenu": { "label": "Software25" },
+      "clientPortalMenu": { "label": "Software25" }
     }
   },
   "assets": ["ui/**/*"]
