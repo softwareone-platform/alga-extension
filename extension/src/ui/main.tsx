@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
+import { createBrowserRouter, RouterProvider } from "react-router";
 import { ALGA_API_URL, ALGA_API_KEY } from "./config.js";
 
 import { App } from "./app";
@@ -46,19 +46,11 @@ const queryClient = new QueryClient({
   },
 });
 
-const routes = PORTAL === "msp" ? mspRoutes : clientRoutes;
-
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    children: [
-      ...routes,
-      {
-        index: true,
-        element: <Navigate to={`/start`} replace />,
-      },
-    ],
+    children: PORTAL === "msp" ? mspRoutes : clientRoutes,
   },
 ]);
 

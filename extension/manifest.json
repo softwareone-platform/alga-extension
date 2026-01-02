@@ -1,7 +1,7 @@
 {
   "name": "com.swo.extension",
-  "publisher": "SoftwareONE",
-  "version": "0.0.9",
+  "publisher": "Software23",
+  "version": "0.1.0",
   "runtime": "wasm-js@1",
   "capabilities": [
     "cap:context.read",
@@ -15,8 +15,8 @@
     "type": "iframe",
     "entry": "ui/index.html",
     "hooks": {
-      "appMenu": { "label": "Software20" },
-      "clientPortalMenu": { "label": "Software20" }
+      "appMenu": { "label": "Software23" },
+      "clientPortalMenu": { "label": "Software23" }
     }
   },
   "assets": ["ui/**/*"]

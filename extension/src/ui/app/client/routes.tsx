@@ -26,7 +26,7 @@ export const clientRoutes: RouteObject[] = [
     children: [
       {
         index: true,
-        element: <Navigate to="agreements" replace />,
+        element: <Navigate to="/start/agreements" replace />,
       },
       {
         path: "agreements",
