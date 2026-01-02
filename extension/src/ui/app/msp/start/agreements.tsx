@@ -44,7 +44,7 @@ const AgreementRow = ({ agreement }: { agreement: Agreement }) => {
   const { consumer } = useConsumer(billingConfig?.consumerId);
 
   return (
-    <TableRow link={`/msp/agreements/${agreement.id}`}>
+    <TableRow link={`/agreements/${agreement.id}`}>
       <NameCell
         name={agreement.name}
         id={agreement.id!}

@@ -6,7 +6,7 @@ import { ALGA_API_URL, ALGA_API_KEY } from "./config.js";
 
 import { App } from "./app";
 import { mspRoutes } from "./app/msp";
-import { clientRoutes } from "./app/client/index.js";
+import { clientRoutes } from "./app/client";
 
 import "./ready-inject.js";
 import "./index.css";

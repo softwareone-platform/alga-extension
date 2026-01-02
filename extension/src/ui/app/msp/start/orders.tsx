@@ -22,7 +22,7 @@ const OrderRow = ({ order }: { order: Order }) => {
   const { billingConfig } = useBillingConfigByAgreement(order?.agreement?.id);
   const { consumer } = useConsumer(billingConfig?.consumerId);
   return (
-    <TableRow link={`/msp/orders/${order.id}`}>
+    <TableRow link={`/orders/${order.id}`}>
       <TableCell>
         <span className="text-sm text-blue-500 hover:text-blue-600 truncate">
           {order.id!}

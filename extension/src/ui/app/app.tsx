@@ -13,7 +13,7 @@ export function App() {
   useEffect(() => {
     if (isPending) return;
     if (!details?.hasToken || !details?.endpoint) {
-      navigate("/msp/start/settings", { replace: true });
+      navigate("/start/settings", { replace: true });
     }
   }, [details, isPending]);
 

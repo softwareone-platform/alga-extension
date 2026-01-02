@@ -25,7 +25,7 @@ const OrderRow = ({
   order: Order;
   billingConfig?: BillingConfig;
 }) => (
-  <TableRow link={`/consumer/orders/${order.id}`}>
+  <TableRow link={`/orders/${order.id}`}>
     <TableCell>
       <span className="text-sm text-blue-500 hover:text-blue-600 truncate">
         {order.id!}

@@ -28,7 +28,7 @@ const SubscriptionRow = ({ subscription }: { subscription: Subscription }) => {
   );
   const { consumer } = useConsumer(billingConfig?.consumerId);
   return (
-    <TableRow link={`/msp/subscriptions/${subscription.id}`}>
+    <TableRow link={`/subscriptions/${subscription.id}`}>
       <TableCell>
         <span className="truncate">{subscription.name || "—"}</span>
       </TableCell>

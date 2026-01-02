@@ -24,9 +24,9 @@ const OrderRow = ({ order }: { order: Order }) => {
   const { billingConfig } = useBillingConfigByAgreement(order?.agreement?.id);
   const { consumer } = useConsumer(billingConfig?.consumerId!);
   return (
-    <TableRow key={order.id} link={`/msp/orders/${order.id}`}>
+    <TableRow key={order.id} link={`/orders/${order.id}`}>
       <TableCell>
-        <Link className="truncate" href={`/msp/orders/${order.id}`}>
+        <Link className="truncate" href={`/orders/${order.id}`}>
           {order.id}
         </Link>
       </TableCell>

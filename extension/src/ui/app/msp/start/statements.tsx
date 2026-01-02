@@ -25,7 +25,7 @@ const StatementRow = ({ statement }: { statement: Statement }) => {
   const { consumer } = useConsumer(billingConfig?.consumerId);
 
   return (
-    <TableRow link={`/msp/statements/${statement.id}`}>
+    <TableRow link={`/statements/${statement.id}`}>
       <TableCell>
         <span className="text-sm text-blue-500 hover:text-blue-600 truncate">
           {statement.id!}

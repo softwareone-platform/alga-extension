@@ -31,9 +31,9 @@ const OrderRow = ({
   billingConfig?: BillingConfig | null;
 }) => {
   return (
-    <TableRow key={order.id} link={`/consumer/orders/${order.id}`}>
+    <TableRow key={order.id} link={`/orders/${order.id}`}>
       <TableCell>
-        <Link className="truncate" href={`/consumer/orders/${order.id}`}>
+        <Link className="truncate" href={`/orders/${order.id}`}>
           {order.id}
         </Link>
       </TableCell>

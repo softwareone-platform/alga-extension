@@ -69,7 +69,7 @@ export function Subscriptions() {
               <TableCell className="flex flex-col gap-0.5 items-start">
                 <Link
                   className="truncate"
-                  href={`/msp/subscriptions/${subscription.id}`}
+                  href={`/subscriptions/${subscription.id}`}
                 >
                   {subscription.name}
                 </Link>
