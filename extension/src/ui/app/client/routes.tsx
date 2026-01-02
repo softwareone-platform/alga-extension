@@ -1,11 +1,8 @@
 import { Navigate, RouteObject } from "react-router";
 import {
   Agreement,
-  SoftwareOne,
   Subscriptions as AgreementSubscriptions,
   Orders as AgreementOrders,
-  Consumer,
-  Billing,
   Details as AgreementDetails,
 } from "./agreements";
 import {
@@ -16,19 +13,12 @@ import {
 } from "./subscriptions";
 import { Order, Items, Details as OrderDetails } from "./orders";
 import { Statement, Charges, Details as StatementDetails } from "./statements";
-import {
-  Agreements,
-  Orders,
-  Settings,
-  Start,
-  Statements,
-  Subscriptions,
-} from "./start";
+import { Start, Agreements, Subscriptions, Orders, Statements } from "./start";
 
-export const mspRoutes: RouteObject[] = [
+export const clientRoutes: RouteObject[] = [
   {
     index: true,
-    element: <Navigate to="agreements" replace />,
+    element: <Navigate to="start" replace />,
   },
   {
     path: "start",
@@ -54,10 +44,6 @@ export const mspRoutes: RouteObject[] = [
         path: "statements",
         element: <Statements />,
       },
-      {
-        path: "settings",
-        element: <Settings />,
-      },
     ],
   },
   {
@@ -66,11 +52,7 @@ export const mspRoutes: RouteObject[] = [
     children: [
       {
         index: true,
-        element: <Navigate to="softwareone" replace />,
-      },
-      {
-        path: "softwareone",
-        element: <SoftwareOne />,
+        element: <Navigate to="subscriptions" replace />,
       },
       {
         path: "subscriptions",
@@ -79,14 +61,6 @@ export const mspRoutes: RouteObject[] = [
       {
         path: "orders",
         element: <AgreementOrders />,
-      },
-      {
-        path: "consumer",
-        element: <Consumer />,
-      },
-      {
-        path: "billing",
-        element: <Billing />,
       },
       {
         path: "details",

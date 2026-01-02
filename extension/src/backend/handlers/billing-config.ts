@@ -29,15 +29,12 @@ const getBillingConfigs = (): BillingConfig[] => {
 };
 
 const saveBillingConfigs = (configs: BillingConfig[]): void => {
-  logInfo(`Encoding`);
   const value = encode({ all: configs });
-  logInfo(`Encoded. Saving`);
   putStorage({
     namespace: STORAGE_NAMESPACE,
     key: STORAGE_KEY,
     value,
   });
-  logInfo(`Saved`);
 };
 
 export const billingConfigHandler = (

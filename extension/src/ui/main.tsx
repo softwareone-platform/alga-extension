@@ -6,11 +6,12 @@ import { ALGA_API_URL, ALGA_API_KEY } from "./config.js";
 
 import { App } from "./app";
 import { mspRoutes } from "./app/msp";
-import { consumerRoutes } from "./app/consumer";
+import { clientRoutes } from "./app/client/index.js";
 
 import "./ready-inject.js";
 import "./index.css";
 import "@alga-psa/ui-kit/theme.css";
+import { PORTAL } from "./utils/portal.js";
 
 //idt:TKN-3140-4844:hUOoIJsnPNBU4MeruvvLDjcYMboih3al2WXyEnY4IeTpZCF1xhex7p1qNPZVCD4b
 //idt:TKN-2515-5802:gcOsB36nFewgcEXVStNz6n9QsfzPz5nkZaNVW0WWl1VBjTttwUYEBFn8kA9lmnnc
@@ -45,16 +46,17 @@ const queryClient = new QueryClient({
   },
 });
 
+const routes = PORTAL === "msp" ? mspRoutes : clientRoutes;
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      ...mspRoutes,
-      ...consumerRoutes,
+      ...routes,
       {
         index: true,
-        element: <Navigate to="/msp/start" replace />,
+        element: <Navigate to={`/start`} replace />,
       },
     ],
   },

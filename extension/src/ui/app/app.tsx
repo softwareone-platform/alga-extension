@@ -1,6 +1,5 @@
 import { Outlet, useNavigate } from "react-router";
-import { useEffect, useRef } from "react";
-import { runIFrame } from "@lib/swo-navigation";
+import { useEffect } from "react";
 import { ConsumersProvider } from "@features/consumers";
 import { ServicesProvider } from "@features/services";
 import { useExtensionDetails } from "@features/extension";
@@ -8,16 +7,8 @@ import { ALGA_API_URL, ALGA_API_KEY } from "../config";
 
 export function App() {
   const { details, isPending } = useExtensionDetails();
-  const isReady = useRef(false);
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (window.top === window || !window.top || isReady.current) return;
-    isReady.current = true;
-
-    runIFrame(window.top, window);
-  }, []);
 
   useEffect(() => {
     if (isPending) return;
