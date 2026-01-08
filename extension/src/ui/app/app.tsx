@@ -4,11 +4,16 @@ import { ConsumersProvider } from "@features/consumers";
 import { ServicesProvider } from "@features/services";
 import { useExtensionDetails } from "@features/extension";
 import { ALGA_API_URL, ALGA_API_KEY } from "../config";
+import { backendClient } from "../lib/alga";
 
 export function App() {
   const { details, isPending } = useExtensionDetails();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    backendClient.get<any>("/user").then(console.log);
+  }, []);
 
   useEffect(() => {
     if (isPending) return;

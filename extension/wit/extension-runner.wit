@@ -89,6 +89,7 @@ interface types {
 }
 
 interface user {
+    use types.{user-data, user-error};
     get-user: func() -> result<user-data, user-error>;
 }
 

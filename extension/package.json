@@ -10,7 +10,7 @@
     "postbuild": "node scripts/postbuild.mjs",
     "build:ui": "tsc -b && BUILD_TARGET=ui vite build",
     "build:alga": "npm run build && npm run pack",
-    "build:backend": "tsup src/backend/handler.ts --format esm --out-dir dist/js --clean --external alga:extension/secrets --external alga:extension/http --external alga:extension/storage --external alga:extension/logging --external alga:extension/ui-proxy --external alga:extension/context",
+    "build:backend": "tsup src/backend/handler.ts --format esm --out-dir dist/js --clean --external alga:extension/secrets --external alga:extension/http --external alga:extension/storage --external alga:extension/logging --external alga:extension/ui-proxy --external alga:extension/context --external alga:extension/user",
     "build:wasm": "jco componentize dist/js/handler.js --wit ./wit/extension-runner.wit --world-name runner --disable all --out dist/main.wasm",
     "pack": "alga pack",
     "pack2": "tar --zstd -cf bundle.tar.zst manifest.json dist/main.wasm dist/ui",
