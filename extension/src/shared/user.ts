@@ -1,3 +1,5 @@
+//Model
+export type UserType = "internal" | "client";
 export type User = {
   tenantId: string;
   clientName: string;
@@ -6,3 +8,6 @@ export type User = {
   userName: string;
   userType: "internal" | "client";
 };
+
+//API
+export type UserResponseBody = User;

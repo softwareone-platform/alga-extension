@@ -1,4 +1,4 @@
-import { BillingConfig, BillingConfigChange } from "@/lib/billing-config";
+import { BillingConfig, BillingConfigChange } from "@/shared/billing-configs";
 import { StorageClient } from "../storage-client";
 
 const STORAGE_KEY = "billing-configs";

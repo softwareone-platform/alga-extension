@@ -1,8 +1,7 @@
 export type ExtensionStatus = "unconfigured" | "active" | "disabled";
-
 export type ExtensionDetails = {
-  endpoint?: string;
-  token?: string;
+  endpoint: string;
+  token: string;
   note?: string;
   status: ExtensionStatus;
   audit: {
@@ -16,6 +15,10 @@ export type ExtensionDetails = {
 export type ExtensionDetailsChange = Pick<
   ExtensionDetails,
   "endpoint" | "token" | "note"
-> & {
-  status?: "active" | "disabled";
+> & { status?: ExtensionStatus };
+
+//API
+export type ExtensionDetailsRequestBody = ExtensionDetailsChange;
+export type ExtensionDetailsResponseBody = Omit<ExtensionDetails, "token"> & {
+  hasToken: boolean;
 };

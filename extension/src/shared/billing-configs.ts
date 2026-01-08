@@ -20,3 +20,7 @@ export type BillingConfigChange = Omit<
   BillingConfig,
   "audit" | "status" | "id"
 >;
+
+//API
+export type BillingConfigResponseBody = BillingConfig[];
+export type BillingConfigRequestBody = BillingConfigChange[];
