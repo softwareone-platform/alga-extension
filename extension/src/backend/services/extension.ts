@@ -1,13 +1,11 @@
 import {
   ExtensionDetails,
-  ExtensionDetailsRequestBody,
+  ExtensionDetailsChange,
 } from "@/shared/extension-details";
 import { StorageClient } from "../storage-client";
 
 const STORAGE_KEY = "settings";
 const STORAGE_NAMESPACE = "swo";
-
-export type ExtensionDetailsChange = ExtensionDetailsRequestBody;
 
 export class ExtensionService {
   private readonly storage: StorageClient;

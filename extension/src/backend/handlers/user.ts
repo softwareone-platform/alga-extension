@@ -2,26 +2,14 @@ import type {
   ExecuteRequest,
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
-import { getUser } from "alga:extension/user";
-import { logError } from "alga:extension/logging";
 import { jsonResponse } from "../utils";
+import { UsersService } from "../services/users";
 
 export const userHandler = (request: ExecuteRequest): ExecuteResponse => {
-  if (request.http.method !== "GET") {
-    return jsonResponse({ error: "Method not allowed" }, { status: 405 });
+  if (request.http.method === "GET") {
+    const user = new UsersService().getUser();
+    return jsonResponse(user, { status: 200 });
   }
 
-  try {
-    const user = getUser();
-    return jsonResponse(user, { status: 200 });
-  } catch (error) {
-    logError(`Get User Error: ${error}`);
-    return jsonResponse(
-      {
-        error: "User Error",
-        message: "User information not available",
-      },
-      { status: 403 }
-    );
-  }
+  return jsonResponse({ error: "Method not allowed" }, { status: 405 });
 };

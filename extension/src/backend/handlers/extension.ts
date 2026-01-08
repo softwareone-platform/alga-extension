@@ -5,7 +5,10 @@ import type {
 
 import { decode, jsonResponse } from "../utils";
 import { ExtensionService } from "../services/extension";
-import { ExtensionDetailsResponseBody } from "@/shared/extension-details";
+import {
+  ExtensionDetailsRequestBody,
+  ExtensionDetailsResponseBody,
+} from "@/shared/extension-details";
 
 export const extensionHandler = ({
   http: { method, body },
@@ -13,15 +16,31 @@ export const extensionHandler = ({
   const extensionService = new ExtensionService();
 
   if (method === "GET") {
-    const details: ExtensionDetailsResponseBody = extensionService.getDetails();
-    return jsonResponse(details as ExtensionDetailsResponseBody, {
+    const details = extensionService.getDetails();
+    if (!details) {
+      return jsonResponse(
+        { error: "Extension details not found" },
+        { status: 404 }
+      );
+    }
+
+    const { token, ...rest } = details;
+
+    const response: ExtensionDetailsResponseBody = {
+      ...rest,
+      hasToken: !!token,
+    };
+    return jsonResponse(response, {
       status: 200,
     });
   }
 
   if (method === "POST") {
-    const changes = decode(body) || [];
-    const newDetails = extensionService.saveDetails(changes);
+    const change = decode(body) as ExtensionDetailsRequestBody;
+    if (!change) {
+      return jsonResponse({ error: "Invalid request body" }, { status: 400 });
+    }
+    const newDetails = extensionService.saveDetails(change);
     return jsonResponse(newDetails, { status: 202 });
 
     // return jsonResponse(
