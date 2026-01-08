@@ -1,6 +1,6 @@
 {
   "name": "com.swo.extension",
-  "publisher": "Software25",
+  "publisher": "Software26",
   "version": "0.1.0",
   "runtime": "wasm-js@1",
   "capabilities": [
@@ -9,14 +9,15 @@
     "cap:secrets.get",
     "cap:http.fetch",
     "cap:ui.proxy",
-    "cap:storage.kv"
+    "cap:storage.kv",
+    "cap:user.read"
   ],
   "ui": {
     "type": "iframe",
     "entry": "ui/index.html",
     "hooks": {
-      "appMenu": { "label": "Software25" },
-      "clientPortalMenu": { "label": "Software25" }
+      "appMenu": { "label": "Software26" },
+      "clientPortalMenu": { "label": "Software26" }
     }
   },
   "assets": ["ui/**/*"]

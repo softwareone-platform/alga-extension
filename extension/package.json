@@ -19,7 +19,7 @@
     "alga-proxy": "npx local-cors-proxy --proxyUrl https://algapsa.com --port 8010"
   },
   "dependencies": {
-    "@alga-psa/extension-runtime": "^0.2.1",
+    "@alga-psa/extension-runtime": "^0.3.0",
     "@alga-psa/ui-kit": "^0.1.0",
     "@headlessui/react": "^2.2.7",
     "@swo/mp-api-model": "^5.1.297",

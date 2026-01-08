@@ -4,6 +4,7 @@ import type {
 } from "@alga-psa/extension-runtime";
 import { logError, logInfo, logWarn } from "alga:extension/logging";
 import { get as getStorage, put as putStorage } from "alga:extension/storage";
+import { getUser } from "alga:extension/user";
 import { decode, encode, jsonResponse } from "../utils";
 import type {
   BillingConfig,

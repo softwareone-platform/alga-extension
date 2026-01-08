@@ -75,3 +75,16 @@ declare module "alga:extension/ui-proxy" {
     payload?: Uint8Array | null
   ): Uint8Array; // throws ProxyError
 }
+
+declare module "alga:extension/user" {
+  export interface UserData {
+    tenantId: string;
+    clientName: string;
+    userId: string;
+    userEmail: string;
+    userName: string;
+    userType: string;
+  }
+  export type UserError = "not-available" | "not-allowed";
+  export function getUser(): UserData; // throws UserError on failure
+}
