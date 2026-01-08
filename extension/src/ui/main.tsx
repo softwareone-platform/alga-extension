@@ -12,6 +12,8 @@ import "./ready-inject.js";
 import "./index.css";
 import "@alga-psa/ui-kit/theme.css";
 import { PORTAL } from "./utils/portal.js";
+import { backendClient } from "./lib/alga/url.js";
+import { UserResponseBody } from "@/lib/user/api.js";
 
 //idt:TKN-3140-4844:hUOoIJsnPNBU4MeruvvLDjcYMboih3al2WXyEnY4IeTpZCF1xhex7p1qNPZVCD4b
 //idt:TKN-2515-5802:gcOsB36nFewgcEXVStNz6n9QsfzPz5nkZaNVW0WWl1VBjTttwUYEBFn8kA9lmnnc
@@ -53,6 +55,10 @@ const router = createBrowserRouter([
     children: PORTAL === "msp" ? mspRoutes : clientRoutes,
   },
 ]);
+
+backendClient
+  .get<UserResponseBody>("/user")
+  .then((res) => console.log(res.data));
 
 console.log(ALGA_API_URL, ALGA_API_KEY);
 
