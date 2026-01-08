@@ -1,7 +1,7 @@
 import "./polyfill";
 
 import { logError } from "alga:extension/logging";
-import { swoHandler, extensionHandler, billingConfigHandler } from "./handlers";
+import { swoHandler, extensionHandler, billingConfigHandler, userHandler } from "./handlers";
 import type {
   ExecuteRequest,
   ExecuteResponse,
@@ -12,6 +12,7 @@ const routes = [
   { path: "/swo", handler: swoHandler },
   { path: "/extension", handler: extensionHandler },
   { path: "/billing-config", handler: billingConfigHandler },
+  { path: "/user", handler: userHandler },
 ];
 
 export function handler(request: ExecuteRequest): ExecuteResponse {
