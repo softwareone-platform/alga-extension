@@ -10,7 +10,7 @@ import { filters } from "../filters";
 import { decode, jsonResponse } from "../utils";
 
 export const swoHandler = (request: ExecuteRequest): ExecuteResponse => {
-  const userType: UserType = "msp";
+  const userType: UserType = "internal";
 
   const path = request.http.url.replace("/swo", "");
 

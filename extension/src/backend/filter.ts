@@ -1,4 +1,4 @@
-export type UserType = "msp" | "customer";
+export type UserType = "internal" | "client";
 
 export type Rule = {
   path: string;

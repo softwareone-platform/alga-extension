@@ -4,9 +4,13 @@ import type {
 } from "@alga-psa/extension-runtime";
 
 import { jsonResponse } from "../utils";
+import { getUser } from "alga:extension/user";
 
 export const extensionHandler = (request: ExecuteRequest): ExecuteResponse => {
-  // const userType: UserType = "msp";
+  const { userType } = getUser();
+  if (userType !== "internal") {
+    return jsonResponse({ error: "Forbidden" }, { status: 403 });
+  }
 
   if (request.http.method !== "GET") {
     return jsonResponse({ error: "Method not allowed" }, { status: 405 });

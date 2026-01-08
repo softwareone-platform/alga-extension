@@ -4,5 +4,5 @@ export type User = {
   userId: string;
   userEmail: string;
   userName: string;
-  userType: string;
+  userType: "internal" | "client";
 };
