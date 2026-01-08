@@ -3,59 +3,28 @@ import type {
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
 import { logError, logInfo, logWarn } from "alga:extension/logging";
-import { get as getStorage, put as putStorage } from "alga:extension/storage";
-import { decode, encode, jsonResponse } from "../utils";
-import type {
-  BillingConfig,
-  BillingConfigsRequestBody,
-  BillingConfigsResponseBody,
-} from "@/lib/billing-config";
-
-const STORAGE_KEY = "billing-configs";
-const STORAGE_NAMESPACE = "billing-configs";
-
-const getBillingConfigs = (): BillingConfig[] => {
-  try {
-    const entry = getStorage(STORAGE_NAMESPACE, STORAGE_KEY);
-    if (entry) {
-      const data = decode<{ all: BillingConfig[] }>(entry.value);
-      return data?.all ?? [];
-    }
-    return [];
-  } catch (error) {
-    logWarn(`Could not getbilling configs: ${error}`);
-    return [];
-  }
-};
-
-const saveBillingConfigs = (configs: BillingConfig[]): void => {
-  const value = encode({ all: configs });
-  putStorage({
-    namespace: STORAGE_NAMESPACE,
-    key: STORAGE_KEY,
-    value,
-  });
-};
+import { decode, jsonResponse } from "../utils";
+import { BillingConfigsService } from "../services/billing-configs";
 
 export const billingConfigHandler = (
   request: ExecuteRequest
 ): ExecuteResponse => {
   const method = request.http.method;
 
+  const billingConfigsService = new BillingConfigsService();
+
   if (method === "GET") {
     logInfo(`Getting billing configs...`);
-    const configs = getBillingConfigs();
-    const response: BillingConfigsResponseBody = configs;
-    return jsonResponse(response, { status: 200 });
+    const configs = billingConfigsService.getConfigs();
+    return jsonResponse(configs, { status: 200 });
   }
 
   if (method === "POST") {
     logInfo(`Saving billing configs...`);
     try {
-      const newConfigsRequestData =
-        decode<BillingConfigsRequestBody>(request.http.body) || [];
+      const changes = decode(request.http.body) || [];
 
-      if (!Array.isArray(newConfigsRequestData)) {
+      if (!Array.isArray(changes)) {
         logWarn(`Invalid request body, expected array`);
         return jsonResponse(
           { error: "Invalid request body, expected array" },
@@ -63,34 +32,7 @@ export const billingConfigHandler = (
         );
       }
 
-      const now = new Date().toISOString();
-      const existingConfigs = getBillingConfigs();
-
-      const existingConfigsById = existingConfigs.reduce((acc, config) => {
-        acc[config.id] = config;
-        return acc;
-      }, {} as Record<string, BillingConfig>);
-
-      const newConfigs: BillingConfig[] = newConfigsRequestData.map(
-        (config) => {
-          const existingConfig = existingConfigsById[config.agreementId];
-          return {
-            ...config,
-            id: existingConfig?.id || config.agreementId,
-            status:
-              config.consumerId &&
-              config.serviceId &&
-              config.markup !== undefined
-                ? "active"
-                : "unconfigured",
-            audit: {
-              createdAt: existingConfig?.audit.createdAt || now,
-              updatedAt: now,
-            },
-          };
-        }
-      );
-      saveBillingConfigs(newConfigs);
+      const newConfigs = billingConfigsService.saveConfigs(changes);
       return jsonResponse(newConfigs, { status: 200 });
     } catch (error) {
       logError(`Error handling POST request: ${error}`);

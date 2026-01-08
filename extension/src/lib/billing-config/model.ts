@@ -15,3 +15,8 @@ export type BillingConfig = {
     updatedAt?: string;
   };
 };
+
+export type BillingConfigChange = Omit<
+  BillingConfig,
+  "audit" | "status" | "id"
+>;

@@ -12,3 +12,10 @@ export type ExtensionDetails = {
     disabledAt?: string;
   };
 };
+
+export type ExtensionDetailsChange = Pick<
+  ExtensionDetails,
+  "endpoint" | "token" | "note"
+> & {
+  status?: "active" | "disabled";
+};

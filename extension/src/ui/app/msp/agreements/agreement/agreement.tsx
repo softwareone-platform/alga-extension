@@ -11,7 +11,7 @@ import {
   useBillingConfigsMutation,
   useBillingConfigs,
 } from "@features/billing-config";
-import { BillingConfigChanges } from "@/lib/billing-config";
+import { BillingConfigChange } from "@/lib/billing-config";
 import { Radio, RadioGroup } from "@ui/radio";
 import {
   Listbox,
@@ -204,7 +204,7 @@ function BillingConfigEditor({
   const { billingConfigs } = useBillingConfigs();
 
   const { control, handleSubmit, reset, register } =
-    useForm<BillingConfigChanges>({
+    useForm<BillingConfigChange>({
       defaultValues: {
         note: "",
         markup: 0,
