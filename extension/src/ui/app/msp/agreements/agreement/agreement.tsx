@@ -11,7 +11,7 @@ import {
   useBillingConfigsMutation,
   useBillingConfigs,
 } from "@features/billing-config";
-import { BillingConfigChange } from "@/lib/billing-config";
+import { BillingConfigChange } from "@/shared/billing-configs";
 import { Radio, RadioGroup } from "@ui/radio";
 import {
   Listbox,

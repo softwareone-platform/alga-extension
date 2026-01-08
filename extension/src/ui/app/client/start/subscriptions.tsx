@@ -18,7 +18,7 @@ import {
 } from "@features/subscriptions";
 import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
-import { BillingConfig } from "@/lib/billing-config";
+import { BillingConfig } from "@/shared/billing-configs";
 import { Subscription } from "@swo/mp-api-model";
 import { useBillingConfigs } from "@/ui/features/billing-config/hooks";
 

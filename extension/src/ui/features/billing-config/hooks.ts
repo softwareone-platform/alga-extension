@@ -3,7 +3,7 @@ import { backendClient } from "@/ui/lib/alga";
 import {
   BillingConfigsRequestBody,
   BillingConfigsResponseBody,
-} from "@/lib/billing-config";
+} from "@/shared/billing-configs";
 
 export const useBillingConfigs = () => {
   const { data: billingConfigs, ...state } = useQuery({

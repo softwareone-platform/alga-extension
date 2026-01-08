@@ -14,7 +14,7 @@ import { PriceWithMarkupCell } from "@features/markup";
 import { useOrders, OrderStatusBadge } from "@features/orders";
 import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
-import { BillingConfig } from "@/lib/billing-config";
+import { BillingConfig } from "@/shared/billing-configs";
 import { Order } from "@swo/mp-api-model";
 import { useBillingConfigs } from "@/ui/features/billing-config";
 

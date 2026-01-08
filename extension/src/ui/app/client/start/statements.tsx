@@ -14,7 +14,7 @@ import { PriceWithMarkupCell } from "@features/markup";
 import { useStatements } from "@features/statements";
 import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
-import { BillingConfig } from "@/lib/billing-config";
+import { BillingConfig } from "@/shared/billing-configs";
 import { Statement } from "@swo/mp-api-model/billing";
 import { useBillingConfigs } from "@/ui/features/billing-config/hooks";
 

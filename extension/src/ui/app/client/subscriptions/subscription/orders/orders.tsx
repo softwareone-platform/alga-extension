@@ -20,7 +20,7 @@ import { useState } from "react";
 import { OrderStatusBadge } from "@features/orders";
 import { DateTimeCell } from "@features/dates";
 import { Order } from "@swo/mp-api-model";
-import { BillingConfig } from "@/lib/billing-config";
+import { BillingConfig } from "@/shared/billing-configs";
 
 const OrderRow = ({
   order,

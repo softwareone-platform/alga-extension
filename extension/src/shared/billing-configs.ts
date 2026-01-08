@@ -22,5 +22,5 @@ export type BillingConfigChange = Omit<
 >;
 
 //API
-export type BillingConfigResponseBody = BillingConfig[];
-export type BillingConfigRequestBody = BillingConfigChange[];
+export type BillingConfigsResponseBody = BillingConfig[];
+export type BillingConfigsRequestBody = BillingConfigChange[];

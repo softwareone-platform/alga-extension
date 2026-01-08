@@ -1,6 +1,5 @@
 import { useAgreements, AgreementStatusBadge } from "@features/agreements";
 import { ProductCell } from "@features/products";
-import { BillingConfig } from "@/lib/billing-config";
 import { useMemo, useState } from "react";
 import { Card } from "@ui/card";
 import { Agreement, AgreementStatus } from "@swo/mp-api-model";
@@ -16,6 +15,7 @@ import {
 } from "@ui/table";
 import { PriceWithMarkupCell } from "@features/markup";
 import { useBillingConfigs } from "@/ui/features/billing-config";
+import { BillingConfig } from "@/shared/billing-configs";
 
 const NameCell = ({
   name,
