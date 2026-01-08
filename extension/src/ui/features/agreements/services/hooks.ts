@@ -51,7 +51,7 @@ export const useAgreements = (
 
       if (agreementIds)
         query.filter({
-          field: "agreement.id",
+          field: "id",
           value: agreementIds,
           operator: "in",
         });
