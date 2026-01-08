@@ -2,7 +2,6 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router";
-import { ALGA_API_URL, ALGA_API_KEY } from "./config.js";
 
 import { App } from "./app";
 import { mspRoutes } from "./app/msp";
@@ -11,7 +10,6 @@ import { clientRoutes } from "./app/client";
 import "./ready-inject.js";
 import "./index.css";
 import "@alga-psa/ui-kit/theme.css";
-import { PORTAL } from "./utils/portal.js";
 import { backendClient } from "./lib/alga/url.js";
 import { UserResponseBody } from "@/lib/user/api.js";
 
@@ -20,6 +18,8 @@ import { UserResponseBody } from "@/lib/user/api.js";
 //idt:TKN-3610-0872:IzD4V5gC9T6dBmpMWrZ60eIkzzbzb9OjliIWdrA2Xs2IXU4umyY0e62x7NHOhRgx
 
 //idt:TKN-8557-7823:Rv3ltKu4js3bVvR6Ok6n0JmIfruCTusirs1nI1UDF3T4AzuiHPPkuMG90gHAsNrR
+
+// console.log(ALGA_API_URL, ALGA_API_KEY);
 
 //https://portal.s1.live/commerce/subscriptions/SUB-5390-6511-9769
 
@@ -36,36 +36,32 @@ import { UserResponseBody } from "@/lib/user/api.js";
 //   }
 // })();
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 2,
-      refetchOnWindowFocus: false,
+backendClient.get<UserResponseBody>("/user").then(({ data: { userType } }) => {
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <App />,
+      children: userType === "internal" ? mspRoutes : clientRoutes,
     },
-    mutations: {
-      retry: 0,
+  ]);
+
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 2,
+        refetchOnWindowFocus: false,
+      },
+      mutations: {
+        retry: 0,
+      },
     },
-  },
+  });
+
+  createRoot(document.getElementById("root")!).render(
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </StrictMode>
+  );
 });
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    children: PORTAL === "msp" ? mspRoutes : clientRoutes,
-  },
-]);
-
-backendClient
-  .get<UserResponseBody>("/user")
-  .then((res) => console.log(res.data));
-
-console.log(ALGA_API_URL, ALGA_API_KEY);
-
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  </StrictMode>
-);

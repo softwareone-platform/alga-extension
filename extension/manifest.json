@@ -1,6 +1,6 @@
 {
   "name": "com.swo.extension",
-  "publisher": "Software26",
+  "publisher": "Software28",
   "version": "0.1.0",
   "runtime": "wasm-js@1",
   "capabilities": [
@@ -16,8 +16,8 @@
     "type": "iframe",
     "entry": "ui/index.html",
     "hooks": {
-      "appMenu": { "label": "Software26" },
-      "clientPortalMenu": { "label": "Software26" }
+      "appMenu": { "label": "Software28" },
+      "clientPortalMenu": { "label": "Software28" }
     }
   },
   "assets": ["ui/**/*"]
