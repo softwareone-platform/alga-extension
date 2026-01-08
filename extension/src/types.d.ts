@@ -1,5 +1,3 @@
-// Type declarations for WIT imports (alga:extension/*)
-
 declare module "alga:extension/logging" {
   export function logInfo(message: string): void;
   export function logWarn(message: string): void;

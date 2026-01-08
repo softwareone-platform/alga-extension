@@ -9,13 +9,6 @@ import { filters } from "../filters";
 
 import { decode, jsonResponse } from "../utils";
 
-// import { getBillingConfigs, jsonResponse, parseBody } from "./utils";
-// import { get as getStorage } from "alga:extension/storage";
-// import type { BillingConfig } from "@/lib/alga";
-// import type { AgreementListResponse, Agreement } from "@swo/mp-api-model";
-// import { MSPAgreement } from "@/lib/shared/agreements";
-// import { priceWithMarkup } from "@/lib/shared/price";
-
 export const swoHandler = (request: ExecuteRequest): ExecuteResponse => {
   const userType: UserType = "msp";
 
