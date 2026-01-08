@@ -44,9 +44,10 @@ function SettingsActions() {
 
   const setStatus = (status: "active" | "disabled") => {
     saveDetails({
-      ...(details || {}),
       note,
       status,
+      token: details?.hasToken ? "token-placeholder" : "",
+      endpoint: details?.endpoint || "",
     });
     setNote("");
     setIsEnabledOpen(false);
