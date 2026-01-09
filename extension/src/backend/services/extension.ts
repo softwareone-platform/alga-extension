@@ -41,19 +41,17 @@ export class ExtensionService {
     if (!isConfigured) {
       status = "unconfigured";
     }
-    if (
-      isConfigured &&
-      data.status === "active" &&
-      details.status !== "active"
-    ) {
+
+    if (isConfigured && status === "unconfigured") {
       status = "active";
       activatedAt = new Date().toISOString();
     }
-    if (
-      isConfigured &&
-      data.status === "disabled" &&
-      details.status !== "disabled"
-    ) {
+
+    if (isConfigured && status !== "active" && data.status === "active") {
+      status = "active";
+      activatedAt = new Date().toISOString();
+    }
+    if (isConfigured && status !== "disabled" && data.status === "disabled") {
       status = "disabled";
       disabledAt = new Date().toISOString();
     }

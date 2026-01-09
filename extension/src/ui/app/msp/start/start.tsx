@@ -13,18 +13,24 @@ import {
 import { Badge } from "@alga-psa/ui-kit";
 import { ActionItem, Actions } from "@ui/actions";
 import { Input, Textarea } from "@ui/input";
+import { ExtensionStatus } from "@/shared/extension-details";
 
-function StatusBadge() {
-  const { details, isLoading, error } = useExtensionDetails();
+function StatusBadge({
+  status,
+  hasError,
+}: {
+  status: ExtensionStatus;
+  hasError: boolean;
+}) {
+  console.log("status", status);
+  console.log("hasError", hasError);
 
-  if (isLoading) return <></>;
+  if (hasError) return <Badge tone="danger">Error</Badge>;
 
-  if (error) return <Badge tone="danger">Error</Badge>;
-  if (!details?.status || details.status === "unconfigured")
+  if (status === "unconfigured")
     return <Badge tone="default">Unconfigured</Badge>;
-  if (details.status === "disabled")
-    return <Badge tone="warning">Disabled</Badge>;
-  if (details.status === "active") return <Badge tone="success">Active</Badge>;
+  if (status === "disabled") return <Badge tone="warning">Disabled</Badge>;
+  if (status === "active") return <Badge tone="success">Active</Badge>;
 
   return <></>;
 }
@@ -39,8 +45,10 @@ function SettingsActions() {
 
   const [note, setNote] = useState("");
 
-  const canEnable = details?.status === "disabled";
-  const canDisable = details?.status === "active";
+  const isConfigured = !!details?.endpoint && !!details?.hasToken;
+
+  const canEnable = isConfigured && details?.status !== "active";
+  const canDisable = isConfigured && details?.status !== "disabled";
 
   const setStatus = (status: "active" | "disabled") => {
     saveDetails({
@@ -198,18 +206,18 @@ function SettingsEditor({
 
 export function Start() {
   const { error } = useAccount();
-  const { isLoading } = useExtensionDetails();
+  const { isLoading, details } = useExtensionDetails();
 
   const [isOpen, setIsOpen] = useState(false);
 
-  if (isLoading) return <></>;
+  if (isLoading || !details) return <></>;
 
   return (
     <div className="w-full flex flex-col p-8 gap-8">
       <header className="w-full flex justify-between">
         <div className="flex items-center gap-6">
           <h1 className="text-3xl font-semibold">SoftwareOne</h1>
-          <StatusBadge />
+          <StatusBadge status={details.status} hasError={!!error} />
         </div>
         <div className="flex items-center gap-6">
           <Button onClick={() => setIsOpen(true)}>Edit</Button>
