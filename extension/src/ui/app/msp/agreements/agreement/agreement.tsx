@@ -29,10 +29,10 @@ function AgreementSummary({ id }: { id: string }) {
   const { billingConfigs, isPending: isBillingConfigPending } =
     useBillingConfigs();
 
-  const billingConfig = useMemo(() => {
-    console.log("billingConfigs", billingConfigs);
-    return billingConfigs?.find((v) => v.agreementId === id);
-  }, [billingConfigs, id]);
+  const billingConfig = useMemo(
+    () => billingConfigs?.find((v) => v.agreementId === id),
+    [billingConfigs, id]
+  );
 
   const { consumer } = useConsumer(billingConfig?.consumerId);
 

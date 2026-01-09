@@ -22,9 +22,6 @@ function StatusBadge({
   status: ExtensionStatus;
   hasError: boolean;
 }) {
-  console.log("status", status);
-  console.log("hasError", hasError);
-
   if (hasError) return <Badge tone="danger">Error</Badge>;
 
   if (status === "unconfigured")
