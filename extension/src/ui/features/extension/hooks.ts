@@ -31,8 +31,9 @@ export const useExtensionDetailsMutation = () => {
   } = useMutation({
     mutationFn: (details: ExtensionDetailsRequestBody) =>
       backendClient.post<ExtensionDetailsResponseBody>("/extension", details),
-    onSuccess: (details) =>
-      queryClient.setQueryData(["extension", "details"], details),
+    onSuccess: (response) => {
+      queryClient.setQueryData(["extension", "details"], response.data);
+    },
   });
 
   return { saveDetails, saveDetailsAsync, state };
