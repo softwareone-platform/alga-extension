@@ -13,7 +13,14 @@ import {
 } from "./subscriptions";
 import { Order, Items, Details as OrderDetails } from "./orders";
 import { Statement, Charges, Details as StatementDetails } from "./statements";
-import { Start, Agreements, Subscriptions, Orders, Statements } from "./start";
+import {
+  Start,
+  Agreements,
+  Subscriptions,
+  Orders,
+  Statements,
+  Inactive,
+} from "./start";
 
 export const clientRoutes: RouteObject[] = [
   {
@@ -43,6 +50,10 @@ export const clientRoutes: RouteObject[] = [
       {
         path: "statements",
         element: <Statements />,
+      },
+      {
+        path: "inactive",
+        element: <Inactive />,
       },
     ],
   },
