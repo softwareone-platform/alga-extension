@@ -2,7 +2,6 @@ import type {
   ExecuteRequest,
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
-import { logInfo } from "alga:extension/logging";
 import { fetch as httpFetch } from "alga:extension/http";
 import {
   Filters,
@@ -12,7 +11,8 @@ import {
 } from "../services/filters";
 
 import { decode, jsonResponse } from "../utils";
-import { getUser } from "alga:extension/user";
+import { ExtensionService } from "../services/extension";
+import { UsersService } from "../services/users";
 
 export const filters: Filters = {
   internal: {
@@ -36,7 +36,14 @@ export const filters: Filters = {
 };
 
 export const swoHandler = (request: ExecuteRequest): ExecuteResponse => {
-  const { userType } = getUser();
+  const extensionService = new ExtensionService();
+  const usersService = new UsersService();
+  const { userType } = usersService.getUser();
+  const { token, endpoint, status } = extensionService.getDetails();
+
+  if (status !== "active") {
+    return jsonResponse({ error: "Extension is not active" }, { status: 403 });
+  }
 
   const path = request.http.url.replace("/swo", "");
 
@@ -44,23 +51,15 @@ export const swoHandler = (request: ExecuteRequest): ExecuteResponse => {
 
   if (!rule)
     return jsonResponse(
-      {
-        error: "Forbidden",
-        message: `Request not allowed for user type ${userType}: ${request.http.url}`,
-      },
-      { status: 403 }
+      { error: "Extension is not configured" },
+      { status: 422 }
     );
-
-  const swoAPIToken =
-    "idt:TKN-8557-7823:Rv3ltKu4js3bVvR6Ok6n0JmIfruCTusirs1nI1UDF3T4AzuiHPPkuMG90gHAsNrR";
-
-  logInfo(`Requesting: https://portal.s1.live/public/v1${path}`);
 
   const response = httpFetch({
     method: request.http.method,
-    url: `https://portal.s1.live/public/v1${path}`,
+    url: `${endpoint}${path}`,
     headers: [
-      { name: "Authorization", value: `Bearer ${swoAPIToken}` },
+      { name: "Authorization", value: `Bearer ${token}` },
       { name: "Content-Type", value: "application/json" },
     ],
   });

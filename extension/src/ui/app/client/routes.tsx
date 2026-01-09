@@ -22,7 +22,7 @@ export const clientRoutes: RouteObject[] = [
   },
   {
     path: "inactive",
-    element: <Navigate to="start/agreements" replace />,
+    element: <Navigate to="/start/agreements" replace />,
   },
   {
     path: "start",

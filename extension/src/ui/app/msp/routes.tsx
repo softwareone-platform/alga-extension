@@ -32,7 +32,7 @@ export const mspRoutes: RouteObject[] = [
   },
   {
     path: "inactive",
-    element: <Navigate to="start/settings" replace />,
+    element: <Navigate to="/start/settings" replace />,
   },
   {
     path: "start",
