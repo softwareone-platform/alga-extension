@@ -12,10 +12,12 @@ export type ExtensionDetails = {
   };
 };
 
-export type ExtensionDetailsChange = Pick<
-  ExtensionDetails,
-  "endpoint" | "token" | "note"
-> & { status?: ExtensionStatus };
+export type ExtensionDetailsChange = {
+  endpoint?: string;
+  token?: string;
+  note?: string;
+  status?: ExtensionStatus;
+};
 
 //API
 export type ExtensionDetailsRequestBody = ExtensionDetailsChange;

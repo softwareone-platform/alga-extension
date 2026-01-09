@@ -17,15 +17,7 @@ export const extensionHandler = ({
 
   if (method === "GET") {
     const details = extensionService.getDetails();
-    if (!details) {
-      return jsonResponse(
-        { error: "Extension details not found" },
-        { status: 404 }
-      );
-    }
-
     const { token, ...rest } = details;
-
     const response: ExtensionDetailsResponseBody = {
       ...rest,
       hasToken: !!token,

@@ -12,8 +12,8 @@ export function App() {
 
   useEffect(() => {
     if (isPending) return;
-    if (!details?.hasToken || !details?.endpoint) {
-      navigate("/start/settings", { replace: true });
+    if (details?.status !== "active") {
+      navigate("/start/inactive", { replace: true });
     }
   }, [details, isPending]);
 

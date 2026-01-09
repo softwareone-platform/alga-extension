@@ -46,8 +46,6 @@ function SettingsActions() {
     saveDetails({
       note,
       status,
-      token: details?.hasToken ? "token-placeholder" : "",
-      endpoint: details?.endpoint || "",
     });
     setNote("");
     setIsEnabledOpen(false);
