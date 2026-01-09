@@ -31,6 +31,10 @@ export const mspRoutes: RouteObject[] = [
     element: <Navigate to="start" replace />,
   },
   {
+    path: "inactive",
+    element: <Navigate to="start/settings" replace />,
+  },
+  {
     path: "start",
     element: <Start />,
     children: [
@@ -53,10 +57,6 @@ export const mspRoutes: RouteObject[] = [
       {
         path: "statements",
         element: <Statements />,
-      },
-      {
-        path: "inactive",
-        element: <Navigate to="settings" replace />,
       },
       {
         path: "settings",

@@ -13,19 +13,16 @@ import {
 } from "./subscriptions";
 import { Order, Items, Details as OrderDetails } from "./orders";
 import { Statement, Charges, Details as StatementDetails } from "./statements";
-import {
-  Start,
-  Agreements,
-  Subscriptions,
-  Orders,
-  Statements,
-  Inactive,
-} from "./start";
+import { Start, Agreements, Subscriptions, Orders, Statements } from "./start";
 
 export const clientRoutes: RouteObject[] = [
   {
     index: true,
     element: <Navigate to="start" replace />,
+  },
+  {
+    path: "inactive",
+    element: <Navigate to="start/agreements" replace />,
   },
   {
     path: "start",
@@ -50,10 +47,6 @@ export const clientRoutes: RouteObject[] = [
       {
         path: "statements",
         element: <Statements />,
-      },
-      {
-        path: "inactive",
-        element: <Inactive />,
       },
     ],
   },

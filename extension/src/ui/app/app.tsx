@@ -13,7 +13,7 @@ export function App() {
   useEffect(() => {
     if (isPending) return;
     if (details?.status !== "active") {
-      navigate("/start/inactive", { replace: true });
+      navigate("/inactive", { replace: true });
     }
   }, [details, isPending]);
 
