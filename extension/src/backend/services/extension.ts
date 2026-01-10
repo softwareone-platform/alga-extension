@@ -5,13 +5,12 @@ import {
 import { StorageClient } from "../lib/alga/storage/client";
 
 const STORAGE_KEY = "settings";
-const STORAGE_NAMESPACE = "swo";
 
 export class ExtensionService {
   private readonly storage: StorageClient;
 
-  constructor() {
-    this.storage = new StorageClient(STORAGE_NAMESPACE);
+  constructor(storage: StorageClient) {
+    this.storage = storage;
   }
 
   getDetails(): ExtensionDetails {
