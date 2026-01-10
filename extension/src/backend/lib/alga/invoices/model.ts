@@ -1,16 +1,16 @@
 export type ManualInvoice = {
-  invoice_id: string;
-  invoice_number: string;
-  client_id: string;
+  invoiceId: string;
+  invoiceNumber: string;
+  clientId: string;
   status: string;
   subtotal: number;
   tax: number;
-  total_amount: number;
-  is_manual: boolean;
+  totalAmount: number;
+  isManual: boolean;
 };
 
 export type ManualInvoiceLine = {
-  service_id: string;
+  serviceId: string;
   quantity: number;
   description: string;
   rate: number;
