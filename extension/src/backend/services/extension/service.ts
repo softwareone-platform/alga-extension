@@ -2,7 +2,7 @@ import {
   ExtensionDetails,
   ExtensionDetailsChange,
 } from "@/shared/extension-details";
-import { StorageClient } from "../lib/alga/storage/client";
+import { StorageClient } from "../../lib/alga/storage/client";
 
 const STORAGE_KEY = "settings";
 

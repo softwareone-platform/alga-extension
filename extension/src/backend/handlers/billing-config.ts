@@ -5,11 +5,13 @@ import type {
 import { logError, logWarn } from "alga:extension/logging";
 import { decode, jsonResponse } from "../lib/alga/utils";
 import { BillingConfigsService } from "../services/billing-configs";
+import { StorageClient } from "../lib/alga";
 
 export const billingConfigHandler = ({
   http: { method, body },
 }: ExecuteRequest): ExecuteResponse => {
-  const billingConfigsService = new BillingConfigsService();
+  const storage = new StorageClient("swo.billing-configs");
+  const billingConfigsService = new BillingConfigsService(storage);
 
   if (method === "GET") {
     const configs = billingConfigsService.getConfigs();

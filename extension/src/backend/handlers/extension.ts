@@ -9,11 +9,13 @@ import {
   ExtensionDetailsRequestBody,
   ExtensionDetailsResponseBody,
 } from "@/shared/extension-details";
+import { StorageClient } from "../lib/alga";
 
 export const extensionHandler = ({
   http: { method, body },
 }: ExecuteRequest): ExecuteResponse => {
-  const extensionService = new ExtensionService();
+  const storage = new StorageClient("swo.extension");
+  const extensionService = new ExtensionService(storage);
 
   if (method === "GET") {
     const { token, ...rest } = extensionService.getDetails();
