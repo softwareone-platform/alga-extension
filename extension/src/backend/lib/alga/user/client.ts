@@ -1,7 +1,7 @@
 import { User } from "@/shared/user";
 import { getUser } from "alga:extension/user";
 
-export class UsersService {
+export class UsersClient {
   constructor() {}
 
   getUser(): User {

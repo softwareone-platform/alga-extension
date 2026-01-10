@@ -1,5 +1,5 @@
 import { BillingConfig, BillingConfigChange } from "@/shared/billing-configs";
-import { StorageClient } from "../storage-client";
+import { StorageClient } from "../lib/alga/storage/client";
 
 const STORAGE_KEY = "billing-configs";
 const STORAGE_NAMESPACE = "billing-configs";

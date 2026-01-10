@@ -2,7 +2,7 @@ import type {
   ExecuteRequest,
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
-import { jsonResponse } from "../utils";
+import { jsonResponse } from "../lib/alga/utils";
 import { UsersService } from "../services/users";
 
 export const userHandler = (request: ExecuteRequest): ExecuteResponse => {

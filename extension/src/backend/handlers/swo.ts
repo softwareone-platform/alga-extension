@@ -10,7 +10,7 @@ import {
   getRule,
 } from "../services/filters";
 
-import { decode, jsonResponse } from "../utils";
+import { decode, jsonResponse } from "../lib/alga/utils";
 import { ExtensionService } from "../services/extension";
 import { UsersService } from "../services/users";
 

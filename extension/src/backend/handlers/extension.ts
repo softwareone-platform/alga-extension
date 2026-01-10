@@ -3,7 +3,7 @@ import type {
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
 
-import { decode, jsonResponse } from "../utils";
+import { decode, jsonResponse } from "../lib/alga/utils";
 import { ExtensionService } from "../services/extension";
 import {
   ExtensionDetailsRequestBody,

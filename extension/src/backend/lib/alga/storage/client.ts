@@ -1,6 +1,6 @@
 import { logWarn } from "alga:extension/logging";
 import { get as getStorage, put as putStorage } from "alga:extension/storage";
-import { decode, encode } from "./utils";
+import { decode, encode } from "../utils";
 
 export class StorageClient {
   private readonly namespace: string;

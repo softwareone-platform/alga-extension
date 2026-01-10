@@ -1,12 +1,17 @@
 import "./polyfill";
 
 import { logError } from "alga:extension/logging";
-import { swoHandler, extensionHandler, billingConfigHandler, userHandler } from "./handlers";
+import {
+  swoHandler,
+  extensionHandler,
+  billingConfigHandler,
+  userHandler,
+} from "./handlers";
 import type {
   ExecuteRequest,
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
-import { jsonResponse } from "./utils";
+import { jsonResponse } from "./lib/alga/utils";
 
 const routes = [
   { path: "/swo", handler: swoHandler },
