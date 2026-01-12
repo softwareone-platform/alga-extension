@@ -1,1 +1,0 @@
-export { ExtensionService } from "./service";

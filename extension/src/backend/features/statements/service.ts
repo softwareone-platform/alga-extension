@@ -1,7 +1,7 @@
 import { StorageClient } from "@/backend/lib/alga";
 import { AlgaStatementDetails, Statement } from "@/shared/statements";
 import { Statement as SWOStatement } from "@swo/mp-api-model/billing";
-import { BillingConfigsService } from "../billing-configs/service";
+import { BillingConfigsService } from "../billing-configs";
 import { BillingConfig } from "../billing-configs";
 
 const STORAGE_KEY = "statements";

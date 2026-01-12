@@ -36,15 +36,13 @@ export const filters: Filters = {
 };
 
 export const swoHandler = (request: ExecuteRequest): ExecuteResponse => {
-  const extensionService = new ExtensionService(
-    new StorageClient("swo.extension")
-  );
+  const extensionService = new ExtensionService(new StorageClient());
   const usersClient = new UsersClient();
   const { userType } = usersClient.getUser();
   const { token, endpoint, status } = extensionService.getDetails();
 
   if (status !== "active") {
-    return jsonResponse({ error: "Extension is not active" }, { status: 403 });
+    return jsonResponse({ error: "Extension is not active" }, { status: 422 });
   }
 
   const path = request.http.url.replace("/swo", "");

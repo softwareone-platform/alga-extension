@@ -4,21 +4,17 @@ import type {
 } from "@alga-psa/extension-runtime";
 
 import { decode, jsonResponse } from "../lib/alga/utils";
-import { ExtensionService } from "../features/extension";
 import {
   ExtensionDetailsRequestBody,
   ExtensionDetailsResponseBody,
 } from "@/shared/extension-details";
-import { StorageClient } from "../lib/alga";
+import { extension } from "../features/extension";
 
 export const extensionHandler = ({
   http: { method, body },
 }: ExecuteRequest): ExecuteResponse => {
-  const storage = new StorageClient();
-  const extensionService = new ExtensionService(storage);
-
   if (method === "GET") {
-    const { token, ...rest } = extensionService.getDetails();
+    const { token, ...rest } = extension.getDetails();
     const response: ExtensionDetailsResponseBody = {
       ...rest,
       hasToken: !!token,
@@ -33,7 +29,7 @@ export const extensionHandler = ({
     if (!change) {
       return jsonResponse({ error: "Invalid request body" }, { status: 400 });
     }
-    const { token, ...rest } = extensionService.saveDetails(change);
+    const { token, ...rest } = extension.saveDetails(change);
     const response: ExtensionDetailsResponseBody = {
       ...rest,
       hasToken: !!token,
