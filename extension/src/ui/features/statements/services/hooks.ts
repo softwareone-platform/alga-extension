@@ -69,6 +69,12 @@ export const useStatements = (
         `/swo/billing/statements?${query.toString()}`
       );
 
+      const abc = await backendClient.get<any>(
+        `/statements?${query.toString()}`
+      );
+
+      console.log(abc);
+
       return data;
     },
     enabled: isConfigured && (!agreementIds || agreementIds.length > 0),
