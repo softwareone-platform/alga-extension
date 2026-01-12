@@ -3,25 +3,15 @@ import type {
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
 import { decode, jsonResponse } from "../lib/alga/utils";
-import { StorageClient } from "../lib/alga";
-import { BillingConfigsService } from "../features/billing-configs";
-import { StatementsService } from "../features/statements";
-import { ExtensionService } from "../features/extension";
 import { fetch as httpFetch } from "alga:extension/http";
 import { StatementListResponse } from "@swo/mp-api-model/billing";
+import { extension } from "../features/extension";
+import { statements } from "../features/statements";
 
 export const statementsHandler = ({
   http: { method, url },
 }: ExecuteRequest): ExecuteResponse => {
-  const storage = new StorageClient();
-  const extensionService = new ExtensionService(storage);
-  const billingConfigsService = new BillingConfigsService(storage);
-  const statementsService = new StatementsService(
-    storage,
-    billingConfigsService
-  );
-
-  const { token, endpoint, status } = extensionService.getDetails();
+  const { token, endpoint, status } = extension.getDetails();
   if (status !== "active") {
     return jsonResponse({ error: "Extension is not active" }, { status: 422 });
   }
@@ -29,7 +19,7 @@ export const statementsHandler = ({
   if (method === "GET") {
     const rql = url.split("?")[1];
 
-    const response = httpFetch({
+    const swoResponse = httpFetch({
       method: "GET",
       url: `${endpoint}/v1/billing/statements?${rql}`,
       headers: [
@@ -38,11 +28,19 @@ export const statementsHandler = ({
       ],
     });
 
-    const responseBody = decode<StatementListResponse>(response.body);
-    if (!responseBody) return jsonResponse({}, { status: response.status });
+    const swoResponseBody = decode<StatementListResponse>(swoResponse.body);
+    if (!swoResponseBody)
+      return jsonResponse({}, { status: swoResponse.status });
 
-    const configs = billingConfigsService.getConfigs();
-    return jsonResponse(configs, { status: 200 });
+    const data = statements.getStatements(swoResponseBody.data || []);
+
+    return jsonResponse(
+      {
+        data,
+        $meta: swoResponseBody.$meta,
+      },
+      { status: 200 }
+    );
   }
 
   return jsonResponse({ error: "Method not allowed" }, { status: 405 });
