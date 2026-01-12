@@ -4,8 +4,8 @@ import type {
 } from "@alga-psa/extension-runtime";
 import { logError, logWarn } from "alga:extension/logging";
 import { decode, jsonResponse } from "../lib/alga/utils";
-import { BillingConfigsService } from "../services/billing-configs";
 import { StorageClient } from "../lib/alga";
+import { BillingConfigsService } from "../features/billing-configs";
 
 export const billingConfigHandler = ({
   http: { method, body },

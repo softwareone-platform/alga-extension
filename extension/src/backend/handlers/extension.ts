@@ -4,7 +4,7 @@ import type {
 } from "@alga-psa/extension-runtime";
 
 import { decode, jsonResponse } from "../lib/alga/utils";
-import { ExtensionService } from "../services/extension";
+import { ExtensionService } from "../features/extension";
 import {
   ExtensionDetailsRequestBody,
   ExtensionDetailsResponseBody,
