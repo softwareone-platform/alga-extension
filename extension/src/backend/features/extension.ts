@@ -11,7 +11,9 @@ const toDetails = (
   change: ExtensionDetailsChange,
   existing: ExtensionDetails
 ): ExtensionDetails => {
-  const isConfigured = !!existing.token && !!existing.endpoint;
+  const isConfigured =
+    !!(change.token || existing.token) &&
+    !!(change.endpoint || existing.endpoint);
 
   let status = existing.status;
   let activatedAt = existing.audit.activatedAt;
