@@ -8,11 +8,10 @@ import {
   UserType,
   filterResponse,
   getRule,
-} from "../features/filters";
+  extension,
+} from "../features";
 
-import { decode, jsonResponse } from "../lib/alga/utils";
-import { ExtensionService } from "../features/extension";
-import { StorageClient, UsersClient } from "../lib/alga";
+import { decode, jsonResponse, getUser } from "../lib/alga";
 
 export const filters: Filters = {
   internal: {
@@ -36,10 +35,8 @@ export const filters: Filters = {
 };
 
 export const swoHandler = (request: ExecuteRequest): ExecuteResponse => {
-  const extensionService = new ExtensionService(new StorageClient());
-  const usersClient = new UsersClient();
-  const { userType } = usersClient.getUser();
-  const { token, endpoint, status } = extensionService.getDetails();
+  const { userType } = getUser();
+  const { token, endpoint, status } = extension.getDetails();
 
   if (status !== "active") {
     return jsonResponse({ error: "Extension is not active" }, { status: 422 });

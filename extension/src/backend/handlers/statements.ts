@@ -2,11 +2,10 @@ import type {
   ExecuteRequest,
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
-import { decode, jsonResponse } from "../lib/alga/utils";
+import { decode, jsonResponse } from "../lib/alga";
 import { fetch as httpFetch } from "alga:extension/http";
 import { StatementListResponse } from "@swo/mp-api-model/billing";
-import { extension } from "../features/extension";
-import { statements } from "../features/statements";
+import { extension, statements } from "../features";
 
 export const statementsHandler = ({
   http: { method, url },

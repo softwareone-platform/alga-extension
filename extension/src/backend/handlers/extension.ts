@@ -3,12 +3,12 @@ import type {
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
 
-import { decode, jsonResponse } from "../lib/alga/utils";
+import { decode, jsonResponse } from "../lib/alga";
 import {
   ExtensionDetailsRequestBody,
   ExtensionDetailsResponseBody,
 } from "@/shared/extension-details";
-import { extension } from "../features/extension";
+import { extension } from "../features";
 
 export const extensionHandler = ({
   http: { method, body },
