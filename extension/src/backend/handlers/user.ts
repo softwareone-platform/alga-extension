@@ -3,11 +3,11 @@ import type {
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
 import { jsonResponse } from "../lib/alga/utils";
-import { UsersService } from "../services/users";
+import { getUser } from "../lib/alga/user";
 
 export const userHandler = (request: ExecuteRequest): ExecuteResponse => {
   if (request.http.method === "GET") {
-    const user = new UsersService().getUser();
+    const user = getUser();
     return jsonResponse(user, { status: 200 });
   }
 
