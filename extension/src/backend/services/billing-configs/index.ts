@@ -1,1 +1,0 @@
-export { BillingConfigsService } from "./service";
