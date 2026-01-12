@@ -14,7 +14,7 @@ import { StorageClient } from "../lib/alga";
 export const extensionHandler = ({
   http: { method, body },
 }: ExecuteRequest): ExecuteResponse => {
-  const storage = new StorageClient("swo.extension");
+  const storage = new StorageClient();
   const extensionService = new ExtensionService(storage);
 
   if (method === "GET") {

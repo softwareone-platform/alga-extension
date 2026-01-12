@@ -25,16 +25,13 @@ const defaultDetails = (
 
 export class StatementsService {
   private readonly storage: StorageClient;
-  // private readonly invoicesClient: InvoicesClient;
   private readonly billingConfigsService: BillingConfigsService;
 
   constructor(
     storage: StorageClient,
-    // invoicesClient: InvoicesClient,
     billingConfigsService: BillingConfigsService
   ) {
     this.storage = storage;
-    // this.invoicesClient = invoicesClient;
     this.billingConfigsService = billingConfigsService;
   }
 

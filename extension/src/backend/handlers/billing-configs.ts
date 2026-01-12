@@ -7,10 +7,10 @@ import { decode, jsonResponse } from "../lib/alga/utils";
 import { StorageClient } from "../lib/alga";
 import { BillingConfigsService } from "../features/billing-configs";
 
-export const billingConfigHandler = ({
+export const billingConfigsHandler = ({
   http: { method, body },
 }: ExecuteRequest): ExecuteResponse => {
-  const storage = new StorageClient("swo.billing-configs");
+  const storage = new StorageClient();
   const billingConfigsService = new BillingConfigsService(storage);
 
   if (method === "GET") {

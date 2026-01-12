@@ -1,6 +1,7 @@
 import { StorageClient } from "../../lib/alga/storage";
 import { BillingConfig, BillingConfigChange } from "./model";
 
+const STORAGE_NAMESPACE = "swo.billing-configs";
 const STORAGE_KEY = "billing-configs";
 
 export class BillingConfigsService {
@@ -11,7 +12,10 @@ export class BillingConfigsService {
   }
 
   getConfigs(): BillingConfig[] {
-    return this.storage.get<{ all: BillingConfig[] }>(STORAGE_KEY)?.all ?? [];
+    return (
+      this.storage.get<{ all: BillingConfig[] }>(STORAGE_NAMESPACE, STORAGE_KEY)
+        ?.all ?? []
+    );
   }
 
   saveConfigs(configs: BillingConfigChange[]): BillingConfig[] {
@@ -39,7 +43,7 @@ export class BillingConfigsService {
       };
     });
 
-    this.storage.put(STORAGE_KEY, { all: newConfigs });
+    this.storage.put(STORAGE_NAMESPACE, STORAGE_KEY, { all: newConfigs });
 
     return newConfigs;
   }

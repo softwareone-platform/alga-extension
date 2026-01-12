@@ -4,6 +4,7 @@ import {
 } from "@/shared/extension-details";
 import { StorageClient } from "../../lib/alga/storage/client";
 
+const STORAGE_NAMESPACE = "swo.extension";
 const STORAGE_KEY = "settings";
 
 export class ExtensionService {
@@ -14,7 +15,10 @@ export class ExtensionService {
   }
 
   getDetails(): ExtensionDetails {
-    const details = this.storage.get<ExtensionDetails>(STORAGE_KEY);
+    const details = this.storage.get<ExtensionDetails>(
+      STORAGE_NAMESPACE,
+      STORAGE_KEY
+    );
     return (
       details || {
         endpoint: "",
@@ -67,7 +71,7 @@ export class ExtensionService {
       },
     };
 
-    this.storage.put(STORAGE_KEY, newDetails);
+    this.storage.put(STORAGE_NAMESPACE, STORAGE_KEY, newDetails);
     return newDetails;
   }
 }

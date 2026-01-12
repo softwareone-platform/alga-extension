@@ -4,8 +4,9 @@ import { logError } from "alga:extension/logging";
 import {
   swoHandler,
   extensionHandler,
-  billingConfigHandler,
+  billingConfigsHandler,
   userHandler,
+  statementsHandler,
 } from "./handlers";
 import type {
   ExecuteRequest,
@@ -16,7 +17,8 @@ import { jsonResponse } from "./lib/alga/utils";
 const routes = [
   { path: "/swo", handler: swoHandler },
   { path: "/extension", handler: extensionHandler },
-  { path: "/billing-config", handler: billingConfigHandler },
+  { path: "/billing-configs", handler: billingConfigsHandler },
+  { path: "/statements", handler: statementsHandler },
   { path: "/user", handler: userHandler },
 ];
 
