@@ -24,7 +24,7 @@ type Invoice = {
   };
 };
 
-const getCharges = (statementId: string): Charge[] => {
+export const getCharges = (statementId: string): Charge[] => {
   let offset = 0;
   const { token, endpoint, status } = extension.getDetails();
 
