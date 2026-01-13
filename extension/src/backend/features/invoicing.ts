@@ -2,7 +2,7 @@ import { ManualInvoiceLine } from "../lib/alga";
 import { BillingConfig } from "@/shared/billing-configs";
 import { Charge, Statement as SWOStatement } from "@swo/mp-api-model/billing";
 
-const toLineItems = (
+export const toLineItems = (
   statement: SWOStatement,
   charges: Charge[],
   billingConfig: BillingConfig

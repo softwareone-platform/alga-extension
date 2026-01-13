@@ -1,4 +1,4 @@
-// This handler is used to test storage in Alga
+//ALGA TESTING
 
 import "./polyfill";
 
@@ -7,18 +7,61 @@ import type {
   ExecuteRequest,
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
-import { encode, jsonResponse } from "./lib/alga/utils";
-import { put as putStorage } from "alga:extension/storage";
+import { decode, encode, jsonResponse } from "./lib/alga/utils";
+import {
+  put as putStorage,
+  get as getStorage,
+  StorageEntry,
+} from "alga:extension/storage";
 
 export function handler(request: ExecuteRequest): ExecuteResponse {
+  const someData = { ok: true };
+  let encodedData: Uint8Array;
+  //ENCODE TEST
+  try {
+    encodedData = encode(someData);
+  } catch (error) {
+    const message = "encode failed: " + error;
+    logError(`Error: ${message}`);
+
+    return jsonResponse(
+      {
+        error: "Internal Server Error",
+        message: message,
+        requestUrl: request.http.url,
+      },
+      { status: 500 }
+    );
+  }
+
+  // PUT STORAGE TEST
   try {
     putStorage({
       namespace: "namespace",
       key: "key",
-      value: encode({ ok: true }),
+      value: encodedData,
     });
   } catch (error) {
-    logError(`Error: ${error}`);
+    const message = "putStorage failed: " + error;
+    logError(`Error: ${message}`);
+
+    return jsonResponse(
+      {
+        error: "Internal Server Error",
+        message: message,
+        requestUrl: request.http.url,
+      },
+      { status: 500 }
+    );
+  }
+
+  // GET STORAGE TEST
+  let entry: StorageEntry;
+  try {
+    entry = getStorage("namespace", "key");
+  } catch (error) {
+    const message = "getStorage failed: " + error;
+    logError(`Error: ${message}`);
 
     return jsonResponse(
       {
@@ -30,5 +73,22 @@ export function handler(request: ExecuteRequest): ExecuteResponse {
     );
   }
 
-  return jsonResponse({ ok: true }, { status: 200 });
+  let data: unknown;
+  try {
+    data = decode(entry.value);
+  } catch (error) {
+    const message = "decode failed: " + error;
+    logError(`Error: ${message}`);
+
+    return jsonResponse(
+      {
+        error: "Internal Server Error",
+        message: message,
+        requestUrl: request.http.url,
+      },
+      { status: 500 }
+    );
+  }
+
+  return jsonResponse({ data }, { status: 200 });
 }
