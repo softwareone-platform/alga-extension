@@ -99,7 +99,7 @@ export const statements = {
 
     return toStatements(statements, invoicesData, bcs);
   },
-  invoice: (statements: SWOStatement[]) => {
+  createInvoices: (statements: SWOStatement[]) => {
     const bcs = billingConfigs.getConfigs();
     const billingConfigsByAgreementId = bcs.reduce((acc, config) => {
       acc[config.agreementId] = config;
@@ -138,9 +138,10 @@ export const statements = {
         continue;
       }
 
-      // const lines = charges
-      //   .map((charge) => toLine(charge, billingConfig))
-      //   .filter((line) => !!line);
+      const lines = charges
+        .map((charge) => toLine(charge, billingConfig))
+        .filter((line) => !!line);
+      console.log(lines);
       const manualInvoice = {} as ManualInvoice; // MOCKED
 
       const newInvoiceData = {
