@@ -1,13 +1,78 @@
-import { BillingConfigClient } from "./alga/billing-config";
-import { InvoicesClient as AlgaInvoicesClient } from "./alga/invoices";
+import { BillingConfigClient, type BillingConfig } from "./alga/billing-config";
+import {
+  InvoicesClient as AlgaInvoicesClient,
+  type CreateInvoiceData,
+  type ManualInvoiceLine,
+} from "./alga/invoices";
 import { KVStorage } from "./alga/kv-storage";
 import dotenv from "dotenv";
 import { MigrationsClient } from "./alga/migrations";
+import type { Charge, Statement } from "@swo/mp-api-model/billing";
 import { StatementsClient } from "./swo/statements";
 import { ExtensionClient } from "./alga/extension";
 import dayjs from "dayjs";
 
 dotenv.config();
+
+const toInvoiceData = async (
+  statement: Statement,
+  charges: Charge[],
+  billingConfig: BillingConfig
+): CreateInvoiceData | null => {
+  const agreementId = statement.agreement!.id!;
+
+  if (!billingConfig) {
+    console.warn(`Billing config not found for agreement ${agreementId}`);
+    return null;
+  }
+
+  const clientId = billingConfig.consumer?.id;
+  if (!clientId) {
+    console.warn(`Consumer not configured for agreement ${agreementId}`);
+    return null;
+  }
+
+  const serviceId = billingConfig.service?.id;
+  if (!serviceId) {
+    console.warn(`Service not configured for agreement ${agreementId}`);
+    return null;
+  }
+
+  const lines = charges
+    .map((charge) => {
+      if (!charge.price?.unitSP) {
+        console.warn(`No price for charge ${charge.id}`);
+        return null;
+      }
+
+      const description = `${
+        charge.item?.name || charge.description?.value1
+      } (${charge.id})`;
+
+      const rate = Math.round(
+        charge.price.unitSP * (1 + billingConfig.markup / 100) * 100
+      );
+
+      return {
+        service_id: serviceId,
+        quantity: charge.quantity ?? 0,
+        description,
+        rate,
+      } satisfies ManualInvoiceLine;
+    })
+    .filter((charge) => !!charge);
+
+  if (lines.length === 0) {
+    console.warn(`No lines in SWO statement ${statement.id}`);
+    return null;
+  }
+
+  return {
+    clientId,
+    lines,
+    externalInvoiceId: statement.id!,
+  } satisfies CreateInvoiceData;
+};
 
 (async () => {
   const algaInvoicesClient = new AlgaInvoicesClient(

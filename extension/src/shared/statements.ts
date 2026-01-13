@@ -5,8 +5,14 @@ import type {
 
 export type InvoiceStatus = "no-invoice" | "to-invoice" | "invoiced";
 
-export type Statement = SWOStatement & {
-  algaInvoiceStatus: InvoiceStatus;
+export type Statement = {
+  id: string;
+  swo: SWOStatement;
+  alga: {
+    status: InvoiceStatus;
+    invoiceId?: string;
+    markup?: number;
+  };
 };
 
 //API
