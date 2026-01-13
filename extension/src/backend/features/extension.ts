@@ -71,7 +71,6 @@ export const extension = {
   saveDetails: (change: ExtensionDetailsChange): ExtensionDetails => {
     const existing = extension.getDetails();
     const newDetails = toDetails(change, existing);
-
     storage.put(STORAGE_NAMESPACE, STORAGE_KEY, newDetails);
     return newDetails;
   },

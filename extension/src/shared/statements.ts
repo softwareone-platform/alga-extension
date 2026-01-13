@@ -20,7 +20,7 @@ export type AlgaStatementDetails = {
 export type Statement = {
   id: string;
   swoStatement: SWOStatement;
-  algaStatementDetails?: AlgaStatementDetails;
+  algaStatementDetails: AlgaStatementDetails;
 };
 
 //API

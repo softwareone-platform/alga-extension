@@ -63,7 +63,7 @@ const toStatements = (
 };
 
 export const statements = {
-  getStatements: (swoStatements: SWOStatement[]): Statement[] => {
+  get: (swoStatements: SWOStatement[]): Statement[] => {
     const details =
       storage.get<{ all: AlgaStatementDetails[] }>(
         STORAGE_NAMESPACE,

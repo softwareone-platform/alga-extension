@@ -1,6 +1,23 @@
-import { decode, encode } from "../utils";
-import { ManualInvoice, ManualInvoiceLine } from "./model";
 import { fetch as httpFetch } from "alga:extension/http";
+import { decode, encode } from "./utils";
+
+export type ManualInvoice = {
+  invoiceId: string;
+  invoiceNumber: string;
+  clientId: string;
+  status: string;
+  subtotal: number;
+  tax: number;
+  totalAmount: number;
+  isManual: boolean;
+};
+
+export type ManualInvoiceLine = {
+  serviceId: string;
+  quantity: number;
+  description: string;
+  rate: number;
+};
 
 type APIManualInvoice = {
   invoice_id: string;
