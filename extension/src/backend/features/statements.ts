@@ -1,77 +1,133 @@
 import { storage } from "../lib/alga/storage";
-import { AlgaStatementDetails, Statement } from "@/shared/statements";
-import { Statement as SWOStatement } from "@swo/mp-api-model/billing";
+import { Statement } from "@/shared/statements";
+import {
+  Charge,
+  ChargeListResponse,
+  Statement as SWOStatement,
+} from "@swo/mp-api-model/billing";
 import { BillingConfig } from "@/shared/billing-configs";
 import { billingConfigs } from "./billing-configs";
+import { RqlQuery } from "@swo/rql-client";
+import { extension } from "./extension";
+import { fetch as httpFetch } from "alga:extension/http";
+import { decode } from "../lib/alga";
 
-const STORAGE_NAMESPACE = "swo.statements";
+const CHARGES_LIMIT = 100;
+const STORAGE_NAMESPACE = "swo.invoices";
 const STORAGE_KEY = "all";
 
-export type GetStatementsOptions = {
-  agreementId?: string;
-  paging?: {
-    offset?: number;
-    limit?: number;
+type Invoice = {
+  statementId: string;
+  invoiceId: string;
+  audit: {
+    createdAt: string;
   };
 };
 
-const defaultDetails = (
-  swoStatement: SWOStatement,
-  billingConfig?: BillingConfig
-): AlgaStatementDetails => ({
-  statementId: swoStatement.id!,
-  status: billingConfig ? "to-invoice" : "no-invoice",
-  audit: { createdAt: new Date().toISOString() },
-});
+const getCharges = (statementId: string): Charge[] => {
+  let offset = 0;
+  const { token, endpoint, status } = extension.getDetails();
+
+  if (status !== "active") {
+    throw new Error("Extension is not active");
+  }
+
+  const charges: Charge[] = [];
+
+  while (true) {
+    const query = new RqlQuery<Charge>();
+    query
+      .expand(
+        "id",
+        "subscription.id",
+        "subscription.name",
+        "item.id",
+        "item.name",
+        "period.start",
+        "period.end",
+        "quantity",
+        "price.SPx1",
+        "price.unitSP"
+      )
+      .paging(offset, CHARGES_LIMIT);
+
+    const response = httpFetch({
+      method: "GET",
+      url: `${endpoint}/billing/statements/${statementId}/charges?${query.toString()}`,
+      headers: [
+        { name: "Authorization", value: `Bearer ${token}` },
+        { name: "Content-Type", value: "application/json" },
+      ],
+    });
+
+    const responseBody = decode<ChargeListResponse>(response.body);
+    if (!responseBody) {
+      throw new Error(`Failed to get charges for statement ${statementId}`);
+    }
+    charges.push(...(responseBody.data || []));
+
+    offset += CHARGES_LIMIT;
+
+    const total = responseBody.$meta?.pagination?.total || 0;
+    if (total <= offset) {
+      break;
+    }
+  }
+
+  return charges;
+};
 
 const toStatements = (
   swoStatements: SWOStatement[],
-  algaDetails: AlgaStatementDetails[],
-  billingConfigs: BillingConfig[]
+  billingConfigs: BillingConfig[],
+  invoices: Invoice[]
 ): Statement[] => {
-  const detailsByStatementId = algaDetails.reduce((acc, detail) => {
-    acc[detail.statementId] = detail;
-    return acc;
-  }, {} as Record<string, AlgaStatementDetails>);
-
   const billingConfigsByAgreementId = billingConfigs.reduce((acc, config) => {
     acc[config.agreementId] = config;
     return acc;
   }, {} as Record<string, BillingConfig>);
 
-  const statements = swoStatements.map((swoStatement) => {
-    const statementId = swoStatement.id;
-    const agreementId = swoStatement.agreement?.id;
-    if (!statementId || !agreementId) {
-      return null;
+  const invoicesByStatementId = invoices.reduce((acc, invoice) => {
+    acc[invoice.statementId] = invoice;
+    return acc;
+  }, {} as Record<string, Invoice>);
+
+  return swoStatements.map((swoStatement) => {
+    const billingConfig = swoStatement.agreement?.id
+      ? billingConfigsByAgreementId[swoStatement.agreement.id]
+      : null;
+
+    if (!billingConfig) {
+      return {
+        ...swoStatement,
+        algaInvoiceStatus: "no-invoice",
+      };
     }
 
-    const billingConfig = billingConfigsByAgreementId[agreementId];
-    const details =
-      detailsByStatementId[statementId] ||
-      defaultDetails(swoStatement, billingConfig);
+    const invoice = invoicesByStatementId[swoStatement.id!];
+    if (!invoice) {
+      return {
+        ...swoStatement,
+        algaInvoiceStatus: "to-invoice",
+      };
+    }
 
     return {
-      id: statementId,
-      swoStatement,
-      algaStatementDetails: details,
-      billingConfig,
+      ...swoStatement,
+      algaInvoiceStatus: "invoiced",
     };
   });
-
-  return statements.filter((statement) => statement !== null);
 };
 
 export const statements = {
   get: (swoStatements: SWOStatement[]): Statement[] => {
-    const details =
-      storage.get<{ all: AlgaStatementDetails[] }>(
-        STORAGE_NAMESPACE,
-        STORAGE_KEY
-      )?.all ?? [];
+    const invoices =
+      storage.get<{ all: Invoice[] }>(STORAGE_NAMESPACE, STORAGE_KEY)?.all ??
+      [];
 
     const bcs = billingConfigs.getConfigs();
 
-    return toStatements(swoStatements, details, bcs);
+    return toStatements(swoStatements, bcs, invoices);
   },
+  invoice: (swoStatements: SWOStatement[]) => {},
 };

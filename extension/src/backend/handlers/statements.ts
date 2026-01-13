@@ -31,7 +31,7 @@ export const statementsHandler = ({
     if (!swoResponseBody)
       return jsonResponse({}, { status: swoResponse.status });
 
-    const data = statements.getStatements(swoResponseBody.data || []);
+    const data = statements.get(swoResponseBody.data || []);
 
     return jsonResponse(
       {
