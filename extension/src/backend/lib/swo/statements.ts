@@ -16,13 +16,12 @@ export class StatementsClient {
     const charges: Charge[] = [];
 
     while (true) {
-      const url = `/billing/statements/${statementId}/charges?select=id,subscription.id,subscription.name,item.id,item.name,period.start,period.end,quantity,price.SPx1,price.unitSP&offset=${offset}&limit=${CHARGES_LIMIT}`;
-
-      const [response, status] = this.swoClient.fetch<ChargeListResponse>(url);
-      if (status !== 200) {
-        throw new Error(
-          `Failed to fetch charges. SWO API returned ${status} (${response})`
-        );
+      const response = this.swoClient.fetch<ChargeListResponse>(
+        `/billing/statements/${statementId}/charges`,
+        `select=id,subscription.id,subscription.name,item.id,item.name,period.start,period.end,quantity,price.SPx1,price.unitSP&offset=${offset}&limit=${CHARGES_LIMIT}`
+      );
+      if (!response) {
+        throw new Error(`Failed to fetch charges.`);
       }
 
       const { data, $meta } = response!;

@@ -11,13 +11,14 @@ export class SWOClient {
   }
 
   fetch<T>(
-    url: string,
+    path: string,
+    rql: string,
     method: "GET" | "POST" = "GET",
     body?: unknown
-  ): [T | null, number] {
+  ): T {
     const response = httpFetch({
       method,
-      url: `${this.apiUrl}${url}`,
+      url: `${this.apiUrl}${path}?${rql}`,
       headers: [
         { name: "Authorization", value: `Bearer ${this.token}` },
         { name: "Content-Type", value: "application/json" },
@@ -29,18 +30,24 @@ export class SWOClient {
       try {
         const error = decode<any>(response.body);
         throw new Error(
-          `Failed to fetch from ${url}. SWO API returned ${
+          `Failed to fetch from ${path}. SWO API returned ${
             response.status
           }:\n\n ${JSON.stringify(error, null, 2)}`
         );
       } catch {
         throw new Error(
-          `Failed to fetch from ${url}. SWO API returned ${response.status}`
+          `Failed to fetch from ${path}. SWO API returned ${response.status}`
         );
       }
     }
 
-    const responseBody = decode<T>(response.body);
-    return [responseBody, response.status];
+    const decoded = decode<T>(response.body);
+    if (!decoded) {
+      throw new Error(
+        `Failed to decode response from ${path}. SWO API returned ${response.status}`
+      );
+    }
+
+    return decoded;
   }
 }

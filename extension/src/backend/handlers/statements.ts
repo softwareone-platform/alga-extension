@@ -2,10 +2,10 @@ import type {
   ExecuteRequest,
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
-import { decode, jsonResponse } from "../lib";
-import { fetch as httpFetch } from "alga:extension/http";
+import { jsonResponse } from "../lib";
 import { StatementListResponse } from "@swo/mp-api-model/billing";
-import { extension, statements } from "../features";
+import { extension } from "../features";
+import { SWOClient } from "../lib/swo/client";
 
 export const statementsHandler = ({
   http: { method, url },
@@ -18,26 +18,19 @@ export const statementsHandler = ({
   if (method === "GET") {
     const rql = url.split("?")[1];
 
-    const swoResponse = httpFetch({
-      method: "GET",
-      url: `${endpoint}/v1/billing/statements?${rql}`,
-      headers: [
-        { name: "Authorization", value: `Bearer ${token}` },
-        { name: "Content-Type", value: "application/json" },
-      ],
-    });
+    const swoClient = new SWOClient(endpoint, token);
+    const { data, $meta } = swoClient.fetch<StatementListResponse>(
+      `/billing/statements`,
+      rql
+    );
 
-    const swoResponseBody = decode<StatementListResponse>(swoResponse.body);
-    if (!swoResponseBody)
-      return jsonResponse({}, { status: swoResponse.status });
-
-    const data = statements.get(swoResponseBody.data || []);
     console.log(data);
 
     return jsonResponse(
       {
-        data: swoResponseBody.data,
-        $meta: swoResponseBody.$meta,
+        data,
+        $meta,
+        url: `${endpoint}/billing/statements?${rql}`,
       },
       { status: 200 }
     );
