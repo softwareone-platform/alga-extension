@@ -7,7 +7,7 @@ import type {
   ExecuteRequest,
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
-import { decode, encode, jsonResponse } from "./lib/alga/utils";
+import { decode, encode, jsonResponse } from "./lib";
 import {
   put as putStorage,
   get as getStorage,

@@ -12,7 +12,7 @@ import type {
   ExecuteRequest,
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
-import { jsonResponse } from "./lib/alga/utils";
+import { jsonResponse } from "./lib";
 
 const routes = [
   { path: "/swo", handler: swoHandler },

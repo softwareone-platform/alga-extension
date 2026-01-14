@@ -6,6 +6,7 @@ import { billingConfigs } from "./billing-configs";
 import { ManualInvoice, ManualInvoiceLine } from "../lib/alga";
 import { StatementsClient } from "../lib/swo";
 import { extension } from "./extension";
+import { SWOClient } from "../lib/swo/client";
 
 const STORAGE_NAMESPACE = "swo.statements";
 const STORAGE_KEY = "all";
@@ -134,9 +135,10 @@ export const statements = {
       }
 
       const { endpoint, token } = extension.getDetails();
-      const swoClient = new StatementsClient(endpoint, token);
+      const swoClient = new SWOClient(endpoint, token);
+      const statementsClient = new StatementsClient(swoClient);
 
-      const charges = swoClient.getCharges(swoStatement.id!);
+      const charges = statementsClient.getCharges(swoStatement.id!);
       if (charges.length === 0) {
         // no charges
         continue;

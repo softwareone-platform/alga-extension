@@ -3,8 +3,7 @@ import type {
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
 import { logError, logWarn } from "alga:extension/logging";
-import { jsonResponse } from "../lib/alga";
-import { decode } from "../lib";
+import { decode, jsonResponse } from "../lib";
 import { billingConfigs } from "../features";
 
 export const billingConfigsHandler = ({
