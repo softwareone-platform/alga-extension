@@ -16,7 +16,7 @@ export const statementsHandler = ({
 
   if (method === "GET") {
     const [urlWithPath, rql] = url.split("?");
-    const id = urlWithPath.split("/")[7];
+    const id = urlWithPath.split("/")[2];
 
     const swoClient = new SWOClient(endpoint, token);
     const statementService = new StatementService(swoClient);
