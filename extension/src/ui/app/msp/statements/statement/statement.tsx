@@ -106,6 +106,8 @@ export function Statement() {
   if (isPending) return <div>Loading...</div>;
   if (!statement) return <div>Statement not found</div>;
 
+  console.log(statement);
+
   return (
     <div className="w-full flex flex-col p-6 gap-8">
       <header className="w-full flex justify-between gap-10">

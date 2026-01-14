@@ -1,12 +1,17 @@
 import { storage } from "../lib/alga/storage";
 import { Statement } from "@/shared/statements";
-import { Charge, Statement as SWOStatement } from "@swo/mp-api-model/billing";
+import {
+  Charge,
+  StatementListResponse,
+  Statement as SWOStatement,
+} from "@swo/mp-api-model/billing";
 import { BillingConfig } from "@/shared/billing-configs";
 import { billingConfigs } from "./billing-configs";
 import { ManualInvoice, ManualInvoiceLine } from "../lib/alga";
 import { StatementsClient } from "../lib/swo";
 import { extension } from "./extension";
 import { SWOClient } from "../lib/swo/client";
+import { ListResponse } from "../lib/swo/api";
 
 const STORAGE_NAMESPACE = "swo.statements";
 const STORAGE_KEY = "all";
@@ -79,8 +84,19 @@ const toStatement = (
   };
 };
 
-export const statements = {
-  get: (swoStatements: SWOStatement[]): Statement[] => {
+export class StatementService {
+  private swoClient: SWOClient;
+
+  constructor(swoClient: SWOClient) {
+    this.swoClient = swoClient;
+  }
+
+  getById(id: string, rql: string): Statement {
+    const statement = this.swoClient.fetch<SWOStatement>(
+      `/billing/statements/${id}`,
+      rql
+    );
+
     const invoicesData =
       storage.get<Record<string, InvoiceData>>(
         STORAGE_NAMESPACE,
@@ -94,11 +110,38 @@ export const statements = {
       return acc;
     }, {} as Record<string, BillingConfig>);
 
-    return swoStatements.map((swoStatement) =>
+    return toStatement(statement, invoicesData, billingConfigsByAgreementId);
+  }
+
+  getByRQL(rql: string): ListResponse<Statement> {
+    const { data: swoStatements, $meta } =
+      this.swoClient.fetch<StatementListResponse>("/billing/statements", rql);
+
+    if (!swoStatements || !$meta) {
+      return { data: [], $meta: { pagination: { total: 0 } } };
+    }
+
+    const invoicesData =
+      storage.get<Record<string, InvoiceData>>(
+        STORAGE_NAMESPACE,
+        STORAGE_KEY
+      ) ?? {};
+
+    const bcs = billingConfigs.getConfigs();
+
+    const billingConfigsByAgreementId = bcs.reduce((acc, config) => {
+      acc[config.agreementId] = config;
+      return acc;
+    }, {} as Record<string, BillingConfig>);
+
+    const statements = swoStatements.map((swoStatement) =>
       toStatement(swoStatement, invoicesData, billingConfigsByAgreementId)
     );
-  },
-  createInvoices: (statements: SWOStatement[]) => {
+
+    return { data: statements, $meta };
+  }
+
+  createInvoices(statements: SWOStatement[]) {
     const bcs = billingConfigs.getConfigs();
     const billingConfigsByAgreementId = bcs.reduce((acc, config) => {
       acc[config.agreementId] = config;
@@ -155,5 +198,5 @@ export const statements = {
       invoicesData[swoStatement.id!] = newInvoiceData;
       storage.put(STORAGE_NAMESPACE, STORAGE_KEY, invoicesData);
     }
-  },
-};
+  }
+}

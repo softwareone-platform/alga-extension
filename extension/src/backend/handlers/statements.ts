@@ -3,8 +3,7 @@ import type {
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
 import { jsonResponse } from "../lib";
-import { StatementListResponse } from "@swo/mp-api-model/billing";
-import { extension, statements } from "../features";
+import { extension, StatementService } from "../features";
 import { SWOClient } from "../lib/swo/client";
 
 export const statementsHandler = ({
@@ -17,28 +16,18 @@ export const statementsHandler = ({
 
   if (method === "GET") {
     const [urlWithPath, rql] = url.split("?");
+    const id = urlWithPath.split("/")[7];
 
     const swoClient = new SWOClient(endpoint, token);
+    const statementService = new StatementService(swoClient);
 
-    const statementsPath = urlWithPath.split("/").slice(7).join("/");
-    const path = statementsPath
-      ? `/billing/statements/${statementsPath}`
-      : "/billing/statements";
+    if (id) {
+      const data = statementService.getById(id, rql);
+      return jsonResponse(data, { status: 200 });
+    }
 
-    const { data: swoData, $meta } = swoClient.fetch<StatementListResponse>(
-      path,
-      rql
-    );
-
-    const data = statements.get(swoData || []);
-
-    return jsonResponse(
-      {
-        data,
-        $meta,
-      },
-      { status: 200 }
-    );
+    const data = statementService.getByRQL(rql);
+    return jsonResponse(data, { status: 200 });
   }
 
   return jsonResponse({ error: "Method not allowed" }, { status: 405 });
