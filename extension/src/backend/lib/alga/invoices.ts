@@ -1,5 +1,5 @@
 import { fetch as httpFetch } from "alga:extension/http";
-import { decode, encode } from "./utils";
+import { decode, encode } from "../utils";
 
 export type ManualInvoice = {
   invoiceId: string;

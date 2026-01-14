@@ -2,7 +2,8 @@ import type {
   ExecuteRequest,
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
-import { decode, jsonResponse } from "../lib/alga";
+import { jsonResponse } from "../lib/alga";
+import { decode } from "../lib";
 import { fetch as httpFetch } from "alga:extension/http";
 import { StatementListResponse } from "@swo/mp-api-model/billing";
 import { extension, statements } from "../features";

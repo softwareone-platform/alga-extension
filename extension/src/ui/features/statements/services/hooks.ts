@@ -69,6 +69,8 @@ export const useStatements = (
         `/swo/billing/statements?${query.toString()}`
       );
 
+      console.log(query.toString());
+
       const abc = await backendClient.get<any>(
         `/statements?${query.toString()}`
       );
