@@ -5,9 +5,7 @@ import type {
 
 export type InvoiceStatus = "no-invoice" | "to-invoice" | "invoiced";
 
-export type Statement = {
-  id: string;
-  swo: SWOStatement;
+export type Statement = SWOStatement & {
   alga: {
     status: InvoiceStatus;
     invoiceId?: string;

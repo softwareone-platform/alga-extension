@@ -41,52 +41,42 @@ const toLine = (
   } satisfies ManualInvoiceLine;
 };
 
-const toStatements = (
-  swoStatements: SWOStatement[],
+const toStatement = (
+  swoStatement: SWOStatement,
   invoicesData: Record<string, InvoiceData>,
-  billingConfigs: BillingConfig[]
-): Statement[] => {
-  const billingConfigsByAgreementId = billingConfigs.reduce((acc, config) => {
-    acc[config.agreementId] = config;
-    return acc;
-  }, {} as Record<string, BillingConfig>);
+  billingConfigs: Record<string, BillingConfig>
+): Statement => {
+  const billingConfig = swoStatement.agreement?.id
+    ? billingConfigs[swoStatement.agreement.id]
+    : null;
 
-  return swoStatements.map((swoStatement) => {
-    const billingConfig = swoStatement.agreement?.id
-      ? billingConfigsByAgreementId[swoStatement.agreement.id]
-      : null;
-
-    if (!billingConfig) {
-      return {
-        id: swoStatement.id!,
-        swo: swoStatement,
-        alga: {
-          status: "no-invoice",
-        },
-      };
-    }
-
-    const invoiceData = invoicesData[swoStatement.id!];
-    if (!invoiceData) {
-      return {
-        id: swoStatement.id!,
-        swo: swoStatement,
-        alga: {
-          status: "to-invoice",
-        },
-      };
-    }
-
+  if (!billingConfig) {
     return {
-      id: swoStatement.id!,
-      swo: swoStatement,
+      ...swoStatement,
       alga: {
-        status: "invoiced",
-        invoiceId: invoiceData.invoiceId,
-        markup: invoiceData.markup,
+        status: "no-invoice",
       },
     };
-  });
+  }
+
+  const invoiceData = invoicesData[swoStatement.id!];
+  if (!invoiceData) {
+    return {
+      ...swoStatement,
+      alga: {
+        status: "to-invoice",
+      },
+    };
+  }
+
+  return {
+    ...swoStatement,
+    alga: {
+      status: "invoiced",
+      invoiceId: invoiceData.invoiceId,
+      markup: invoiceData.markup,
+    },
+  };
 };
 
 export const statements = {
@@ -99,7 +89,14 @@ export const statements = {
 
     const bcs = billingConfigs.getConfigs();
 
-    return toStatements(swoStatements, invoicesData, bcs);
+    const billingConfigsByAgreementId = bcs.reduce((acc, config) => {
+      acc[config.agreementId] = config;
+      return acc;
+    }, {} as Record<string, BillingConfig>);
+
+    return swoStatements.map((swoStatement) =>
+      toStatement(swoStatement, invoicesData, billingConfigsByAgreementId)
+    );
   },
   createInvoices: (statements: SWOStatement[]) => {
     const bcs = billingConfigs.getConfigs();
