@@ -106,7 +106,7 @@ export function Statement() {
   if (isPending) return <div>Loading...</div>;
   if (!statement) return <div>Statement not found</div>;
 
-  console.log(statement);
+  console.log(statement, statement.alga.status);
 
   return (
     <div className="w-full flex flex-col p-6 gap-8">

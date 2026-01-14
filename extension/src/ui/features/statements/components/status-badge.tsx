@@ -8,11 +8,11 @@ export const AlgaInvoiceStatusBadge = ({
 }) => {
   if (!status) return <></>;
 
-  let tone: "danger" | "default" | "success" | "warning" = "default";
-
-  if (status === "no-invoice") <Badge tone={tone}>Cannot invoice</Badge>;
-  if (status === "to-invoice") <Badge tone={tone}>To invoice</Badge>;
-  if (status === "invoiced") <Badge tone={tone}>Invoiced</Badge>;
+  if (status === "no-invoice")
+    return <Badge tone={"default"}>Cannot invoice</Badge>;
+  if (status === "to-invoice")
+    return <Badge tone={"warning"}>To invoice</Badge>;
+  if (status === "invoiced") return <Badge tone={"success"}>Invoiced</Badge>;
 
   return <></>;
 };
