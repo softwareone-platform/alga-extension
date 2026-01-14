@@ -11,8 +11,8 @@ import {
   extension,
 } from "../features";
 
-import { jsonResponse, getUser } from "../lib/alga";
-import { decode } from "../lib";
+import { getUser } from "../lib/alga";
+import { decode, jsonResponse } from "../lib";
 
 export const filters: Filters = {
   internal: {

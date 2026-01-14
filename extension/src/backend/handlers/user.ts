@@ -2,8 +2,8 @@ import type {
   ExecuteRequest,
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
-import { jsonResponse } from "../lib/alga/utils";
 import { getUser } from "../lib/alga/user";
+import { jsonResponse } from "../lib";
 
 export const userHandler = (request: ExecuteRequest): ExecuteResponse => {
   if (request.http.method === "GET") {

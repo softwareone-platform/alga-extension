@@ -1,3 +1,5 @@
+import { ExecuteResponse } from "@alga-psa/extension-runtime";
+
 const decoder = new TextDecoder();
 const encoder = new TextEncoder();
 
@@ -14,3 +16,16 @@ export const decode = <T = unknown>(u8a?: Uint8Array | null): T | null => {
     return null;
   }
 };
+
+export function jsonResponse(
+  body: unknown,
+  init: Partial<ExecuteResponse> = {}
+): ExecuteResponse {
+  return {
+    status: init.status ?? 200,
+    headers: init.headers ?? [
+      { name: "content-type", value: "application/json" },
+    ],
+    body: encode(body),
+  };
+}

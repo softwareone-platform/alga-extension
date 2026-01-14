@@ -1,9 +1,9 @@
-import { LinkButton } from "@ui/button";
+import { LinkButton, Button } from "@ui/button";
 import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { withMarkup } from "@features/markup";
 import { useStatement } from "@features/statements";
@@ -97,8 +97,12 @@ function StatementSummary({ id }: { id: string }) {
 export function Statement() {
   const { id } = useParams<{ id: string }>();
   const { statement, isPending } = useStatement(id!);
-  if (isPending) return <div>Loading...</div>;
 
+  const invoice = useCallback(async () => {
+    console.log(statement);
+  }, [statement]);
+
+  if (isPending) return <div>Loading...</div>;
   if (!statement) return <div>Statement not found</div>;
 
   return (
@@ -108,6 +112,7 @@ export function Statement() {
           <h1 className="text-3xl font-semibold">{id}</h1>
         </div>
         <div className="flex items-center gap-6">
+          <Button onClick={invoice}>Invoice</Button>
           <LinkButton
             variant="white"
             href={`${SWO_PORTAL_URL}/billing/statements/${id}`}

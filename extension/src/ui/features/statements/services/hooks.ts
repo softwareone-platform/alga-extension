@@ -75,7 +75,7 @@ export const useStatements = (
         `/statements?${query.toString()}`
       );
 
-      console.log(abc);
+      console.log(abc.data);
 
       return data;
     },

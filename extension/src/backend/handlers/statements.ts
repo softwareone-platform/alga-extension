@@ -2,8 +2,7 @@ import type {
   ExecuteRequest,
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
-import { jsonResponse } from "../lib/alga";
-import { decode } from "../lib";
+import { decode, jsonResponse } from "../lib";
 import { fetch as httpFetch } from "alga:extension/http";
 import { StatementListResponse } from "@swo/mp-api-model/billing";
 import { extension, statements } from "../features";
@@ -33,10 +32,11 @@ export const statementsHandler = ({
       return jsonResponse({}, { status: swoResponse.status });
 
     const data = statements.get(swoResponseBody.data || []);
+    console.log(data);
 
     return jsonResponse(
       {
-        data,
+        data: swoResponseBody.data,
         $meta: swoResponseBody.$meta,
       },
       { status: 200 }
