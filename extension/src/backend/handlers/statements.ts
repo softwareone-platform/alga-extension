@@ -4,7 +4,7 @@ import type {
 } from "@alga-psa/extension-runtime";
 import { jsonResponse } from "../lib";
 import { StatementListResponse } from "@swo/mp-api-model/billing";
-import { extension } from "../features";
+import { extension, statements } from "../features";
 import { SWOClient } from "../lib/swo/client";
 
 export const statementsHandler = ({
@@ -19,18 +19,17 @@ export const statementsHandler = ({
     const rql = url.split("?")[1];
 
     const swoClient = new SWOClient(endpoint, token);
-    const { data, $meta } = swoClient.fetch<StatementListResponse>(
+    const { data: swoData, $meta } = swoClient.fetch<StatementListResponse>(
       `/billing/statements`,
       rql
     );
 
-    console.log(data);
+    const data = statements.get(swoData || []);
 
     return jsonResponse(
       {
         data,
         $meta,
-        url: `${endpoint}/billing/statements?${rql}`,
       },
       { status: 200 }
     );

@@ -90,7 +90,7 @@ const toStatements = (
 };
 
 export const statements = {
-  get: (statements: SWOStatement[]): Statement[] => {
+  get: (swoStatements: SWOStatement[]): Statement[] => {
     const invoicesData =
       storage.get<Record<string, InvoiceData>>(
         STORAGE_NAMESPACE,
@@ -99,7 +99,7 @@ export const statements = {
 
     const bcs = billingConfigs.getConfigs();
 
-    return toStatements(statements, invoicesData, bcs);
+    return toStatements(swoStatements, invoicesData, bcs);
   },
   createInvoices: (statements: SWOStatement[]) => {
     const bcs = billingConfigs.getConfigs();
