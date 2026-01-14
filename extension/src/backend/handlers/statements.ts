@@ -16,11 +16,17 @@ export const statementsHandler = ({
   }
 
   if (method === "GET") {
-    const rql = url.split("?")[1];
+    const [urlWithPath, rql] = url.split("?");
 
     const swoClient = new SWOClient(endpoint, token);
+
+    const statementsPath = urlWithPath.split("/").slice(7).join("/");
+    const path = statementsPath
+      ? `/billing/statements/${statementsPath}`
+      : "/billing/statements";
+
     const { data: swoData, $meta } = swoClient.fetch<StatementListResponse>(
-      `/billing/statements`,
+      path,
       rql
     );
 

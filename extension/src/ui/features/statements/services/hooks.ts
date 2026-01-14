@@ -29,7 +29,6 @@ export const useStatements = (
       const { offset = 0, limit = 10, sort, licenseeId } = options || {};
 
       const query = new RqlQuery<Statement>();
-
       query
         .expand(
           "id",
@@ -66,16 +65,8 @@ export const useStatements = (
         });
 
       const { data } = await backendClient.get<StatementListResponse>(
-        `/swo/billing/statements?${query.toString()}`
-      );
-
-      console.log(query.toString());
-
-      const abc = await backendClient.get<any>(
         `/statements?${query.toString()}`
       );
-
-      console.log(abc.data);
 
       return data;
     },
@@ -116,7 +107,7 @@ export const useStatement = (id: string) => {
       );
 
       const { data } = await backendClient.get<Statement>(
-        `/swo/billing/statements/${id}?${query.toString()}`
+        `/statements/${id}?${query.toString()}`
       );
 
       return data;

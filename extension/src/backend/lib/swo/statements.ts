@@ -1,4 +1,4 @@
-import { Charge } from "@swo/mp-api-model/billing";
+import { Charge, Statement } from "@swo/mp-api-model/billing";
 import { ChargeListResponse } from "@swo/mp-api-model/billing";
 import { SWOClient } from "./client";
 
@@ -9,6 +9,13 @@ export class StatementsClient {
 
   constructor(swoClient: SWOClient) {
     this.swoClient = swoClient;
+  }
+
+  getStatementById(statementId: string): Statement {
+    return this.swoClient.fetch<Statement>(
+      `/billing/statements/${statementId}`,
+      `select=id,type,agreement.id,agreement.name,product.id,product.name,product.icon,licensee.id,licensee.name,price.currency,price.totalSP,invoice,status,audit`
+    );
   }
 
   getCharges(statementId: string): Charge[] {
