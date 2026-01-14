@@ -9,6 +9,7 @@ import { withMarkup } from "@features/markup";
 import { useStatement } from "@features/statements";
 import { ConsumerLink, useConsumer } from "@features/consumers";
 import { SWO_PORTAL_URL } from "@/ui/config";
+import { AlgaInvoiceStatusBadge } from "@/ui/features/statements/components";
 
 function StatementSummary({ id }: { id: string }) {
   const { statement, isPending: isAgreementPending } = useStatement(id);
@@ -110,6 +111,7 @@ export function Statement() {
       <header className="w-full flex justify-between gap-10">
         <div className="flex items-center gap-6">
           <h1 className="text-3xl font-semibold">{id}</h1>
+          <AlgaInvoiceStatusBadge status={statement.alga.status} />
         </div>
         <div className="flex items-center gap-6">
           <Button onClick={invoice}>Invoice</Button>

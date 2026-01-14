@@ -2,13 +2,18 @@ import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useExtensionDetails } from "@features/extension";
 import { RqlQuery } from "@swo/rql-client";
 import {
-  Statement,
-  StatementListResponse,
   Charge,
   ChargeListResponse,
+  ListMetadata,
 } from "@swo/mp-api-model/billing";
 import { backendClient } from "@/ui/lib/alga";
 import { SWOListOptions } from "@/ui/features/shared";
+import { Statement } from "@/shared/statements";
+
+export type StatementListResponse = {
+  data: Statement[];
+  $meta: ListMetadata;
+};
 
 export type StatementsClientStatementsOptions = SWOListOptions<Statement> & {
   licenseeId?: string;

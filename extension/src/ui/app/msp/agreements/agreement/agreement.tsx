@@ -347,7 +347,7 @@ export function Agreement() {
       <header className="w-full flex justify-between gap-10">
         <div className="flex items-center gap-6">
           <h1 className="text-3xl font-semibold">{name}</h1>
-          {!!status && <AgreementStatusBadge status={status} />}
+          <AgreementStatusBadge status={status} />
         </div>
         <div className="flex items-center gap-6">
           <Button onClick={() => setIsOpen(true)}>Edit</Button>
