@@ -23,7 +23,7 @@ type InvoiceData = {
 
 const toLine = (
   charge: Charge,
-  billingConfig: BillingConfig
+  billingConfig: BillingConfig,
 ): ManualInvoiceLine | null => {
   if (!charge.price?.unitSP) {
     console.warn(`No price for charge ${charge.id}`);
@@ -35,7 +35,7 @@ const toLine = (
   })`;
 
   const rate = Math.round(
-    charge.price.unitSP * (1 + billingConfig.markup / 100) * 100
+    charge.price.unitSP * (1 + billingConfig.markup / 100) * 100,
   );
 
   return {
@@ -49,7 +49,7 @@ const toLine = (
 const toStatement = (
   swoStatement: SWOStatement,
   invoicesData: Record<string, InvoiceData>,
-  billingConfigs: Record<string, BillingConfig>
+  billingConfigs: Record<string, BillingConfig>,
 ): Statement => {
   const billingConfig = swoStatement.agreement?.id
     ? billingConfigs[swoStatement.agreement.id]
@@ -94,21 +94,24 @@ export class StatementService {
   getById(id: string, rql: string): Statement {
     const statement = this.swoClient.fetch<SWOStatement>(
       `/billing/statements/${id}`,
-      rql
+      rql,
     );
 
     const invoicesData =
       storage.get<Record<string, InvoiceData>>(
         STORAGE_NAMESPACE,
-        STORAGE_KEY
+        STORAGE_KEY,
       ) ?? {};
 
     const bcs = billingConfigs.getConfigs();
 
-    const billingConfigsByAgreementId = bcs.reduce((acc, config) => {
-      acc[config.agreementId] = config;
-      return acc;
-    }, {} as Record<string, BillingConfig>);
+    const billingConfigsByAgreementId = bcs.reduce(
+      (acc, config) => {
+        acc[config.agreementId] = config;
+        return acc;
+      },
+      {} as Record<string, BillingConfig>,
+    );
 
     return toStatement(statement, invoicesData, billingConfigsByAgreementId);
   }
@@ -124,18 +127,21 @@ export class StatementService {
     const invoicesData =
       storage.get<Record<string, InvoiceData>>(
         STORAGE_NAMESPACE,
-        STORAGE_KEY
+        STORAGE_KEY,
       ) ?? {};
 
     const bcs = billingConfigs.getConfigs();
 
-    const billingConfigsByAgreementId = bcs.reduce((acc, config) => {
-      acc[config.agreementId] = config;
-      return acc;
-    }, {} as Record<string, BillingConfig>);
+    const billingConfigsByAgreementId = bcs.reduce(
+      (acc, config) => {
+        acc[config.agreementId] = config;
+        return acc;
+      },
+      {} as Record<string, BillingConfig>,
+    );
 
     const statements = swoStatements.map((swoStatement) =>
-      toStatement(swoStatement, invoicesData, billingConfigsByAgreementId)
+      toStatement(swoStatement, invoicesData, billingConfigsByAgreementId),
     );
 
     return { data: statements, $meta };
@@ -143,15 +149,18 @@ export class StatementService {
 
   createInvoices(statements: SWOStatement[]) {
     const bcs = billingConfigs.getConfigs();
-    const billingConfigsByAgreementId = bcs.reduce((acc, config) => {
-      acc[config.agreementId] = config;
-      return acc;
-    }, {} as Record<string, BillingConfig>);
+    const billingConfigsByAgreementId = bcs.reduce(
+      (acc, config) => {
+        acc[config.agreementId] = config;
+        return acc;
+      },
+      {} as Record<string, BillingConfig>,
+    );
 
     let invoicesData =
       storage.get<Record<string, InvoiceData>>(
         STORAGE_NAMESPACE,
-        STORAGE_KEY
+        STORAGE_KEY,
       ) || {};
 
     for (const swoStatement of statements) {
