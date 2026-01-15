@@ -1,4 +1,3 @@
-import { storage } from "../lib/alga/storage";
 import { Statement } from "@/shared/statements";
 import {
   Charge,
@@ -10,16 +9,11 @@ import { BillingConfig } from "@/shared/billing-configs";
 import { billingConfigs } from "./billing-configs";
 import { SWOClient } from "../lib/swo/client";
 import { ListResponse } from "../lib/swo/api";
+import { InvoiceLink } from "@/shared/invoices";
+import { invoiceLinks } from "./invoice-links";
 
-const STORAGE_NAMESPACE = "swo.statements";
-const STORAGE_KEY = "all";
 const STATEMENTS_LIMIT = 100;
 const CHARGES_LIMIT = 100;
-
-type InvoiceData = {
-  invoiceId: string;
-  markup: number;
-};
 
 // const toLine = (
 //   charge: Charge,
@@ -46,39 +40,6 @@ type InvoiceData = {
 //   } satisfies ManualInvoiceLine;
 // };
 
-const toStatement = (
-  swoStatement: SWOStatement,
-  invoiceData?: InvoiceData,
-  billingConfig?: BillingConfig
-): Statement => {
-  if (!billingConfig) {
-    return {
-      ...swoStatement,
-      alga: {
-        status: "no-invoice",
-      },
-    };
-  }
-
-  if (!invoiceData) {
-    return {
-      ...swoStatement,
-      alga: {
-        status: "to-invoice",
-      },
-    };
-  }
-
-  return {
-    ...swoStatement,
-    alga: {
-      status: "invoiced",
-      invoiceId: invoiceData.invoiceId,
-      markup: invoiceData.markup,
-    },
-  };
-};
-
 export class StatementService {
   private swoClient: SWOClient;
 
@@ -92,23 +53,32 @@ export class StatementService {
       rql
     );
 
-    const invoicesData =
-      storage.get<Record<string, InvoiceData>>(
-        STORAGE_NAMESPACE,
-        STORAGE_KEY
-      ) ?? {};
-
     const bcs = billingConfigs.getConfigs();
-
     const billingConfig = bcs.find(
       (bc) => bc.agreementId === statement.agreement?.id
     );
 
-    return toStatement(
-      statement,
-      invoicesData[statement.id ?? ""],
-      billingConfig
-    );
+    if (!billingConfig) {
+      return {
+        ...statement,
+        algaInvoiceStatus: "no-invoice",
+      } satisfies Statement;
+    }
+
+    const ils = invoiceLinks.getLinks();
+    const invoiceLink = ils.find((il) => il.statementId === id);
+
+    if (!invoiceLink) {
+      return {
+        ...statement,
+        algaInvoiceStatus: "to-invoice",
+      } satisfies Statement;
+    }
+
+    return {
+      ...statement,
+      algaInvoiceStatus: "invoiced",
+    } satisfies Statement;
   }
 
   getByRQL(rql: string): ListResponse<Statement> {
@@ -119,26 +89,38 @@ export class StatementService {
       return { data: [], $meta: { pagination: { total: 0 } } };
     }
 
-    const invoicesData =
-      storage.get<Record<string, InvoiceData>>(
-        STORAGE_NAMESPACE,
-        STORAGE_KEY
-      ) ?? {};
+    const ils = invoiceLinks.getLinks();
+    const invoiceLinksByStatementId = ils.reduce((acc, il) => {
+      acc[il.statementId] = il;
+      return acc;
+    }, {} as Record<string, InvoiceLink>);
 
     const bcs = billingConfigs.getConfigs();
-
     const billingConfigsByAgreementId = bcs.reduce((acc, config) => {
       acc[config.agreementId] = config;
       return acc;
     }, {} as Record<string, BillingConfig>);
 
-    const statements = swoStatements.map((swoStatement) =>
-      toStatement(
-        swoStatement,
-        invoicesData[swoStatement.id ?? ""],
-        billingConfigsByAgreementId[swoStatement.agreement?.id ?? ""]
-      )
-    );
+    const statements = swoStatements.map((swoStatement) => {
+      if (!billingConfigsByAgreementId[swoStatement.agreement?.id ?? ""]) {
+        return {
+          ...swoStatement,
+          algaInvoiceStatus: "no-invoice",
+        } satisfies Statement;
+      }
+
+      if (!invoiceLinksByStatementId[swoStatement.id ?? ""]) {
+        return {
+          ...swoStatement,
+          algaInvoiceStatus: "to-invoice",
+        } satisfies Statement;
+      }
+
+      return {
+        ...swoStatement,
+        algaInvoiceStatus: "invoiced",
+      } satisfies Statement;
+    });
 
     return { data: statements, $meta };
   }
@@ -158,12 +140,9 @@ export class StatementService {
       );
     }
 
-    let invoicesData =
-      storage.get<Record<string, InvoiceData>>(
-        STORAGE_NAMESPACE,
-        STORAGE_KEY
-      ) ?? {};
-    if (invoicesData[statementId]) {
+    const ils = invoiceLinks.getLinks();
+    const invoiceLink = ils.find((il) => il.statementId === statementId);
+    if (invoiceLink) {
       throw new Error(`Invoice already exists for statement ${statementId}`);
     }
 
@@ -177,14 +156,19 @@ export class StatementService {
     //       .filter((line) => !!line);
     //     console.log(lines);
     //     const manualInvoice = {} as ManualInvoice; // MOCKED
-    invoicesData[statementId] = {
-      invoiceId: "SOME_ID",
-      markup: billingConfig.markup,
-    };
+    invoiceLinks.saveLinks([
+      ...ils,
+      {
+        invoiceId: "SOME_ID",
+        statementId,
+        markupSnapshot: billingConfig.markup,
+      },
+    ]);
 
-    storage.put(STORAGE_NAMESPACE, STORAGE_KEY, invoicesData);
-
-    return toStatement(swoStatement, invoicesData[statementId], billingConfig);
+    return {
+      ...swoStatement,
+      algaInvoiceStatus: "invoiced",
+    } satisfies Statement;
   }
 
   invoiceAll(): void {
@@ -194,11 +178,11 @@ export class StatementService {
       return acc;
     }, {} as Record<string, BillingConfig>);
 
-    const invoicesData =
-      storage.get<Record<string, InvoiceData>>(
-        STORAGE_NAMESPACE,
-        STORAGE_KEY
-      ) ?? {};
+    const ils = invoiceLinks.getLinks();
+    const invoiceLinksByStatementId = ils.reduce((acc, il) => {
+      acc[il.statementId] = il;
+      return acc;
+    }, {} as Record<string, InvoiceLink>);
 
     let offset = 0;
 
@@ -219,8 +203,8 @@ export class StatementService {
           continue;
         }
 
-        const invoiceData = invoicesData[swoStatement.id!];
-        if (invoiceData) {
+        const invoiceLink = invoiceLinksByStatementId[swoStatement.id!];
+        if (invoiceLink) {
           continue;
         }
 
@@ -234,10 +218,14 @@ export class StatementService {
         //   .filter((line) => !!line);
         // console.log(lines);
         // const manualInvoice = {} as ManualInvoice; // MOCKED
-        invoicesData[swoStatement.id!] = {
-          invoiceId: "SOME_ID",
-          markup: billingConfig.markup,
-        };
+        invoiceLinks.saveLinks([
+          ...ils,
+          {
+            invoiceId: "SOME_ID",
+            statementId: swoStatement.id!,
+            markupSnapshot: billingConfig.markup,
+          },
+        ]);
       }
 
       offset += STATEMENTS_LIMIT;
