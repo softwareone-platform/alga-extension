@@ -106,8 +106,6 @@ export function Statement() {
   if (isPending) return <div>Loading...</div>;
   if (!statement) return <div>Statement not found</div>;
 
-  console.log(statement, statement.alga.status);
-
   return (
     <div className="w-full flex flex-col p-6 gap-8">
       <header className="w-full flex justify-between gap-10">
@@ -116,7 +114,9 @@ export function Statement() {
           <AlgaInvoiceStatusBadge status={statement.alga.status} />
         </div>
         <div className="flex items-center gap-6">
-          <Button onClick={invoice}>Invoice</Button>
+          {statement.alga.status === "to-invoice" && (
+            <Button onClick={invoice}>Invoice</Button>
+          )}
           <LinkButton
             variant="white"
             href={`${SWO_PORTAL_URL}/billing/statements/${id}`}

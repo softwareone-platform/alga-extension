@@ -12,15 +12,16 @@ import {
 } from "@ui/table";
 import { MarkupCell, PriceWithMarkupCell } from "@features/markup";
 import { useStatements } from "@features/statements";
+import { AlgaInvoiceStatusBadge } from "@/ui/features/statements/components";
 import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
-import { Statement } from "@swo/mp-api-model/billing";
+import { Statement } from "@/shared/statements";
 import { ConsumerLink, useConsumer } from "@features/consumers";
 import { useBillingConfigByAgreement } from "@/ui/features/billing-config";
 
 const StatementRow = ({ statement }: { statement: Statement }) => {
   const { billingConfig } = useBillingConfigByAgreement(
-    statement?.agreement?.id
+    statement?.agreement?.id,
   );
   const { consumer } = useConsumer(billingConfig?.consumerId);
 
@@ -51,6 +52,9 @@ const StatementRow = ({ statement }: { statement: Statement }) => {
         markup={billingConfig?.markup}
       />
       <TableCell>{statement.price?.currency?.sale || "—"}</TableCell>
+      <TableCell>
+        <AlgaInvoiceStatusBadge status={statement.alga.status} />
+      </TableCell>
     </TableRow>
   );
 };
@@ -61,7 +65,7 @@ export function Statements() {
 
   return (
     <Card>
-      <Table className="grid-cols-[minmax(192px,auto)_minmax(150px,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)]">
+      <Table className="grid-cols-[minmax(192px,auto)_minmax(150px,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_minmax(0,auto)_auto]">
         <TableHeader>
           <TableRow>
             <TableHeaderCell>Name</TableHeaderCell>
@@ -74,6 +78,7 @@ export function Statements() {
             <TableHeaderCell>Markup</TableHeaderCell>
             <TableHeaderCell>Total RP</TableHeaderCell>
             <TableHeaderCell>Currency</TableHeaderCell>
+            <TableHeaderCell>Status</TableHeaderCell>
           </TableRow>
         </TableHeader>
         <TableBody>
