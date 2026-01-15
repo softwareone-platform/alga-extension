@@ -157,7 +157,7 @@ export class StatementService {
       {} as Record<string, BillingConfig>,
     );
 
-    let invoicesData =
+    let algaEntries =
       storage.get<Record<string, InvoiceData>>(
         STORAGE_NAMESPACE,
         STORAGE_KEY,
@@ -177,8 +177,8 @@ export class StatementService {
         continue;
       }
 
-      const invoiceData = invoicesData[swoStatement.id!];
-      if (!!invoiceData) {
+      const algaEntry = algaEntries[swoStatement.id!];
+      if (!!algaEntry) {
         // already invoiced
         continue;
       }
@@ -204,8 +204,8 @@ export class StatementService {
         markup: billingConfig.markup,
       } satisfies InvoiceData;
 
-      invoicesData[swoStatement.id!] = newInvoiceData;
-      storage.put(STORAGE_NAMESPACE, STORAGE_KEY, invoicesData);
+      algaEntries[swoStatement.id!] = newInvoiceData;
+      storage.put(STORAGE_NAMESPACE, STORAGE_KEY, algaEntries);
     }
   }
 }
