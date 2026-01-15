@@ -15,8 +15,8 @@ export const statementsHandler = ({
   }
 
   if (method === "GET") {
-    const [urlWithPath, rql] = url.split("?");
-    const id = urlWithPath.split("/")[2];
+    const [path, rql] = url.split("?");
+    const id = path.split("/")[2];
 
     const swoClient = new SWOClient(endpoint, token);
     const statementService = new StatementService(swoClient);
@@ -28,6 +28,9 @@ export const statementsHandler = ({
 
     const data = statementService.getByRQL(rql);
     return jsonResponse(data, { status: 200 });
+  }
+
+  if (method === "POST") {
   }
 
   return jsonResponse({ error: "Method not allowed" }, { status: 405 });
