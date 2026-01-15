@@ -111,10 +111,10 @@ export function Statement() {
       <header className="w-full flex justify-between gap-10">
         <div className="flex items-center gap-6">
           <h1 className="text-3xl font-semibold">{id}</h1>
-          <AlgaInvoiceStatusBadge status={statement.alga.status} />
+          <AlgaInvoiceStatusBadge status={statement.algaInvoiceStatus} />
         </div>
         <div className="flex items-center gap-6">
-          {statement.alga.status === "to-invoice" && (
+          {statement.algaInvoiceStatus === "to-invoice" && (
             <Button onClick={invoice}>Invoice</Button>
           )}
           <LinkButton

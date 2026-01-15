@@ -21,7 +21,7 @@ import { useBillingConfigByAgreement } from "@/ui/features/billing-config";
 
 const StatementRow = ({ statement }: { statement: Statement }) => {
   const { billingConfig } = useBillingConfigByAgreement(
-    statement?.agreement?.id,
+    statement?.agreement?.id
   );
   const { consumer } = useConsumer(billingConfig?.consumerId);
 
@@ -53,7 +53,7 @@ const StatementRow = ({ statement }: { statement: Statement }) => {
       />
       <TableCell>{statement.price?.currency?.sale || "—"}</TableCell>
       <TableCell>
-        <AlgaInvoiceStatusBadge status={statement.alga.status} />
+        <AlgaInvoiceStatusBadge status={statement.algaInvoiceStatus} />
       </TableCell>
     </TableRow>
   );
