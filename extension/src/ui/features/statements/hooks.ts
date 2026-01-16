@@ -183,7 +183,7 @@ export const useStatementActions = (statementId: string) => {
         `/statements/${statementId}/create-invoice`
       ),
     onSuccess: (response) =>
-      queryClient.setQueryData(["statements", "statementId"], response.data),
+      queryClient.setQueryData(["statements", statementId], response.data),
   });
 
   return {

@@ -24,6 +24,8 @@ export const AlgaInvoiceStatusBadge = ({
   if (status === "to-invoice")
     return <Badge tone={"warning"}>To invoice</Badge>;
   if (status === "invoiced") return <Badge tone={"success"}>Invoiced</Badge>;
+  if (status === "invoicing")
+    return <Badge tone={"default"}>Invoicing...</Badge>;
 
   return <></>;
 };
