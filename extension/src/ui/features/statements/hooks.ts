@@ -1,4 +1,9 @@
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  keepPreviousData,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useExtensionDetails } from "@features/extension";
 import { RqlQuery } from "@swo/rql-client";
 import {
@@ -8,7 +13,7 @@ import {
 } from "@swo/mp-api-model/billing";
 import { backendClient } from "@/ui/lib/alga";
 import { SWOListOptions } from "@/ui/features/shared";
-import { Statement } from "@/shared/statements";
+import { Statement } from "./types";
 
 export type StatementListResponse = {
   data: Statement[];
@@ -168,4 +173,22 @@ export const useStatementCharges = (
   const pagination = data?.$meta?.pagination || { total: 0 };
 
   return { charges, pagination, ...state };
+};
+
+export const useStatementActions = (statementId: string) => {
+  const queryClient = useQueryClient();
+  const { mutate, mutateAsync, status } = useMutation({
+    mutationFn: () =>
+      backendClient.post<Statement>(
+        `/statements/${statementId}/create-invoice`
+      ),
+    onSuccess: (response) =>
+      queryClient.setQueryData(["statements", "statementId"], response.data),
+  });
+
+  return {
+    createInvoice: mutate,
+    createInvoiceAsync: mutateAsync,
+    createInvoiceStatus: status,
+  };
 };

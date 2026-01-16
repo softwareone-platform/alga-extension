@@ -3,13 +3,30 @@ import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { withMarkup } from "@features/markup";
-import { useStatement } from "@features/statements";
+import { useStatement, useStatementActions } from "@features/statements";
 import { ConsumerLink, useConsumer } from "@features/consumers";
 import { SWO_PORTAL_URL } from "@/ui/config";
-import { AlgaInvoiceStatusBadge } from "@/ui/features/statements/components";
+import { Badge } from "@alga-psa/ui-kit";
+import { InvoiceStatus } from "@/shared/statements";
+
+export const AlgaInvoiceStatusBadge = ({
+  status,
+}: {
+  status?: InvoiceStatus | "invoicing";
+}) => {
+  if (!status) return <></>;
+
+  if (status === "no-invoice")
+    return <Badge tone={"default"}>Cannot invoice</Badge>;
+  if (status === "to-invoice")
+    return <Badge tone={"warning"}>To invoice</Badge>;
+  if (status === "invoiced") return <Badge tone={"success"}>Invoiced</Badge>;
+
+  return <></>;
+};
 
 function StatementSummary({ id }: { id: string }) {
   const { statement, isPending: isAgreementPending } = useStatement(id);
@@ -99,9 +116,12 @@ export function Statement() {
   const { id } = useParams<{ id: string }>();
   const { statement, isPending } = useStatement(id!);
 
-  const invoice = useCallback(async () => {
-    console.log(statement);
-  }, [statement]);
+  const { createInvoice, createInvoiceStatus } = useStatementActions(id!);
+
+  const statementStatus = useMemo(() => {
+    if (createInvoiceStatus === "pending") return "invoicing";
+    return statement?.algaInvoiceStatus;
+  }, [createInvoiceStatus, statement?.algaInvoiceStatus]);
 
   if (isPending) return <div>Loading...</div>;
   if (!statement) return <div>Statement not found</div>;
@@ -111,11 +131,11 @@ export function Statement() {
       <header className="w-full flex justify-between gap-10">
         <div className="flex items-center gap-6">
           <h1 className="text-3xl font-semibold">{id}</h1>
-          <AlgaInvoiceStatusBadge status={statement.algaInvoiceStatus} />
+          <AlgaInvoiceStatusBadge status={statementStatus} />
         </div>
         <div className="flex items-center gap-6">
           {statement.algaInvoiceStatus === "to-invoice" && (
-            <Button onClick={invoice}>Invoice</Button>
+            <Button onClick={() => createInvoice()}>Invoice</Button>
           )}
           <LinkButton
             variant="white"

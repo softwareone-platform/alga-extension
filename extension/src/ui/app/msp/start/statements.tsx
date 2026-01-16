@@ -12,12 +12,28 @@ import {
 } from "@ui/table";
 import { MarkupCell, PriceWithMarkupCell } from "@features/markup";
 import { useStatements } from "@features/statements";
-import { AlgaInvoiceStatusBadge } from "@/ui/features/statements/components";
 import { AgreementCell } from "@features/agreements";
 import { ProductCell } from "@features/products";
-import { Statement } from "@/shared/statements";
+import { InvoiceStatus, Statement } from "@/shared/statements";
 import { ConsumerLink, useConsumer } from "@features/consumers";
 import { useBillingConfigByAgreement } from "@/ui/features/billing-config";
+import { Badge } from "@alga-psa/ui-kit";
+
+export const AlgaInvoiceStatusBadge = ({
+  status,
+}: {
+  status?: InvoiceStatus;
+}) => {
+  if (!status) return <></>;
+
+  if (status === "no-invoice")
+    return <Badge tone={"default"}>Cannot invoice</Badge>;
+  if (status === "to-invoice")
+    return <Badge tone={"warning"}>To invoice</Badge>;
+  if (status === "invoiced") return <Badge tone={"success"}>Invoiced</Badge>;
+
+  return <></>;
+};
 
 const StatementRow = ({ statement }: { statement: Statement }) => {
   const { billingConfig } = useBillingConfigByAgreement(
