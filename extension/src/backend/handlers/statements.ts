@@ -31,6 +31,19 @@ export const statementsHandler = ({
   }
 
   if (method === "POST") {
+    const path = url.split("?")[0];
+    const segments = path.split("/");
+    const id = segments[2];
+    const action = segments[3];
+
+    if (id && action === "create-invoice") {
+      const swoClient = new SWOClient(endpoint, token);
+      const statementService = new StatementService(swoClient);
+      const data = statementService.invoiceStatement(id);
+      return jsonResponse(data, { status: 200 });
+    }
+
+    return jsonResponse({ error: "Not found" }, { status: 404 });
   }
 
   return jsonResponse({ error: "Method not allowed" }, { status: 405 });
