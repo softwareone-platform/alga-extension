@@ -23,9 +23,9 @@ export const AlgaInvoiceStatusBadge = ({
     return <Badge tone={"default"}>Cannot invoice</Badge>;
   if (status === "to-invoice")
     return <Badge tone={"warning"}>To invoice</Badge>;
-  if (status === "invoiced") return <Badge tone={"success"}>Invoiced</Badge>;
   if (status === "invoicing")
     return <Badge tone={"default"}>Invoicing...</Badge>;
+  if (status === "invoiced") return <Badge tone={"success"}>Invoiced</Badge>;
 
   return <></>;
 };
@@ -137,7 +137,12 @@ export function Statement() {
         </div>
         <div className="flex items-center gap-6">
           {statement.algaInvoiceStatus === "to-invoice" && (
-            <Button onClick={() => createInvoice()}>Invoice</Button>
+            <Button
+              onClick={() => createInvoice()}
+              disabled={createInvoiceStatus === "pending"}
+            >
+              {createInvoiceStatus === "pending" ? "Invoicing..." : "Invoice"}
+            </Button>
           )}
           <LinkButton
             variant="white"
