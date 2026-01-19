@@ -159,6 +159,11 @@ export function Statement() {
         <NavLink to="charges">
           {({ isActive }) => <Tabs.Tab isActive={isActive}>Charges</Tabs.Tab>}
         </NavLink>
+        <NavLink to="attachments">
+          {({ isActive }) => (
+            <Tabs.Tab isActive={isActive}>Attachments</Tabs.Tab>
+          )}
+        </NavLink>
         <NavLink to="details">
           {({ isActive }) => <Tabs.Tab isActive={isActive}>Details</Tabs.Tab>}
         </NavLink>

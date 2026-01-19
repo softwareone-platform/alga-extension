@@ -15,7 +15,12 @@ import {
   Details as SubscriptionDetails,
 } from "./subscriptions";
 import { Order, Items, Details as OrderDetails } from "./orders";
-import { Statement, Charges, Details as StatementDetails } from "./statements";
+import {
+  Statement,
+  Charges,
+  Attachments,
+  Details as StatementDetails,
+} from "./statements";
 import {
   Agreements,
   Orders,
@@ -149,6 +154,10 @@ export const mspRoutes: RouteObject[] = [
       {
         path: "charges",
         element: <Charges />,
+      },
+      {
+        path: "attachments",
+        element: <Attachments />,
       },
       {
         path: "details",
