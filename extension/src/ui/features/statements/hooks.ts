@@ -45,7 +45,8 @@ export const useStatements = (
       const query = new RqlQuery<Statement>();
       query
         .expand(
-          "id",
+          "id", 
+          "audit",
           "type",
           "agreement.id",
           "agreement.name",
@@ -57,7 +58,6 @@ export const useStatements = (
           "price.currency",
           "price.totalSP",
           "status",
-          "audit"
         )
         .orderBy([sort?.by || "audit.created.at", sort?.order || "desc"])
         .paging(offset, limit);
@@ -104,7 +104,8 @@ export const useStatement = (id: string) => {
       const query = new RqlQuery<Statement>();
 
       query.expand(
-        "id",
+        "id", 
+        "audit",
         "type",
         "agreement.id",
         "agreement.name",
@@ -117,7 +118,6 @@ export const useStatement = (id: string) => {
         "price.totalSP",
         "invoice" as any,
         "status",
-        "audit"
       );
 
       const { data } = await backendClient.get<Statement>(
@@ -149,6 +149,7 @@ export const useStatementCharges = (
       query
         .expand(
           "id",
+          "audit",
           "subscription.id",
           "subscription.name",
           "item.id",
@@ -192,6 +193,20 @@ export const useStatementAttachments = (
       const { offset = 0, limit = 10 } = options || {};
 
       const query = new RqlQuery<StatementAttachment>();
+      query.expand(
+        "id", 
+        "audit",
+        "name",
+        "description",
+        "filename",
+        "size",
+        "isDeleted"
+      );
+      query.filter({
+        field: "isDeleted",
+        value: false,
+        operator: "eq",
+      });
       query.paging(offset, limit);
 
       const { data } = await backendClient.get<StatementAttachmentListResponse>(
