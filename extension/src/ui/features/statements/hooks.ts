@@ -10,6 +10,8 @@ import {
   Charge,
   ChargeListResponse,
   ListMetadata,
+  StatementAttachment,
+  StatementAttachmentListResponse,
 } from "@swo/mp-api-model/billing";
 import { backendClient } from "@/ui/lib/alga";
 import { SWOListOptions } from "@/ui/features/shared";
@@ -25,6 +27,8 @@ export type StatementsClientStatementsOptions = SWOListOptions<Statement> & {
 };
 
 export type StatementsClientChargesOptions = SWOListOptions<Charge>;
+
+export type StatementsClientAttachmentsOptions = SWOListOptions<StatementAttachment>;
 
 export const useStatements = (
   options?: StatementsClientStatementsOptions,
@@ -173,6 +177,37 @@ export const useStatementCharges = (
   const pagination = data?.$meta?.pagination || { total: 0 };
 
   return { charges, pagination, ...state };
+};
+
+export const useStatementAttachments = (
+  statementId: string,
+  options?: StatementsClientAttachmentsOptions
+) => {
+  const { details } = useExtensionDetails();
+  const isConfigured = !!details?.hasToken && !!details?.endpoint;
+
+  const { data, ...state } = useQuery({
+    queryKey: ["statements", statementId, "attachments", options],
+    queryFn: async () => {
+      const { offset = 0, limit = 10 } = options || {};
+
+      const query = new RqlQuery<StatementAttachment>();
+      query.paging(offset, limit);
+
+      const { data } = await backendClient.get<StatementAttachmentListResponse>(
+        `/swo/billing/statements/${statementId}/attachments?${query.toString()}`
+      );
+
+      return data;
+    },
+    enabled: isConfigured && !!statementId,
+    placeholderData: keepPreviousData,
+  });
+
+  const attachments = data?.data || [];
+  const pagination = data?.$meta?.pagination || { total: 0 };
+
+  return { attachments, pagination, ...state };
 };
 
 export const useStatementActions = (statementId: string) => {
