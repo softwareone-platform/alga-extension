@@ -13,6 +13,7 @@ import {
 import { useState } from "react";
 import { useStatementAttachments } from "@features/statements";
 import { DateTimeCell } from "@features/dates";
+import { backendClient } from "@/ui/lib/alga";
 
 const FileCell = ({
   filename,
@@ -64,7 +65,10 @@ export function Attachments() {
         </TableHeader>
         <TableBody>
           {attachments?.map((attachment) => (
-            <TableRow key={attachment.id}>
+            <TableRow key={attachment.id} onClick={async () => {
+              const response = await backendClient.get<string>(`/swo/billing/statements/${id}/attachments/${attachment.id}`);
+              console.log(response);
+            }}>
               <TableCell>{attachment.name || "—"}</TableCell>
               <TableCell>{attachment.description || "—"}</TableCell>
               <DateTimeCell dateTime={attachment.audit?.created?.at} />

@@ -13,6 +13,7 @@ import {
 
 import { getUser } from "../lib/alga";
 import { decode, jsonResponse } from "../lib";
+import { logInfo } from "alga:extension/logging";
 
 export const filters: Filters = {
   internal: {
@@ -62,9 +63,17 @@ export const swoHandler = (request: ExecuteRequest): ExecuteResponse => {
     ],
   });
 
+  logInfo(`Response from: ${endpoint}${path}`);
+  logInfo(`Response headers: ${JSON.stringify(response.headers)}`);
+  logInfo(`Response status: ${response.status}`);
+  logInfo(`Response body: ${response.body}`);
+
+  const location = response.headers.find((h) => h.name === "Location")?.value;
+  const headers = location ? [{ name: "Location", value: location }] : [];
+
   const responseBody = decode(response.body);
-  if (!responseBody) return jsonResponse({}, { status: response.status });
+  if (!responseBody) return jsonResponse({}, { status: response.status, headers });
 
   const body = filterResponse(responseBody, rule);
-  return jsonResponse(body, { status: response.status });
+  return jsonResponse(body, { status: response.status, headers });
 };

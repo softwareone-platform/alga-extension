@@ -12,10 +12,10 @@ export class SWOClient {
 
   fetch<T>(
     path: string,
-    rql: string,
+    rql: string = "",
     method: "GET" | "POST" = "GET",
     body?: unknown
-  ): T {
+  ): { data: T; headers: { name: string; value: string }[]; status: number } {
     const response = httpFetch({
       method,
       url: `${this.apiUrl}${path}?${rql}`,
@@ -48,6 +48,6 @@ export class SWOClient {
       );
     }
 
-    return decoded;
+    return { data: decoded, headers: response.headers, status: response.status };
   }
 }

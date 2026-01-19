@@ -48,7 +48,7 @@ export class StatementService {
   }
 
   getById(id: string, rql: string): Statement {
-    const statement = this.swoClient.fetch<SWOStatement>(
+    const { data: statement } = this.swoClient.fetch<SWOStatement>(
       `/billing/statements/${id}`,
       rql
     );
@@ -82,8 +82,9 @@ export class StatementService {
   }
 
   getByRQL(rql: string): ListResponse<Statement> {
-    const { data: swoStatements, $meta } =
-      this.swoClient.fetch<StatementListResponse>("/billing/statements", rql);
+    const {
+      data: { data: swoStatements, $meta },
+    } = this.swoClient.fetch<StatementListResponse>("/billing/statements", rql);
 
     if (!swoStatements || !$meta) {
       return { data: [], $meta: { pagination: { total: 0 } } };
@@ -126,7 +127,7 @@ export class StatementService {
   }
 
   invoiceStatement(statementId: string): Statement {
-    const swoStatement = this.swoClient.fetch<SWOStatement>(
+    const { data: swoStatement } = this.swoClient.fetch<SWOStatement>(
       `/billing/statements/${statementId}`,
       "select=id,agreement.id"
     );
@@ -187,11 +188,12 @@ export class StatementService {
     let offset = 0;
 
     while (true) {
-      const { data: swoStatements, $meta } =
-        this.swoClient.fetch<StatementListResponse>(
-          "/billing/statements",
-          `[MAGIC!!!!!]&offset=${offset}&limit=${STATEMENTS_LIMIT}`
-        );
+      const {
+        data: { data: swoStatements, $meta },
+      } = this.swoClient.fetch<StatementListResponse>(
+        "/billing/statements",
+        `[MAGIC!!!!!]&offset=${offset}&limit=${STATEMENTS_LIMIT}`
+      );
       if (($meta?.pagination?.total ?? 0) <= offset) {
         break;
       }
@@ -237,15 +239,13 @@ export class StatementService {
     const charges: Charge[] = [];
 
     while (true) {
-      const response = this.swoClient.fetch<ChargeListResponse>(
+      const {
+        data: { data, $meta },
+      } = this.swoClient.fetch<ChargeListResponse>(
         `/billing/statements/${statementId}/charges`,
         `select=id,subscription.id,subscription.name,item.id,item.name,period.start,period.end,quantity,price.SPx1,price.unitSP&offset=${offset}&limit=${CHARGES_LIMIT}`
       );
-      if (!response) {
-        throw new Error(`Failed to fetch charges.`);
-      }
 
-      const { data, $meta } = response!;
       charges.push(...(data || []));
 
       offset += CHARGES_LIMIT;
@@ -258,4 +258,20 @@ export class StatementService {
 
     return charges;
   }
+
+  // private getAttachmentUrl(statementId: string, attachmentId: string): string {
+  //     const {
+  //       headers,
+  //       status,
+  //     } = this.swoClient.fetch<void>(
+  //       `/billing/statements/${statementId}/attachments/${attachmentId}`
+  //     );
+
+  //     const location = headers.find((h) => h.name === "Location")?.value;
+  //     if (!location) {
+  //       throw new Error(`Failed to get attachment URL for statement ${statementId} and attachment ${attachmentId}. SWO API returned ${status}`);
+  //     }
+
+  //     return location;
+  // }
 }
