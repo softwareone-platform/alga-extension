@@ -192,7 +192,7 @@ export class StatementService {
         data: { data: swoStatements, $meta },
       } = this.swoClient.fetch<StatementListResponse>(
         "/billing/statements",
-        `[MAGIC!!!!!]&offset=${offset}&limit=${STATEMENTS_LIMIT}`
+        `select=id,audit,agreement.id&gt(audit.created.at,%222025-10-31T00%3A00%3A00.000Z%22)&offset=${offset}&limit=${STATEMENTS_LIMIT}`
       );
       if (($meta?.pagination?.total ?? 0) <= offset) {
         break;
