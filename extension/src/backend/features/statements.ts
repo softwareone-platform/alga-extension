@@ -185,6 +185,8 @@ export class StatementService {
       return acc;
     }, {} as Record<string, InvoiceLink>);
 
+    const now = new Date().toISOString().split("T")[0];
+
     let offset = 0;
 
     while (true) {
@@ -192,7 +194,7 @@ export class StatementService {
         data: { data: swoStatements, $meta },
       } = this.swoClient.fetch<StatementListResponse>(
         "/billing/statements",
-        `select=id,audit,agreement.id&gt(audit.created.at,%222025-10-31T00%3A00%3A00.000Z%22)&offset=${offset}&limit=${STATEMENTS_LIMIT}`
+        `select=id,audit,agreement.id&gt(audit.created.at,%22${now}T00%3A00%3A00.000Z%22)&offset=${offset}&limit=${STATEMENTS_LIMIT}`
       );
       if (($meta?.pagination?.total ?? 0) <= offset) {
         break;
@@ -258,20 +260,4 @@ export class StatementService {
 
     return charges;
   }
-
-  // private getAttachmentUrl(statementId: string, attachmentId: string): string {
-  //     const {
-  //       headers,
-  //       status,
-  //     } = this.swoClient.fetch<void>(
-  //       `/billing/statements/${statementId}/attachments/${attachmentId}`
-  //     );
-
-  //     const location = headers.find((h) => h.name === "Location")?.value;
-  //     if (!location) {
-  //       throw new Error(`Failed to get attachment URL for statement ${statementId} and attachment ${attachmentId}. SWO API returned ${status}`);
-  //     }
-
-  //     return location;
-  // }
 }
