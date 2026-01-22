@@ -40,7 +40,7 @@ export const useStatements = (
   const { data, ...state } = useQuery({
     queryKey: ["statements", options, agreementIds],
     queryFn: async () => {
-      const { offset = 0, limit = 10, sort, licenseeId } = options || {};
+      const { offset = 0, limit = 1, sort, licenseeId } = options || {};
 
       const query = new RqlQuery<Statement>();
       query
