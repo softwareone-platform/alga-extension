@@ -31,29 +31,37 @@ const columns: ColumnDef<Statement>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
+    minSize: 160,
     size: 192,
     cell: ({ row: { original: { id } } }) => <span className="block text-sm text-blue-500 hover:text-blue-600 truncate">{id}</span>
   },
   {
     accessorKey: 'statementType',
     header: 'Statement Type',
-    size: 150,
+    minSize: 160,
+    size: 160,
     cell: ({ row: { original: { type } } }) => <span>{type || "—"}</span>
   },
   {
     accessorKey: 'agreement',
     header: 'Agreement',
+    minSize: 160,
+    size: 160,
     cell: ({ row: { original: { agreement } } }) => <Agreement name={agreement?.name} id={agreement?.id} />
   },
 
   {
     accessorKey: 'product',
     header: 'Product',
+    minSize: 160,
+    size: 160,
     cell: ({ row: { original: { product } } }) => <Product name={product?.name} iconUrl={product?.icon} />
   },
   {
     accessorKey: 'consumer',
     header: 'Consumer',
+    minSize: 160,
+    size: 160,
     cell: ({ row: { original: { agreement } } }) => {
       const { billingConfig } = useBillingConfigByAgreement(agreement?.id);
       const { consumer } = useConsumer(billingConfig?.consumerId);
@@ -68,16 +76,22 @@ const columns: ColumnDef<Statement>[] = [
   {
     accessorKey: 'totalSP',
     header: 'Total SP',
+    minSize: 128,
+    size: 128,
     cell: ({ row: { original: { price } } }) => <span>{price?.totalSP || "—"}</span>
   },
   {
     accessorKey: 'markup',
     header: 'Markup',
+    minSize: 128,
+    size: 128,
     cell: ({ row: { original: { price } } }) => <span>{price?.markup ? `${price.markup}%` : "—"}</span>
   },
   {
     accessorKey: 'totalRP',
     header: 'Total RP',
+    minSize: 128,
+    size: 128,
     cell: ({ row: { original: { price } } }) => {
       const priceWithMarkup = withMarkup(price?.totalSP, price?.markup);
       return <span>{priceWithMarkup || "—"}</span>
@@ -86,11 +100,15 @@ const columns: ColumnDef<Statement>[] = [
   {
     accessorKey: 'currency',
     header: 'Currency',
+    minSize: 128,
+    size: 128,
     cell: ({ row: { original: { price } } }) => <span>{price?.currency?.sale || "—"}</span>
   },
   {
     accessorKey: 'algaInvoiceStatus',
     header: 'Alga Invoice Status',
+    minSize: 180,
+    size: 180,
     cell: ({ row: { original: { algaInvoiceStatus } } }) => <AlgaInvoiceStatusBadge status={algaInvoiceStatus} />
   }
 ];
