@@ -132,7 +132,7 @@ export function Statements() {
   });
 
   return (
-    <Card className="w-fit min-w-full">
+    <Card>
       <TableContainer>
         <table style={{ width: table.getTotalSize() }} className="relative table-fixed">
           <thead>
@@ -166,13 +166,15 @@ export function Statements() {
             ))}
           </tbody>
         </table>
-        <Pagination
-          onPageChange={(page) =>
-            setOffset((page - 1) * (pagination.limit ?? 0))
-          }
-          totalItems={pagination.total ?? 0}
-          isLoading={isFetching}
-        />
+        <div className="w-full h-16 absolute bottom-0 left-0">
+          <Pagination
+            onPageChange={(page) =>
+              setOffset((page - 1) * (pagination.limit ?? 0))
+            }
+            totalItems={pagination.total ?? 0}
+            isLoading={isFetching}
+          />
+        </div>
       </TableContainer>
     </Card>
   );
