@@ -134,47 +134,47 @@ export function Statements() {
   return (
     <Card>
       <TableContainer>
-        <table style={{ width: table.getTotalSize() }} className="relative table-fixed">
-          <thead>
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id} className="border-border-200 border-b">
-                {headerGroup.headers.map(header => (
-                  <th key={header.id} style={{ width: header.getSize() }} className="relative py-3 px-6 text-left text-xs font-medium tracking-wider">
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                    <div
-                      onMouseDown={header.getResizeHandler()}
-                      onTouchStart={header.getResizeHandler()}
-                      className="absolute right-0 top-0 h-full w-2 cursor-col-resize"
-                      style={{
-                        background: header.column.getIsResizing() ? '#2563eb' : 'transparent',
-                      }}
-                    />
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map(row => (
-              <tr key={row.id} className="border-border-200 border-b text-sm text-text-700">
-                {row.getVisibleCells().map(cell => (
-                  <td key={cell.id} style={{ width: cell.column.getSize() }} className="py-3 px-6  items-center">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="w-full h-16 absolute bottom-0 left-0">
-          <Pagination
-            onPageChange={(page) =>
-              setOffset((page - 1) * (pagination.limit ?? 0))
-            }
-            totalItems={pagination.total ?? 0}
-            isLoading={isFetching}
-          />
+        <div className="w-full overflow-x-scroll relative">
+          <table style={{ width: table.getTotalSize() }} className="relative table-fixed">
+            <thead>
+              {table.getHeaderGroups().map(headerGroup => (
+                <tr key={headerGroup.id} className="border-border-200 border-b">
+                  {headerGroup.headers.map(header => (
+                    <th key={header.id} style={{ width: header.getSize() }} className="relative py-3 px-6 text-left text-xs font-medium tracking-wider">
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                      <div
+                        onMouseDown={header.getResizeHandler()}
+                        onTouchStart={header.getResizeHandler()}
+                        className="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                        style={{
+                          background: header.column.getIsResizing() ? '#2563eb' : 'transparent',
+                        }}
+                      />
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map(row => (
+                <tr key={row.id} className="border-border-200 border-b text-sm text-text-700">
+                  {row.getVisibleCells().map(cell => (
+                    <td key={cell.id} style={{ width: cell.column.getSize() }} className="py-3 px-6  items-center">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
+        <Pagination
+          onPageChange={(page) =>
+            setOffset((page - 1) * (pagination.limit ?? 0))
+          }
+          totalItems={pagination.total ?? 0}
+          isLoading={isFetching}
+        />
       </TableContainer>
     </Card>
   );

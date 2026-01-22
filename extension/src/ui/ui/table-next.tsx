@@ -3,7 +3,7 @@ import { Button } from "@/ui/ui";
 import { cn } from "@/ui/utils";
 
 export const TableContainer = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(({ className, children, ...props }, ref) => {
-  return <div className="w-full overflow-x-scroll border border-border-200 rounded-md relative" ref={ref} {...props}>
+  return <div className="border border-border-200 rounded-md" ref={ref} {...props}>
     {children}
   </div>
 });
