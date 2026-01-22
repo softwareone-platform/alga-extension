@@ -85,7 +85,10 @@ const columns: ColumnDef<Statement>[] = [
     header: 'Markup',
     minSize: 128,
     size: 128,
-    cell: ({ row: { original: { price } } }) => <span>{price?.markup ? `${price.markup}%` : "—"}</span>
+    cell: ({ row: { original: { agreement } } }) => {
+      const { billingConfig } = useBillingConfigByAgreement(agreement?.id);
+      return <span>{billingConfig?.markup ? `${billingConfig.markup}%` : "—"}</span>
+    }
   },
   {
     accessorKey: 'totalRP',
