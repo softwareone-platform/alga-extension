@@ -4,7 +4,7 @@ export const ProductCell = ({ name, iconUrl }: { name?: string | null; iconUrl?:
   return (
     <div className="flex gap-4 w-full items-center">
       <Icon iconUrl={iconUrl} alt={name} className="size-8" />
-      <span className="truncate">{name || "—"}</span>
+      <span className="block truncate">{name || "—"}</span>
     </div>
   );
 };

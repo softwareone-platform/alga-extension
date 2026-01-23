@@ -21,7 +21,7 @@ const columns: ColumnDef<Order & { billingConfig?: BillingConfig | null }>[] = [
     minSize: 160,
     size: 192,
     cell: ({ row: { original } }) => (
-      <span className="text-sm text-blue-500 hover:text-blue-600 truncate">
+      <span className="block text-sm text-blue-500 hover:text-blue-600 truncate">
         {original.id}
       </span>
     )

@@ -30,8 +30,8 @@ const createColumns = (markup?: number): ColumnDef<SubscriptionLine>[] => [
     size: 192,
     cell: ({ row: { original } }) => (
       <div className="flex flex-col gap-0.5 items-start relative w-full">
-        <span className="truncate w-full">{original.item?.name || "—"}</span>
-        <span className="text-xs text-text-500 truncate w-full">{original.item?.id || "—"}</span>
+        <span className="block truncate w-full">{original.item?.name || "—"}</span>
+        <span className="block text-xs text-text-500 truncate w-full">{original.item?.id || "—"}</span>
       </div>
     )
   },

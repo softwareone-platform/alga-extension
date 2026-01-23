@@ -34,7 +34,7 @@ const createColumns = (markup: number | null | undefined): ColumnDef<Subscriptio
         >
           {original.name}
         </Link>
-        <span className="text-xs text-text-500 truncate">
+        <span className="block text-xs text-text-500 truncate">
           {original.id}
         </span>
       </div>

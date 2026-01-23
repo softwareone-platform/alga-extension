@@ -43,8 +43,8 @@ const createColumns = (markup?: number): ColumnDef<Charge>[] => [
     size: 192,
     cell: ({ row: { original } }) => (
       <div className="flex flex-col gap-0.5 items-start relative w-full">
-        <span className="truncate w-full">{original.subscription?.name || "—"}</span>
-        <span className="text-xs text-text-500 truncate w-full">{original.subscription?.id || "—"}</span>
+        <span className="block truncate w-full">{original.subscription?.name || "—"}</span>
+        <span className="block text-xs text-text-500 truncate w-full">{original.subscription?.id || "—"}</span>
       </div>
     )
   },
@@ -55,8 +55,8 @@ const createColumns = (markup?: number): ColumnDef<Charge>[] => [
     size: 192,
     cell: ({ row: { original } }) => (
       <div className="flex flex-col gap-0.5 items-start relative w-full">
-        <span className="truncate w-full">{original.item?.name || "—"}</span>
-        <span className="text-xs text-text-500 truncate w-full">{original.item?.id || "—"}</span>
+        <span className="block truncate w-full">{original.item?.name || "—"}</span>
+        <span className="block text-xs text-text-500 truncate w-full">{original.item?.id || "—"}</span>
       </div>
     )
   },

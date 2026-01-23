@@ -1,6 +1,6 @@
 {
-  "name": "com.swo.extension2",
-  "publisher": "Software29",
+  "name": "com.swo.extension3",
+  "publisher": "Software30",
   "version": "0.1.0",
   "runtime": "wasm-js@1",
   "capabilities": [
@@ -16,8 +16,8 @@
     "type": "iframe",
     "entry": "ui/index.html",
     "hooks": {
-      "appMenu": { "label": "Software29" },
-      "clientPortalMenu": { "label": "Software29" }
+      "appMenu": { "label": "Software30" },
+      "clientPortalMenu": { "label": "Software30" }
     }
   },
   "assets": ["ui/**/*"]
