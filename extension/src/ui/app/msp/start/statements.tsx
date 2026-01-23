@@ -10,6 +10,7 @@ import { ConsumerLink, useConsumer } from "@/ui/features/consumers";
 import { useBillingConfigByAgreement } from "@/ui/features/billing-config";
 import { withMarkup } from "@/ui/features/markup";
 import { Pagination, TableContainer } from "@/ui/ui/table-next";
+import { useNavigate } from "react-router";
 
 export const AlgaInvoiceStatusBadge = ({
   status,
@@ -117,6 +118,7 @@ const columns: ColumnDef<Statement>[] = [
 ];
 
 export function Statements() {
+  const navigate = useNavigate();
   const [offset, setOffset] = useState(0);
   const { statements: data, pagination, isFetching } = useStatements({ offset });
 
@@ -157,7 +159,11 @@ export function Statements() {
             </thead>
             <tbody>
               {table.getRowModel().rows.map(row => (
-                <tr key={row.id} className="border-border-200 border-b text-sm text-text-700">
+                <tr
+                  key={row.id}
+                  onClick={() => navigate(`/statements/${row.original.id}`)}
+                  className="border-border-200 border-b text-sm text-text-700 cursor-pointer hover:bg-primary-50"
+                >
                   {row.getVisibleCells().map(cell => (
                     <td key={cell.id} style={{ width: cell.column.getSize() }} className="py-3 px-6  items-center">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

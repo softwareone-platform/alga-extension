@@ -178,7 +178,7 @@ export function Agreements() {
             </thead>
             <tbody>
               {table.getRowModel().rows.map((row) => (
-                <tr key={row.id} className="border-border-200 border-b text-sm text-text-700 cursor-pointer" onClick={() => navigate(`/agreements/${row.original.id}`)}>
+                <tr key={row.id} className="border-border-200 border-b text-sm text-text-700 cursor-pointer hover:bg-primary-50" onClick={() => navigate(`/agreements/${row.original.id}`)}>
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
