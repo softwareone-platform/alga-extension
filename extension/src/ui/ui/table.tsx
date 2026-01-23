@@ -1,127 +1,15 @@
 import { forwardRef, HTMLAttributes, useState } from "react";
-import { cn } from "@utils/cn";
-import { useNavigate } from "react-router";
-import { Button } from "./button";
+import { Button } from "@/ui/ui";
+import { cn } from "@/ui/utils";
 
-export const Table = forwardRef<
-  HTMLTableElement,
-  HTMLAttributes<HTMLTableElement>
->(({ className, ...props }, ref) => {
-  return (
-    <table
-      ref={ref}
-      className={cn(
-        className,
-        "w-full grid border border-border-200 rounded-md"
-      )}
-      {...props}
-    />
-  );
+export const TableContainer = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(({ className, children, ...props }, ref) => {
+  return <div className="border border-border-200 rounded-md" ref={ref} {...props}>
+    {children}
+  </div>
 });
-
-Table.displayName = "Table";
-
-export type TableSectionProps = Omit<
-  HTMLAttributes<HTMLTableSectionElement>,
-  "className"
->;
-
-export const TableHeader = forwardRef<
-  HTMLTableSectionElement,
-  TableSectionProps
->((props, ref) => {
-  return <thead className="contents" ref={ref} {...props} />;
-});
-
-export const TableFooter = forwardRef<
-  HTMLTableSectionElement,
-  TableSectionProps
->((props, ref) => {
-  return <tfoot className="contents" ref={ref} {...props} />;
-});
-
-TableHeader.displayName = "TableHeader";
-TableFooter.displayName = "TableFooter";
-
-export type TableBodyProps = Omit<
-  HTMLAttributes<HTMLTableSectionElement>,
-  "className"
->;
-
-export const TableBody = forwardRef<HTMLTableSectionElement, TableBodyProps>(
-  (props, ref) => {
-    return <thead className="contents" ref={ref} {...props} />;
-  }
-);
-
-TableBody.displayName = "TableBody";
-
-export type TableRowProps = Omit<
-  HTMLAttributes<HTMLTableRowElement>,
-  "className"
-> & {
-  link?: string;
-};
-
-export const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(
-  ({ link, ...props }, ref) => {
-    const navigate = useNavigate();
-
-    return (
-      <tr
-        className={cn("contents group", { "cursor-pointer": !!link })}
-        onClick={() => {
-          if (link) {
-            navigate(link);
-          }
-        }}
-        ref={ref}
-        {...props}
-      />
-    );
-  }
-);
-
-TableRow.displayName = "TableRow";
-
-export const TableHeaderCell = forwardRef<
-  HTMLTableCellElement,
-  HTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => {
-  return (
-    <th
-      className={cn(
-        "border-b py-3 px-6 border-border-200 text-left text-xs font-medium tracking-wider",
-        className
-      )}
-      ref={ref}
-      {...props}
-    />
-  );
-});
-
-TableHeaderCell.displayName = "TableHeadCell";
-
-export const TableCell = forwardRef<
-  HTMLTableCellElement,
-  HTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => {
-  return (
-    <td
-      className={cn(
-        "border-b py-3 px-6 border-border-200 text-left text-sm text-text-700 group-hover:bg-primary-50 flex items-center",
-        className
-      )}
-      ref={ref}
-      {...props}
-    />
-  );
-});
-
-TableCell.displayName = "TableCell";
 
 export type PaginationProps = Omit<
-  HTMLAttributes<HTMLTableCellElement>,
+  HTMLAttributes<HTMLDivElement>,
   "children"
 > & {
   onPageChange: (page: number) => void;
@@ -131,7 +19,7 @@ export type PaginationProps = Omit<
   isLoading?: boolean;
 };
 
-export const Pagination = forwardRef<HTMLTableCellElement, PaginationProps>(
+export const Pagination = forwardRef<HTMLDivElement, PaginationProps>(
   (
     {
       onPageChange,
@@ -153,11 +41,11 @@ export const Pagination = forwardRef<HTMLTableCellElement, PaginationProps>(
     };
 
     return (
-      <TableCell
+      <div
         ref={ref}
         {...props}
         className={cn(
-          "flex justify-between items-center col-span-full border-b-0",
+          "flex justify-between items-center w-full py-3 px-6",
           className
         )}
       >
@@ -178,9 +66,7 @@ export const Pagination = forwardRef<HTMLTableCellElement, PaginationProps>(
         >
           Next
         </Button>
-      </TableCell>
+      </div>
     );
   }
 );
-
-Pagination.displayName = "Pagination";

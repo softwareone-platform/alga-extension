@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card } from "@ui/card";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Pagination, TableContainer } from "@/ui/ui/table-next";
+import { Pagination, TableContainer } from "@/ui/ui/table";
 import { withMarkup } from "@features/markup";
 import {
   useSubscriptions,
@@ -9,7 +9,7 @@ import {
   BILLING_PERIODS,
 } from "@features/subscriptions";
 import { Agreement } from "@features/agreements";
-import { Product } from "@features/products";
+import { ProductCell } from "@features/products";
 import { useBillingConfigByAgreement } from "@/ui/features/billing-config";
 import { ConsumerLink, useConsumer } from "@features/consumers";
 import { Subscription } from "@swo/mp-api-model";
@@ -31,7 +31,7 @@ const columns: ColumnDef<Subscription>[] = [
     minSize: 100,
     size: 160,
     cell: ({ row: { original: { product } } }) => (
-      <Product name={product?.name} iconUrl={product?.icon} />
+      <ProductCell name={product?.name} iconUrl={product?.icon} />
     )
   },
   {

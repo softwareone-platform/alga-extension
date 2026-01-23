@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card } from "@ui/card";
 import { useNavigate, useParams } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Pagination, TableContainer } from "@/ui/ui/table-next";
+import { Pagination, TableContainer } from "@/ui/ui/table";
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { useSubscriptionOrders } from "@features/subscriptions";
 import { withMarkup } from "@features/markup";

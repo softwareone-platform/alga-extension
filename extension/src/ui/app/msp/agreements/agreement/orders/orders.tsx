@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card } from "@ui/card";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Pagination, TableContainer } from "@/ui/ui/table-next";
+import { Pagination, TableContainer } from "@/ui/ui/table";
 import { OrderStatusBadge, useAgreementOrders } from "@features/agreements";
 import { useParams, useNavigate } from "react-router";
 import { withMarkup } from "@features/markup";

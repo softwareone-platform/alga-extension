@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Card } from "@ui/card";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Pagination, TableContainer } from "@/ui/ui/table-next";
+import { Pagination, TableContainer } from "@/ui/ui/table";
 import { withMarkup } from "@features/markup";
 import { useOrders, OrderStatusBadge } from "@features/orders";
 import { Agreement } from "@features/agreements";
-import { Product } from "@features/products";
+import { ProductCell } from "@features/products";
 import { Order } from "@swo/mp-api-model";
 import { ConsumerLink, useConsumer } from "@features/consumers";
 import { useBillingConfigByAgreement } from "@/ui/features/billing-config";
@@ -45,7 +45,7 @@ const columns: ColumnDef<Order>[] = [
     minSize: 160,
     size: 160,
     cell: ({ row: { original: { product } } }) => (
-      <Product name={product?.name} iconUrl={product?.icon} />
+      <ProductCell name={product?.name} iconUrl={product?.icon} />
     )
   },
   {

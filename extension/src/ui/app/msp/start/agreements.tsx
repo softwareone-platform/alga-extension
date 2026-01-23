@@ -1,10 +1,10 @@
 import { useAgreements, AgreementStatusBadge } from "@features/agreements";
-import { Product } from "@features/products";
+import { ProductCell } from "@features/products";
 import { useState } from "react";
 import { Card } from "@ui/card";
 import { Agreement, AgreementStatus } from "@swo/mp-api-model";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Pagination, TableContainer } from "@/ui/ui/table-next";
+import { Pagination, TableContainer } from "@/ui/ui/table";
 import { withMarkup } from "@features/markup";
 import { ConsumerLink, useConsumer } from "@features/consumers";
 import { useBillingConfigByAgreement } from "@/ui/features/billing-config";
@@ -76,7 +76,7 @@ const columns: ColumnDef<Agreement>[] = [
     minSize: 160,
     size: 192,
     cell: ({ row: { original } }) => (
-      <Product name={original.product?.name} iconUrl={original.product?.icon} />
+      <ProductCell name={original.product?.name} iconUrl={original.product?.icon} />
     ),
   },
   {

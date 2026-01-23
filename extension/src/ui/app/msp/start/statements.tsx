@@ -5,11 +5,11 @@ import { InvoiceStatus, Statement } from "@/shared/statements";
 import { Badge } from "@alga-psa/ui-kit";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Agreement } from "@/ui/features/agreements";
-import { Product } from "@/ui/features/products";
+import { ProductCell } from "@/ui/features/products";
 import { ConsumerLink, useConsumer } from "@/ui/features/consumers";
 import { useBillingConfigByAgreement } from "@/ui/features/billing-config";
 import { withMarkup } from "@/ui/features/markup";
-import { Pagination, TableContainer } from "@/ui/ui/table-next";
+import { Pagination, TableContainer } from "@/ui/ui/table";
 import { useNavigate } from "react-router";
 
 export const AlgaInvoiceStatusBadge = ({
@@ -56,7 +56,7 @@ const columns: ColumnDef<Statement>[] = [
     header: 'Product',
     minSize: 160,
     size: 160,
-    cell: ({ row: { original: { product } } }) => <Product name={product?.name} iconUrl={product?.icon} />
+    cell: ({ row: { original: { product } } }) => <ProductCell name={product?.name} iconUrl={product?.icon} />
   },
   {
     accessorKey: 'consumer',

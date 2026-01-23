@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card } from "@ui/card";
 import { useParams } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Pagination, TableContainer } from "@/ui/ui/table-next";
+import { Pagination, TableContainer } from "@/ui/ui/table";
 import { useStatementAttachments } from "@features/statements";
 import { formatDateTime } from "@features/dates";
 import { backendClient } from "@/ui/lib/alga";
