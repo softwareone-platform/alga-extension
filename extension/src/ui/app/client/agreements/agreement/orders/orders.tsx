@@ -19,7 +19,7 @@ const columns: ColumnDef<OrderRow>[] = [
     minSize: 160,
     size: 192,
     cell: ({ row: { original } }) => (
-      <span className="truncate text-blue-500 hover:text-blue-600">
+      <span className="block truncate text-blue-500 hover:text-blue-600">
         {original.id}
       </span>
     )

@@ -36,8 +36,8 @@ const columns: ColumnDef<ItemRow>[] = [
       if (!item?.name && !item?.id) return <span>—</span>;
       return (
         <div className="flex flex-col gap-0.5 items-start relative w-full">
-          <span className="truncate w-full">{item?.name || "—"}</span>
-          <span className="text-xs text-text-500 truncate w-full">{item?.id || "—"}</span>
+          <span className="block truncate w-full">{item?.name || "—"}</span>
+          <span className="text-xs text-text-500 block truncate w-full">{item?.id || "—"}</span>
         </div>
       );
     }

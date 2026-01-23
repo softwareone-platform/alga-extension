@@ -24,7 +24,7 @@ const columns: ColumnDef<SubscriptionRow>[] = [
     minSize: 160,
     size: 192,
     cell: ({ row: { original } }) => (
-      <span className="truncate">{original.name || "—"}</span>
+      <span className="block truncate">{original.name || "—"}</span>
     )
   },
   {

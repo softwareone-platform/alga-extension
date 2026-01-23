@@ -30,10 +30,10 @@ const columns: ColumnDef<SubscriptionRow>[] = [
     size: 200,
     cell: ({ row: { original } }) => (
       <div className="flex flex-col gap-0.5 items-start">
-        <span className="truncate text-blue-500 hover:text-blue-600">
+        <span className="block truncate text-blue-500 hover:text-blue-600">
           {original.name}
         </span>
-        <span className="text-xs text-text-500 truncate">
+        <span className="block truncate text-xs text-text-500">
           {original.id}
         </span>
       </div>

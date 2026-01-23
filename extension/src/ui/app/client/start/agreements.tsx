@@ -23,13 +23,13 @@ const NameCell = ({
 }) => {
   return (
     <div className="grid grid-cols-[auto_auto] gap-y-0.5 gap-x-2 w-full">
-      <span className="text-sm text-blue-500 hover:text-blue-600 truncate">
+      <span className="text-sm text-blue-500 hover:text-blue-600 block truncate">
         {name ?? "—"}
       </span>
       <span className="row-span-2 justify-self-end">
         <AgreementStatusBadge status={status} />
       </span>
-      <span className="text-xs text-text-500 truncate">{id}</span>
+      <span className="text-xs text-text-500 block truncate">{id}</span>
     </div>
   );
 };
