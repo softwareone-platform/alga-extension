@@ -4,6 +4,10 @@ import { RqlQuery } from "@swo/rql-client";
 import { Order, OrderListResponse } from "@swo/mp-api-model";
 import { backendClient } from "@/ui/lib/alga";
 import { SWOListOptions } from "@/ui/features/shared";
+import { PaginationMetadata } from "@swo/mp-api-model/billing";
+
+const EMPTY_ORDERS: Order[] = [];
+const EMPTY_PAGINATION: PaginationMetadata = {};
 
 export type OrdersClientOrdersOptions = SWOListOptions<Order> & {
   licenseeId?: string;
@@ -58,8 +62,8 @@ export const useOrders = (
     placeholderData: keepPreviousData,
   });
 
-  const orders = data?.data || [];
-  const pagination = data?.$meta?.pagination || { total: 0 };
+  const orders = data?.data || EMPTY_ORDERS;
+  const pagination = data?.$meta?.pagination || EMPTY_PAGINATION;
 
   return { orders, pagination, ...state };
 };

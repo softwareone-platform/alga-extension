@@ -16,6 +16,12 @@ import {
 import { backendClient } from "@/ui/lib/alga";
 import { SWOListOptions } from "@/ui/features/shared";
 import { Statement } from "./types";
+import { PaginationMetadata } from "@swo/mp-api-model/billing";
+
+const EMPTY_STATEMENTS: Statement[] = [];
+const EMPTY_CHARGES: Charge[] = [];
+const EMPTY_ATTACHMENTS: StatementAttachment[] = [];
+const EMPTY_PAGINATION: PaginationMetadata = {};
 
 export type StatementListResponse = {
   data: Statement[];
@@ -28,11 +34,12 @@ export type StatementsClientStatementsOptions = SWOListOptions<Statement> & {
 
 export type StatementsClientChargesOptions = SWOListOptions<Charge>;
 
-export type StatementsClientAttachmentsOptions = SWOListOptions<StatementAttachment>;
+export type StatementsClientAttachmentsOptions =
+  SWOListOptions<StatementAttachment>;
 
 export const useStatements = (
   options?: StatementsClientStatementsOptions,
-  agreementIds?: string[]
+  agreementIds?: string[],
 ) => {
   const { details } = useExtensionDetails();
   const isConfigured = !!details?.hasToken && !!details?.endpoint;
@@ -45,7 +52,7 @@ export const useStatements = (
       const query = new RqlQuery<Statement>();
       query
         .expand(
-          "id", 
+          "id",
           "audit",
           "type",
           "agreement.id",
@@ -79,7 +86,7 @@ export const useStatements = (
         });
 
       const { data } = await backendClient.get<StatementListResponse>(
-        `/statements?${query.toString()}`
+        `/statements?${query.toString()}`,
       );
 
       return data;
@@ -88,8 +95,8 @@ export const useStatements = (
     placeholderData: keepPreviousData,
   });
 
-  const statements = data?.data || [];
-  const pagination = data?.$meta?.pagination || { total: 0 };
+  const statements = data?.data || EMPTY_STATEMENTS;
+  const pagination = data?.$meta?.pagination || EMPTY_PAGINATION;
 
   return { statements, pagination, ...state };
 };
@@ -104,7 +111,7 @@ export const useStatement = (id: string) => {
       const query = new RqlQuery<Statement>();
 
       query.expand(
-        "id", 
+        "id",
         "audit",
         "type",
         "agreement.id",
@@ -121,7 +128,7 @@ export const useStatement = (id: string) => {
       );
 
       const { data } = await backendClient.get<Statement>(
-        `/statements/${id}?${query.toString()}`
+        `/statements/${id}?${query.toString()}`,
       );
 
       return data;
@@ -134,7 +141,7 @@ export const useStatement = (id: string) => {
 
 export const useStatementCharges = (
   statementId: string,
-  options?: StatementsClientChargesOptions
+  options?: StatementsClientChargesOptions,
 ) => {
   const { details } = useExtensionDetails();
   const isConfigured = !!details?.hasToken && !!details?.endpoint;
@@ -158,14 +165,14 @@ export const useStatementCharges = (
           "period.end",
           "quantity",
           "price.SPx1",
-          "price.unitSP"
+          "price.unitSP",
         )
         .paging(offset, limit);
 
       if (sort) query.orderBy([sort.by, sort.order || "asc"]);
 
       const { data } = await backendClient.get<ChargeListResponse>(
-        `/swo/billing/statements/${statementId}/charges?${query.toString()}`
+        `/swo/billing/statements/${statementId}/charges?${query.toString()}`,
       );
 
       return data;
@@ -174,15 +181,15 @@ export const useStatementCharges = (
     placeholderData: keepPreviousData,
   });
 
-  const charges = data?.data || [];
-  const pagination = data?.$meta?.pagination || { total: 0 };
+  const charges = data?.data || EMPTY_CHARGES;
+  const pagination = data?.$meta?.pagination || EMPTY_PAGINATION;
 
   return { charges, pagination, ...state };
 };
 
 export const useStatementAttachments = (
   statementId: string,
-  options?: StatementsClientAttachmentsOptions
+  options?: StatementsClientAttachmentsOptions,
 ) => {
   const { details } = useExtensionDetails();
   const isConfigured = !!details?.hasToken && !!details?.endpoint;
@@ -194,13 +201,13 @@ export const useStatementAttachments = (
 
       const query = new RqlQuery<StatementAttachment>();
       query.expand(
-        "id", 
+        "id",
         "audit",
         "name",
         "description",
         "filename",
         "size",
-        "isDeleted"
+        "isDeleted",
       );
       query.filter({
         field: "isDeleted",
@@ -210,7 +217,7 @@ export const useStatementAttachments = (
       query.paging(offset, limit);
 
       const { data } = await backendClient.get<StatementAttachmentListResponse>(
-        `/swo/billing/statements/${statementId}/attachments?${query.toString()}`
+        `/swo/billing/statements/${statementId}/attachments?${query.toString()}`,
       );
 
       return data;
@@ -219,8 +226,8 @@ export const useStatementAttachments = (
     placeholderData: keepPreviousData,
   });
 
-  const attachments = data?.data || [];
-  const pagination = data?.$meta?.pagination || { total: 0 };
+  const attachments = data?.data || EMPTY_ATTACHMENTS;
+  const pagination = data?.$meta?.pagination || EMPTY_PAGINATION;
 
   return { attachments, pagination, ...state };
 };
@@ -230,7 +237,7 @@ export const useStatementActions = (statementId: string) => {
   const { mutate, mutateAsync, status } = useMutation({
     mutationFn: () =>
       backendClient.post<Statement>(
-        `/statements/${statementId}/create-invoice`
+        `/statements/${statementId}/create-invoice`,
       ),
     onSuccess: (response) =>
       queryClient.setQueryData(["statements", statementId], response.data),

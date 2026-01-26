@@ -20,6 +20,8 @@ export type AgreementsClientOrdersOptions = SWOListOptions<Order>;
 export type AgreementsClientSubscriptionsOptions = SWOListOptions<Subscription>;
 
 const EMPTY_AGREEMENTS: Agreement[] = [];
+const EMPTY_SUBSCRIPTIONS: Subscription[] = [];
+const EMPTY_ORDERS: Order[] = [];
 const EMPTY_PAGINATION: PaginationMetadata = {};
 
 export const useAgreements = (
@@ -153,8 +155,8 @@ export const useAgreementSubscriptions = (
     placeholderData: keepPreviousData,
   });
 
-  const subscriptions = data?.data || [];
-  const pagination = data?.$meta?.pagination || { total: 0 };
+  const subscriptions = data?.data || EMPTY_SUBSCRIPTIONS;
+  const pagination = data?.$meta?.pagination || EMPTY_PAGINATION;
 
   return { subscriptions, pagination, ...state };
 };
@@ -202,8 +204,8 @@ export const useAgreementOrders = (
     placeholderData: keepPreviousData,
   });
 
-  const orders = data?.data || [];
-  const pagination = data?.$meta?.pagination || { total: 0 };
+  const orders = data?.data || EMPTY_ORDERS;
+  const pagination = data?.$meta?.pagination || EMPTY_PAGINATION;
 
   return { orders, pagination, ...state };
 };
