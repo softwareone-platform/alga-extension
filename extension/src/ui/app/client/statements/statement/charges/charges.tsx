@@ -18,7 +18,7 @@ const columns: ColumnDef<ChargeRow>[] = [
     header: 'Name',
     minSize: 160,
     size: 192,
-    cell: ({ row: { original } }) => <span>{original.id}</span>
+    cell: ({ row: { original } }) => <span className="block truncate">{original.id}</span>
   },
   {
     accessorKey: 'subscription',
