@@ -138,10 +138,10 @@ function AgreementSummary({ id }: { id: string }) {
 
 const ConsumersListbox = ({
   consumerId,
-  onConsumerIdChange,
+  onConsumerChange,
 }: {
   consumerId: string;
-  onConsumerIdChange: (id: string) => void;
+  onConsumerChange: (id: string, tenantId: string) => void;
 }) => {
   const { consumers } = useConsumers();
 
@@ -151,7 +151,12 @@ const ConsumersListbox = ({
   );
 
   return (
-    <Listbox value={consumerId} onChange={onConsumerIdChange}>
+    <Listbox value={consumerId} onChange={i => {
+      const consumer = consumers?.data?.find(v => v.id === i);
+      if (consumer) {
+        onConsumerChange(consumer.id, consumer.tenantId);
+      }
+    }}>
       <ListboxButton>{consumer?.name ?? "-"}</ListboxButton>
       <ListboxOptions>
         {consumers?.data?.map((consumer) => (
@@ -210,6 +215,7 @@ function BillingConfigEditor({
         markup: 0,
         operations: "self-service",
         consumerId: "",
+        consumerTenantId: "",
         serviceId: "",
       },
     });
@@ -224,6 +230,7 @@ function BillingConfigEditor({
         markup: billingConfig.markup ?? 0,
         operations: billingConfig.operations ?? "self-service",
         consumerId: billingConfig.consumerId ?? "",
+        consumerTenantId: billingConfig.consumerTenantId ?? "",
         serviceId: billingConfig.serviceId ?? "",
       });
     }
@@ -262,7 +269,9 @@ function BillingConfigEditor({
                 render={({ field }) => (
                   <ConsumersListbox
                     consumerId={field.value}
-                    onConsumerIdChange={field.onChange}
+                    onConsumerChange={(id, tenantId) => {
+                      field.onChange({ target: { value: id } });
+                    }}
                   />
                 )}
               />

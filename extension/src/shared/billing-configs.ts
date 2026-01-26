@@ -7,6 +7,7 @@ export type BillingConfig = {
   operations: Operations;
   status: BillingConfigStatus;
   consumerId: string;
+  consumerTenantId: string;
   serviceId: string;
   markup: number;
   note?: string;

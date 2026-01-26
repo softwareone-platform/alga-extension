@@ -9,9 +9,8 @@ export const useBillingConfigs = () => {
   const { data: billingConfigs, ...state } = useQuery({
     queryKey: ["billing-configs"],
     queryFn: async () => {
-      const { data } = await backendClient.get<BillingConfigsResponseBody>(
-        "/billing-configs"
-      );
+      const { data } =
+        await backendClient.get<BillingConfigsResponseBody>("/billing-configs");
       return data;
     },
     staleTime: Infinity,
@@ -28,14 +27,6 @@ export const useBillingConfigByAgreement = (agreementId?: string) => {
   };
 };
 
-export const useBillingConfigByConsumer = (consumerId?: string) => {
-  const { billingConfigs, ...state } = useBillingConfigs();
-  return {
-    billingConfig: billingConfigs?.find((v) => v.consumerId === consumerId),
-    ...state,
-  };
-};
-
 export const useBillingConfigsMutation = () => {
   const queryClient = useQueryClient();
 
@@ -47,7 +38,7 @@ export const useBillingConfigsMutation = () => {
     mutationFn: (changes: BillingConfigsRequestBody) =>
       backendClient.post<BillingConfigsResponseBody>(
         "/billing-configs",
-        changes
+        changes,
       ),
     onSuccess: (response) =>
       queryClient.setQueryData(["billing-configs"], response.data),
