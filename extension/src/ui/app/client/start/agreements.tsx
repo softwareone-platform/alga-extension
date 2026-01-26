@@ -97,13 +97,15 @@ export function Agreements() {
               [billingConfig.agreementId!]: billingConfig,
             }),
             {} as Record<string, BillingConfig>
-          ),
+          ) ?? {},
       [billingConfigs]
-    ) || {};
+    );
+
+  const agreementsIds = useMemo(() => Object.keys(billingConfigsById), [billingConfigsById]);
 
   const { agreements, pagination, isFetching } = useAgreements(
     { offset },
-    Object.keys(billingConfigsById)
+    agreementsIds
   );
 
   const [columnSizing, setColumnSizing] = useState({});
@@ -112,8 +114,6 @@ export function Agreements() {
     ...agreement,
     billingConfig: billingConfigsById[agreement.id!]
   })), [agreements, billingConfigsById]);
-
-  console.log("rerender");
 
   const table = useReactTable({
     data,

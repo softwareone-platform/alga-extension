@@ -11,6 +11,7 @@ import {
 } from "@swo/mp-api-model";
 import { backendClient } from "@/ui/lib/alga";
 import { SWOListOptions } from "@/ui/features/shared";
+import { PaginationMetadata } from "@swo/mp-api-model/billing";
 
 export type AgreementsClientAgreementsOptions = SWOListOptions<Agreement>;
 
@@ -18,9 +19,12 @@ export type AgreementsClientOrdersOptions = SWOListOptions<Order>;
 
 export type AgreementsClientSubscriptionsOptions = SWOListOptions<Subscription>;
 
+const EMPTY_AGREEMENTS: Agreement[] = [];
+const EMPTY_PAGINATION: PaginationMetadata = {};
+
 export const useAgreements = (
   options?: AgreementsClientAgreementsOptions,
-  agreementIds?: string[]
+  agreementIds?: string[],
 ) => {
   const { details } = useExtensionDetails();
   const isConfigured = !!details?.hasToken && !!details?.endpoint;
@@ -44,7 +48,7 @@ export const useAgreements = (
           "price.SPxM",
           "price.SPxY",
           "price.currency",
-          "audit"
+          "audit",
         )
         .orderBy([sort?.by || "audit.created.at", sort?.order || "desc"])
         .paging(offset, limit);
@@ -57,7 +61,7 @@ export const useAgreements = (
         });
 
       const { data } = await backendClient.get<AgreementListResponse>(
-        `/swo/commerce/agreements?${query.toString()}`
+        `/swo/commerce/agreements?${query.toString()}`,
       );
       return data;
     },
@@ -65,8 +69,8 @@ export const useAgreements = (
     placeholderData: keepPreviousData,
   });
 
-  const agreements = data?.data || [];
-  const pagination = data?.$meta?.pagination || { total: 0 };
+  const agreements = data?.data || EMPTY_AGREEMENTS;
+  const pagination = data?.$meta?.pagination || EMPTY_PAGINATION;
 
   return { agreements, pagination, ...state };
 };
@@ -95,12 +99,12 @@ export const useAgreement = (id: string) => {
           "audit",
           "seller.id",
           "seller.name",
-          "seller.address"
+          "seller.address",
         )
         .exclude("subscriptions", "lines");
 
       const { data } = await backendClient.get<Agreement>(
-        `/swo/commerce/agreements/${id}?${query.toString()}`
+        `/swo/commerce/agreements/${id}?${query.toString()}`,
       );
       return data;
     },
@@ -112,7 +116,7 @@ export const useAgreement = (id: string) => {
 
 export const useAgreementSubscriptions = (
   agreementId: string,
-  options?: AgreementsClientSubscriptionsOptions
+  options?: AgreementsClientSubscriptionsOptions,
 ) => {
   const { details } = useExtensionDetails();
   const isConfigured = !!details?.hasToken && !!details?.endpoint;
@@ -134,13 +138,13 @@ export const useAgreementSubscriptions = (
           "terms.period",
           "terms.commitment",
           "status",
-          "audit"
+          "audit",
         )
         .orderBy([sort?.by || "audit.created.at", sort?.order || "desc"])
         .paging(offset, limit);
 
       const { data } = await backendClient.get<SubscriptionListResponse>(
-        `/swo/commerce/subscriptions?agreement.id=${agreementId}&${query.toString()}`
+        `/swo/commerce/subscriptions?agreement.id=${agreementId}&${query.toString()}`,
       );
 
       return data;
@@ -157,7 +161,7 @@ export const useAgreementSubscriptions = (
 
 export const useAgreementOrders = (
   agreementId: string,
-  options?: AgreementsClientOrdersOptions
+  options?: AgreementsClientOrdersOptions,
 ) => {
   const { details } = useExtensionDetails();
   const isConfigured = !!details?.hasToken && !!details?.endpoint;
@@ -184,13 +188,13 @@ export const useAgreementOrders = (
           "price.SPxY",
           "price.currency",
           "status",
-          "audit"
+          "audit",
         )
         .orderBy([sort?.by || "audit.created.at", sort?.order || "desc"])
         .paging(offset, limit);
 
       const { data } = await backendClient.get<OrderListResponse>(
-        `/swo/commerce/orders?agreement.id=${agreementId}&${query.toString()}`
+        `/swo/commerce/orders?agreement.id=${agreementId}&${query.toString()}`,
       );
       return data;
     },
