@@ -22,7 +22,7 @@ export const billingConfigsHandler = ({
         logWarn(`Invalid request body, expected array`);
         return jsonResponse(
           { error: "Invalid request body, expected array" },
-          { status: 400 }
+          { status: 400 },
         );
       }
 

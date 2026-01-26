@@ -139,6 +139,8 @@ export function Agreements() {
 
   const [columnSizing, setColumnSizing] = useState({});
 
+  console.log("rerender");
+
   const table = useReactTable({
     data: agreements ?? [],
     columns,

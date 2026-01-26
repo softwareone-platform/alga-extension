@@ -108,13 +108,15 @@ export function Agreements() {
 
   const [columnSizing, setColumnSizing] = useState({});
 
-  const agreementsWithConfig: AgreementRow[] = agreements?.map(agreement => ({
+  const data = useMemo(() => agreements.map(agreement => ({
     ...agreement,
     billingConfig: billingConfigsById[agreement.id!]
-  })) ?? [];
+  })), [agreements, billingConfigsById]);
+
+  console.log("rerender");
 
   const table = useReactTable({
-    data: agreementsWithConfig,
+    data,
     columns,
     columnResizeMode: 'onChange',
     getCoreRowModel: getCoreRowModel(),

@@ -1,19 +1,22 @@
 import { BillingConfig, BillingConfigChange } from "@/shared/billing-configs";
-import { storage } from "../lib/alga";
+import { getUser, storage } from "../lib/alga";
 
 const STORAGE_NAMESPACE = "swo.billing-configs";
 const STORAGE_KEY = "billing-configs";
 
 const toConfigs = (
   changes: BillingConfigChange[],
-  existing: BillingConfig[]
+  existing: BillingConfig[],
 ): BillingConfig[] => {
   const now = new Date().toISOString();
 
-  const byId = existing.reduce((acc, config) => {
-    acc[config.id] = config;
-    return acc;
-  }, {} as Record<string, BillingConfig>);
+  const byId = existing.reduce(
+    (acc, config) => {
+      acc[config.id] = config;
+      return acc;
+    },
+    {} as Record<string, BillingConfig>,
+  );
 
   return changes.map((config) => {
     const existingConfig = byId[config.agreementId];
@@ -37,6 +40,12 @@ export const billingConfigs = {
     storage.get<{ all: BillingConfig[] }>(STORAGE_NAMESPACE, STORAGE_KEY)
       ?.all ?? [],
   saveConfigs: (changes: BillingConfigChange[]): BillingConfig[] => {
+    const user = getUser();
+
+    if (user.userType !== "internal") {
+      throw new Error("Unauthorized");
+    }
+
     const existing = billingConfigs.getConfigs();
     const configs = toConfigs(changes, existing);
 
