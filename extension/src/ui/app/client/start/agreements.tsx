@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { Card } from "@ui/card";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";
@@ -12,7 +12,7 @@ import { useNavigate } from "react-router";
 
 type AgreementRow = Agreement & { billingConfig?: BillingConfig };
 
-const NameCell = ({
+const NameCell = memo(function NameCell({
   name,
   id,
   status,
@@ -20,7 +20,7 @@ const NameCell = ({
   name?: string | null;
   id: string;
   status?: AgreementStatus | null;
-}) => {
+}) {
   return (
     <div className="grid grid-cols-[auto_auto] gap-y-0.5 gap-x-2 w-full">
       <span className="text-sm text-blue-500 hover:text-blue-600 block truncate">
@@ -32,7 +32,7 @@ const NameCell = ({
       <span className="text-xs text-text-500 block truncate">{id}</span>
     </div>
   );
-};
+});
 
 const columns: ColumnDef<AgreementRow>[] = [
   {

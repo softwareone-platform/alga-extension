@@ -81,25 +81,24 @@ export function Statements() {
   const [offset, setOffset] = useState(0);
 
   const { billingConfigs } = useBillingConfigs();
-  const billingConfigsById =
-    useMemo(
-      () =>
-        billingConfigs
-          ?.filter(
-            (bc) =>
-              bc.consumerId === "eeca06d2-a0f2-42a5-a33d-ecd7db5430d0" &&
-              bc.status === "active" &&
-              bc.operations === "self-service"
-          )
-          .reduce(
-            (acc, billingConfig) => ({
-              ...acc,
-              [billingConfig.agreementId!]: billingConfig,
-            }),
-            {} as Record<string, BillingConfig>
-          ),
-      [billingConfigs]
-    ) || {};
+  const billingConfigsById = useMemo(
+    () =>
+      billingConfigs
+        ?.filter(
+          (bc) =>
+            bc.consumerId === "eeca06d2-a0f2-42a5-a33d-ecd7db5430d0" &&
+            bc.status === "active" &&
+            bc.operations === "self-service"
+        )
+        .reduce(
+          (acc, billingConfig) => ({
+            ...acc,
+            [billingConfig.agreementId!]: billingConfig,
+          }),
+          {} as Record<string, BillingConfig>
+        ) ?? {},
+    [billingConfigs]
+  );
 
   const { statements, pagination, isFetching } = useStatements(
     { offset },
@@ -108,10 +107,14 @@ export function Statements() {
 
   const [columnSizing, setColumnSizing] = useState({});
 
-  const statementsWithConfig: StatementRow[] = statements?.map(statement => ({
-    ...statement,
-    billingConfig: billingConfigsById[statement.agreement?.id!]
-  })) ?? [];
+  const statementsWithConfig = useMemo<StatementRow[]>(
+    () =>
+      statements?.map((statement) => ({
+        ...statement,
+        billingConfig: billingConfigsById[statement.agreement?.id!],
+      })) ?? [],
+    [statements, billingConfigsById]
+  );
 
   const table = useReactTable({
     data: statementsWithConfig,

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { Card } from "@ui/card";
 import { useParams } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
@@ -10,7 +10,11 @@ import { Badge } from "@alga-psa/ui-kit";
 import { OrderLine } from "@swo/mp-api-model";
 import { BillingConfig } from "@/shared/billing-configs";
 
-export const ItemStatusBadge = ({ status }: { status?: string }) => {
+export const ItemStatusBadge = memo(function ItemStatusBadge({
+  status,
+}: {
+  status?: string;
+}) {
   if (!status) return <span>—</span>;
 
   let tone: "danger" | "default" | "success" | "warning" = "default";
@@ -21,7 +25,7 @@ export const ItemStatusBadge = ({ status }: { status?: string }) => {
   if (status === "Error") tone = "danger";
 
   return <Badge tone={tone}>{status}</Badge>;
-};
+});
 
 type ItemRow = OrderLine & { billingConfig?: BillingConfig | null };
 
@@ -92,13 +96,12 @@ export function Items() {
 
   const [columnSizing, setColumnSizing] = useState({});
 
-  if (!order) return <>Loading...</>;
+  const lines = order?.lines ?? [];
 
-  const lines = order.lines || [];
-
-  if (lines.length === 0) return <>No Items found.</>;
-
-  const itemsWithConfig: ItemRow[] = lines.map((line) => ({ ...line, billingConfig }));
+  const itemsWithConfig = useMemo<ItemRow[]>(
+    () => lines.map((line) => ({ ...line, billingConfig })),
+    [lines, billingConfig]
+  );
 
   const table = useReactTable({
     data: itemsWithConfig,
@@ -108,6 +111,10 @@ export function Items() {
     onColumnSizingChange: setColumnSizing,
     state: { columnSizing },
   });
+
+  if (!order) return <>Loading...</>;
+
+  if (lines.length === 0) return <>No Items found.</>;
 
   return (
     <Card>

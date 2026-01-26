@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Card } from "@ui/card";
 import {
   SubscriptionStatusBadge,
@@ -118,11 +118,15 @@ export function Subscriptions() {
 
   const [columnSizing, setColumnSizing] = useState({});
 
-  const subscriptionsWithConfig: SubscriptionRow[] = subscriptions?.map(subscription => ({
-    ...subscription,
-    billingConfig,
-    agreementId: id
-  })) ?? [];
+  const subscriptionsWithConfig = useMemo<SubscriptionRow[]>(
+    () =>
+      subscriptions?.map((subscription) => ({
+        ...subscription,
+        billingConfig,
+        agreementId: id,
+      })) ?? [],
+    [subscriptions, billingConfig, id]
+  );
 
   const table = useReactTable({
     data: subscriptionsWithConfig,

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Card } from "@ui/card";
 import { useParams } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
@@ -105,7 +105,10 @@ export function Charges() {
 
   const [columnSizing, setColumnSizing] = useState({});
 
-  const chargesWithConfig: ChargeRow[] = charges?.map(charge => ({ ...charge, billingConfig })) ?? [];
+  const chargesWithConfig = useMemo<ChargeRow[]>(
+    () => charges?.map((charge) => ({ ...charge, billingConfig })) ?? [],
+    [charges, billingConfig]
+  );
 
   const table = useReactTable({
     data: chargesWithConfig,

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Card } from "@ui/card";
 import { useParams, useNavigate } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
@@ -99,7 +99,10 @@ export function Orders() {
 
   const [columnSizing, setColumnSizing] = useState({});
 
-  const ordersWithConfig = orders?.map(order => ({ ...order, billingConfig })) ?? [];
+  const ordersWithConfig = useMemo(
+    () => orders?.map((order) => ({ ...order, billingConfig })) ?? [],
+    [orders, billingConfig]
+  );
 
   const table = useReactTable({
     data: ordersWithConfig,

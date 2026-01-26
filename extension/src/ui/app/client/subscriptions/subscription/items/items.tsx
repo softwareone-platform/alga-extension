@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Card } from "@ui/card";
 import { useParams } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
@@ -77,11 +77,14 @@ export function Items() {
   const { billingConfig } = useBillingConfigByAgreement(
     subscription?.agreement?.id!
   );
-  const items = subscription?.lines || [];
+  const items = subscription?.lines ?? [];
 
   const [columnSizing, setColumnSizing] = useState({});
 
-  const itemsWithConfig: ItemRow[] = items.map(item => ({ ...item, billingConfig }));
+  const itemsWithConfig = useMemo<ItemRow[]>(
+    () => items.map((item) => ({ ...item, billingConfig })),
+    [items, billingConfig]
+  );
 
   const table = useReactTable({
     data: itemsWithConfig,

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Card } from "@ui/card";
 import { OrderStatusBadge, useAgreementOrders } from "@features/agreements";
 import { useParams, useNavigate } from "react-router";
@@ -103,7 +103,10 @@ export function Orders() {
 
   const [columnSizing, setColumnSizing] = useState({});
 
-  const ordersWithConfig: OrderRow[] = orders?.map(order => ({ ...order, billingConfig })) ?? [];
+  const ordersWithConfig = useMemo<OrderRow[]>(
+    () => orders?.map((order) => ({ ...order, billingConfig })) ?? [],
+    [orders, billingConfig]
+  );
 
   const table = useReactTable({
     data: ordersWithConfig,
