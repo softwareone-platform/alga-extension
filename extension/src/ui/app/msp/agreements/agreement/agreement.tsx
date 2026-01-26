@@ -208,7 +208,7 @@ function BillingConfigEditor({
 }) {
   const { billingConfigs } = useBillingConfigs();
 
-  const { control, handleSubmit, reset, register } =
+  const { control, handleSubmit, reset, register, setValue } =
     useForm<BillingConfigChange>({
       defaultValues: {
         note: "",
@@ -271,6 +271,7 @@ function BillingConfigEditor({
                     consumerId={field.value}
                     onConsumerChange={(id, tenantId) => {
                       field.onChange({ target: { value: id } });
+                      setValue("consumerTenantId", tenantId);
                     }}
                   />
                 )}

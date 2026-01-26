@@ -51,7 +51,7 @@ export const swoHandler = (request: ExecuteRequest): ExecuteResponse => {
   if (!rule)
     return jsonResponse(
       { error: "Extension is not configured" },
-      { status: 422 }
+      { status: 422 },
     );
 
   const response = httpFetch({
@@ -63,16 +63,18 @@ export const swoHandler = (request: ExecuteRequest): ExecuteResponse => {
     ],
   });
 
-  logInfo(`Response from: ${endpoint}${path}`);
-  logInfo(`Response headers: ${JSON.stringify(response.headers)}`);
-  logInfo(`Response status: ${response.status}`);
-  logInfo(`Response body: ${response.body}`);
-
   const location = response.headers.find((h) => h.name === "Location")?.value;
   const headers = location ? [{ name: "Location", value: location }] : [];
 
   const responseBody = decode(response.body);
-  if (!responseBody) return jsonResponse({}, { status: response.status, headers });
+
+  logInfo(`Response from: ${endpoint}${path}`);
+  logInfo(`Response headers: ${JSON.stringify(response.headers)}`);
+  logInfo(`Response status: ${response.status}`);
+  logInfo(`Response body: ${responseBody}`);
+
+  if (!responseBody)
+    return jsonResponse({}, { status: response.status, headers });
 
   const body = filterResponse(responseBody, rule);
   return jsonResponse(body, { status: response.status, headers });
