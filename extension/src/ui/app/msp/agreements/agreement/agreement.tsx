@@ -138,10 +138,10 @@ function AgreementSummary({ id }: { id: string }) {
 
 const ConsumersListbox = ({
   consumerId,
-  onConsumerChange,
+  onConsumerIdChange,
 }: {
   consumerId: string;
-  onConsumerChange: (id: string, tenantId: string) => void;
+  onConsumerIdChange: (id: string) => void;
 }) => {
   const { consumers } = useConsumers();
 
@@ -151,12 +151,7 @@ const ConsumersListbox = ({
   );
 
   return (
-    <Listbox value={consumerId} onChange={i => {
-      const consumer = consumers?.data?.find(v => v.id === i);
-      if (consumer) {
-        onConsumerChange(consumer.id, consumer.tenantId);
-      }
-    }}>
+    <Listbox value={consumerId} onChange={onConsumerIdChange}>
       <ListboxButton>{consumer?.name ?? "-"}</ListboxButton>
       <ListboxOptions>
         {consumers?.data?.map((consumer) => (
@@ -208,14 +203,13 @@ function BillingConfigEditor({
 }) {
   const { billingConfigs } = useBillingConfigs();
 
-  const { control, handleSubmit, reset, register, setValue } =
+  const { control, handleSubmit, reset, register } =
     useForm<BillingConfigChange>({
       defaultValues: {
         note: "",
         markup: 0,
         operations: "self-service",
         consumerId: "",
-        consumerTenantId: "",
         serviceId: "",
       },
     });
@@ -230,7 +224,6 @@ function BillingConfigEditor({
         markup: billingConfig.markup ?? 0,
         operations: billingConfig.operations ?? "self-service",
         consumerId: billingConfig.consumerId ?? "",
-        consumerTenantId: billingConfig.consumerTenantId ?? "",
         serviceId: billingConfig.serviceId ?? "",
       });
     }
@@ -269,10 +262,7 @@ function BillingConfigEditor({
                 render={({ field }) => (
                   <ConsumersListbox
                     consumerId={field.value}
-                    onConsumerChange={(id, tenantId) => {
-                      field.onChange({ target: { value: id } });
-                      setValue("consumerTenantId", tenantId);
-                    }}
+                    onConsumerIdChange={field.onChange}
                   />
                 )}
               />

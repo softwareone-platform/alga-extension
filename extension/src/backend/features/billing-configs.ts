@@ -46,7 +46,7 @@ export const billingConfigs = {
 
     return userType === "internal"
       ? all
-      : all.filter((v) => v.consumerTenantId === tenantId);
+      : all.filter((v) => v.consumerId === tenantId);
   },
   saveConfigs: (changes: BillingConfigChange[]): BillingConfig[] => {
     const user = getUser();
