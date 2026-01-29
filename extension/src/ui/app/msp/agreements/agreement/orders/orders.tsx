@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Card } from "@ui/card";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";
+import { Loader } from "@/ui/ui/loader";
 import { OrderStatusBadge, useAgreementOrders } from "@features/agreements";
 import { useParams, useNavigate } from "react-router";
 import { withMarkup } from "@features/markup";
@@ -119,9 +120,7 @@ export function Orders() {
     state: { columnSizing },
   });
 
-  if (isPending) return <></>;
-
-  if (orders.length === 0) return <>No Orders found.</>;
+  if (!isPending && orders.length === 0) return <>No Orders found.</>;
 
   return (
     <Card>
@@ -164,6 +163,11 @@ export function Orders() {
             </tbody>
           </table>
         </div>
+        {isFetching && (
+          <div className="flex items-center justify-center py-3 px-6 border-b border-border-200">
+            <Loader />
+          </div>
+        )}
         <Pagination
           onPageChange={(page) =>
             setOffset((page - 1) * (pagination.limit ?? 0))
