@@ -101,7 +101,7 @@ export function Statements() {
     [billingConfigs]
   );
 
-  const { statements, pagination, isFetching } = useStatements(
+  const { statements, pagination, isFetching, isPending } = useStatements(
     { offset },
     Object.keys(billingConfigsById)
   );
@@ -167,7 +167,7 @@ export function Statements() {
             </tbody>
           </table>
         </div>
-        {isFetching && (
+        {isPending && (
           <div className="flex items-center justify-center py-3 px-6 border-b border-border-200">
             <Loader />
           </div>

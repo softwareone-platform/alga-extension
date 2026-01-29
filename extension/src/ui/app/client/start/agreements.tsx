@@ -104,7 +104,7 @@ export function Agreements() {
 
   const agreementsIds = useMemo(() => Object.keys(billingConfigsById), [billingConfigsById]);
 
-  const { agreements, pagination, isFetching } = useAgreements(
+  const { agreements, pagination, isFetching, isPending } = useAgreements(
     { offset },
     agreementsIds
   );
@@ -166,7 +166,7 @@ export function Agreements() {
             </tbody>
           </table>
         </div>
-        {isFetching && (
+        {isPending && (
           <div className="flex items-center justify-center py-3 px-6 border-b border-border-200">
             <Loader />
           </div>

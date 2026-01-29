@@ -163,7 +163,7 @@ export function Orders() {
             </tbody>
           </table>
         </div>
-        {isFetching && (
+        {isPending && (
           <div className="flex items-center justify-center py-3 px-6 border-b border-border-200">
             <Loader />
           </div>
