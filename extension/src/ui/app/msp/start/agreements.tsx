@@ -2,63 +2,13 @@ import { useAgreements, AgreementStatusBadge } from "@features/agreements";
 import { ProductCell } from "@features/products";
 import { useState } from "react";
 import { Card } from "@ui/card";
-import { Agreement, AgreementStatus } from "@swo/mp-api-model";
+import { Agreement } from "@swo/mp-api-model";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";
 import { withMarkup } from "@features/markup";
 import { ConsumerLink, useConsumer } from "@features/consumers";
 import { useBillingConfigByAgreement } from "@/ui/features/billing-config";
 import { useNavigate } from "react-router";
-
-const NameCell = ({
-  name,
-  id,
-  status,
-}: {
-  name?: string | null;
-  id: string;
-  status?: AgreementStatus | null;
-}) => {
-  return (
-    <div className="grid grid-cols-[auto_auto] gap-y-0.5 gap-x-2 w-full">
-      <span className="block text-sm text-blue-500 hover:text-blue-600 truncate">
-        {name ?? "—"}
-      </span>
-      <span className="row-span-2 justify-self-end">
-        <AgreementStatusBadge status={status} />
-      </span>
-      <span className="block text-xs text-text-500 truncate">{id}</span>
-    </div>
-  );
-};
-
-const ConsumerCell = ({ agreementId }: { agreementId?: string }) => {
-  const { billingConfig } = useBillingConfigByAgreement(agreementId);
-  const { consumer } = useConsumer(billingConfig?.consumerId);
-  return <ConsumerLink id={consumer?.id!} name={consumer?.name!} />;
-};
-
-const BillingConfigIdCell = ({ agreementId }: { agreementId?: string }) => {
-  const { billingConfig } = useBillingConfigByAgreement(agreementId);
-  return <span>{billingConfig?.id || "—"}</span>;
-};
-
-const MarkupCell = ({ agreementId }: { agreementId?: string }) => {
-  const { billingConfig } = useBillingConfigByAgreement(agreementId);
-  return <span>{billingConfig?.markup ? `${billingConfig.markup}%` : "—"}</span>;
-};
-
-const PriceWithMarkupCell = ({ agreementId, price }: { agreementId?: string; price?: number | null }) => {
-  const { billingConfig } = useBillingConfigByAgreement(agreementId);
-  return <span>{withMarkup(price, billingConfig?.markup)}</span>;
-};
-
-const OperationsCell = ({ agreementId }: { agreementId?: string }) => {
-  const { billingConfig } = useBillingConfigByAgreement(agreementId);
-  if (billingConfig?.operations === "managed") return <span>Managed</span>;
-  if (billingConfig?.operations === "self-service") return <span>Self-service</span>;
-  return <span>—</span>;
-};
 
 const columns: ColumnDef<Agreement>[] = [
   {
@@ -67,7 +17,15 @@ const columns: ColumnDef<Agreement>[] = [
     minSize: 160,
     size: 192,
     cell: ({ row: { original } }) => (
-      <NameCell name={original.name} id={original.id!} status={original.status} />
+      <div className="grid grid-cols-[auto_auto] gap-y-0.5 gap-x-2 w-full">
+        <span className="block text-sm text-blue-500 hover:text-blue-600 truncate">
+          {original.name ?? "—"}
+        </span>
+        <span className="row-span-2 justify-self-end">
+          <AgreementStatusBadge status={original.status} />
+        </span>
+        <span className="block text-xs text-text-500 truncate">{original.id}</span>
+      </div>
     ),
   },
   {
@@ -84,14 +42,21 @@ const columns: ColumnDef<Agreement>[] = [
     header: "Billing config ID",
     minSize: 120,
     size: 160,
-    cell: ({ row: { original } }) => <BillingConfigIdCell agreementId={original.id} />,
+    cell: ({ row: { original } }) => {
+      const { billingConfig } = useBillingConfigByAgreement(original.id);
+      return <span>{billingConfig?.id || "—"}</span>;
+    },
   },
   {
     accessorKey: "consumer",
     header: "Consumer",
     minSize: 100,
     size: 160,
-    cell: ({ row: { original } }) => <ConsumerCell agreementId={original.id} />,
+    cell: ({ row: { original } }) => {
+      const { billingConfig } = useBillingConfigByAgreement(original.id);
+      const { consumer } = useConsumer(billingConfig?.consumerId);
+      return <ConsumerLink id={consumer?.id!} name={consumer?.name!} />;
+    },
   },
   {
     accessorKey: "spxy",
@@ -105,23 +70,32 @@ const columns: ColumnDef<Agreement>[] = [
     header: "Markup",
     minSize: 100,
     size: 100,
-    cell: ({ row: { original } }) => <MarkupCell agreementId={original.id} />,
+    cell: ({ row: { original } }) => {
+      const { billingConfig } = useBillingConfigByAgreement(original.id);
+      return <span>{billingConfig?.markup ? `${billingConfig.markup}%` : "—"}</span>;
+    },
   },
   {
     accessorKey: "rpxy",
     header: "RPxY",
     minSize: 100,
     size: 100,
-    cell: ({ row: { original } }) => (
-      <PriceWithMarkupCell agreementId={original.id} price={original.price?.SPxY} />
-    ),
+    cell: ({ row: { original } }) => {
+      const { billingConfig } = useBillingConfigByAgreement(original.id);
+      return <span>{withMarkup(original.price?.SPxY, billingConfig?.markup)}</span>;
+    },
   },
   {
     accessorKey: "operations",
     header: "Operations",
     minSize: 120,
     size: 120,
-    cell: ({ row: { original } }) => <OperationsCell agreementId={original.id} />,
+    cell: ({ row: { original } }) => {
+      const { billingConfig } = useBillingConfigByAgreement(original.id);
+      if (billingConfig?.operations === "managed") return <span>Managed</span>;
+      if (billingConfig?.operations === "self-service") return <span>Self-service</span>;
+      return <span>—</span>;
+    },
   },
   {
     accessorKey: "currency",
