@@ -9,7 +9,8 @@ import { withMarkup } from "@features/markup";
 import { OrderStatusBadge } from "@features/orders";
 import { formatDateTime } from "@features/dates";
 import { Order } from "@swo/mp-api-model";
-import { ConsumerLink, useConsumer } from "@features/consumers";
+import { useConsumer } from "@features/consumers";
+import { Link } from "@/ui/ui/link";
 
 const columns: ColumnDef<Order>[] = [
   {
@@ -52,7 +53,7 @@ const columns: ColumnDef<Order>[] = [
     cell: ({ row: { original } }) => {
       const { billingConfig } = useBillingConfigByAgreement(original.agreement?.id);
       const { consumer } = useConsumer(billingConfig?.consumerId!);
-      return <ConsumerLink id={consumer?.id!} name={consumer?.name!} />;
+      return <Link to={consumer?.id ? `/consumers/${consumer.id}` : undefined}>{consumer?.name}</Link>;
     }
   },
   {

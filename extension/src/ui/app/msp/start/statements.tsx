@@ -6,7 +6,8 @@ import { Badge } from "@alga-psa/ui-kit";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Agreement } from "@/ui/features/agreements";
 import { ProductCell } from "@/ui/features/products";
-import { ConsumerLink, useConsumer } from "@/ui/features/consumers";
+import { useConsumer } from "@/ui/features/consumers";
+import { Link } from "@/ui/ui/link";
 import { useBillingConfigByAgreement } from "@/ui/features/billing-config";
 import { withMarkup } from "@/ui/features/markup";
 import { Pagination, TableContainer } from "@/ui/ui/table";
@@ -66,7 +67,7 @@ const columns: ColumnDef<Statement>[] = [
     cell: ({ row: { original: { agreement } } }) => {
       const { billingConfig } = useBillingConfigByAgreement(agreement?.id);
       const { consumer } = useConsumer(billingConfig?.consumerId);
-      return <ConsumerLink id={consumer?.id!} name={consumer?.name!} />
+      return <Link to={consumer?.id ? `/consumers/${consumer.id}` : undefined}>{consumer?.name}</Link>
     }
   },
   {

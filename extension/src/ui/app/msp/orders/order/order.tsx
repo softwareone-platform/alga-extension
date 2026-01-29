@@ -7,7 +7,8 @@ import { useMemo } from "react";
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { withMarkup } from "@features/markup";
 import { OrderStatusBadge, useOrder } from "@features/orders";
-import { ConsumerLink, useConsumer } from "@features/consumers";
+import { useConsumer } from "@features/consumers";
+import { Link } from "@/ui/ui/link";
 import { SWO_PORTAL_URL } from "@/ui/config";
 
 function OrderSummary({ id }: { id: string }) {
@@ -56,7 +57,7 @@ function OrderSummary({ id }: { id: string }) {
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Consumer</label>
         <div className="flex gap-2 items-center grow text-sm">
-          <ConsumerLink id={consumer?.id!} name={consumer?.name!} />
+          <Link to={consumer?.id ? `/consumers/${consumer.id}` : undefined}>{consumer?.name}</Link>
         </div>
       </div>
       <div className="flex flex-col gap-1">

@@ -11,7 +11,8 @@ import {
 import { Agreement } from "@features/agreements";
 import { ProductCell } from "@features/products";
 import { useBillingConfigByAgreement } from "@/ui/features/billing-config";
-import { ConsumerLink, useConsumer } from "@features/consumers";
+import { useConsumer } from "@features/consumers";
+import { Link } from "@/ui/ui/link";
 import { Subscription } from "@swo/mp-api-model";
 import { useNavigate } from "react-router";
 
@@ -42,7 +43,7 @@ const columns: ColumnDef<Subscription>[] = [
     cell: ({ row: { original: { agreement } } }) => {
       const { billingConfig } = useBillingConfigByAgreement(agreement?.id);
       const { consumer } = useConsumer(billingConfig?.consumerId);
-      return <ConsumerLink id={consumer?.id!} name={consumer?.name!} />;
+      return <Link to={consumer?.id ? `/consumers/${consumer.id}` : undefined}>{consumer?.name}</Link>;
     }
   },
   {

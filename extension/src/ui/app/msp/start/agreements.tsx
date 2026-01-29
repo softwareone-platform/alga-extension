@@ -6,7 +6,8 @@ import { Agreement } from "@swo/mp-api-model";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";
 import { withMarkup } from "@features/markup";
-import { ConsumerLink, useConsumer } from "@features/consumers";
+import { useConsumer } from "@features/consumers";
+import { Link } from "@/ui/ui/link";
 import { useBillingConfigByAgreement } from "@/ui/features/billing-config";
 import { useNavigate } from "react-router";
 
@@ -55,7 +56,7 @@ const columns: ColumnDef<Agreement>[] = [
     cell: ({ row: { original } }) => {
       const { billingConfig } = useBillingConfigByAgreement(original.id);
       const { consumer } = useConsumer(billingConfig?.consumerId);
-      return <ConsumerLink id={consumer?.id!} name={consumer?.name!} />;
+      return <Link to={consumer?.id ? `/consumers/${consumer.id}` : undefined}>{consumer?.name}</Link>;
     },
   },
   {
