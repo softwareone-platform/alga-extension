@@ -122,7 +122,7 @@ const columns: ColumnDef<Statement>[] = [
 export function Statements() {
   const navigate = useNavigate();
   const [offset, setOffset] = useState(0);
-  const { statements: data, pagination, isFetching } = useStatements({ offset });
+  const { statements: data, pagination, isFetching, isPending } = useStatements({ offset });
 
   const [columnSizing, setColumnSizing] = useState({});
 

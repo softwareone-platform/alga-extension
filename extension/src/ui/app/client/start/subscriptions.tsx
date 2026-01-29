@@ -115,7 +115,7 @@ export function Subscriptions() {
     [billingConfigs]
   );
 
-  const { subscriptions, pagination, isFetching } = useSubscriptions(
+  const { subscriptions, pagination, isFetching, isPending } = useSubscriptions(
     {
       offset,
     },

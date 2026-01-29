@@ -108,7 +108,7 @@ const columns: ColumnDef<Order>[] = [
 export function Orders() {
   const navigate = useNavigate();
   const [offset, setOffset] = useState(0);
-  const { orders, pagination, isFetching } = useOrders({ offset });
+  const { orders, pagination, isFetching, isPending } = useOrders({ offset });
 
   const [columnSizing, setColumnSizing] = useState({});
 

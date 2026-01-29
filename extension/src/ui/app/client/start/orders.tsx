@@ -101,7 +101,7 @@ export function Orders() {
     [billingConfigs]
   );
 
-  const { orders, pagination, isFetching } = useOrders(
+  const { orders, pagination, isFetching, isPending } = useOrders(
     {
       offset,
     },

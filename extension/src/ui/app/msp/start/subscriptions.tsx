@@ -119,7 +119,7 @@ const columns: ColumnDef<Subscription>[] = [
 export function Subscriptions() {
   const navigate = useNavigate();
   const [offset, setOffset] = useState(0);
-  const { subscriptions, pagination, isFetching } = useSubscriptions({
+  const { subscriptions, pagination, isFetching, isPending } = useSubscriptions({
     offset,
   });
 
