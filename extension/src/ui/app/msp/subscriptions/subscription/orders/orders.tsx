@@ -19,9 +19,7 @@ const columns: ColumnDef<Order>[] = [
     minSize: 160,
     size: 192,
     cell: ({ row: { original } }) => (
-      <span className="block text-blue-500 hover:text-blue-600 truncate">
-        {original.id}
-      </span>
+      <Link to={`/orders/${original.id}`}>{original.id}</Link>
     )
   },
   {
@@ -29,21 +27,21 @@ const columns: ColumnDef<Order>[] = [
     header: 'Type',
     minSize: 80,
     size: 100,
-    cell: ({ row: { original } }) => <span>{original.type || "—"}</span>
+    cell: ({ row: { original } }) => <span className="truncate block">{original.type || "—"}</span>
   },
   {
     accessorKey: 'agreement',
     header: 'Agreement',
     minSize: 160,
     size: 160,
-    cell: ({ row: { original } }) => <span>{original.agreement?.name || "—"}</span>
+    cell: ({ row: { original } }) => <span className="truncate block">{original.agreement?.name || "—"}</span>
   },
   {
     accessorKey: 'product',
     header: 'Product',
     minSize: 160,
     size: 160,
-    cell: ({ row: { original } }) => <span>{original.product?.name || "—"}</span>
+    cell: ({ row: { original } }) => <span className="truncate block">{original.product?.name || "—"}</span>
   },
   {
     accessorKey: 'consumer',

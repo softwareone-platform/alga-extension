@@ -13,7 +13,7 @@ export const Link = ({
   return (
     <RouterLink
       to={to}
-      className={cn("text-blue-500 hover:text-blue-600", className)}
+      className={cn("text-blue-500 hover:text-blue-600 truncate block", className)}
       {...props}
     >
       {children}
