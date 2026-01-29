@@ -11,6 +11,7 @@ import { Link } from "@/ui/ui/link";
 import { useBillingConfigByAgreement } from "@/ui/features/billing-config";
 import { withMarkup } from "@/ui/features/markup";
 import { Pagination, TableContainer } from "@/ui/ui/table";
+import { Loader } from "@/ui/ui/loader";
 import { useNavigate } from "react-router";
 
 export const AlgaInvoiceStatusBadge = ({
@@ -175,6 +176,11 @@ export function Statements() {
             </tbody>
           </table>
         </div>
+        {isFetching && (
+          <div className="flex items-center justify-center py-3 px-6 border-b border-border-200">
+            <Loader />
+          </div>
+        )}
         <Pagination
           onPageChange={(page) =>
             setOffset((page - 1) * (pagination.limit ?? 0))

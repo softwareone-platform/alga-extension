@@ -24,7 +24,7 @@ import {
 import { useConsumer } from "@features/consumers";
 import { Link } from "@/ui/ui/link";
 import { SWO_PORTAL_URL } from "@/ui/config";
-import { Dialog, DialogPanel, DialogTitle } from "@/ui/ui";
+import { Dialog, DialogPanel, DialogTitle, Loader } from "@/ui/ui";
 import type { Subscription, AgreementLine } from "@swo/mp-api-model";
 
 function SubscriptionSummary({ id }: { id: string }) {
@@ -40,7 +40,7 @@ function SubscriptionSummary({ id }: { id: string }) {
   );
 
   if (isSubscriptionPending || isBillingConfigPending)
-    return <div>Loading...</div>;
+    return <Card className="flex flex-row justify-between"><Loader /></Card>;
 
   if (!subscription) return <></>;
 

@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";
+import { Loader } from "@/ui/ui/loader";
 import {
   SubscriptionStatusBadge,
   useAgreementSubscriptions,
@@ -27,117 +28,117 @@ const getCommitmentText = (commitment: TermsEntity["commitment"]) => {
 const createColumns = (
   markup: number | null | undefined,
 ): ColumnDef<Subscription>[] => [
-  {
-    accessorKey: "name",
-    header: "Name",
-    minSize: 180,
-    size: 220,
-    cell: ({ row: { original } }) => (
-      <div className="flex flex-col gap-0.5 items-start">
-        <span className="block truncate text-blue-500 hover:text-blue-600">
-          {original.name}
-        </span>
-        <span className="block text-xs text-text-500 truncate">
-          {original.id}
-        </span>
-      </div>
-    ),
-  },
-  {
-    accessorKey: "spxm",
-    header: "SPxM",
-    minSize: 80,
-    size: 100,
-    cell: ({
-      row: {
-        original: { price },
-      },
-    }) => <span>{price?.SPxM || "—"}</span>,
-  },
-  {
-    accessorKey: "spxy",
-    header: "SPxY",
-    minSize: 80,
-    size: 100,
-    cell: ({
-      row: {
-        original: { price },
-      },
-    }) => <span>{price?.SPxY || "—"}</span>,
-  },
-  {
-    accessorKey: "rpxm",
-    header: "RPxM",
-    minSize: 80,
-    size: 100,
-    cell: ({
-      row: {
-        original: { price },
-      },
-    }) => {
-      const priceWithMarkup = withMarkup(price?.SPxM, markup);
-      return <span>{priceWithMarkup || "—"}</span>;
+    {
+      accessorKey: "name",
+      header: "Name",
+      minSize: 180,
+      size: 220,
+      cell: ({ row: { original } }) => (
+        <div className="flex flex-col gap-0.5 items-start">
+          <span className="block truncate text-blue-500 hover:text-blue-600">
+            {original.name}
+          </span>
+          <span className="block text-xs text-text-500 truncate">
+            {original.id}
+          </span>
+        </div>
+      ),
     },
-  },
-  {
-    accessorKey: "rpxy",
-    header: "RPxY",
-    minSize: 80,
-    size: 100,
-    cell: ({
-      row: {
-        original: { price },
-      },
-    }) => {
-      const priceWithMarkup = withMarkup(price?.SPxY, markup);
-      return <span>{priceWithMarkup || "—"}</span>;
+    {
+      accessorKey: "spxm",
+      header: "SPxM",
+      minSize: 80,
+      size: 100,
+      cell: ({
+        row: {
+          original: { price },
+        },
+      }) => <span>{price?.SPxM || "—"}</span>,
     },
-  },
-  {
-    accessorKey: "period",
-    header: "Billing period",
-    minSize: 100,
-    size: 128,
-    cell: ({
-      row: {
-        original: { terms },
+    {
+      accessorKey: "spxy",
+      header: "SPxY",
+      minSize: 80,
+      size: 100,
+      cell: ({
+        row: {
+          original: { price },
+        },
+      }) => <span>{price?.SPxY || "—"}</span>,
+    },
+    {
+      accessorKey: "rpxm",
+      header: "RPxM",
+      minSize: 80,
+      size: 100,
+      cell: ({
+        row: {
+          original: { price },
+        },
+      }) => {
+        const priceWithMarkup = withMarkup(price?.SPxM, markup);
+        return <span>{priceWithMarkup || "—"}</span>;
       },
-    }) => <span className="truncate block">{terms?.period ? BILLING_PERIODS[terms.period] : "—"}</span>,
-  },
-  {
-    accessorKey: "commitment",
-    header: "Commitment",
-    minSize: 100,
-    size: 128,
-    cell: ({
-      row: {
-        original: { terms },
+    },
+    {
+      accessorKey: "rpxy",
+      header: "RPxY",
+      minSize: 80,
+      size: 100,
+      cell: ({
+        row: {
+          original: { price },
+        },
+      }) => {
+        const priceWithMarkup = withMarkup(price?.SPxY, markup);
+        return <span>{priceWithMarkup || "—"}</span>;
       },
-    }) => <span className="truncate block">{getCommitmentText(terms?.commitment)}</span>,
-  },
-  {
-    accessorKey: "currency",
-    header: "Currency",
-    minSize: 80,
-    size: 100,
-    cell: ({
-      row: {
-        original: { price },
-      },
-    }) => <span>{price?.currency || "—"}</span>,
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    minSize: 100,
-    size: 120,
-    cell: ({
-      row: {
-        original: { status },
-      },
-    }) => <SubscriptionStatusBadge status={status} />,
-  },
-];
+    },
+    {
+      accessorKey: "period",
+      header: "Billing period",
+      minSize: 100,
+      size: 128,
+      cell: ({
+        row: {
+          original: { terms },
+        },
+      }) => <span className="truncate block">{terms?.period ? BILLING_PERIODS[terms.period] : "—"}</span>,
+    },
+    {
+      accessorKey: "commitment",
+      header: "Commitment",
+      minSize: 100,
+      size: 128,
+      cell: ({
+        row: {
+          original: { terms },
+        },
+      }) => <span className="truncate block">{getCommitmentText(terms?.commitment)}</span>,
+    },
+    {
+      accessorKey: "currency",
+      header: "Currency",
+      minSize: 80,
+      size: 100,
+      cell: ({
+        row: {
+          original: { price },
+        },
+      }) => <span>{price?.currency || "—"}</span>,
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      minSize: 100,
+      size: 120,
+      cell: ({
+        row: {
+          original: { status },
+        },
+      }) => <SubscriptionStatusBadge status={status} />,
+    },
+  ];
 
 export function Subscriptions() {
   const navigate = useNavigate();
@@ -163,9 +164,7 @@ export function Subscriptions() {
     state: { columnSizing },
   });
 
-  if (isPending) return <></>;
-
-  if (subscriptions.length === 0) return <>No Subscriptons found.</>;
+  if (!isPending && subscriptions.length === 0) return <>No Subscriptons found.</>;
 
   return (
     <Card>
@@ -227,6 +226,11 @@ export function Subscriptions() {
             </tbody>
           </table>
         </div>
+        {isFetching && (
+          <div className="flex items-center justify-center py-3 px-6 border-b border-border-200">
+            <Loader />
+          </div>
+        )}
         <Pagination
           onPageChange={(page) =>
             setOffset((page - 1) * (pagination.limit ?? 0))

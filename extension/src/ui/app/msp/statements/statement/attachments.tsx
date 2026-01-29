@@ -3,6 +3,7 @@ import { Card } from "@ui/card";
 import { useParams } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";
+import { Loader } from "@/ui/ui/loader";
 import { useStatementAttachments } from "@features/statements";
 import { formatDateTime } from "@features/dates";
 import { backendClient } from "@/ui/lib/alga";
@@ -91,9 +92,7 @@ export function Attachments() {
     state: { columnSizing },
   });
 
-  if (isPending) return <></>;
-
-  if (attachments.length === 0) return <>No Attachments found.</>;
+  if (!isPending && attachments.length === 0) return <>No Attachments found.</>;
 
   return (
     <Card>
@@ -137,6 +136,11 @@ export function Attachments() {
             </tbody>
           </table>
         </div>
+        {isFetching && (
+          <div className="flex items-center justify-center py-3 px-6 border-b border-border-200">
+            <Loader />
+          </div>
+        )}
         <Pagination
           onPageChange={(page) =>
             setOffset((page - 1) * (pagination.limit ?? 0))

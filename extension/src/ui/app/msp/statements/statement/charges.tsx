@@ -3,6 +3,7 @@ import { Card } from "@ui/card";
 import { useParams } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";
+import { Loader } from "@/ui/ui/loader";
 import { withMarkup } from "@features/markup";
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { useStatement, useStatementCharges } from "@features/statements";
@@ -128,9 +129,7 @@ export function Charges() {
     state: { columnSizing },
   });
 
-  if (isPending) return <></>;
-
-  if (charges.length === 0) return <>No Charges found.</>;
+  if (!isPending && charges.length === 0) return <>No Charges found.</>;
 
   return (
     <Card>
@@ -170,6 +169,11 @@ export function Charges() {
             </tbody>
           </table>
         </div>
+        {isFetching && (
+          <div className="flex items-center justify-center py-3 px-6 border-b border-border-200">
+            <Loader />
+          </div>
+        )}
         <Pagination
           onPageChange={(page) =>
             setOffset((page - 1) * (pagination.limit ?? 0))

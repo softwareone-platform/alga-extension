@@ -2,6 +2,7 @@ import { memo, useMemo, useState } from "react";
 import { Card } from "@ui/card";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";
+import { Loader } from "@/ui/ui/loader";
 import { useAgreements, AgreementStatusBadge } from "@features/agreements";
 import { ProductCell } from "@features/products";
 import { Agreement, AgreementStatus } from "@swo/mp-api-model";
@@ -165,6 +166,11 @@ export function Agreements() {
             </tbody>
           </table>
         </div>
+        {isFetching && (
+          <div className="flex items-center justify-center py-3 px-6 border-b border-border-200">
+            <Loader />
+          </div>
+        )}
         <Pagination
           onPageChange={(page: number) =>
             setOffset((page - 1) * (pagination.limit ?? 0))
