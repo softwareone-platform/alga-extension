@@ -159,6 +159,7 @@ const ConsumersListbox = ({
             {consumer.name}
           </ListboxOption>
         ))}
+        <ListboxOption key="empty" value=""> - </ListboxOption>
       </ListboxOptions>
     </Listbox>
   );
@@ -187,6 +188,7 @@ const ServiceListbox = ({
             {service.name}
           </ListboxOption>
         ))}
+        <ListboxOption key="empty" value=""> - </ListboxOption>
       </ListboxOptions>
     </Listbox>
   );
