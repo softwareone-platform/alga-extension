@@ -31,21 +31,21 @@ const columns: ColumnDef<Order & { billingConfig?: BillingConfig | null }>[] = [
     header: 'Type',
     minSize: 80,
     size: 100,
-    cell: ({ row: { original } }) => <span>{original.type || "—"}</span>
+    cell: ({ row: { original } }) => <span className="truncate block">{original.type || "—"}</span>
   },
   {
     accessorKey: 'agreement',
     header: 'Agreement',
     minSize: 120,
     size: 150,
-    cell: ({ row: { original } }) => <span>{original.agreement?.name || "—"}</span>
+    cell: ({ row: { original } }) => <span className="truncate block">{original.agreement?.name || "—"}</span>
   },
   {
     accessorKey: 'product',
     header: 'Product',
     minSize: 120,
     size: 150,
-    cell: ({ row: { original } }) => <span>{original.product?.name || "—"}</span>
+    cell: ({ row: { original } }) => <span className="truncate block">{original.product?.name || "—"}</span>
   },
   {
     accessorKey: 'rpxy',
@@ -70,7 +70,7 @@ const columns: ColumnDef<Order & { billingConfig?: BillingConfig | null }>[] = [
     minSize: 120,
     size: 150,
     cell: ({ row: { original } }) => (
-      <span>{original.audit?.created?.at ? formatDateTime(original.audit.created.at) : "—"}</span>
+      <span className="truncate block">{original.audit?.created?.at ? formatDateTime(original.audit.created.at) : "—"}</span>
     )
   },
   {

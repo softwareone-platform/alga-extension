@@ -79,7 +79,7 @@ const columns: ColumnDef<SubscriptionRow>[] = [
     minSize: 100,
     size: 128,
     cell: ({ row: { original } }) => (
-      <span>
+      <span className="truncate block">
         {original.terms?.period
           ? BILLING_PERIODS[original.terms?.period]
           : "—"}
@@ -91,7 +91,7 @@ const columns: ColumnDef<SubscriptionRow>[] = [
     header: 'Commitment',
     minSize: 100,
     size: 128,
-    cell: ({ row: { original } }) => <span>{getCommitmentText(original.terms?.commitment)}</span>
+    cell: ({ row: { original } }) => <span className="truncate block">{getCommitmentText(original.terms?.commitment)}</span>
   },
   {
     accessorKey: 'currency',

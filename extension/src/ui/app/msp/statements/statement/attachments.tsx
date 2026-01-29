@@ -32,14 +32,14 @@ const columns: ColumnDef<Attachment>[] = [
     header: 'Name',
     minSize: 160,
     size: 192,
-    cell: ({ row: { original } }) => <span>{original.name || "—"}</span>
+    cell: ({ row: { original } }) => <span className="truncate block">{original.name || "—"}</span>
   },
   {
     accessorKey: 'description',
     header: 'Description',
     minSize: 160,
     size: 192,
-    cell: ({ row: { original } }) => <span>{original.description || "—"}</span>
+    cell: ({ row: { original } }) => <span className="truncate block">{original.description || "—"}</span>
   },
   {
     accessorKey: 'created',
@@ -47,7 +47,7 @@ const columns: ColumnDef<Attachment>[] = [
     minSize: 140,
     size: 160,
     cell: ({ row: { original } }) => (
-      <span>{formatDateTime(original.audit?.created?.at) || "—"}</span>
+      <span className="truncate block">{formatDateTime(original.audit?.created?.at) || "—"}</span>
     )
   },
   {
@@ -56,7 +56,7 @@ const columns: ColumnDef<Attachment>[] = [
     minSize: 140,
     size: 160,
     cell: ({ row: { original } }) => (
-      <span>{formatDateTime(original.audit?.updated?.at) || "—"}</span>
+      <span className="truncate block">{formatDateTime(original.audit?.updated?.at) || "—"}</span>
     )
   },
   {

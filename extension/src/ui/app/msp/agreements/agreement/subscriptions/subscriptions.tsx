@@ -102,7 +102,7 @@ const createColumns = (
       row: {
         original: { terms },
       },
-    }) => <span>{terms?.period ? BILLING_PERIODS[terms.period] : "—"}</span>,
+    }) => <span className="truncate block">{terms?.period ? BILLING_PERIODS[terms.period] : "—"}</span>,
   },
   {
     accessorKey: "commitment",
@@ -113,7 +113,7 @@ const createColumns = (
       row: {
         original: { terms },
       },
-    }) => <span>{getCommitmentText(terms?.commitment)}</span>,
+    }) => <span className="truncate block">{getCommitmentText(terms?.commitment)}</span>,
   },
   {
     accessorKey: "currency",

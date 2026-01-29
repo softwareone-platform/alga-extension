@@ -66,7 +66,7 @@ const createColumns = (markup?: number): ColumnDef<Charge>[] => [
     minSize: 140,
     size: 160,
     cell: ({ row: { original } }) => (
-      <span>{formatDateTime(original.period?.start) || "—"}</span>
+      <span className="truncate block">{formatDateTime(original.period?.start) || "—"}</span>
     )
   },
   {
@@ -75,7 +75,7 @@ const createColumns = (markup?: number): ColumnDef<Charge>[] => [
     minSize: 140,
     size: 160,
     cell: ({ row: { original } }) => (
-      <span>{formatDateTime(original.period?.end) || "—"}</span>
+      <span className="truncate block">{formatDateTime(original.period?.end) || "—"}</span>
     )
   },
   {

@@ -29,14 +29,14 @@ const columns: ColumnDef<OrderRow>[] = [
     header: 'Type',
     minSize: 80,
     size: 100,
-    cell: ({ row: { original } }) => <span>{original.type || "—"}</span>
+    cell: ({ row: { original } }) => <span className="truncate block">{original.type || "—"}</span>
   },
   {
     accessorKey: 'customer',
     header: 'Customer',
     minSize: 100,
     size: 120,
-    cell: () => <span>CONSUMER</span>
+    cell: () => <span className="truncate block">CONSUMER</span>
   },
   {
     accessorKey: 'spxy',
@@ -77,7 +77,7 @@ const columns: ColumnDef<OrderRow>[] = [
     minSize: 120,
     size: 150,
     cell: ({ row: { original } }) => (
-      <span>{original.audit?.created?.at ? formatDateTime(original.audit.created.at) : "—"}</span>
+      <span className="truncate block">{original.audit?.created?.at ? formatDateTime(original.audit.created.at) : "—"}</span>
     )
   },
   {

@@ -10,6 +10,7 @@ import { useConsumer } from "@features/consumers";
 import { Link } from "@/ui/ui/link";
 import { useBillingConfigByAgreement } from "@/ui/features/billing-config";
 import { useNavigate } from "react-router";
+import { Loader } from "@/ui/ui";
 
 const columns: ColumnDef<Agreement>[] = [
   {
@@ -45,7 +46,7 @@ const columns: ColumnDef<Agreement>[] = [
     size: 160,
     cell: ({ row: { original } }) => {
       const { billingConfig } = useBillingConfigByAgreement(original.id);
-      return <span>{billingConfig?.id || "—"}</span>;
+      return <span className="truncate block">{billingConfig?.id || "—"}</span>;
     },
   },
   {
@@ -93,8 +94,8 @@ const columns: ColumnDef<Agreement>[] = [
     size: 120,
     cell: ({ row: { original } }) => {
       const { billingConfig } = useBillingConfigByAgreement(original.id);
-      if (billingConfig?.operations === "managed") return <span>Managed</span>;
-      if (billingConfig?.operations === "self-service") return <span>Self-service</span>;
+      if (billingConfig?.operations === "managed") return <span className="truncate block">Managed</span>;
+      if (billingConfig?.operations === "self-service") return <span className="truncate block">Self-service</span>;
       return <span>—</span>;
     },
   },
@@ -109,7 +110,7 @@ const columns: ColumnDef<Agreement>[] = [
 
 export function Agreements() {
   const [offset, setOffset] = useState(0);
-  const { agreements, pagination, isFetching } = useAgreements({ offset });
+  const { agreements, pagination, isFetching, isPending } = useAgreements({ offset });
   const navigate = useNavigate();
 
   const [columnSizing, setColumnSizing] = useState({});
@@ -168,6 +169,11 @@ export function Agreements() {
             </tbody>
           </table>
         </div>
+        {isPending && (
+          <div className="flex items-center justify-center py-3 px-6 border-b border-border-200">
+            <Loader />
+          </div>
+        )}
         <Pagination
           onPageChange={(page) => setOffset((page - 1) * (pagination.limit ?? 0))}
           totalItems={pagination.total ?? 0}

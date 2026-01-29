@@ -26,14 +26,14 @@ const columns: ColumnDef<Order>[] = [
     header: 'Type',
     minSize: 80,
     size: 100,
-    cell: ({ row: { original: { type } } }) => <span>{type || "—"}</span>
+    cell: ({ row: { original: { type } } }) => <span className="truncate block">{type || "—"}</span>
   },
   {
     accessorKey: 'customer',
     header: 'Customer',
     minSize: 100,
     size: 128,
-    cell: () => <span>CONSUMER</span>
+    cell: () => <span className="truncate block">CONSUMER</span>
   },
   {
     accessorKey: 'spxy',
