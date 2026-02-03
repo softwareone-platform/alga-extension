@@ -14,6 +14,8 @@
     "build:wasm": "jco componentize dist/js/handler.js --wit ./wit/extension-runner.wit --world-name runner --disable all --out dist/main.wasm",
     "pack": "alga pack",
     "build-pack": "npm run build && npm run pack",
+    "deploy": "node scripts/deploy.mjs",
+    "build-deploy": "npm run build:alga && npm run deploy",
     "lint": "eslint .",
     "preview": "vite preview",
     "alga-proxy": "npx local-cors-proxy --proxyUrl https://algapsa.com --port 8010"
@@ -50,6 +52,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
+    "playwright": "^1.58.1",
     "rimraf": "^6.1.2",
     "tailwindcss": "^4.1.12",
     "tsup": "^8.5.1",
