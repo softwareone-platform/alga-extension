@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "runtime": "wasm-js@1",
   "capabilities": [
+    "cap:invoice.manual.create",
     "cap:context.read",
     "cap:log.emit",
     "cap:secrets.get",
