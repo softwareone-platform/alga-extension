@@ -1,6 +1,6 @@
 import "./polyfill";
 
-import { logError } from "alga:extension/logging";
+import { logError, logInfo } from "alga:extension/logging";
 import {
   swoHandler,
   extensionHandler,
@@ -23,6 +23,8 @@ const routes = [
 ];
 
 export function handler(request: ExecuteRequest): ExecuteResponse {
+  logInfo(`LOGGING TEST`);
+
   const route = routes.find((route) => request.http.url.startsWith(route.path));
 
   if (!route) {

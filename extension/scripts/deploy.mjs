@@ -111,31 +111,12 @@ async function deploy() {
     const installButton = page.getByRole('button', { name: 'Install' }).first();
     await installButton.click();
 
-    // Wait for success indication
-    console.log('[deploy] Waiting for installation to complete...');
-
-    // Wait for either success message or error
-    await Promise.race([
-      page.waitForSelector('text=successfully', { timeout: 60000 }),
-      page.waitForSelector('text=installed', { timeout: 60000 }),
-      page.waitForSelector('[role="alert"]', { timeout: 60000 }),
-    ]);
-
-    // Check for success
-    const successIndicator = await page.locator('text=successfully, text=installed').first();
-    if (await successIndicator.isVisible()) {
-      console.log('[deploy] Extension installed successfully!');
-    } else {
-      // Check for error alert
-      const alert = await page.locator('[role="alert"]').first();
-      if (await alert.isVisible()) {
-        const alertText = await alert.textContent();
-        console.log(`[deploy] Installation result: ${alertText}`);
-      }
-    }
-
-    // Give user time to see the result
-    await page.waitForTimeout(3000);
+    // Wait for "Extension installed" text to appear and be visible
+    console.log('[deploy] Waiting for "Extension installed" confirmation...');
+    const installedText = page.locator('text=Extension installed');
+    await installedText.waitFor({ state: 'visible', timeout: 60000 });
+    console.log('[deploy] Extension installed successfully!');
+    await page.waitForTimeout(1000);
 
   } catch (error) {
     console.error('[deploy] Error during deployment:', error.message);
