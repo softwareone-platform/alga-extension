@@ -11,34 +11,35 @@ import { SWOClient } from "../lib/swo/client";
 import { ListResponse } from "../lib/swo/api";
 import { InvoiceLink } from "@/shared/invoices";
 import { invoiceLinks } from "./invoice-links";
+import { ManualInvoice, ManualInvoiceLine } from "../lib/alga";
 
 const STATEMENTS_LIMIT = 100;
 const CHARGES_LIMIT = 100;
 
-// const toLine = (
-//   charge: Charge,
-//   billingConfig: BillingConfig
-// ): ManualInvoiceLine | null => {
-//   if (!charge.price?.unitSP) {
-//     console.warn(`No price for charge ${charge.id}`);
-//     return null;
-//   }
+const toLine = (
+  charge: Charge,
+  billingConfig: BillingConfig
+): ManualInvoiceLine | null => {
+  if (!charge.price?.unitSP) {
+    console.warn(`No price for charge ${charge.id}`);
+    return null;
+  }
 
-//   const description = `${charge.item?.name || charge.description?.value1} (${
-//     charge.id
-//   })`;
+  const description = `${charge.item?.name || charge.description?.value1} (${
+    charge.id
+  })`;
 
-//   const rate = Math.round(
-//     charge.price.unitSP * (1 + billingConfig.markup / 100) * 100
-//   );
+  const rate = Math.round(
+    charge.price.unitSP * (1 + billingConfig.markup / 100) * 100
+  );
 
-//   return {
-//     serviceId: billingConfig.serviceId,
-//     quantity: charge.quantity ?? 0,
-//     description,
-//     rate,
-//   } satisfies ManualInvoiceLine;
-// };
+  return {
+    serviceId: billingConfig.serviceId,
+    quantity: charge.quantity ?? 0,
+    description,
+    rate,
+  } satisfies ManualInvoiceLine;
+};
 
 export class StatementService {
   private swoClient: SWOClient;
@@ -152,11 +153,13 @@ export class StatementService {
     if (charges.length === 0) {
       throw new Error(`No charges found for statement ${statementId}`);
     }
-    //     const lines = charges
-    //       .map((charge) => toLine(charge, billingConfig))
-    //       .filter((line) => !!line);
-    //     console.log(lines);
-    //     const manualInvoice = {} as ManualInvoice; // MOCKED
+
+    const lines = charges
+      .map((charge) => toLine(charge, billingConfig))
+      .filter((line) => !!line);
+    console.log(lines);
+    const manualInvoice = {} as ManualInvoice;
+
     invoiceLinks.saveLinks([
       ...ils,
       {
