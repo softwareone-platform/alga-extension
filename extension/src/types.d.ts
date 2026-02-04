@@ -86,3 +86,42 @@ declare module "alga:extension/user" {
   export type UserError = "not-available" | "not-allowed";
   export function getUser(): UserData; // throws UserError on failure
 }
+
+declare module "alga:extension/invoicing" {
+  export type DiscountType = "percentage" | "fixed";
+
+  export interface ManualInvoiceItemInput {
+    serviceId: string;
+    quantity: number;
+    description: string;
+    rate: number;
+    isDiscount?: boolean;
+    discountType?: DiscountType;
+    appliesToItemId?: string;
+    appliesToServiceId?: string;
+  }
+
+  export interface CreateManualInvoiceInput {
+    clientId: string;
+    items: ManualInvoiceItemInput[];
+    invoiceDate?: string;
+    dueDate?: string;
+    poNumber?: string;
+  }
+
+  export interface CreateManualInvoiceResult {
+    success: boolean;
+    invoiceId?: string;
+    invoiceNumber?: string;
+    status?: string;
+    subtotal?: number;
+    tax?: number;
+    total?: number;
+    error?: string;
+    fieldErrors?: string;
+  }
+
+  export function createManualInvoice(
+    input: CreateManualInvoiceInput
+  ): CreateManualInvoiceResult;
+}

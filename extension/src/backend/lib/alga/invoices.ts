@@ -1,94 +1,52 @@
-import { fetch as httpFetch } from "alga:extension/http";
-import { decode, encode } from "../utils";
+// import { createManualInvoice } from "alga:extension/invoicing";
 
-export type ManualInvoice = {
-  invoiceId: string;
-  invoiceNumber: string;
-  clientId: string;
-  status: string;
-  subtotal: number;
-  tax: number;
-  totalAmount: number;
-  isManual: boolean;
-};
+// export type ManualInvoice = {
+//   invoiceId: string;
+//   invoiceNumber: string;
+//   status: string;
+//   subtotal: number;
+//   tax: number;
+//   total: number;
+// };
 
-export type ManualInvoiceLine = {
-  serviceId: string;
-  quantity: number;
-  description: string;
-  rate: number;
-};
+// export type ManualInvoiceLine = {
+//   serviceId: string;
+//   quantity: number;
+//   description: string;
+//   rate: number;
+// };
 
-type APIManualInvoice = {
-  invoice_id: string;
-  invoice_number: string;
-  client_id: string;
-  status: string;
-  subtotal: number;
-  tax: number;
-  total_amount: number;
-  is_manual: boolean;
-};
+// export const createInvoice = (
+//   clientId: string,
+//   items: ManualInvoiceLine[]
+// ): ManualInvoice => {
+//   const {
+//     success,
+//     invoiceId,
+//     invoiceNumber,
+//     status,
+//     subtotal,
+//     tax,
+//     total,
+//     error,
+//   } = createManualInvoice({
+//     clientId,
+//     items,
+//     invoiceDate: undefined,
+//     dueDate: undefined,
+//     poNumber: undefined,
+//   });
 
-type APIManualInvoiceLine = {
-  service_id: string;
-  quantity: number;
-  description: string;
-  rate: number;
-};
+//   if (!success) {
+//     throw new Error(error ?? "Unknown error creating invoice");
+//   }
 
-type ApiSuccessResponse<T> = {
-  data: T;
-  meta?: unknown;
-};
-
-export class InvoicesClient {
-  private baseUrl: string;
-  private apiKey: string;
-
-  constructor(baseUrl: string, apiKey: string) {
-    this.baseUrl = baseUrl;
-    this.apiKey = apiKey;
-  }
-
-  create(clientId: string, lines: ManualInvoiceLine[]): ManualInvoice | null {
-    const items = lines.map(
-      (line) =>
-        ({
-          service_id: line.serviceId,
-          quantity: line.quantity,
-          description: line.description,
-          rate: line.rate,
-        } satisfies APIManualInvoiceLine)
-    );
-
-    const response = httpFetch({
-      method: "POST",
-      url: `${this.baseUrl}/api/v1/invoices/manual`,
-      body: encode({
-        clientId,
-        items,
-      }),
-      headers: [
-        { name: "Content-Type", value: "application/json" },
-        { name: "x-api-key", value: this.apiKey },
-      ],
-    });
-
-    const responseBody = decode<ApiSuccessResponse<APIManualInvoice>>(
-      response.body
-    );
-    if (!responseBody?.data) return null;
-
-    return {
-      invoiceId: responseBody.data.invoice_id,
-      invoiceNumber: responseBody.data.invoice_number,
-      clientId: responseBody.data.client_id,
-      status: responseBody.data.status,
-      subtotal: responseBody.data.subtotal,
-      tax: responseBody.data.tax,
-      totalAmount: responseBody.data.total_amount,
-      isManual: responseBody.data.is_manual,
-    } satisfies ManualInvoice;
-  }
-}
+//   return {
+//     invoiceId: invoiceId!,
+//     invoiceNumber: invoiceNumber!,
+//     status: status ?? "draft",
+//     subtotal: subtotal ?? 0,
+//     tax: tax ?? 0,
+//     total: total ?? 0,
+//   };
+// };

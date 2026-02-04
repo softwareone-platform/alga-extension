@@ -11,7 +11,10 @@ import { SWOClient } from "../lib/swo/client";
 import { ListResponse } from "../lib/swo/api";
 import { InvoiceLink } from "@/shared/invoices";
 import { invoiceLinks } from "./invoice-links";
-import { ManualInvoice, ManualInvoiceLine } from "../lib/alga";
+import {
+  createManualInvoice,
+  ManualInvoiceItemInput,
+} from "alga:extension/invoicing";
 
 const STATEMENTS_LIMIT = 100;
 const CHARGES_LIMIT = 100;
@@ -19,7 +22,7 @@ const CHARGES_LIMIT = 100;
 const toLine = (
   charge: Charge,
   billingConfig: BillingConfig
-): ManualInvoiceLine | null => {
+): ManualInvoiceItemInput | null => {
   if (!charge.price?.unitSP) {
     console.warn(`No price for charge ${charge.id}`);
     return null;
@@ -38,7 +41,7 @@ const toLine = (
     quantity: charge.quantity ?? 0,
     description,
     rate,
-  } satisfies ManualInvoiceLine;
+  } satisfies ManualInvoiceItemInput;
 };
 
 export class StatementService {
@@ -148,7 +151,6 @@ export class StatementService {
       throw new Error(`Invoice already exists for statement ${statementId}`);
     }
 
-    //TODO: Create invoice in Alga
     const charges = this.fetchAllCharges(swoStatement.id!);
     if (charges.length === 0) {
       throw new Error(`No charges found for statement ${statementId}`);
@@ -156,14 +158,21 @@ export class StatementService {
 
     const lines = charges
       .map((charge) => toLine(charge, billingConfig))
-      .filter((line) => !!line);
-    console.log(lines);
-    const manualInvoice = {} as ManualInvoice;
+      .filter((line): line is ManualInvoiceItemInput => !!line);
+
+    const { invoiceId, error, success } = createManualInvoice({
+      clientId: billingConfig.consumerId,
+      items: lines,
+    });
+
+    if (!success) {
+      throw new Error(error ?? "Unknown error creating invoice");
+    }
 
     invoiceLinks.saveLinks([
       ...ils,
       {
-        invoiceId: "SOME_ID",
+        invoiceId: invoiceId!,
         statementId,
         markupSnapshot: billingConfig.markup,
       },
@@ -215,24 +224,38 @@ export class StatementService {
           continue;
         }
 
-        //TODO: Create invoice in Alga
         const charges = this.fetchAllCharges(swoStatement.id!);
         if (charges.length === 0) {
           continue;
         }
-        // const lines = charges
-        //   .map((charge) => toLine(charge, billingConfig))
-        //   .filter((line) => !!line);
-        // console.log(lines);
-        // const manualInvoice = {} as ManualInvoice; // MOCKED
-        invoiceLinks.saveLinks([
-          ...ils,
-          {
-            invoiceId: "SOME_ID",
-            statementId: swoStatement.id!,
-            markupSnapshot: billingConfig.markup,
-          },
-        ]);
+
+        const lines = charges
+          .map((charge) => toLine(charge, billingConfig))
+          .filter((line): line is ManualInvoiceItemInput => !!line);
+
+        try {
+          const { invoiceId, error, success } = createManualInvoice({
+            clientId: billingConfig.consumerId,
+            items: lines,
+          });
+
+          if (!success) {
+            throw new Error(error ?? "Unknown error creating invoice");
+          }
+
+          invoiceLinks.saveLinks([
+            ...ils,
+            {
+              invoiceId: invoiceId!,
+              statementId: swoStatement.id!,
+              markupSnapshot: billingConfig.markup,
+            },
+          ]);
+        } catch (error) {
+          console.warn(
+            `Failed to create invoice for statement ${swoStatement.id}: ${error}`
+          );
+        }
       }
 
       offset += STATEMENTS_LIMIT;

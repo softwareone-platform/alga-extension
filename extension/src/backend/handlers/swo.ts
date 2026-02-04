@@ -11,9 +11,9 @@ import {
   extension,
 } from "../features";
 
-import { getUser } from "../lib/alga";
 import { decode, jsonResponse } from "../lib";
 import { logInfo } from "alga:extension/logging";
+import { getUser } from "alga:extension/user";
 
 export const filters: Filters = {
   internal: {
@@ -51,7 +51,7 @@ export const swoHandler = (request: ExecuteRequest): ExecuteResponse => {
   if (!rule)
     return jsonResponse(
       { error: "Extension is not configured" },
-      { status: 422 },
+      { status: 422 }
     );
 
   const response = httpFetch({
