@@ -227,24 +227,26 @@ export function Start() {
       <SettingsEditor isOpen={isOpen} onClose={() => setIsOpen(false)} />
 
       <Tabs>
-        <NavLink to="/start/agreements">
-          {({ isActive }) => (
-            <Tabs.Tab isActive={isActive}>Agreements</Tabs.Tab>
-          )}
-        </NavLink>
-        <NavLink to="/start/subscriptions">
-          {({ isActive }) => (
-            <Tabs.Tab isActive={isActive}>Subscriptions</Tabs.Tab>
-          )}
-        </NavLink>
-        <NavLink to="/start/orders">
-          {({ isActive }) => <Tabs.Tab isActive={isActive}>Orders</Tabs.Tab>}
-        </NavLink>
-        <NavLink to="/start/statements">
-          {({ isActive }) => (
-            <Tabs.Tab isActive={isActive}>Statements</Tabs.Tab>
-          )}
-        </NavLink>
+        {details.status !== "unconfigured" && (<>
+          <NavLink to="/start/agreements">
+            {({ isActive }) => (
+              <Tabs.Tab isActive={isActive}>Agreements</Tabs.Tab>
+            )}
+          </NavLink>
+          <NavLink to="/start/subscriptions">
+            {({ isActive }) => (
+              <Tabs.Tab isActive={isActive}>Subscriptions</Tabs.Tab>
+            )}
+          </NavLink>
+          <NavLink to="/start/orders">
+            {({ isActive }) => <Tabs.Tab isActive={isActive}>Orders</Tabs.Tab>}
+          </NavLink>
+          <NavLink to="/start/statements">
+            {({ isActive }) => (
+              <Tabs.Tab isActive={isActive}>Statements</Tabs.Tab>
+            )}
+          </NavLink>
+        </>)}
         <NavLink to="/start/settings">
           {({ isActive }) => <Tabs.Tab isActive={isActive}>Settings</Tabs.Tab>}
         </NavLink>
