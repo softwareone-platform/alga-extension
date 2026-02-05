@@ -1,6 +1,6 @@
 import "./polyfill";
 
-import { logError, logInfo } from "alga:extension/logging";
+import { logError } from "alga:extension/logging";
 import {
   swoHandler,
   extensionHandler,
@@ -23,12 +23,6 @@ const routes = [
 ];
 
 export function handler(request: ExecuteRequest): ExecuteResponse {
-  logInfo(`LOGGING TEST`);
-
-  if (1 == 1) {
-    return jsonResponse({ message: "LOGGING TEST" }, { status: 200 });
-  }
-
   const route = routes.find((route) => request.http.url.startsWith(route.path));
 
   if (!route) {
@@ -37,7 +31,7 @@ export function handler(request: ExecuteRequest): ExecuteResponse {
         error: "Not Found",
         message: `Route not found: ${request.http.url}`,
       },
-      { status: 404 }
+      { status: 404 },
     );
   }
 
@@ -51,7 +45,7 @@ export function handler(request: ExecuteRequest): ExecuteResponse {
         error: "Internal Server Error",
         message: "An unexpected error occurred",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

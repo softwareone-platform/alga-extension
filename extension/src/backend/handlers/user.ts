@@ -13,7 +13,7 @@ export const userHandler = (request: ExecuteRequest): ExecuteResponse => {
     } catch (error) {
       return jsonResponse(
         { error: "Internal server error: " + error },
-        { status: 500 }
+        { status: 500 },
       );
     }
   }
