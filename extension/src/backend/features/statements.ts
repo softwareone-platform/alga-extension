@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { Statement } from "@/shared/statements";
 import {
   Charge,
@@ -214,8 +213,13 @@ export class StatementService {
       {} as Record<string, InvoiceLink>,
     );
 
-    const to = dayjs().add(1, "day").format("YYYY-MM-DD");
-    const from = dayjs(to).subtract(3, "month").format("YYYY-MM-DD");
+    const toDate = new Date();
+    toDate.setDate(toDate.getDate() + 1);
+    const to = toDate.toISOString().split("T")[0];
+
+    const fromDate = new Date(toDate);
+    fromDate.setMonth(fromDate.getMonth() - 3);
+    const from = fromDate.toISOString().split("T")[0];
 
     let offset = 0;
 
