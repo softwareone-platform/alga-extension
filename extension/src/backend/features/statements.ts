@@ -21,7 +21,7 @@ const CHARGES_LIMIT = 100;
 
 const toLine = (
   charge: Charge,
-  billingConfig: BillingConfig
+  billingConfig: BillingConfig,
 ): ManualInvoiceItemInput | null => {
   if (!charge.price?.unitSP) {
     console.warn(`No price for charge ${charge.id}`);
@@ -33,7 +33,7 @@ const toLine = (
   })`;
 
   const rate = Math.round(
-    charge.price.unitSP * (1 + billingConfig.markup / 100) * 100
+    charge.price.unitSP * (1 + billingConfig.markup / 100) * 100,
   );
 
   return {
@@ -54,12 +54,13 @@ export class StatementService {
   getById(id: string, rql: string): Statement {
     const { data: statement } = this.swoClient.fetch<SWOStatement>(
       `/billing/statements/${id}`,
-      rql
+      rql,
     );
 
     const bcs = billingConfigs.getConfigs();
     const billingConfig = bcs.find(
-      (bc) => bc.agreementId === statement.agreement?.id
+      (bc) =>
+        bc.agreementId === statement.agreement?.id && bc.status === "active",
     );
 
     if (!billingConfig) {
@@ -95,16 +96,22 @@ export class StatementService {
     }
 
     const ils = invoiceLinks.getLinks();
-    const invoiceLinksByStatementId = ils.reduce((acc, il) => {
-      acc[il.statementId] = il;
-      return acc;
-    }, {} as Record<string, InvoiceLink>);
+    const invoiceLinksByStatementId = ils.reduce(
+      (acc, il) => {
+        acc[il.statementId] = il;
+        return acc;
+      },
+      {} as Record<string, InvoiceLink>,
+    );
 
     const bcs = billingConfigs.getConfigs();
-    const billingConfigsByAgreementId = bcs.reduce((acc, config) => {
-      acc[config.agreementId] = config;
-      return acc;
-    }, {} as Record<string, BillingConfig>);
+    const billingConfigsByAgreementId = bcs.reduce(
+      (acc, config) => {
+        acc[config.agreementId] = config;
+        return acc;
+      },
+      {} as Record<string, BillingConfig>,
+    );
 
     const statements = swoStatements.map((swoStatement) => {
       if (!billingConfigsByAgreementId[swoStatement.agreement?.id ?? ""]) {
@@ -133,7 +140,7 @@ export class StatementService {
   invoiceStatement(statementId: string): Statement {
     const { data: swoStatement } = this.swoClient.fetch<SWOStatement>(
       `/billing/statements/${statementId}`,
-      "select=id,agreement.id"
+      "select=id,agreement.id",
     );
 
     const billingConfig = billingConfigs
@@ -141,7 +148,7 @@ export class StatementService {
       .find((bc) => bc.agreementId === swoStatement.agreement?.id);
     if (!billingConfig) {
       throw new Error(
-        `Billing config not found for agreement ${swoStatement.agreement?.id}`
+        `Billing config not found for agreement ${swoStatement.agreement?.id}`,
       );
     }
 
@@ -160,13 +167,16 @@ export class StatementService {
       .map((charge) => toLine(charge, billingConfig))
       .filter((line): line is ManualInvoiceItemInput => !!line);
 
-    const { invoiceId, error, success } = createManualInvoice({
+    const invoice = {
       clientId: billingConfig.consumerId,
       items: lines,
-    });
+    };
+
+    const { invoiceId, error, success } = createManualInvoice(invoice);
+    const errorMessage = error ?? "Unknown error creating invoice";
 
     if (!success) {
-      throw new Error(error ?? "Unknown error creating invoice");
+      throw new Error(`${errorMessage} for ${JSON.stringify(invoice)}`);
     }
 
     invoiceLinks.saveLinks([
@@ -186,16 +196,22 @@ export class StatementService {
 
   invoiceAll(): void {
     const bcs = billingConfigs.getConfigs();
-    const billingConfigsByAgreementId = bcs.reduce((acc, config) => {
-      acc[config.agreementId] = config;
-      return acc;
-    }, {} as Record<string, BillingConfig>);
+    const billingConfigsByAgreementId = bcs.reduce(
+      (acc, config) => {
+        acc[config.agreementId] = config;
+        return acc;
+      },
+      {} as Record<string, BillingConfig>,
+    );
 
     const ils = invoiceLinks.getLinks();
-    const invoiceLinksByStatementId = ils.reduce((acc, il) => {
-      acc[il.statementId] = il;
-      return acc;
-    }, {} as Record<string, InvoiceLink>);
+    const invoiceLinksByStatementId = ils.reduce(
+      (acc, il) => {
+        acc[il.statementId] = il;
+        return acc;
+      },
+      {} as Record<string, InvoiceLink>,
+    );
 
     const now = new Date().toISOString().split("T")[0];
 
@@ -206,7 +222,7 @@ export class StatementService {
         data: { data: swoStatements, $meta },
       } = this.swoClient.fetch<StatementListResponse>(
         "/billing/statements",
-        `select=id,audit,agreement.id&gt(audit.created.at,%22${now}T00%3A00%3A00.000Z%22)&offset=${offset}&limit=${STATEMENTS_LIMIT}`
+        `select=id,audit,agreement.id&gt(audit.created.at,%22${now}T00%3A00%3A00.000Z%22)&offset=${offset}&limit=${STATEMENTS_LIMIT}`,
       );
       if (($meta?.pagination?.total ?? 0) <= offset) {
         break;
@@ -253,7 +269,7 @@ export class StatementService {
           ]);
         } catch (error) {
           console.warn(
-            `Failed to create invoice for statement ${swoStatement.id}: ${error}`
+            `Failed to create invoice for statement ${swoStatement.id}: ${error}`,
           );
         }
       }
@@ -271,7 +287,7 @@ export class StatementService {
         data: { data, $meta },
       } = this.swoClient.fetch<ChargeListResponse>(
         `/billing/statements/${statementId}/charges`,
-        `select=id,subscription.id,subscription.name,item.id,item.name,period.start,period.end,quantity,price.SPx1,price.unitSP&offset=${offset}&limit=${CHARGES_LIMIT}`
+        `select=id,subscription.id,subscription.name,item.id,item.name,period.start,period.end,quantity,price.SPx1,price.unitSP&offset=${offset}&limit=${CHARGES_LIMIT}`,
       );
 
       charges.push(...(data || []));
