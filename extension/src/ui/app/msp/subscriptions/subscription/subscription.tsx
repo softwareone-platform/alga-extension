@@ -26,6 +26,7 @@ import { Link } from "@/ui/ui/link";
 import { SWO_PORTAL_URL } from "@/ui/config";
 import { Dialog, DialogPanel, DialogTitle, Loader } from "@/ui/ui";
 import type { Subscription, AgreementLine } from "@swo/mp-api-model";
+import { useAgreement } from "@/ui/features/agreements";
 
 function SubscriptionSummary({ id }: { id: string }) {
   const { subscription, isPending: isSubscriptionPending } =
@@ -320,6 +321,7 @@ function Manage({
 export function Subscription() {
   const { id } = useParams<{ id: string }>();
   const { subscription, isPending } = useSubscription(id!);
+  const { agreement } = useAgreement(subscription?.agreement?.id!);
   const [isManageOpen, setIsManageOpen] = useState(false);
 
   if (isPending) return <div>Loading...</div>;
@@ -328,7 +330,7 @@ export function Subscription() {
 
   const { status } = subscription;
 
-  const canManage = status === "Active" && subscription.lines && subscription.lines.length > 0;
+  const canManage = agreement?.status === "Active" && subscription.lines && subscription.lines.length > 0;
 
   return (
     <>
