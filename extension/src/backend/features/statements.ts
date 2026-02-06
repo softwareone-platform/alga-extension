@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { Statement } from "@/shared/statements";
 import {
   Charge,
@@ -63,7 +64,7 @@ export class StatementService {
         bc.agreementId === statement.agreement?.id && bc.status === "active",
     );
 
-    if (!billingConfig) {
+    if (!billingConfig || statement.status !== "Issued") {
       return {
         ...statement,
         algaInvoiceStatus: "no-invoice",
@@ -213,7 +214,8 @@ export class StatementService {
       {} as Record<string, InvoiceLink>,
     );
 
-    const now = new Date().toISOString().split("T")[0];
+    const to = dayjs().add(1, "day").format("YYYY-MM-DD");
+    const from = dayjs(to).subtract(3, "month").format("YYYY-MM-DD");
 
     let offset = 0;
 
@@ -222,7 +224,7 @@ export class StatementService {
         data: { data: swoStatements, $meta },
       } = this.swoClient.fetch<StatementListResponse>(
         "/billing/statements",
-        `select=id,audit,agreement.id&gt(audit.created.at,%22${now}T00%3A00%3A00.000Z%22)&offset=${offset}&limit=${STATEMENTS_LIMIT}`,
+        `select=id,audit,agreement.id&filter(group.buyers)&and(gt(audit.created.at,%22${from}T22%3A00%3A00.000Z%22),lt(audit.created.at,%22${to}T23%3A00%3A00.000Z%22),eq(status,%22Issued%22))&order=-audit.created.at&offset=${offset}&limit=${STATEMENTS_LIMIT}`,
       );
       if (($meta?.pagination?.total ?? 0) <= offset) {
         break;
