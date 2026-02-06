@@ -328,7 +328,7 @@ export function Subscription() {
 
   const { status } = subscription;
 
-  const canManage = subscription.lines && subscription.lines.length > 0;
+  const canManage = status === "Active" && subscription.lines && subscription.lines.length > 0;
 
   return (
     <>
