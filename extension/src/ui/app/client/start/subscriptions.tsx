@@ -98,20 +98,13 @@ export function Subscriptions() {
   const { billingConfigs } = useBillingConfigs();
   const billingConfigsById = useMemo(
     () =>
-      billingConfigs
-        ?.filter(
-          (bc) =>
-            bc.consumerId === "eeca06d2-a0f2-42a5-a33d-ecd7db5430d0" &&
-            bc.status === "active" &&
-            bc.operations === "self-service"
-        )
-        .reduce(
-          (acc, billingConfig) => ({
-            ...acc,
-            [billingConfig.agreementId!]: billingConfig,
-          }),
-          {} as Record<string, BillingConfig>
-        ) ?? {},
+      billingConfigs?.reduce(
+        (acc, billingConfig) => ({
+          ...acc,
+          [billingConfig.agreementId!]: billingConfig,
+        }),
+        {} as Record<string, BillingConfig>
+      ) ?? {},
     [billingConfigs]
   );
 

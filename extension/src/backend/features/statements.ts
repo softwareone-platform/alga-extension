@@ -98,9 +98,17 @@ export class StatementService {
       {} as Record<string, BillingConfig>,
     );
 
+    if (userType === "client" && !bcs.length) {
+      return { data: [], $meta: { pagination: { total: 0 } } };
+    }
+
     const baseUrl = `/billing/statements?select=audit.created.at,audit.updated.at,seller.address.country,buyer.externalIds,client.externalId,client.externalIds,vendor.externalId,vendor.externalIds,seller.externalId,licensee.externalId,agreement.externalIds,customLedger.externalIds&${optionsToUrl(options)}`;
     const swoUrl =
-      userType === "internal" ? baseUrl : `${baseUrl}&filter(group.buyers)`;
+      userType === "internal"
+        ? baseUrl
+        : `${baseUrl}&or(${Object.keys(billingConfigsByAgreementId)
+            .map((aid) => `eq(agreement.id,%22${aid}%22)`)
+            .join(",")})`;
 
     const {
       data: { data: swoStatements, $meta },
