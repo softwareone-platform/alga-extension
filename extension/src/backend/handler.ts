@@ -44,6 +44,7 @@ export function handler(request: ExecuteRequest): ExecuteResponse {
       {
         error: "Internal Server Error",
         message: "An unexpected error occurred",
+        details: JSON.stringify(error, null, 2),
       },
       { status: 500 },
     );
