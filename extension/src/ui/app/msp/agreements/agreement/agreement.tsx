@@ -238,7 +238,6 @@ function BillingConfigEditor({
       ...billingConfigs!.filter((v) => v.agreementId !== agreementId),
       {
         ...data,
-        serviceId: data.serviceId || "8156fc13-851c-45e1-8147-f1d98ecb7018", // TEMP!!!!
         agreementId,
       },
     ]);
