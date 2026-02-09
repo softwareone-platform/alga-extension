@@ -17,6 +17,7 @@ import { backendClient } from "@/ui/lib/alga";
 import { SWOListOptions } from "@/ui/features/shared";
 import { Statement } from "./types";
 import { PaginationMetadata } from "@swo/mp-api-model/billing";
+import { optionsToUrl } from "@/shared/list-options";
 
 const EMPTY_STATEMENTS: Statement[] = [];
 const EMPTY_CHARGES: Charge[] = [];
@@ -28,9 +29,7 @@ export type StatementListResponse = {
   $meta: ListMetadata;
 };
 
-export type StatementsClientStatementsOptions = SWOListOptions<Statement> & {
-  licenseeId?: string;
-};
+export type StatementsClientStatementsOptions = SWOListOptions<Statement>;
 
 export type StatementsClientChargesOptions = SWOListOptions<Charge>;
 
@@ -38,60 +37,20 @@ export type StatementsClientAttachmentsOptions =
   SWOListOptions<StatementAttachment>;
 
 export const useStatements = (
-  options?: StatementsClientStatementsOptions,
-  agreementIds?: string[],
+  options: StatementsClientStatementsOptions = { offset: 0, limit: 100 },
 ) => {
   const { details } = useExtensionDetails();
   const isConfigured = !!details?.hasToken && !!details?.endpoint;
 
   const { data, ...state } = useQuery({
-    queryKey: ["statements", options, agreementIds],
+    queryKey: ["statements", options],
     queryFn: async () => {
-      const { offset = 0, limit = 1, sort, licenseeId } = options || {};
-
-      const query = new RqlQuery<Statement>();
-      query
-        .expand(
-          "id",
-          "audit",
-          "type",
-          "agreement.id",
-          "agreement.name",
-          "product.id",
-          "product.name",
-          "product.icon",
-          "licensee.id",
-          "licensee.name",
-          "price.currency",
-          "price.totalSP",
-          "status",
-        )
-        .orderBy([sort?.by || "audit.created.at", sort?.order || "desc"])
-        .paging(offset, limit);
-
-      if (sort) query.orderBy([sort.by, sort.order || "asc"]);
-
-      if (licenseeId)
-        query.filter({
-          field: "licensee.id",
-          value: licenseeId,
-          operator: "eq",
-        });
-
-      if (agreementIds)
-        query.filter({
-          field: "agreement.id",
-          value: agreementIds,
-          operator: "in",
-        });
-
       const { data } = await backendClient.get<StatementListResponse>(
-        `/statements?${query.toString()}`,
+        `/statements?${optionsToUrl(options)}`,
       );
-
       return data;
     },
-    enabled: isConfigured && (!agreementIds || agreementIds.length > 0),
+    enabled: isConfigured,
     placeholderData: keepPreviousData,
   });
 
@@ -108,28 +67,7 @@ export const useStatement = (id: string) => {
   const { data: statement, ...state } = useQuery({
     queryKey: ["statements", id],
     queryFn: async () => {
-      const query = new RqlQuery<Statement>();
-
-      query.expand(
-        "id",
-        "audit",
-        "type",
-        "agreement.id",
-        "agreement.name",
-        "product.id",
-        "product.name",
-        "product.icon",
-        "licensee.id",
-        "licensee.name",
-        "price.currency",
-        "price.totalSP",
-        "invoice" as any,
-        "status",
-      );
-
-      const { data } = await backendClient.get<Statement>(
-        `/statements/${id}?${query.toString()}`,
-      );
+      const { data } = await backendClient.get<Statement>(`/statements/${id}`);
 
       return data;
     },

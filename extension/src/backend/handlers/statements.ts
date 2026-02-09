@@ -5,6 +5,7 @@ import type {
 import { jsonResponse } from "../lib";
 import { extension, StatementService } from "../features";
 import { SWOClient } from "../lib/swo/client";
+import { optionsFromUrl } from "@/shared/list-options";
 
 export const statementsHandler = ({
   http: { method, url },
@@ -15,18 +16,20 @@ export const statementsHandler = ({
   }
 
   if (method === "GET") {
-    const [path, rql] = url.split("?");
+    const [path] = url.split("?");
     const id = path.split("/")[2];
 
     const swoClient = new SWOClient(endpoint, token);
     const statementService = new StatementService(swoClient);
 
     if (id) {
-      const data = statementService.getById(id, rql);
+      const data = statementService.getById(id);
       return jsonResponse(data, { status: 200 });
     }
 
-    const data = statementService.getByRQL(rql);
+    const options = optionsFromUrl(url);
+    const data = statementService.list(options);
+
     return jsonResponse(data, { status: 200 });
   }
 

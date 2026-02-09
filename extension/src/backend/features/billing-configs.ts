@@ -38,7 +38,7 @@ const toConfigs = (
 
 export const billingConfigs = {
   getConfigs: (): BillingConfig[] => {
-    const { userType, tenantId } = getUser();
+    const { userType } = getUser();
 
     const { all } = storage.get<{ all: BillingConfig[] }>(
       STORAGE_NAMESPACE,
@@ -47,7 +47,9 @@ export const billingConfigs = {
 
     return userType === "internal"
       ? all
-      : all.filter((v) => v.consumerId === tenantId);
+      : all.filter(
+          (v) => v.consumerId === "eeca06d2-a0f2-42a5-a33d-ecd7db5430d0", // TODO: get from user
+        );
   },
   saveConfigs: (changes: BillingConfigChange[]): BillingConfig[] => {
     const user = getUser();

@@ -15,6 +15,8 @@ import {
   createManualInvoice,
   ManualInvoiceItemInput,
 } from "alga:extension/invoicing";
+import { ListOptions, optionsToUrl } from "@/shared/list-options";
+import { getUser } from "alga:extension/user-v2";
 
 const STATEMENTS_LIMIT = 100;
 const CHARGES_LIMIT = 100;
@@ -51,10 +53,9 @@ export class StatementService {
     this.swoClient = swoClient;
   }
 
-  getById(id: string, rql: string): Statement {
+  getById(id: string): Statement {
     const { data: statement } = this.swoClient.fetch<SWOStatement>(
-      `/billing/statements/${id}`,
-      rql,
+      `/billing/statements/${id}?select=id,audit,type,agreement.id,agreement.name,product.id,product.name,product.icon,licensee.id,licensee.name,price.currency,price.totalSP,status`,
     );
 
     const bcs = billingConfigs.getConfigs();
@@ -86,10 +87,24 @@ export class StatementService {
     } satisfies Statement;
   }
 
-  getByRQL(rql: string): ListResponse<Statement> {
+  list(options: ListOptions): ListResponse<Statement> {
+    const { userType } = getUser();
+    const bcs = billingConfigs.getConfigs();
+    const billingConfigsByAgreementId = bcs.reduce(
+      (acc, config) => {
+        acc[config.agreementId] = config;
+        return acc;
+      },
+      {} as Record<string, BillingConfig>,
+    );
+
+    const baseUrl = `/billing/statements?select=audit.created.at,audit.updated.at,seller.address.country,buyer.externalIds,client.externalId,client.externalIds,vendor.externalId,vendor.externalIds,seller.externalId,licensee.externalId,agreement.externalIds,customLedger.externalIds&${optionsToUrl(options)}`;
+    const swoUrl =
+      userType === "internal" ? baseUrl : `${baseUrl}&filter(group.buyers)`;
+
     const {
       data: { data: swoStatements, $meta },
-    } = this.swoClient.fetch<StatementListResponse>("/billing/statements", rql);
+    } = this.swoClient.fetch<StatementListResponse>(swoUrl);
 
     if (!swoStatements || !$meta) {
       return { data: [], $meta: { pagination: { total: 0 } } };
@@ -102,15 +117,6 @@ export class StatementService {
         return acc;
       },
       {} as Record<string, InvoiceLink>,
-    );
-
-    const bcs = billingConfigs.getConfigs();
-    const billingConfigsByAgreementId = bcs.reduce(
-      (acc, config) => {
-        acc[config.agreementId] = config;
-        return acc;
-      },
-      {} as Record<string, BillingConfig>,
     );
 
     const statements = swoStatements.map((swoStatement) => {
@@ -139,8 +145,7 @@ export class StatementService {
 
   invoiceStatement(statementId: string): Statement {
     const { data: swoStatement } = this.swoClient.fetch<SWOStatement>(
-      `/billing/statements/${statementId}`,
-      "select=id,agreement.id",
+      `/billing/statements/${statementId}?select=id,agreement.id`,
     );
 
     const billingConfig = billingConfigs
@@ -227,8 +232,7 @@ export class StatementService {
       const {
         data: { data: swoStatements, $meta },
       } = this.swoClient.fetch<StatementListResponse>(
-        "/billing/statements",
-        `select=id,audit,agreement.id&filter(group.buyers)&and(gt(audit.created.at,%22${from}T22%3A00%3A00.000Z%22),lt(audit.created.at,%22${to}T23%3A00%3A00.000Z%22),eq(status,%22Issued%22))&order=-audit.created.at&offset=${offset}&limit=${STATEMENTS_LIMIT}`,
+        `/billing/statements?select=id,audit,agreement.id&filter(group.buyers)&and(gt(audit.created.at,%22${from}T22%3A00%3A00.000Z%22),lt(audit.created.at,%22${to}T23%3A00%3A00.000Z%22),eq(status,%22Issued%22))&order=-audit.created.at&offset=${offset}&limit=${STATEMENTS_LIMIT}`,
       );
       if (($meta?.pagination?.total ?? 0) <= offset) {
         break;
@@ -292,8 +296,7 @@ export class StatementService {
       const {
         data: { data, $meta },
       } = this.swoClient.fetch<ChargeListResponse>(
-        `/billing/statements/${statementId}/charges`,
-        `select=id,subscription.id,subscription.name,item.id,item.name,period.start,period.end,quantity,price.SPx1,price.unitSP&offset=${offset}&limit=${CHARGES_LIMIT}`,
+        `/billing/statements/${statementId}/charges?select=id,subscription.id,subscription.name,item.id,item.name,period.start,period.end,quantity,price.SPx1,price.unitSP&offset=${offset}&limit=${CHARGES_LIMIT}`,
       );
 
       charges.push(...(data || []));

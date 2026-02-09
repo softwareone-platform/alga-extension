@@ -101,10 +101,7 @@ export function Statements() {
     [billingConfigs]
   );
 
-  const { statements, pagination, isFetching, isPending } = useStatements(
-    { offset },
-    Object.keys(billingConfigsById)
-  );
+  const { statements, pagination, isFetching, isPending } = useStatements({ offset });
 
   const [columnSizing, setColumnSizing] = useState({});
 

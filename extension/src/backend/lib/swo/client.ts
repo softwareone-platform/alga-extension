@@ -11,14 +11,13 @@ export class SWOClient {
   }
 
   fetch<T>(
-    path: string,
-    rql: string = "",
+    url: string,
     method: "GET" | "POST" = "GET",
-    body?: unknown
+    body?: unknown,
   ): { data: T; headers: { name: string; value: string }[]; status: number } {
     const response = httpFetch({
       method,
-      url: `${this.apiUrl}${path}?${rql}`,
+      url: `${this.apiUrl}${url}`,
       headers: [
         { name: "Authorization", value: `Bearer ${this.token}` },
         { name: "Content-Type", value: "application/json" },
@@ -30,13 +29,13 @@ export class SWOClient {
       try {
         const error = decode<any>(response.body);
         throw new Error(
-          `Failed to fetch from ${path}. SWO API returned ${
+          `Failed to fetch from ${url}. SWO API returned ${
             response.status
-          }:\n\n ${JSON.stringify(error, null, 2)}`
+          }:\n\n ${JSON.stringify(error, null, 2)}`,
         );
       } catch {
         throw new Error(
-          `Failed to fetch from ${path}. SWO API returned ${response.status}`
+          `Failed to fetch from ${url}. SWO API returned ${response.status}`,
         );
       }
     }
@@ -44,10 +43,14 @@ export class SWOClient {
     const decoded = decode<T>(response.body);
     if (!decoded) {
       throw new Error(
-        `Failed to decode response from ${path}. SWO API returned ${response.status}`
+        `Failed to decode response from ${url}. SWO API returned ${response.status}`,
       );
     }
 
-    return { data: decoded, headers: response.headers, status: response.status };
+    return {
+      data: decoded,
+      headers: response.headers,
+      status: response.status,
+    };
   }
 }

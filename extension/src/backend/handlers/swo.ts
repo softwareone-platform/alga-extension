@@ -12,7 +12,6 @@ import {
 } from "../features";
 
 import { decode, jsonResponse } from "../lib";
-import { logInfo } from "alga:extension/logging";
 import { getUser } from "alga:extension/user-v2";
 
 export const filters: Filters = {
@@ -67,11 +66,6 @@ export const swoHandler = (request: ExecuteRequest): ExecuteResponse => {
   const headers = location ? [{ name: "Location", value: location }] : [];
 
   const responseBody = decode(response.body);
-
-  logInfo(`Response from: ${endpoint}${path}`);
-  logInfo(`Response headers: ${JSON.stringify(response.headers)}`);
-  logInfo(`Response status: ${response.status}`);
-  logInfo(`Response body: ${responseBody}`);
 
   if (!responseBody)
     return jsonResponse({}, { status: response.status, headers });
