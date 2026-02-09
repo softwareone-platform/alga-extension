@@ -109,6 +109,8 @@ export function Agreements() {
     agreementsIds
   );
 
+  console.log(agreements, pagination, isFetching, isPending);
+
   const [columnSizing, setColumnSizing] = useState({});
 
   const data = useMemo(() => agreements.map(agreement => ({
