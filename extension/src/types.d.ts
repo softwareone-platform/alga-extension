@@ -47,7 +47,7 @@ declare module "alga:extension/storage" {
   export function deleteEntry(namespace: string, key: string): void;
   export function listEntries(
     namespace: string,
-    cursor?: string | null
+    cursor?: string | null,
   ): StorageEntry[];
 }
 
@@ -70,11 +70,11 @@ declare module "alga:extension/ui-proxy" {
     | "internal";
   export function callRoute(
     route: string,
-    payload?: Uint8Array | null
+    payload?: Uint8Array | null,
   ): Uint8Array; // throws ProxyError
 }
 
-declare module "alga:extension/user" {
+declare module "alga:extension/user-v2" {
   export interface UserData {
     tenantId: string;
     clientName: string;
@@ -122,6 +122,6 @@ declare module "alga:extension/invoicing" {
   }
 
   export function createManualInvoice(
-    input: CreateManualInvoiceInput
+    input: CreateManualInvoiceInput,
   ): CreateManualInvoiceResult;
 }
