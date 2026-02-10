@@ -1,38 +1,32 @@
-import type {
-  ExecuteRequest,
-  ExecuteResponse,
-} from "@alga-psa/extension-runtime";
-import { logError, logWarn } from "alga:extension/logging";
-import { decode, jsonResponse } from "../lib";
+import {
+  BillingConfigsRequestBody,
+  BillingConfigsResponseBody,
+} from "@/shared/billing-configs";
 import { billingConfigs } from "../features";
+import { defineHandler } from "../engine";
 
-export const billingConfigsHandler = ({
-  http: { method, body },
-}: ExecuteRequest): ExecuteResponse => {
-  if (method === "GET") {
-    const configs = billingConfigs.getConfigs();
-    return jsonResponse(configs, { status: 200 });
-  }
+defineHandler<unknown, BillingConfigsResponseBody>(
+  "GET",
+  "/billing-configs",
+  () => {
+    return {
+      status: 200,
+      body: billingConfigs.getConfigs(),
+    };
+  },
+);
 
-  if (method === "POST") {
-    try {
-      const changes = decode(body) || [];
-
-      if (!Array.isArray(changes)) {
-        logWarn(`Invalid request body, expected array`);
-        return jsonResponse(
-          { error: "Invalid request body, expected array" },
-          { status: 400 },
-        );
-      }
-
-      const newConfigs = billingConfigs.saveConfigs(changes);
-      return jsonResponse(newConfigs, { status: 202 });
-    } catch (error) {
-      logError(`Error handling POST request: ${error}`);
-      return jsonResponse({ error: "Internal server error" }, { status: 500 });
+defineHandler<BillingConfigsRequestBody, BillingConfigsResponseBody>(
+  "POST",
+  "/billing-configs",
+  ({ body: changes }) => {
+    if (!changes || !Array.isArray(changes)) {
+      return { status: 400, error: "Invalid request body, expected array" };
     }
-  }
 
-  return jsonResponse({ error: "Method not allowed" }, { status: 405 });
-};
+    return {
+      status: 202,
+      body: billingConfigs.saveConfigs(changes),
+    };
+  },
+);
