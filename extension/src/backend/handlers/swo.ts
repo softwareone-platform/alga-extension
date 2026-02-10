@@ -1,18 +1,8 @@
-import type {
-  ExecuteRequest,
-  ExecuteResponse,
-} from "@alga-psa/extension-runtime";
 import { fetch as httpFetch } from "alga:extension/http";
-import {
-  Filters,
-  UserType,
-  filterResponse,
-  getRule,
-  extension,
-} from "../features";
+import { Filters, UserType, getRule } from "../features";
 
 import { decode, jsonResponse } from "../lib";
-import { getUser } from "alga:extension/user-v2";
+import { defineHandler } from "../handlers";
 
 export const filters: Filters = {
   internal: {
@@ -35,41 +25,33 @@ export const filters: Filters = {
   },
 };
 
-export const swoHandler = (request: ExecuteRequest): ExecuteResponse => {
-  const { userType } = getUser();
-  const { token, endpoint, status } = extension.getDetails();
+defineHandler(
+  "*",
+  "/swo",
+  ({ url, user, method, extensionDetails: { endpoint, token } }) => {
+    const swoUrl = url.replace("/swo", "");
 
-  if (status !== "active") {
-    return jsonResponse({ error: "Extension is not active" }, { status: 422 });
-  }
+    const rule = getRule(swoUrl, user?.userType as UserType, filters);
+    if (!rule)
+      return jsonResponse(
+        { error: "Extension is not configured" },
+        { status: 422 },
+      );
 
-  const path = request.http.url.replace("/swo", "");
+    const response = httpFetch({
+      method,
+      url: `${endpoint}${swoUrl}`,
+      headers: [
+        { name: "Authorization", value: `Bearer ${token}` },
+        { name: "Content-Type", value: "application/json" },
+      ],
+    });
 
-  const rule = getRule(path, userType as UserType, filters);
+    const location = response.headers.find((h) => h.name === "Location")?.value;
+    const headers = location ? [{ name: "Location", value: location }] : [];
 
-  if (!rule)
-    return jsonResponse(
-      { error: "Extension is not configured" },
-      { status: 422 },
-    );
+    const responseBody = decode(response.body);
 
-  const response = httpFetch({
-    method: request.http.method,
-    url: `${endpoint}${path}`,
-    headers: [
-      { name: "Authorization", value: `Bearer ${token}` },
-      { name: "Content-Type", value: "application/json" },
-    ],
-  });
-
-  const location = response.headers.find((h) => h.name === "Location")?.value;
-  const headers = location ? [{ name: "Location", value: location }] : [];
-
-  const responseBody = decode(response.body);
-
-  if (!responseBody)
-    return jsonResponse({}, { status: response.status, headers });
-
-  const body = filterResponse(responseBody, rule);
-  return jsonResponse(body, { status: response.status, headers });
-};
+    return { status: response.status, headers, body: responseBody || {} };
+  },
+);
