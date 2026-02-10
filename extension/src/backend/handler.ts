@@ -30,8 +30,6 @@ export function handler(request: ExecuteRequest): ExecuteResponse {
 
   const abc = fn("/users/123/delete");
 
-  return jsonResponse(abc, { status: 200 });
-
   if (!route) {
     return jsonResponse(
       {

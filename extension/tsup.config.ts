@@ -6,6 +6,7 @@ export default defineConfig({
   format: ["esm"],
   outDir: "dist/js",
   clean: true,
+  noExternal: [/.*/],
   external: [
     "alga:extension/secrets",
     "alga:extension/http",
