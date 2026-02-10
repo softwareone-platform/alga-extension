@@ -1,8 +1,8 @@
+import { storage } from "@/backend/lib/alga";
 import {
   ExtensionDetails,
   ExtensionDetailsChange,
 } from "@/shared/extension-details";
-import { storage } from "../../lib/alga";
 
 const STORAGE_NAMESPACE = "swo.extension";
 const STORAGE_KEY = "details";

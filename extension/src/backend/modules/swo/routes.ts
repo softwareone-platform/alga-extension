@@ -1,8 +1,7 @@
 import { fetch as httpFetch } from "alga:extension/http";
 import { Filters, UserType, getRule } from "./filters";
-
-import { decode, jsonResponse } from "../../lib";
-import { defineHandler } from "../../engine";
+import { decode, jsonResponse } from "@/backend/lib";
+import { defineHandler } from "@/backend/engine";
 
 export const filters: Filters = {
   internal: {

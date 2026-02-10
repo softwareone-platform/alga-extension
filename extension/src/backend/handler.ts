@@ -8,11 +8,11 @@ import type {
 import { jsonResponse } from "./lib";
 import { handleRequest } from "./engine";
 
-import "./modules/swo/swo";
-import "./modules/user/routes";
-import "./modules/extensions/routes";
-import "./modules/billing-configs/routes";
-import "./modules/statements/routes";
+import "./modules/swo";
+import "./modules/user";
+import "./modules/extensions";
+import "./modules/billing-configs";
+import "./modules/statements";
 
 export function handler(request: ExecuteRequest): ExecuteResponse {
   try {

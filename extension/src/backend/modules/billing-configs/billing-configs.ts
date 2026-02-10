@@ -1,5 +1,5 @@
+import { storage } from "@/backend/lib/alga";
 import { BillingConfig, BillingConfigChange } from "@/shared/billing-configs";
-import { storage } from "../../lib/alga";
 import { getUser } from "alga:extension/user-v2";
 
 const STORAGE_NAMESPACE = "swo.billing-configs";

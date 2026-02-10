@@ -1,8 +1,8 @@
-import { SWOClient } from "../../lib/swo/client";
 import { ListResponse, optionsFromUrl } from "@/shared/lists";
-import { defineHandler } from "../../engine";
 import { Statement } from "@/shared/statements";
 import { StatementService } from "./statements";
+import { defineHandler } from "@/backend/engine";
+import { SWOClient } from "@/backend/lib/swo";
 
 defineHandler<{}, Statement>(
   "GET",
