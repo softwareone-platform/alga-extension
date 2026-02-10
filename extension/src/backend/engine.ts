@@ -44,7 +44,7 @@ export type HandlerMethod =
 const hs = new Array<{
   method: HandlerMethod | HandlerMethod[];
   path: string;
-  matcher: MatchFunction<any>;
+  matcher: MatchFunction;
   handler: Handler<any, any>;
   requiresActive: boolean;
 }>();

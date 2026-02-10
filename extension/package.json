@@ -33,7 +33,7 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.18",
     "lucide-react": "^0.544.0",
-    "path-to-regexp": "^8.3.0",
+    "path-to-regexp": "^6.3.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-hook-form": "^7.69.0",
