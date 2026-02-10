@@ -81,7 +81,7 @@ export const handleRequest = ({
     if (route.requiresActiveExtension && extensionDetails.status !== "active") {
       return jsonResponse(
         { error: "Extension is not active" },
-        { status: 422 },
+        { status: 400 },
       );
     }
 
