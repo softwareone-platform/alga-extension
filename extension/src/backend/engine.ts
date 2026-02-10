@@ -7,8 +7,8 @@ import {
 } from "@alga-psa/extension-runtime";
 import { match, MatchFunction } from "path-to-regexp";
 import { decode } from "./lib";
-import { extension } from "./features";
 import { getUser, UserData } from "alga:extension/user-v2";
+import { extension } from "./extension";
 
 export type HandlerRequest<T> = {
   extensionDetails: ExtensionDetails;
