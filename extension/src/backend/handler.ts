@@ -13,7 +13,6 @@ import type {
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
 import { jsonResponse } from "./lib";
-import { match } from "path-to-regexp";
 
 const routes = [
   { path: "/swo", handler: swoHandler },
@@ -25,10 +24,6 @@ const routes = [
 
 export function handler(request: ExecuteRequest): ExecuteResponse {
   const route = routes.find((route) => request.http.url.startsWith(route.path));
-
-  const fn = match("/users{/:id}/delete");
-
-  const abc = fn("/users/123/delete");
 
   if (!route) {
     return jsonResponse(
