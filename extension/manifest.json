@@ -4,13 +4,14 @@
   "version": "0.1.0",
   "runtime": "wasm-js@1",
   "capabilities": [
-    "cap:invoice.manual.create",
     "cap:context.read",
-    "cap:log.emit",
-    "cap:secrets.get",
     "cap:http.fetch",
-    "cap:ui.proxy",
+    "cap:invoice.manual.create",
+    "cap:log.emit",
+    "cap:scheduler.manage",
+    "cap:secrets.get",
     "cap:storage.kv",
+    "cap:ui.proxy",
     "cap:user.read"
   ],
   "ui": {
@@ -20,6 +21,11 @@
       "appMenu": { "label": "SoftwareONE" },
       "clientPortalMenu": { "label": "SoftwareONE" }
     }
+  },
+  "api": {
+    "endpoints": [
+      { "method": "POST", "path": "/statements/auto-invoice", "handler": "dist/main", "schedulable": true }
+    ]
   },
   "assets": ["ui/**/*"]
 }
