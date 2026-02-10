@@ -26,10 +26,9 @@ export const filters: Filters = {
 
 defineHandler(
   "*",
-  "/swo",
+  "/swo/{*swoUrl}",
   ({ url, user, method, extensionDetails: { endpoint, token } }) => {
     const swoUrl = url.replace("/swo", "");
-
     const rule = getRule(swoUrl, user?.userType as UserType, filters);
     if (!rule)
       return jsonResponse(
