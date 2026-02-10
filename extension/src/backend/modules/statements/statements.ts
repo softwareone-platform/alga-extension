@@ -206,7 +206,7 @@ export class StatementService {
     } satisfies Statement;
   }
 
-  invoiceAll(): void {
+  invoiceMany(fromDate: Date, toDate: Date): void {
     const bcs = billingConfigs.getConfigs();
     const billingConfigsByAgreementId = bcs.reduce(
       (acc, config) => {
@@ -225,12 +225,7 @@ export class StatementService {
       {} as Record<string, InvoiceLink>,
     );
 
-    const toDate = new Date();
-    toDate.setDate(toDate.getDate() + 1);
     const to = toDate.toISOString().split("T")[0];
-
-    const fromDate = new Date(toDate);
-    fromDate.setMonth(fromDate.getMonth() - 3);
     const from = fromDate.toISOString().split("T")[0];
 
     let offset = 0;

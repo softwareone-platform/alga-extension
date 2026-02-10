@@ -1,6 +1,6 @@
 {
-  "name": "com.swo.extension",
-  "publisher": "SoftwareONE",
+  "name": "com.swt.extension",
+  "publisher": "SoftwareTWO",
   "version": "0.1.0",
   "runtime": "wasm-js@1",
   "capabilities": [
@@ -18,8 +18,8 @@
     "type": "iframe",
     "entry": "ui/index.html",
     "hooks": {
-      "appMenu": { "label": "SoftwareONE" },
-      "clientPortalMenu": { "label": "SoftwareONE" }
+      "appMenu": { "label": "SoftwareTWO" },
+      "clientPortalMenu": { "label": "SoftwareTWO" }
     }
   },
   "api": {

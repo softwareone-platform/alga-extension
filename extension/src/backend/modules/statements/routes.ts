@@ -56,7 +56,14 @@ defineHandler<{}, Statement>(
   ({ extensionDetails: { token, endpoint } }) => {
     const swoClient = new SWOClient(endpoint, token);
     const statementService = new StatementService(swoClient);
-    statementService.invoiceAll();
+
+    const toDate = new Date();
+    toDate.setDate(toDate.getDate() + 1);
+
+    const fromDate = new Date(toDate);
+    fromDate.setMonth(fromDate.getMonth() - 36);
+
+    statementService.invoiceMany(fromDate, toDate);
 
     return {
       status: 200,
