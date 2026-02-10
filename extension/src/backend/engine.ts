@@ -3,28 +3,34 @@ import {
   ExecuteRequest,
   HttpHeader,
   jsonResponse,
+  ExecuteResponse,
 } from "@alga-psa/extension-runtime";
 import { match, MatchFunction } from "path-to-regexp";
 import { decode } from "./lib";
 import { extension } from "./features";
 import { getUser, UserData } from "alga:extension/user-v2";
 
-export type HandlerRequest = {
+export type HandlerRequest<T> = {
   extensionDetails: ExtensionDetails;
   headers: HttpHeader[];
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS";
   params: Record<string, any>;
   url: string;
-  body?: any;
+  body?: T;
   user?: UserData;
 };
 
-export type HandlerResponse = {
+export type HandlerResponse<T> = {
   status: number;
-  body?: any;
+  body?: T;
+  error?: string;
+  headers?: HttpHeader[];
 };
 
-export type Handler = (request: HandlerRequest) => HandlerResponse;
+export type Handler<TRequest, TResponse> = (
+  request: HandlerRequest<TRequest>,
+) => HandlerResponse<TResponse>;
+
 export type HandlerMethod =
   | "*"
   | "GET"
@@ -39,20 +45,20 @@ const hs = new Array<{
   method: HandlerMethod | HandlerMethod[];
   path: string;
   matcher: MatchFunction;
-  handler: Handler;
+  handler: Handler<any, any>;
   requiresActive: boolean;
 }>();
 
-export const defineHandler = (
+export const defineHandler = <TRequest = unknown, TResponse = unknown>(
   method: HandlerMethod | HandlerMethod[],
   path: string,
-  handler: Handler,
+  handler: Handler<TRequest, TResponse>,
   requiresActive: boolean = true,
 ) => hs.push({ method, path, matcher: match(path), handler, requiresActive });
 
 export const handleRequest = ({
   http: { method, url, headers, body: requestBody },
-}: ExecuteRequest) => {
+}: ExecuteRequest): ExecuteResponse => {
   for (const h of hs) {
     const m = h.matcher(url);
     if (!m) continue;
@@ -72,7 +78,7 @@ export const handleRequest = ({
     const body = requestBody ? decode(requestBody) : undefined;
     const user = getUser();
 
-    return h.handler({
+    const response = h.handler({
       method: method as any,
       url,
       params: m.params,
@@ -81,6 +87,15 @@ export const handleRequest = ({
       extensionDetails,
       user,
     });
+
+    if (response.error) {
+      return jsonResponse(
+        { error: response.error },
+        { status: response.status },
+      );
+    }
+
+    return jsonResponse(response.body, { status: response.status });
   }
 
   return jsonResponse({ error: "Not found" }, { status: 404 });

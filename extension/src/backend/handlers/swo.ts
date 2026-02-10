@@ -2,7 +2,7 @@ import { fetch as httpFetch } from "alga:extension/http";
 import { Filters, UserType, getRule } from "../features";
 
 import { decode, jsonResponse } from "../lib";
-import { defineHandler } from "../handlers";
+import { defineHandler } from "../engine";
 
 export const filters: Filters = {
   internal: {
