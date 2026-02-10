@@ -41,34 +41,44 @@ export type HandlerMethod =
   | "HEAD"
   | "OPTIONS";
 
-const hs = new Array<{
+const routes = new Array<{
   method: HandlerMethod | HandlerMethod[];
   path: string;
   matcher: MatchFunction;
   handler: Handler<any, any>;
-  requiresActive: boolean;
+  requiresActiveExtension: boolean;
 }>();
 
-export const defineHandler = <TRequest = unknown, TResponse = unknown>(
+export const route = <TRequest = unknown, TResponse = unknown>(
   method: HandlerMethod | HandlerMethod[],
   path: string,
   handler: Handler<TRequest, TResponse>,
-  requiresActive: boolean = true,
-) => hs.push({ method, path, matcher: match(path), handler, requiresActive });
+  requiresActiveExtension: boolean = true,
+) =>
+  routes.push({
+    method,
+    path,
+    matcher: match(path),
+    handler,
+    requiresActiveExtension,
+  });
 
 export const handleRequest = ({
   http: { method, url, headers, body: requestBody },
 }: ExecuteRequest): ExecuteResponse => {
-  for (const h of hs) {
-    const m = h.matcher(url);
+  for (const route of routes) {
+    const m = route.matcher(url);
     if (!m) continue;
-    if (Array.isArray(h.method) && !h.method.includes(method as HandlerMethod))
+    if (
+      Array.isArray(route.method) &&
+      !route.method.includes(method as HandlerMethod)
+    )
       continue;
-    if (h.method !== "*" && h.method !== method) continue;
+    if (route.method !== "*" && route.method !== method) continue;
 
     const extensionDetails = extension.getDetails();
 
-    if (h.requiresActive && extensionDetails.status !== "active") {
+    if (route.requiresActiveExtension && extensionDetails.status !== "active") {
       return jsonResponse(
         { error: "Extension is not active" },
         { status: 422 },
@@ -78,7 +88,7 @@ export const handleRequest = ({
     const body = requestBody ? decode(requestBody) : undefined;
     const user = getUser();
 
-    const response = h.handler({
+    const response = route.handler({
       method: method as any,
       url,
       params: m.params,

@@ -1,7 +1,7 @@
 import { fetch as httpFetch } from "alga:extension/http";
 import { Filters, UserType, getRule } from "./filters";
 import { decode, jsonResponse } from "@/backend/lib";
-import { defineHandler } from "@/backend/engine";
+import { route } from "@/backend/routing";
 
 export const filters: Filters = {
   internal: {
@@ -24,7 +24,7 @@ export const filters: Filters = {
   },
 };
 
-defineHandler(
+route(
   "*",
   "/swo/:swoUrl(.*)",
   ({ url, user, method, extensionDetails: { endpoint, token } }) => {

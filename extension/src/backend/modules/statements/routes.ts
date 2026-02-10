@@ -1,10 +1,10 @@
 import { ListResponse, optionsFromUrl } from "@/shared/lists";
 import { Statement } from "@/shared/statements";
 import { StatementService } from "./statements";
-import { defineHandler } from "@/backend/engine";
+import { route } from "@/backend/routing";
 import { SWOClient } from "@/backend/lib/swo";
 
-defineHandler<{}, Statement>(
+route<{}, Statement>(
   "GET",
   "/statements/:id",
   ({ params: { id }, extensionDetails: { token, endpoint } }) => {
@@ -19,7 +19,7 @@ defineHandler<{}, Statement>(
   },
 );
 
-defineHandler<{}, ListResponse<Statement>>(
+route<{}, ListResponse<Statement>>(
   "GET",
   "/statements",
   ({ url, extensionDetails: { token, endpoint } }) => {
@@ -35,7 +35,7 @@ defineHandler<{}, ListResponse<Statement>>(
   },
 );
 
-defineHandler<{}, Statement>(
+route<{}, Statement>(
   "POST",
   "/statements/:id/create-invoice",
   ({ params: { id }, extensionDetails: { token, endpoint } }) => {
@@ -50,7 +50,7 @@ defineHandler<{}, Statement>(
   },
 );
 
-defineHandler<{}, Statement>(
+route<{}, Statement>(
   "POST",
   "/statements/create-invoices",
   ({ extensionDetails: { token, endpoint } }) => {

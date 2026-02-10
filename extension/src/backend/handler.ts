@@ -6,7 +6,7 @@ import type {
   ExecuteResponse,
 } from "@alga-psa/extension-runtime";
 import { jsonResponse } from "./lib";
-import { handleRequest } from "./engine";
+import { handleRequest } from "./routing";
 
 import "./modules/swo";
 import "./modules/user";

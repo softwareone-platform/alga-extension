@@ -2,10 +2,10 @@ import {
   ExtensionDetailsRequestBody,
   ExtensionDetailsResponseBody,
 } from "@/shared/extension-details";
-import { defineHandler } from "@/backend/engine";
+import { route } from "@/backend/routing";
 import { extension } from "@/backend/extension";
 
-defineHandler<unknown, ExtensionDetailsResponseBody>(
+route<unknown, ExtensionDetailsResponseBody>(
   "GET",
   "/extension",
   ({ extensionDetails: { token, ...rest } }) => {
@@ -19,7 +19,7 @@ defineHandler<unknown, ExtensionDetailsResponseBody>(
   },
 );
 
-defineHandler<ExtensionDetailsRequestBody, ExtensionDetailsResponseBody>(
+route<ExtensionDetailsRequestBody, ExtensionDetailsResponseBody>(
   "POST",
   "/extension",
   ({ body: change }) => {
@@ -36,4 +36,5 @@ defineHandler<ExtensionDetailsRequestBody, ExtensionDetailsResponseBody>(
       },
     };
   },
+  false,
 );

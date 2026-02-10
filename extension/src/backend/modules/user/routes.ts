@@ -1,5 +1,5 @@
-import { defineHandler } from "@/backend/engine";
+import { route } from "@/backend/routing";
 
-defineHandler("GET", "/user", ({ user }) => {
+route("GET", "/user", ({ user }) => {
   return { status: 200, body: user };
 });
