@@ -21,7 +21,7 @@ route<{}, Statement>(
 
 route<{}, ListResponse<Statement>>(
   "GET",
-  "/statements",
+  "/statements(.*)",
   ({ url, extensionDetails: { token, endpoint } }) => {
     const options = optionsFromUrl(url);
     const swoClient = new SWOClient(endpoint, token);

@@ -110,5 +110,5 @@ export const handleRequest = ({
     return jsonResponse(response.body, { status: response.status });
   }
 
-  return jsonResponse({ error: "Not found" }, { status: 404 });
+  return jsonResponse({ error: "Route not found" }, { status: 404 });
 };
