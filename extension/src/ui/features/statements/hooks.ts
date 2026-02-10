@@ -17,7 +17,7 @@ import { backendClient } from "@/ui/lib/alga";
 import { SWOListOptions } from "@/ui/features/shared";
 import { Statement } from "./types";
 import { PaginationMetadata } from "@swo/mp-api-model/billing";
-import { optionsToUrl } from "@/shared/list-options";
+import { optionsToUrl } from "@/shared/lists";
 
 const EMPTY_STATEMENTS: Statement[] = [];
 const EMPTY_CHARGES: Charge[] = [];

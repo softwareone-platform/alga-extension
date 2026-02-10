@@ -1,4 +1,4 @@
-import { storage } from "../lib/alga";
+import { storage } from "@/backend/lib/alga";
 import { InvoiceLink } from "@/shared/invoices";
 
 const STORAGE_NAMESPACE = "swo.invoice-links";

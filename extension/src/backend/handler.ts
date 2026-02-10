@@ -8,19 +8,11 @@ import type {
 import { jsonResponse } from "./lib";
 import { handleRequest } from "./engine";
 
-import "./handlers/swo";
-import "./handlers/user";
-import "./handlers/extension";
-import "./handlers/billing-configs";
-import "./handlers/statements";
-
-// const routes = [
-//   { path: "/swo", handler: swoHandler },
-//   { path: "/extension", handler: extensionHandler },
-//   { path: "/billing-configs", handler: billingConfigsHandler },
-//   { path: "/statements", handler: statementsHandler },
-//   { path: "/user", handler: userHandler },
-// ];
+import "./modules/swo/swo";
+import "./modules/user/routes";
+import "./modules/extensions/routes";
+import "./modules/billing-configs/routes";
+import "./modules/statements/routes";
 
 export function handler(request: ExecuteRequest): ExecuteResponse {
   try {

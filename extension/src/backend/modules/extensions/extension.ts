@@ -2,14 +2,14 @@ import {
   ExtensionDetails,
   ExtensionDetailsChange,
 } from "@/shared/extension-details";
-import { storage } from "../lib/alga";
+import { storage } from "../../lib/alga";
 
 const STORAGE_NAMESPACE = "swo.extension";
 const STORAGE_KEY = "details";
 
 const toDetails = (
   change: ExtensionDetailsChange,
-  existing: ExtensionDetails
+  existing: ExtensionDetails,
 ): ExtensionDetails => {
   const isConfigured =
     !!(change.token || existing.token) &&
@@ -54,7 +54,7 @@ export const extension = {
   getDetails: (): ExtensionDetails => {
     const details = storage.get<ExtensionDetails>(
       STORAGE_NAMESPACE,
-      STORAGE_KEY
+      STORAGE_KEY,
     );
     return (
       details || {

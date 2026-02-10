@@ -1,3 +1,5 @@
+import { ListMetadata } from "@swo/mp-api-model";
+
 export type ListOptions = {
   offset?: number;
   limit?: number;
@@ -25,4 +27,9 @@ export const optionsFromUrl = (url: string): ListOptions => {
     offset: offset ? parseInt(offset) : undefined,
     limit: limit ? parseInt(limit) : undefined,
   };
+};
+
+export type ListResponse<T> = {
+  data: T[];
+  $meta: ListMetadata;
 };

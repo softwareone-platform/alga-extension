@@ -2,8 +2,8 @@ import {
   BillingConfigsRequestBody,
   BillingConfigsResponseBody,
 } from "@/shared/billing-configs";
-import { billingConfigs } from "../features";
-import { defineHandler } from "../engine";
+import { defineHandler } from "../../engine";
+import { billingConfigs } from "./billing-configs";
 
 defineHandler<unknown, BillingConfigsResponseBody>(
   "GET",

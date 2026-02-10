@@ -2,8 +2,8 @@ import {
   ExtensionDetailsRequestBody,
   ExtensionDetailsResponseBody,
 } from "@/shared/extension-details";
-import { extension } from "../features";
-import { defineHandler } from "../engine";
+import { defineHandler } from "../../engine";
+import { extension } from "./extension";
 
 defineHandler<unknown, ExtensionDetailsResponseBody>(
   "GET",

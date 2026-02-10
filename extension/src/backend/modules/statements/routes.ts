@@ -1,0 +1,51 @@
+import { SWOClient } from "../../lib/swo/client";
+import { ListResponse, optionsFromUrl } from "@/shared/lists";
+import { defineHandler } from "../../engine";
+import { Statement } from "@/shared/statements";
+import { StatementService } from "./statements";
+
+defineHandler<{}, Statement>(
+  "GET",
+  "/statements/:id",
+  ({ params: { id }, extensionDetails: { token, endpoint } }) => {
+    const swoClient = new SWOClient(endpoint, token);
+    const statementService = new StatementService(swoClient);
+    const body = statementService.getById(id);
+
+    return {
+      status: 200,
+      body,
+    };
+  },
+);
+
+defineHandler<{}, ListResponse<Statement>>(
+  "GET",
+  "/statements",
+  ({ url, extensionDetails: { token, endpoint } }) => {
+    const options = optionsFromUrl(url);
+    const swoClient = new SWOClient(endpoint, token);
+    const statementService = new StatementService(swoClient);
+    const body = statementService.list(options);
+
+    return {
+      status: 200,
+      body,
+    };
+  },
+);
+
+defineHandler<{}, Statement>(
+  "POST",
+  "/statements/:id/create-invoice",
+  ({ params: { id }, extensionDetails: { token, endpoint } }) => {
+    const swoClient = new SWOClient(endpoint, token);
+    const statementService = new StatementService(swoClient);
+    const body = statementService.invoiceStatement(id);
+
+    return {
+      status: 200,
+      body,
+    };
+  },
+);
