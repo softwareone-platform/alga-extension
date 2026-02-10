@@ -49,3 +49,17 @@ defineHandler<{}, Statement>(
     };
   },
 );
+
+defineHandler<{}, Statement>(
+  "POST",
+  "/statements/create-invoices",
+  ({ extensionDetails: { token, endpoint } }) => {
+    const swoClient = new SWOClient(endpoint, token);
+    const statementService = new StatementService(swoClient);
+    statementService.invoiceAll();
+
+    return {
+      status: 200,
+    };
+  },
+);
