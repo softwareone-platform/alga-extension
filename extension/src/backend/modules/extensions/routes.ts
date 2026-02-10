@@ -17,6 +17,7 @@ route<unknown, ExtensionDetailsResponseBody>(
       },
     };
   },
+  "*",
 );
 
 route<ExtensionDetailsRequestBody, ExtensionDetailsResponseBody>(
@@ -36,5 +37,5 @@ route<ExtensionDetailsRequestBody, ExtensionDetailsResponseBody>(
       },
     };
   },
-  false,
+  "*",
 );

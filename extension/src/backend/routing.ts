@@ -1,4 +1,4 @@
-import { ExtensionDetails } from "@/shared/extension-details";
+import { ExtensionDetails, ExtensionStatus } from "@/shared/extension-details";
 import {
   ExecuteRequest,
   HttpHeader,
@@ -31,7 +31,7 @@ export type Handler<TRequest, TResponse> = (
   request: HandlerRequest<TRequest>,
 ) => HandlerResponse<TResponse>;
 
-export type HandlerMethod =
+export type HandledMethod =
   | "*"
   | "GET"
   | "POST"
@@ -41,26 +41,28 @@ export type HandlerMethod =
   | "HEAD"
   | "OPTIONS";
 
+export type HandledStatus = "*" | ExtensionStatus;
+
 const routes = new Array<{
-  method: HandlerMethod | HandlerMethod[];
+  method: HandledMethod | HandledMethod[];
+  status: HandledStatus;
   path: string;
   matcher: MatchFunction;
   handler: Handler<any, any>;
-  requiresActiveExtension: boolean;
 }>();
 
 export const route = <TRequest = unknown, TResponse = unknown>(
-  method: HandlerMethod | HandlerMethod[],
+  method: HandledMethod | HandledMethod[],
   path: string,
   handler: Handler<TRequest, TResponse>,
-  requiresActiveExtension: boolean = true,
+  status: HandledStatus = "active",
 ) =>
   routes.push({
     method,
+    status,
     path,
     matcher: match(path),
     handler,
-    requiresActiveExtension,
   });
 
 export const handleRequest = ({
@@ -71,14 +73,14 @@ export const handleRequest = ({
     if (!m) continue;
     if (
       Array.isArray(route.method) &&
-      !route.method.includes(method as HandlerMethod)
+      !route.method.includes(method as HandledMethod)
     )
       continue;
     if (route.method !== "*" && route.method !== method) continue;
 
     const extensionDetails = extension.getDetails();
 
-    if (route.requiresActiveExtension && extensionDetails.status !== "active") {
+    if (route.status !== "*" && extensionDetails.status !== route.status) {
       return jsonResponse(
         { error: "Extension is not active" },
         { status: 400 },

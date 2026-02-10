@@ -6,5 +6,5 @@ route(
   ({ user }) => {
     return { status: 200, body: user };
   },
-  false,
+  "*",
 );
