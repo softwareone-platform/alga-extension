@@ -77,6 +77,7 @@ declare module "alga:extension/ui-proxy" {
 declare module "alga:extension/user-v2" {
   export interface UserData {
     tenantId: string;
+    clientId?: string;
     clientName: string;
     userId: string;
     userEmail: string;
