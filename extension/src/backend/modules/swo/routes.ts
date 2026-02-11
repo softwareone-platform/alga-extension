@@ -26,7 +26,7 @@ export const filters: Filters = {
 
 route(
   "*",
-  "/swo/:swoUrl(.*)",
+  "/swo/:swoPath(.*)",
   ({ url, user, method, extensionDetails: { endpoint, token } }) => {
     const swoUrl = url.replace("/swo", "");
     const rule = getRule(swoUrl, user?.userType as UserType, filters);
