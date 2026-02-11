@@ -24,8 +24,7 @@
   },
   "api": {
     "endpoints": [
-      { "method": "POST", "path": "/statements/create-invoices", "handler": "dist/main", "schedulable": true },
-      { "method": "GET", "path": "/user", "handler": "dist/main", "schedulable": false }
+      { "method": "POST", "path": "/statements/create-invoices", "handler": "dist/main", "schedulable": true }
     ]
   },
   "assets": ["ui/**/*"]

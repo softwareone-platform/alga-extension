@@ -44,7 +44,7 @@ const EXT_ID = resolveExtensionId(new URLSearchParams(window.location.search));
 const hostOrigin = resolveHostOrigin();
 
 export const backendClient = axios.create({
-  baseURL: new URL(`/api/ext/${EXT_ID}`, hostOrigin).toString(),
+  baseURL: new URL(`/api/ext-proxy/${EXT_ID}`, hostOrigin).toString(),
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",

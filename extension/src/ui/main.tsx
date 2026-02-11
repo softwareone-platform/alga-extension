@@ -10,20 +10,26 @@ import { clientRoutes } from "./app/client";
 import "./ready-inject.js";
 import "./index.css";
 import "@alga-psa/ui-kit/theme.css";
+
 import { backendClient } from "./lib/alga/url.js";
 import { UserResponseBody } from "@/shared/user";
-import { IframeBridge } from "@alga-psa/extension-iframe-sdk";
+
+// import { IframeBridge } from "@alga-psa/extension-iframe-sdk";
+
+// const bridge = new IframeBridge({ devAllowWildcard: true });
+
+// export async function proxyGet<T>(route: string): Promise<T> {
+//   const bytes = await bridge.uiProxy.callRoute(route);
+//   const text = new TextDecoder().decode(bytes);
+//   return text ? JSON.parse(text) : ({} as T);
+// }
+
+// proxyGet<UserResponseBody>("/user").then(({ userType }) => {
+//   console.log("From backend", userType);
+// });
 
 
-const bridge = new IframeBridge({ devAllowWildcard: true });
-
-export async function proxyGet<T>(route: string): Promise<T> {
-  const bytes = await bridge.uiProxy.callRoute(route);
-  const text = new TextDecoder().decode(bytes);
-  return text ? JSON.parse(text) : ({} as T);
-}
-
-proxyGet<UserResponseBody>("/user").then(({ userType }) => {
+backendClient.get<UserResponseBody>("/user").then(({ data: { userType } }) => {
   console.log("From proxy", userType);
   const router = createBrowserRouter([
     {
@@ -52,8 +58,4 @@ proxyGet<UserResponseBody>("/user").then(({ userType }) => {
       </QueryClientProvider>
     </StrictMode>
   );
-});
-
-backendClient.get<UserResponseBody>("/user").then(({ data: { userType } }) => {
-  console.log("From backend", userType);
 });
