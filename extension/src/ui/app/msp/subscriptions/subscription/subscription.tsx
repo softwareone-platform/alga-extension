@@ -330,10 +330,16 @@ export function Subscription() {
 
   const { status } = subscription;
 
-  const canManage = agreement?.status === "Active" && subscription.lines && subscription.lines.length > 0;
+  let canManage = agreement?.status === "Active" && subscription.lines && subscription.lines.length > 0;
+  canManage = true;
 
   return (
     <>
+      <Manage
+        subscription={subscription}
+        isOpen={isManageOpen}
+        onClose={() => setIsManageOpen(false)}
+      />
       <div className="w-full flex flex-col p-6 gap-8">
         <header className="w-full flex justify-between gap-10">
           <div className="flex items-center gap-6">
@@ -341,7 +347,9 @@ export function Subscription() {
             {!!status && <SubscriptionStatusBadge status={status} />}
           </div>
           <div className="flex items-center gap-6">
-            <Button onClick={() => setIsManageOpen(true)}>Manage</Button>
+            {canManage && (
+              <Button onClick={() => setIsManageOpen(true)}>Manage</Button>
+            )}
             <LinkButton
               variant="white"
               href={`${SWO_PORTAL_URL}/commerce/subscriptions/${id}`}
@@ -353,13 +361,6 @@ export function Subscription() {
           </div>
         </header>
         <SubscriptionSummary id={id!} />
-        {canManage && (
-          <Manage
-            subscription={subscription}
-            isOpen={isManageOpen}
-            onClose={() => setIsManageOpen(false)}
-          />
-        )}
         <Tabs>
           <NavLink to="items">
             {({ isActive }) => <Tabs.Tab isActive={isActive}>Items</Tabs.Tab>}
