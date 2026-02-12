@@ -12,7 +12,7 @@ export type ButtonProps = HeadlessButtonProps & {
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = "primary", className, ...props }, ref) => {
+  ({ variant = "primary", className, disabled, ...props }, ref) => {
     return (
       <HeadlessButton
         ref={ref}
@@ -23,9 +23,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
               variant === "primary",
             "border border-border-400 bg-white text-text-700 hover:bg-primary-50 hover:text-primary-700":
               variant === "white",
+            "opacity-50 cursor-not-allowed": disabled,
           },
           className
         )}
+        disabled={disabled}
         {...props}
       />
     );

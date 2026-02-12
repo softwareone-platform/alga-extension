@@ -51,14 +51,12 @@ export function SubscriptionManage({
   });
 
   const onSubmit = async (data: ManageFormValues) => {
-    console.log("New quantities:", data.lines);
-
-    const ord = await updateSubscriptionAsync(Object.entries(data.lines).map(([id, quantity]) => ({
+    await updateSubscriptionAsync(Object.entries(data.lines).map(([id, quantity]) => ({
       id,
       quantity,
     })));
 
-    console.log("Order:", ord);
+    onClose();
   };
 
   const columns: ColumnDef<AgreementLine>[] = useMemo(
