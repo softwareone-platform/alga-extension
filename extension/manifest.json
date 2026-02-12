@@ -1,7 +1,7 @@
 {
   "name": "com.swt.extension",
   "publisher": "SoftwareTWO",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "runtime": "wasm-js@1",
   "capabilities": [
     "cap:context.read",
