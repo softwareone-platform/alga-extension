@@ -1,5 +1,5 @@
 import { chromium } from 'playwright';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -27,12 +27,18 @@ async function deploy() {
     process.exit(1);
   }
 
-  // Read manifest content
+  // Bump manifest version (patch)
   if (!existsSync(CONFIG.manifestPath)) {
     console.error(`[deploy] Manifest not found at ${CONFIG.manifestPath}`);
     process.exit(1);
   }
-  const manifestContent = readFileSync(CONFIG.manifestPath, 'utf8');
+  const manifest = JSON.parse(readFileSync(CONFIG.manifestPath, 'utf8'));
+  const versionParts = manifest.version.split('.');
+  versionParts[versionParts.length - 1] = String(Number(versionParts[versionParts.length - 1]) + 1);
+  manifest.version = versionParts.join('.');
+  writeFileSync(CONFIG.manifestPath, JSON.stringify(manifest, null, 2) + '\n', 'utf8');
+  console.log(`[deploy] Bumped version to ${manifest.version}`);
+  const manifestContent = JSON.stringify(manifest, null, 2);
 
   console.log('[deploy] Launching browser...');
   const browser = await chromium.launch({ headless: false });

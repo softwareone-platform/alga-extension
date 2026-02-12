@@ -1,7 +1,7 @@
 {
   "name": "com.swt.extension",
   "publisher": "SoftwareTWO",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "runtime": "wasm-js@1",
   "capabilities": [
     "cap:context.read",
@@ -18,14 +18,25 @@
     "type": "iframe",
     "entry": "ui/index.html",
     "hooks": {
-      "appMenu": { "label": "SoftwareTWO" },
-      "clientPortalMenu": { "label": "SoftwareTWO" }
+      "appMenu": {
+        "label": "SoftwareTWO"
+      },
+      "clientPortalMenu": {
+        "label": "SoftwareTWO"
+      }
     }
   },
   "api": {
     "endpoints": [
-      { "method": "POST", "path": "/statements/create-invoices", "handler": "dist/main", "schedulable": true }
+      {
+        "method": "POST",
+        "path": "/statements/create-invoices",
+        "handler": "dist/main",
+        "schedulable": true
+      }
     ]
   },
-  "assets": ["ui/**/*"]
+  "assets": [
+    "ui/**/*"
+  ]
 }
