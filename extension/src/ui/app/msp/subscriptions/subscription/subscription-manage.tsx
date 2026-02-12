@@ -14,6 +14,7 @@ import {
 import { withMarkup } from "@features/markup";
 import { useForm } from "react-hook-form";
 import type { Subscription, AgreementLine } from "@swo/mp-api-model";
+import { useSubscriptionUpdate } from "@/ui/features/subscriptions";
 
 type ManageFormValues = {
   lines: Record<string, number>;
@@ -32,6 +33,8 @@ export function SubscriptionManage({
     subscription.agreement?.id!
   );
 
+  const { updateSubscriptionAsync, isPending } = useSubscriptionUpdate(subscription);
+
   const items = subscription.lines || [];
 
   const defaultValues = useMemo<ManageFormValues>(
@@ -47,8 +50,15 @@ export function SubscriptionManage({
     defaultValues,
   });
 
-  const onSubmit = (data: ManageFormValues) => {
+  const onSubmit = async (data: ManageFormValues) => {
     console.log("New quantities:", data.lines);
+
+    const ord = await updateSubscriptionAsync(Object.entries(data.lines).map(([id, quantity]) => ({
+      id,
+      quantity,
+    })));
+
+    console.log("Order:", ord);
   };
 
   const columns: ColumnDef<AgreementLine>[] = useMemo(
@@ -213,7 +223,7 @@ export function SubscriptionManage({
           </TableContainer>
 
           <div className="flex justify-end gap-6 mt-4">
-            <Button type="submit">Place Order</Button>
+            <Button type="submit" disabled={isPending}>{isPending ? "Placing order..." : "Place Order"}</Button>
           </div>
         </form>
       </DialogPanel>

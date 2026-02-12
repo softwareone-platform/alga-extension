@@ -1,4 +1,4 @@
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { useQuery, keepPreviousData, useMutation } from "@tanstack/react-query";
 import { useExtensionDetails } from "@features/extension";
 import { RqlQuery } from "@swo/rql-client";
 import {
@@ -6,6 +6,7 @@ import {
   SubscriptionListResponse,
   Order,
   OrderListResponse,
+  AgreementLine,
 } from "@swo/mp-api-model";
 import { backendClient } from "@/ui/lib/alga";
 import { SWOListOptions } from "@/ui/features/shared";
@@ -91,9 +92,6 @@ export const useSubscriptions = (
 };
 
 export const useSubscription = (id: string) => {
-  const { details } = useExtensionDetails();
-  const isConfigured = !!details?.hasToken && !!details?.endpoint;
-
   const { data: subscription, ...state } = useQuery({
     queryKey: ["subscriptions", id],
     queryFn: async () => {
@@ -137,7 +135,7 @@ export const useSubscription = (id: string) => {
       );
       return data;
     },
-    enabled: isConfigured && !!id,
+    enabled: !!id,
   });
 
   return { subscription, ...state };
@@ -147,9 +145,6 @@ export const useSubscriptionOrders = (
   id: string,
   options?: SubscriptionsClientOrdersOptions,
 ) => {
-  const { details } = useExtensionDetails();
-  const isConfigured = !!details?.hasToken && !!details?.endpoint;
-
   const { data, ...state } = useQuery({
     queryKey: ["subscriptions", id, "orders", options],
     queryFn: async () => {
@@ -190,7 +185,7 @@ export const useSubscriptionOrders = (
       );
       return data;
     },
-    enabled: isConfigured && !!id,
+    enabled: !!id,
     placeholderData: keepPreviousData,
   });
 
@@ -198,4 +193,45 @@ export const useSubscriptionOrders = (
   const pagination = data?.$meta?.pagination || EMPTY_PAGINATION;
 
   return { orders, pagination, ...state };
+};
+
+export const useSubscriptionUpdate = (subscription: Subscription) => {
+  const {
+    mutate: updateSubscription,
+    mutateAsync: updateSubscriptionAsync,
+    ...state
+  } = useMutation({
+    mutationFn: async (lines: AgreementLine[]) => {
+      if (!subscription.agreement?.id || !subscription.id) {
+        throw new Error("Subscription or agreement not found");
+      }
+
+      const {
+        data: { id: orderId },
+      } = await backendClient.post<Order>(`/swo/commerce/orders`, {
+        status: "Draft",
+        type: "Change",
+        agreement: {
+          id: subscription.agreement.id,
+        },
+        subscriptions: [
+          {
+            id: subscription.id,
+          },
+        ],
+      });
+
+      if (!orderId) {
+        throw new Error("Failed to create order");
+      }
+
+      const ord = await backendClient.put<Order>(`/swo/commerce/orders`, {
+        lines,
+      });
+
+      return ord;
+    },
+  });
+
+  return { updateSubscription, updateSubscriptionAsync, ...state };
 };
