@@ -225,11 +225,26 @@ export const useSubscriptionUpdate = (subscription: Subscription) => {
         throw new Error("Failed to create order");
       }
 
-      const ord = await backendClient.put<Order>(`/swo/commerce/orders`, {
+      const {
+        data: { lines: newLines },
+      } = await backendClient.put<Order>(`/swo/commerce/orders/${orderId}`, {
         lines,
       });
 
-      return ord;
+      if (!newLines) {
+        throw new Error("Failed to update order");
+      }
+
+      //https://portal.s1.live/public/v1/commerce/orders/ORD-8150-9866-7724/process
+
+      const { data: order } = await backendClient.post<Order>(
+        `/swo/commerce/orders/${orderId}/process`,
+        {
+          lines: newLines,
+        },
+      );
+
+      return order;
     },
   });
 

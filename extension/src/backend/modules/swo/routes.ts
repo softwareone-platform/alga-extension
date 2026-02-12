@@ -1,6 +1,6 @@
 import { fetch as httpFetch } from "alga:extension/http";
 import { Filters, UserType, getRule } from "./filters";
-import { decode, jsonResponse } from "@/backend/lib";
+import { decode, encode, jsonResponse } from "@/backend/lib";
 import { route } from "@/backend/routing";
 
 export const filters: Filters = {
@@ -27,7 +27,7 @@ export const filters: Filters = {
 route(
   "*",
   "/swo/:swoPath(.*)",
-  ({ url, user, method, extensionDetails: { endpoint, token } }) => {
+  ({ url, user, method, body, extensionDetails: { endpoint, token } }) => {
     const swoUrl = url.replace("/swo", "");
     const rule = getRule(swoUrl, user?.userType as UserType, filters);
     if (!rule)
@@ -43,6 +43,7 @@ route(
         { name: "Authorization", value: `Bearer ${token}` },
         { name: "Content-Type", value: "application/json" },
       ],
+      body: body ? encode(body) : undefined,
     });
 
     const location = response.headers.find((h) => h.name === "Location")?.value;
