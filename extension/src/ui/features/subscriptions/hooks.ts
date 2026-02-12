@@ -1,4 +1,9 @@
-import { useQuery, keepPreviousData, useMutation } from "@tanstack/react-query";
+import {
+  useQuery,
+  useQueryClient,
+  keepPreviousData,
+  useMutation,
+} from "@tanstack/react-query";
 import { useExtensionDetails } from "@features/extension";
 import { RqlQuery } from "@swo/rql-client";
 import {
@@ -196,6 +201,7 @@ export const useSubscriptionOrders = (
 };
 
 export const useSubscriptionUpdate = (subscription: Subscription) => {
+  const queryClient = useQueryClient();
   const {
     mutate: updateSubscription,
     mutateAsync: updateSubscriptionAsync,
@@ -245,6 +251,10 @@ export const useSubscriptionUpdate = (subscription: Subscription) => {
       );
 
       return order;
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["subscriptions"] });
+      queryClient.invalidateQueries({ queryKey: ["agreements"] });
     },
   });
 
