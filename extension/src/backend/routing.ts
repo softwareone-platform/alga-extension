@@ -88,7 +88,12 @@ export const handleRequest = ({
     }
 
     const body = requestBody ? decode(requestBody) : undefined;
-    const user = getUser();
+
+    // TODO: Temporary fix. getUser will throw an error if the user is not defined
+    let user: UserData | undefined;
+    try {
+      user = getUser();
+    } catch {}
 
     const response = route.handler({
       method: method as any,

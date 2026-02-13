@@ -14,13 +14,14 @@ import {
 import { withMarkup } from "@features/markup";
 import { useForm } from "react-hook-form";
 import type { Subscription, AgreementLine } from "@swo/mp-api-model";
-import { useSubscriptionUpdate } from "@/ui/features/subscriptions";
+import { useSubscriptionUpdate } from "./hooks";
+import { useAgreement } from "../agreements";
 
 type ManageFormValues = {
   lines: Record<string, number>;
 };
 
-export function SubscriptionManage({
+export function SubscriptionManagementDialog({
   isOpen,
   onClose,
   subscription,
@@ -226,5 +227,29 @@ export function SubscriptionManage({
         </form>
       </DialogPanel>
     </Dialog>
+  );
+}
+
+export function SubscriptionManagement({
+  subscription,
+}: {
+  subscription: Subscription;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const { agreement } = useAgreement(subscription?.agreement?.id!);
+
+  const canManage = agreement?.status === "Active" && subscription.lines && subscription.lines.length > 0;
+
+  if (!canManage) return <></>;
+
+  return (
+    <>
+      <Button onClick={() => setIsOpen(true)}>Manage</Button>
+      <SubscriptionManagementDialog
+        subscription={subscription}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+      />
+    </>
   );
 }

@@ -1,9 +1,9 @@
-import { Button, LinkButton } from "@ui/button";
+import { LinkButton } from "@ui/button";
 import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
   BillingConfigStatusBadge,
   useBillingConfigByAgreement,
@@ -18,8 +18,7 @@ import { useConsumer } from "@features/consumers";
 import { Link } from "@/ui/ui/link";
 import { SWO_PORTAL_URL } from "@/ui/config";
 import { Loader } from "@/ui/ui";
-import { useAgreement } from "@/ui/features/agreements";
-import { SubscriptionManage } from "./subscription-manage";
+import { SubscriptionManagement } from "@/ui/features/subscriptions";
 
 function SubscriptionSummary({ id }: { id: string }) {
   const { subscription, isPending: isSubscriptionPending } =
@@ -135,8 +134,6 @@ function SubscriptionSummary({ id }: { id: string }) {
 export function Subscription() {
   const { id } = useParams<{ id: string }>();
   const { subscription, isPending } = useSubscription(id!);
-  const { agreement } = useAgreement(subscription?.agreement?.id!);
-  const [isManageOpen, setIsManageOpen] = useState(false);
 
   if (isPending) return <div>Loading...</div>;
 
@@ -144,15 +141,8 @@ export function Subscription() {
 
   const { status } = subscription;
 
-  const canManage = agreement?.status === "Active" && subscription.lines && subscription.lines.length > 0;
-
   return (
     <>
-      <SubscriptionManage
-        subscription={subscription}
-        isOpen={isManageOpen}
-        onClose={() => setIsManageOpen(false)}
-      />
       <div className="w-full flex flex-col p-6 gap-8">
         <header className="w-full flex justify-between gap-10">
           <div className="flex items-center gap-6">
@@ -160,9 +150,7 @@ export function Subscription() {
             {!!status && <SubscriptionStatusBadge status={status} />}
           </div>
           <div className="flex items-center gap-6">
-            {canManage && (
-              <Button onClick={() => setIsManageOpen(true)}>Manage</Button>
-            )}
+            <SubscriptionManagement subscription={subscription} />
             <LinkButton
               variant="white"
               href={`${SWO_PORTAL_URL}/commerce/subscriptions/${id}`}
