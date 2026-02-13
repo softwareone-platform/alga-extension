@@ -5,17 +5,37 @@ import {
 import { billingConfigs } from "./billing-configs";
 import { route } from "@/backend/routing";
 
-route<unknown, BillingConfigsResponseBody>("GET", "/billing-configs", () => {
-  return {
-    status: 200,
-    body: billingConfigs.getConfigs(),
-  };
-});
+route<unknown, BillingConfigsResponseBody>(
+  "GET",
+  "/billing-configs",
+  ({ user }) => {
+    if (!user?.userType) {
+      return { status: 403, error: "Unauthorized" };
+    }
+
+    const all = billingConfigs.getConfigs();
+
+    if (user?.userType === "internal")
+      return {
+        status: 200,
+        body: all,
+      };
+
+    return {
+      status: 200,
+      body: all.filter((v) => v.consumerId === user.clientId),
+    };
+  },
+);
 
 route<BillingConfigsRequestBody, BillingConfigsResponseBody>(
   "POST",
   "/billing-configs",
-  ({ body: changes }) => {
+  ({ body: changes, user }) => {
+    if (user?.userType !== "internal") {
+      return { status: 403, error: "Unauthorized" };
+    }
+
     if (!changes || !Array.isArray(changes)) {
       return { status: 400, error: "Invalid request body, expected array" };
     }

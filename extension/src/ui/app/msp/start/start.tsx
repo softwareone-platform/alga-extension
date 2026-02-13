@@ -14,7 +14,6 @@ import { Badge } from "@alga-psa/ui-kit";
 import { ActionItem, Actions } from "@ui/actions";
 import { Input, Textarea } from "@ui/input";
 import { ExtensionStatus } from "@/shared/extension-details";
-import { backendClient } from "@/ui/lib/alga";
 
 function StatusBadge({
   status,
@@ -222,15 +221,6 @@ export function Start() {
           <SettingsActions />
         </div>
       </header>
-
-      <button onClick={() => {
-        backendClient.post("/statements/create-invoices").then(() => {
-          console.log("Invoiced all statements");
-        });
-
-      }}>
-        SCHEDULED INVOICING
-      </button>
 
       {error && <ErrorCard>{error.message}</ErrorCard>}
 

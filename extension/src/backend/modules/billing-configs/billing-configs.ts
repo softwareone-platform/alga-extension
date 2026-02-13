@@ -1,6 +1,5 @@
 import { storage } from "@/backend/lib/alga";
 import { BillingConfig, BillingConfigChange } from "@/shared/billing-configs";
-import { getUser } from "alga:extension/user-v2";
 
 const STORAGE_NAMESPACE = "swo.billing-configs";
 const STORAGE_KEY = "billing-configs";
@@ -38,24 +37,13 @@ const toConfigs = (
 
 export const billingConfigs = {
   getConfigs: (): BillingConfig[] => {
-    const { userType, clientId } = getUser();
-
     const { all } = storage.get<{ all: BillingConfig[] }>(
       STORAGE_NAMESPACE,
       STORAGE_KEY,
     ) || { all: [] };
-
-    return userType === "internal"
-      ? all
-      : all.filter((v) => v.consumerId === clientId);
+    return all;
   },
   saveConfigs: (changes: BillingConfigChange[]): BillingConfig[] => {
-    const user = getUser();
-
-    if (user.userType !== "internal") {
-      throw new Error("Unauthorized");
-    }
-
     const existing = billingConfigs.getConfigs();
     const configs = toConfigs(changes, existing);
 
