@@ -13,27 +13,63 @@ import {
 } from "@features/billing-config";
 import { withMarkup } from "@features/markup";
 import { useForm } from "react-hook-form";
-import type { Subscription, AgreementLine } from "@swo/mp-api-model";
+import type { Subscription, AgreementLine, Order } from "@swo/mp-api-model";
 import { useSubscriptionUpdate } from "./hooks";
 import { useAgreement } from "../agreements";
+import { OrderStatusBadge } from "@features/orders/status-badge";
+import { useNavigate } from "react-router";
 
 type ManageFormValues = {
   lines: Record<string, number>;
 };
 
-export function SubscriptionManagementDialog({
-  isOpen,
+function OrderConfirmation({
+  order,
   onClose,
-  subscription,
 }: {
-  isOpen: boolean;
+  order: Order;
   onClose: () => void;
-  subscription: Subscription;
 }) {
-  const { billingConfig } = useBillingConfigByAgreement(
-    subscription.agreement?.id!
-  );
+  const navigate = useNavigate();
 
+  const onViewOrder = () => {
+    navigate(`/orders/${order.id}`);
+    onClose();
+  };
+
+  return (
+    <>
+      <p className="text-sm text-text-700">
+        Your order has been confirmed. Below is the order number. You can click to see more
+        details or continue to the orders page.
+      </p>
+      <div className="mt-4">
+        <p className="text-sm font-medium text-gray-500">Order</p>
+        <div className="flex items-center gap-3 mt-1">
+          <span className="text-base font-medium">{order.id}</span>
+          <OrderStatusBadge status={order.status} />
+        </div>
+      </div>
+      <div className="flex justify-end gap-3 mt-6">
+        <Button variant="white" onClick={onClose}>Close</Button>
+        <Button onClick={onViewOrder}>
+          View order
+        </Button>
+      </div>
+    </>
+  );
+}
+
+function SubscriptionManagementForm({
+  subscription,
+  onClose,
+  onSuccess,
+}: {
+  subscription: Subscription;
+  onClose: () => void;
+  onSuccess: (order: Order) => void;
+}) {
+  const { billingConfig } = useBillingConfigByAgreement(subscription.agreement?.id!);
   const { updateSubscriptionAsync, isPending } = useSubscriptionUpdate(subscription);
 
   const items = subscription.lines || [];
@@ -52,12 +88,21 @@ export function SubscriptionManagementDialog({
   });
 
   const onSubmit = async (data: ManageFormValues) => {
-    await updateSubscriptionAsync(Object.entries(data.lines).map(([id, quantity]) => ({
+    const hasChanges = items.some(
+      (line) => data.lines[line.id!] !== defaultValues.lines[line.id!]
+    );
+
+    if (!hasChanges) {
+      onClose();
+      return;
+    }
+
+    const order = await updateSubscriptionAsync(Object.entries(data.lines).map(([id, quantity]) => ({
       id,
       quantity,
     })));
 
-    onClose();
+    onSuccess(order);
   };
 
   const columns: ColumnDef<AgreementLine>[] = useMemo(
@@ -160,76 +205,107 @@ export function SubscriptionManagementDialog({
   return (
     <>
       {isPending && <div className="fixed inset-0 z-[9999] bg-transparent" />}
-      <Dialog open={isOpen} onClose={onClose}>
-        <DialogPanel className="w-[90vw]">
-          <DialogTitle onClose={onClose}>Manage Subscription</DialogTitle>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <TableContainer>
-              <div className="w-full overflow-x-scroll relative">
-                <table
-                  style={{ width: table.getTotalSize() }}
-                  className="relative table-fixed"
-                >
-                  <thead>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                      <tr key={headerGroup.id} className="border-border-200 border-b">
-                        {headerGroup.headers.map((header) => (
-                          <th
-                            key={header.id}
-                            style={{ width: header.getSize() }}
-                            className="relative py-3 px-6 text-left text-xs font-medium tracking-wider"
-                          >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                            <div
-                              onMouseDown={header.getResizeHandler()}
-                              onTouchStart={header.getResizeHandler()}
-                              className="absolute right-0 top-0 h-full w-2 cursor-col-resize"
-                              style={{
-                                background: header.column.getIsResizing()
-                                  ? "#2563eb"
-                                  : "transparent",
-                              }}
-                            />
-                          </th>
-                        ))}
-                      </tr>
-                    ))}
-                  </thead>
-                  <tbody>
-                    {table.getRowModel().rows.map((row) => (
-                      <tr
-                        key={row.id}
-                        className="border-border-200 border-b text-sm text-text-700"
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <TableContainer>
+          <div className="w-full overflow-x-scroll relative">
+            <table
+              style={{ width: table.getTotalSize() }}
+              className="relative table-fixed"
+            >
+              <thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id} className="border-border-200 border-b">
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        style={{ width: header.getSize() }}
+                        className="relative py-3 px-6 text-left text-xs font-medium tracking-wider"
                       >
-                        {row.getVisibleCells().map((cell) => (
-                          <td
-                            key={cell.id}
-                            style={{ width: cell.column.getSize() }}
-                            className="py-3 px-6 items-center"
-                          >
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </td>
-                        ))}
-                      </tr>
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        <div
+                          onMouseDown={header.getResizeHandler()}
+                          onTouchStart={header.getResizeHandler()}
+                          className="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                          style={{
+                            background: header.column.getIsResizing()
+                              ? "#2563eb"
+                              : "transparent",
+                          }}
+                        />
+                      </th>
                     ))}
-                  </tbody>
-                </table>
-              </div>
-            </TableContainer>
+                  </tr>
+                ))}
+              </thead>
+              <tbody>
+                {table.getRowModel().rows.map((row) => (
+                  <tr
+                    key={row.id}
+                    className="border-border-200 border-b text-sm text-text-700"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <td
+                        key={cell.id}
+                        style={{ width: cell.column.getSize() }}
+                        className="py-3 px-6 items-center"
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </TableContainer>
 
-            <div className="flex justify-end gap-6 mt-4">
-              <Button type="submit" disabled={isPending}>{isPending ? "Placing order..." : "Place Order"}</Button>
-            </div>
-          </form>
-        </DialogPanel>
-      </Dialog>
+        <div className="flex justify-end gap-6 mt-4">
+          <Button type="submit" disabled={isPending}>{isPending ? "Placing order..." : "Place Order"}</Button>
+        </div>
+      </form>
     </>
+  );
+}
+
+export function SubscriptionManagementDialog({
+  isOpen,
+  onClose,
+  subscription,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  subscription: Subscription;
+}) {
+  const [confirmedOrder, setConfirmedOrder] = useState<Order | null>(null);
+
+  const handleClose = () => {
+    setConfirmedOrder(null);
+    onClose();
+  };
+
+  return (
+    <Dialog open={isOpen} onClose={handleClose}>
+      <DialogPanel className="w-[90vw]">
+        <DialogTitle onClose={handleClose}>
+          {confirmedOrder ? "Order confirmation" : "Manage Subscription"}
+        </DialogTitle>
+        {confirmedOrder ? (
+          <OrderConfirmation order={confirmedOrder} onClose={handleClose} />
+        ) : (
+          <SubscriptionManagementForm
+            subscription={subscription}
+            onClose={handleClose}
+            onSuccess={setConfirmedOrder}
+          />
+        )}
+      </DialogPanel>
+    </Dialog>
   );
 }
 
