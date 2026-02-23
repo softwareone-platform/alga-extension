@@ -128,7 +128,7 @@ export function Agreements() {
     <Card>
       <TableContainer>
         <div className="w-full overflow-x-scroll relative">
-          <table style={{ width: table.getTotalSize() }} className="relative table-fixed">
+          <table style={{ width: table.getTotalSize(), minWidth: '100%' }} className="relative table-fixed">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id} className="border-border-200 border-b">
