@@ -319,11 +319,9 @@ export function SubscriptionManagement({
 
   const canManage = agreement?.status === "Active" && subscription.lines && subscription.lines.length > 0;
 
-  if (!canManage) return <></>;
-
   return (
     <>
-      <Button onClick={() => setIsOpen(true)}>Manage</Button>
+      {canManage && <Button onClick={() => setIsOpen(true)}>Manage</Button>}
       <SubscriptionManagementDialog
         subscription={subscription}
         isOpen={isOpen}
