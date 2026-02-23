@@ -14,7 +14,7 @@ import {
 } from "@features/agreements";
 import { useParams, useNavigate } from "react-router";
 import { TermsEntity, Subscription } from "@swo/mp-api-model";
-import { withMarkup } from "@features/markup";
+import { Price, PriceWithMarkup } from "@features/price";
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { BILLING_PERIODS } from "@features/subscriptions";
 
@@ -53,7 +53,7 @@ const createColumns = (
         row: {
           original: { price },
         },
-      }) => <span>{price?.SPxM || "—"}</span>,
+      }) => <Price currency={price?.currency} value={price?.SPxM} />,
     },
     {
       accessorKey: "spxy",
@@ -64,7 +64,7 @@ const createColumns = (
         row: {
           original: { price },
         },
-      }) => <span>{price?.SPxY || "—"}</span>,
+      }) => <Price currency={price?.currency} value={price?.SPxY} />,
     },
     {
       accessorKey: "rpxm",
@@ -76,8 +76,7 @@ const createColumns = (
           original: { price },
         },
       }) => {
-        const priceWithMarkup = withMarkup(price?.SPxM, markup);
-        return <span>{priceWithMarkup || "—"}</span>;
+        return <PriceWithMarkup currency={price?.currency} value={price?.SPxM} markup={markup} />;
       },
     },
     {
@@ -90,8 +89,7 @@ const createColumns = (
           original: { price },
         },
       }) => {
-        const priceWithMarkup = withMarkup(price?.SPxY, markup);
-        return <span>{priceWithMarkup || "—"}</span>;
+        return <PriceWithMarkup currency={price?.currency} value={price?.SPxY} markup={markup} />;
       },
     },
     {

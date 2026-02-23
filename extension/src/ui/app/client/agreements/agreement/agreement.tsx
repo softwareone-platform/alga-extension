@@ -2,20 +2,15 @@ import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
-import { useMemo } from "react";
+
 import { useAgreement, AgreementStatusBadge } from "@features/agreements";
 import { useBillingConfigByAgreement } from "@features/billing-config";
-import { withMarkup } from "@features/markup";
+import { PriceWithMarkup } from "@features/price";
 
 function AgreementSummary({ id }: { id: string }) {
   const { agreement, isPending: isAgreementPending } = useAgreement(id);
   const { billingConfig, isPending: isBillingConfigPending } =
     useBillingConfigByAgreement(id);
-
-  const RPxY = useMemo(
-    () => withMarkup(agreement?.price?.SPxY, billingConfig?.markup),
-    [agreement?.price?.SPxY, billingConfig?.markup]
-  );
 
   if (isAgreementPending || isBillingConfigPending)
     return <div>Loading...</div>;
@@ -59,7 +54,7 @@ function AgreementSummary({ id }: { id: string }) {
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">RPxY</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">{RPxY}</span>
+          <span className="text-sm text-black"><PriceWithMarkup currency={agreement?.price?.currency} value={agreement?.price?.SPxY} markup={billingConfig?.markup} /></span>
         </div>
       </div>
       <div className="flex flex-col gap-1">

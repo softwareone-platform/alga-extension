@@ -8,7 +8,7 @@ import {
   useSubscription,
   useSubscriptionOrders,
 } from "@features/subscriptions";
-import { withMarkup } from "@features/markup";
+import { PriceWithMarkup } from "@features/price";
 import { OrderStatusBadge } from "@features/orders";
 import { formatDateTime } from "@features/dates";
 import { Order } from "@swo/mp-api-model";
@@ -52,10 +52,9 @@ const columns: ColumnDef<Order & { billingConfig?: BillingConfig | null }>[] = [
     header: 'RPxY',
     minSize: 100,
     size: 128,
-    cell: ({ row: { original } }) => {
-      const priceWithMarkup = withMarkup(original.price?.SPxY, original.billingConfig?.markup);
-      return <span>{priceWithMarkup || "—"}</span>;
-    }
+    cell: ({ row: { original } }) => (
+      <PriceWithMarkup currency={original.price?.currency} value={original.price?.SPxY} markup={original.billingConfig?.markup} />
+    )
   },
   {
     accessorKey: 'currency',

@@ -4,7 +4,7 @@ import { useParams } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { TableContainer } from "@/ui/ui/table";
 import { useBillingConfigByAgreement } from "@features/billing-config";
-import { withMarkup } from "@features/markup";
+import { Price, PriceWithMarkup } from "@features/price";
 import { useSubscription } from "@/ui/features/subscriptions";
 
 interface SubscriptionLine {
@@ -22,7 +22,7 @@ interface SubscriptionLine {
   };
 }
 
-const createColumns = (markup?: number): ColumnDef<SubscriptionLine>[] => [
+const createColumns = (markup?: number, currency?: string): ColumnDef<SubscriptionLine>[] => [
   {
     accessorKey: 'name',
     header: 'Name',
@@ -54,7 +54,7 @@ const createColumns = (markup?: number): ColumnDef<SubscriptionLine>[] => [
     header: 'Unit SP',
     minSize: 80,
     size: 100,
-    cell: ({ row: { original } }) => <span>{original.price?.unitSP || "—"}</span>
+    cell: ({ row: { original } }) => <Price currency={currency} value={original.price?.unitSP} />
   },
   {
     accessorKey: 'unitRP',
@@ -62,8 +62,7 @@ const createColumns = (markup?: number): ColumnDef<SubscriptionLine>[] => [
     minSize: 80,
     size: 100,
     cell: ({ row: { original } }) => {
-      const priceWithMarkup = withMarkup(original.price?.unitSP, markup);
-      return <span>{priceWithMarkup || "—"}</span>;
+      return <PriceWithMarkup currency={currency} value={original.price?.unitSP} markup={markup} />;
     }
   },
   {
@@ -71,7 +70,7 @@ const createColumns = (markup?: number): ColumnDef<SubscriptionLine>[] => [
     header: 'SPxM',
     minSize: 80,
     size: 100,
-    cell: ({ row: { original } }) => <span>{original.price?.SPxM || "—"}</span>
+    cell: ({ row: { original } }) => <Price currency={currency} value={original.price?.SPxM} />
   },
   {
     accessorKey: 'rpxm',
@@ -79,8 +78,7 @@ const createColumns = (markup?: number): ColumnDef<SubscriptionLine>[] => [
     minSize: 80,
     size: 100,
     cell: ({ row: { original } }) => {
-      const priceWithMarkup = withMarkup(original.price?.SPxM, markup);
-      return <span>{priceWithMarkup || "—"}</span>;
+      return <PriceWithMarkup currency={currency} value={original.price?.SPxM} markup={markup} />;
     }
   },
   {
@@ -88,7 +86,7 @@ const createColumns = (markup?: number): ColumnDef<SubscriptionLine>[] => [
     header: 'SPxY',
     minSize: 80,
     size: 100,
-    cell: ({ row: { original } }) => <span>{original.price?.SPxY || "—"}</span>
+    cell: ({ row: { original } }) => <Price currency={currency} value={original.price?.SPxY} />
   },
   {
     accessorKey: 'rpxy',
@@ -96,8 +94,7 @@ const createColumns = (markup?: number): ColumnDef<SubscriptionLine>[] => [
     minSize: 80,
     size: 100,
     cell: ({ row: { original } }) => {
-      const priceWithMarkup = withMarkup(original.price?.SPxY, markup);
-      return <span>{priceWithMarkup || "—"}</span>;
+      return <PriceWithMarkup currency={currency} value={original.price?.SPxY} markup={markup} />;
     }
   },
 ];
@@ -111,7 +108,7 @@ export function Items() {
   const [columnSizing, setColumnSizing] = useState({});
 
   const items = subscription?.lines || [];
-  const columns = createColumns(billingConfig?.markup);
+  const columns = createColumns(billingConfig?.markup, subscription?.price?.currency);
 
   const table = useReactTable({
     data: items as SubscriptionLine[],

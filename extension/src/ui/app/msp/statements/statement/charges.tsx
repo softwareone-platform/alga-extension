@@ -4,7 +4,7 @@ import { useParams } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";
 import { Loader } from "@/ui/ui/loader";
-import { withMarkup } from "@features/markup";
+import { Price, PriceWithMarkup } from "@features/price";
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { useStatement, useStatementCharges } from "@features/statements";
 import { formatDateTime } from "@features/dates";
@@ -29,7 +29,7 @@ interface Charge {
   };
 }
 
-const createColumns = (markup?: number): ColumnDef<Charge>[] => [
+const createColumns = (markup?: number, currency?: string): ColumnDef<Charge>[] => [
   {
     accessorKey: 'id',
     header: 'Name',
@@ -91,17 +91,16 @@ const createColumns = (markup?: number): ColumnDef<Charge>[] => [
     header: 'SP',
     minSize: 80,
     size: 100,
-    cell: ({ row: { original } }) => <span>{original.price?.SPx1 || "—"}</span>
+    cell: ({ row: { original } }) => <Price currency={currency} value={original.price?.SPx1} />
   },
   {
     accessorKey: 'rp',
     header: 'RP',
     minSize: 80,
     size: 100,
-    cell: ({ row: { original } }) => {
-      const priceWithMarkup = withMarkup(original.price?.SPx1, markup);
-      return <span>{priceWithMarkup || "—"}</span>;
-    }
+    cell: ({ row: { original } }) => (
+      <PriceWithMarkup currency={currency} value={original.price?.SPx1} markup={markup} />
+    )
   },
 ];
 
@@ -118,7 +117,7 @@ export function Charges() {
   );
   const [columnSizing, setColumnSizing] = useState({});
 
-  const columns = createColumns(billingConfig?.markup);
+  const columns = createColumns(billingConfig?.markup, statement?.price?.currency?.sale);
 
   const table = useReactTable({
     data: charges as Charge[],

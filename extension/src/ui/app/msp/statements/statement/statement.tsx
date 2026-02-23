@@ -5,7 +5,7 @@ import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
 import { useMemo } from "react";
 import { useBillingConfigByAgreement } from "@features/billing-config";
-import { withMarkup } from "@features/markup";
+import { Price, PriceWithMarkup } from "@features/price";
 import { useStatement, useStatementActions } from "@features/statements";
 import { useConsumer } from "@features/consumers";
 import { Link } from "@/ui/ui/link";
@@ -35,11 +35,6 @@ function StatementSummary({ id }: { id: string }) {
   const { statement, isPending: isAgreementPending } = useStatement(id);
   const { billingConfig, isPending: isBillingConfigPending } =
     useBillingConfigByAgreement(statement?.agreement?.id);
-
-  const totalRP = useMemo(
-    () => withMarkup(statement?.price?.totalSP, billingConfig?.markup),
-    [statement?.price?.totalSP, billingConfig?.markup]
-  );
 
   const { consumer } = useConsumer(billingConfig?.consumerId);
 
@@ -85,7 +80,7 @@ function StatementSummary({ id }: { id: string }) {
         <label className="text-sm font-semibold text-black">Total SP</label>
         <div className="flex gap-2 items-center grow">
           <span className="text-sm text-black">
-            {statement.price?.totalSP || "—"}
+            <Price currency={statement.price?.currency?.sale} value={statement.price?.totalSP} />
           </span>
         </div>
       </div>
@@ -100,7 +95,7 @@ function StatementSummary({ id }: { id: string }) {
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Total RP</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">{totalRP}</span>
+          <span className="text-sm text-black"><PriceWithMarkup currency={statement?.price?.currency?.sale} value={statement?.price?.totalSP} markup={billingConfig?.markup} /></span>
         </div>
       </div>
       <div className="flex flex-col gap-1">

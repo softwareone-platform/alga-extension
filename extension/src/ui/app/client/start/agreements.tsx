@@ -6,7 +6,7 @@ import { Loader } from "@/ui/ui/loader";
 import { useAgreements, AgreementStatusBadge } from "@features/agreements";
 import { ProductCell } from "@features/products";
 import { Agreement, AgreementStatus } from "@swo/mp-api-model";
-import { withMarkup } from "@features/markup";
+import { PriceWithMarkup } from "@features/price";
 import { useBillingConfigs } from "@/ui/features/billing-config";
 import { BillingConfig } from "@/shared/billing-configs";
 import { useNavigate } from "react-router";
@@ -63,10 +63,9 @@ const columns: ColumnDef<AgreementRow>[] = [
     header: 'RPxY',
     minSize: 100,
     size: 128,
-    cell: ({ row: { original } }) => {
-      const priceWithMarkup = withMarkup(original.price?.SPxY, original.billingConfig?.markup);
-      return <span>{priceWithMarkup || "—"}</span>;
-    }
+    cell: ({ row: { original } }) => (
+      <PriceWithMarkup currency={original.price?.currency} value={original.price?.SPxY} markup={original.billingConfig?.markup} />
+    )
   },
   {
     accessorKey: 'currency',

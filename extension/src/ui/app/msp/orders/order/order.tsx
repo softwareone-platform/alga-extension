@@ -3,9 +3,9 @@ import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
-import { useMemo } from "react";
+
 import { useBillingConfigByAgreement } from "@features/billing-config";
-import { withMarkup } from "@features/markup";
+import { Price, PriceWithMarkup } from "@features/price";
 import { OrderStatusBadge, useOrder } from "@features/orders";
 import { useConsumer } from "@features/consumers";
 import { Link } from "@/ui/ui/link";
@@ -17,11 +17,6 @@ function OrderSummary({ id }: { id: string }) {
     useBillingConfigByAgreement(order?.agreement?.id);
 
   const { consumer } = useConsumer(billingConfig?.consumerId);
-
-  const totalRP = useMemo(
-    () => withMarkup(order?.price?.SPxY, billingConfig?.markup),
-    [order?.price?.SPxY, billingConfig?.markup]
-  );
 
   if (isOrderPending || isBillingConfigPending) return <div>Loading...</div>;
 
@@ -63,7 +58,7 @@ function OrderSummary({ id }: { id: string }) {
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">SPxY</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">{order.price?.SPxY || "—"}</span>
+          <span className="text-sm text-black"><Price currency={order.price?.currency} value={order.price?.SPxY} /></span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
@@ -77,7 +72,7 @@ function OrderSummary({ id }: { id: string }) {
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">RPxY</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">{totalRP}</span>
+          <span className="text-sm text-black"><PriceWithMarkup currency={order?.price?.currency} value={order?.price?.SPxY} markup={billingConfig?.markup} /></span>
         </div>
       </div>
       <div className="flex flex-col gap-1">

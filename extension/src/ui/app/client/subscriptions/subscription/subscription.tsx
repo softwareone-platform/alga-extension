@@ -2,9 +2,9 @@ import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
-import { useMemo } from "react";
+
 import { useBillingConfigByAgreement } from "@features/billing-config";
-import { withMarkup } from "@features/markup";
+import { PriceWithMarkup } from "@features/price";
 import {
   SubscriptionStatusBadge,
   useSubscription,
@@ -16,11 +16,6 @@ function SubscriptionSummary({ id }: { id: string }) {
     useSubscription(id);
   const { billingConfig, isPending: isBillingConfigPending } =
     useBillingConfigByAgreement(subscription?.agreement?.id);
-
-  const totalRP = useMemo(
-    () => withMarkup(subscription?.price?.SPxY, billingConfig?.markup),
-    [subscription?.price?.SPxY, billingConfig?.markup]
-  );
 
   if (isSubscriptionPending || isBillingConfigPending)
     return <div>Loading...</div>;
@@ -53,7 +48,7 @@ function SubscriptionSummary({ id }: { id: string }) {
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">RPxY</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">{totalRP}</span>
+          <span className="text-sm text-black"><PriceWithMarkup currency={subscription?.price?.currency} value={subscription?.price?.SPxY} markup={billingConfig?.markup} /></span>
         </div>
       </div>
       <div className="flex flex-col gap-1">

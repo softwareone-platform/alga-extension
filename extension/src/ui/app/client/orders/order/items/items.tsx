@@ -3,7 +3,7 @@ import { Card } from "@ui/card";
 import { useParams } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { TableContainer } from "@/ui/ui/table";
-import { withMarkup } from "@features/markup";
+import { PriceWithMarkup } from "@features/price";
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { useOrder } from "@features/orders";
 import { Badge } from "@alga-psa/ui-kit";
@@ -29,7 +29,7 @@ export const ItemStatusBadge = memo(function ItemStatusBadge({
 
 type ItemRow = OrderLine & { billingConfig?: BillingConfig | null };
 
-const columns: ColumnDef<ItemRow>[] = [
+const createColumns = (currency?: string): ColumnDef<ItemRow>[] => [
   {
     accessorKey: 'item',
     header: 'Name',
@@ -65,20 +65,18 @@ const columns: ColumnDef<ItemRow>[] = [
     header: 'RPxM',
     minSize: 100,
     size: 120,
-    cell: ({ row: { original } }) => {
-      const priceWithMarkup = withMarkup(original.price?.SPxM, original.billingConfig?.markup);
-      return <span>{priceWithMarkup || "—"}</span>;
-    }
+    cell: ({ row: { original } }) => (
+      <PriceWithMarkup currency={currency} value={original.price?.SPxM} markup={original.billingConfig?.markup} />
+    )
   },
   {
     accessorKey: 'rpxy',
     header: 'RPxY',
     minSize: 100,
     size: 120,
-    cell: ({ row: { original } }) => {
-      const priceWithMarkup = withMarkup(original.price?.SPxY, original.billingConfig?.markup);
-      return <span>{priceWithMarkup || "—"}</span>;
-    }
+    cell: ({ row: { original } }) => (
+      <PriceWithMarkup currency={currency} value={original.price?.SPxY} markup={original.billingConfig?.markup} />
+    )
   },
   {
     accessorKey: 'status',
@@ -102,6 +100,8 @@ export function Items() {
     () => lines.map((line) => ({ ...line, billingConfig })),
     [lines, billingConfig]
   );
+
+  const columns = createColumns(order?.price?.currency);
 
   const table = useReactTable({
     data: itemsWithConfig,

@@ -9,7 +9,7 @@ import { ProductCell } from "@/ui/features/products";
 import { useConsumer } from "@/ui/features/consumers";
 import { Link } from "@/ui/ui/link";
 import { useBillingConfigByAgreement } from "@/ui/features/billing-config";
-import { withMarkup } from "@/ui/features/markup";
+import { Price, PriceWithMarkup } from "@features/price";
 import { Pagination, TableContainer } from "@/ui/ui/table";
 import { Loader } from "@/ui/ui/loader";
 import { useNavigate } from "react-router";
@@ -81,7 +81,7 @@ const columns: ColumnDef<Statement>[] = [
     header: 'Total SP',
     minSize: 128,
     size: 128,
-    cell: ({ row: { original: { price } } }) => <span>{price?.totalSP || "—"}</span>
+    cell: ({ row: { original: { price } } }) => <Price currency={price?.currency?.sale} value={price?.totalSP} />
   },
   {
     accessorKey: 'markup',
@@ -98,10 +98,9 @@ const columns: ColumnDef<Statement>[] = [
     header: 'Total RP',
     minSize: 128,
     size: 128,
-    cell: ({ row: { original: { price } } }) => {
-      const priceWithMarkup = withMarkup(price?.totalSP, price?.markup);
-      return <span>{priceWithMarkup || "—"}</span>
-    }
+    cell: ({ row: { original: { price } } }) => (
+      <PriceWithMarkup currency={price?.currency?.sale} value={price?.totalSP} markup={price?.markup} />
+    )
   },
   {
     accessorKey: 'currency',

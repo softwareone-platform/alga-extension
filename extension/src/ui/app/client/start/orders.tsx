@@ -3,7 +3,7 @@ import { Card } from "@ui/card";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";
 import { Loader } from "@/ui/ui/loader";
-import { withMarkup } from "@features/markup";
+import { PriceWithMarkup } from "@features/price";
 import { useOrders, OrderStatusBadge } from "@features/orders";
 import { Agreement } from "@features/agreements";
 import { ProductCell } from "@features/products";
@@ -56,10 +56,9 @@ const columns: ColumnDef<OrderRow>[] = [
     header: 'RPxY',
     minSize: 100,
     size: 128,
-    cell: ({ row: { original } }) => {
-      const priceWithMarkup = withMarkup(original.price?.SPxY, original.billingConfig?.markup);
-      return <span>{priceWithMarkup || "—"}</span>;
-    }
+    cell: ({ row: { original } }) => (
+      <PriceWithMarkup currency={original.price?.currency} value={original.price?.SPxY} markup={original.billingConfig?.markup} />
+    )
   },
   {
     accessorKey: 'currency',

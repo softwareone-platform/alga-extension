@@ -5,7 +5,7 @@ import { Card } from "@ui/card";
 import { Agreement } from "@swo/mp-api-model";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";
-import { withMarkup } from "@features/markup";
+import { Price, PriceWithMarkup } from "@features/price";
 import { useConsumer } from "@features/consumers";
 import { Link } from "@/ui/ui/link";
 import { useBillingConfigByAgreement } from "@/ui/features/billing-config";
@@ -65,7 +65,7 @@ const columns: ColumnDef<Agreement>[] = [
     header: "SPxY",
     minSize: 100,
     size: 100,
-    cell: ({ row: { original } }) => <span>{original.price?.SPxY || "—"}</span>,
+    cell: ({ row: { original } }) => <Price currency={original.price?.currency} value={original.price?.SPxY} />,
   },
   {
     accessorKey: "markup",
@@ -84,7 +84,7 @@ const columns: ColumnDef<Agreement>[] = [
     size: 100,
     cell: ({ row: { original } }) => {
       const { billingConfig } = useBillingConfigByAgreement(original.id);
-      return <span>{withMarkup(original.price?.SPxY, billingConfig?.markup)}</span>;
+      return <PriceWithMarkup currency={original.price?.currency} value={original.price?.SPxY} markup={billingConfig?.markup} />;
     },
   },
   {

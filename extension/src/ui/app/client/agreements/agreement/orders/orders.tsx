@@ -4,7 +4,7 @@ import { OrderStatusBadge, useAgreementOrders } from "@features/agreements";
 import { useParams, useNavigate } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";
-import { withMarkup } from "@features/markup";
+import { Price, PriceWithMarkup } from "@features/price";
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { formatDateTime } from "@features/dates";
 import { Order } from "@swo/mp-api-model";
@@ -43,7 +43,7 @@ const columns: ColumnDef<OrderRow>[] = [
     header: 'SPxY',
     minSize: 80,
     size: 100,
-    cell: ({ row: { original } }) => <span>{original.price?.SPxY || "—"}</span>
+    cell: ({ row: { original } }) => <Price currency={original.price?.currency} value={original.price?.SPxY} />
   },
   {
     accessorKey: 'markup',
@@ -59,10 +59,9 @@ const columns: ColumnDef<OrderRow>[] = [
     header: 'RPxY',
     minSize: 100,
     size: 120,
-    cell: ({ row: { original } }) => {
-      const priceWithMarkup = withMarkup(original.price?.SPxY, original.billingConfig?.markup);
-      return <span>{priceWithMarkup || "—"}</span>;
-    }
+    cell: ({ row: { original } }) => (
+      <PriceWithMarkup currency={original.price?.currency} value={original.price?.SPxY} markup={original.billingConfig?.markup} />
+    )
   },
   {
     accessorKey: 'currency',

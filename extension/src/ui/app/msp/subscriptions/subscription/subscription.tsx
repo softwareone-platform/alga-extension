@@ -3,12 +3,12 @@ import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
-import { useMemo } from "react";
+
 import {
   BillingConfigStatusBadge,
   useBillingConfigByAgreement,
 } from "@features/billing-config";
-import { withMarkup } from "@features/markup";
+import { Price, PriceWithMarkup } from "@features/price";
 import {
   SubscriptionStatusBadge,
   useSubscription,
@@ -26,11 +26,6 @@ function SubscriptionSummary({ id }: { id: string }) {
   const { billingConfig, isPending: isBillingConfigPending } =
     useBillingConfigByAgreement(subscription?.agreement?.id);
   const { consumer } = useConsumer(billingConfig?.consumerId!);
-
-  const totalRP = useMemo(
-    () => withMarkup(subscription?.price?.SPxY, billingConfig?.markup),
-    [subscription?.price?.SPxY, billingConfig?.markup]
-  );
 
   if (isSubscriptionPending || isBillingConfigPending)
     return <Card className="flex flex-row justify-between"><Loader /></Card>;
@@ -79,7 +74,7 @@ function SubscriptionSummary({ id }: { id: string }) {
         <label className="text-sm font-semibold text-black">SPxY</label>
         <div className="flex gap-2 items-center grow">
           <span className="text-sm text-black">
-            {subscription.price?.SPxY || "—"}
+            <Price currency={subscription.price?.currency} value={subscription.price?.SPxY} />
           </span>
         </div>
       </div>
@@ -94,7 +89,7 @@ function SubscriptionSummary({ id }: { id: string }) {
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">RPxY</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">{totalRP}</span>
+          <span className="text-sm text-black"><PriceWithMarkup currency={subscription?.price?.currency} value={subscription?.price?.SPxY} markup={billingConfig?.markup} /></span>
         </div>
       </div>
       <div className="flex flex-col gap-1">

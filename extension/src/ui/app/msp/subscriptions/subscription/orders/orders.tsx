@@ -6,7 +6,7 @@ import { Pagination, TableContainer } from "@/ui/ui/table";
 import { Loader } from "@/ui/ui/loader";
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { useSubscriptionOrders } from "@features/subscriptions";
-import { withMarkup } from "@features/markup";
+import { Price, PriceWithMarkup } from "@features/price";
 import { OrderStatusBadge } from "@features/orders";
 import { formatDateTime } from "@features/dates";
 import { Order } from "@swo/mp-api-model";
@@ -60,7 +60,7 @@ const columns: ColumnDef<Order>[] = [
     header: 'SPxY',
     minSize: 100,
     size: 120,
-    cell: ({ row: { original } }) => <span>{original.price?.SPxY || "—"}</span>
+    cell: ({ row: { original } }) => <Price currency={original.price?.currency} value={original.price?.SPxY} />
   },
   {
     accessorKey: 'markup',
@@ -79,8 +79,7 @@ const columns: ColumnDef<Order>[] = [
     size: 120,
     cell: ({ row: { original } }) => {
       const { billingConfig } = useBillingConfigByAgreement(original.agreement?.id);
-      const priceWithMarkup = withMarkup(original.price?.SPxY, billingConfig?.markup);
-      return <span>{priceWithMarkup || "—"}</span>;
+      return <PriceWithMarkup currency={original.price?.currency} value={original.price?.SPxY} markup={billingConfig?.markup} />;
     }
   },
   {

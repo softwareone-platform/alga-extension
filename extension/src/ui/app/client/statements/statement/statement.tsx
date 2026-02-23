@@ -2,20 +2,15 @@ import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
-import { useMemo } from "react";
+
 import { useBillingConfigByAgreement } from "@features/billing-config";
-import { withMarkup } from "@features/markup";
+import { PriceWithMarkup } from "@features/price";
 import { useStatement } from "@features/statements";
 
 function StatementSummary({ id }: { id: string }) {
   const { statement, isPending: isAgreementPending } = useStatement(id);
   const { billingConfig, isPending: isBillingConfigPending } =
     useBillingConfigByAgreement(statement?.agreement?.id);
-
-  const totalRP = useMemo(
-    () => withMarkup(statement?.price?.totalSP, billingConfig?.markup),
-    [statement?.price?.totalSP, billingConfig?.markup]
-  );
 
   if (isAgreementPending || isBillingConfigPending)
     return <div>Loading...</div>;
@@ -52,7 +47,7 @@ function StatementSummary({ id }: { id: string }) {
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Total RP</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">{totalRP}</span>
+          <span className="text-sm text-black"><PriceWithMarkup currency={statement?.price?.currency?.sale} value={statement?.price?.totalSP} markup={billingConfig?.markup} /></span>
         </div>
       </div>
       <div className="flex flex-col gap-1">

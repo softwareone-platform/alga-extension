@@ -19,7 +19,7 @@ import {
   ListboxOption,
   ListboxOptions,
 } from "@ui/listbox";
-import { withMarkup } from "@features/markup";
+import { Price, PriceWithMarkup } from "@features/price";
 import { useConsumer, useConsumers } from "@features/consumers";
 import { useServices } from "@features/services";
 import { useForm, Controller } from "react-hook-form";
@@ -35,11 +35,6 @@ function AgreementSummary({ id }: { id: string }) {
   );
 
   const { consumer } = useConsumer(billingConfig?.consumerId);
-
-  const RPxY = useMemo(
-    () => withMarkup(agreement?.price?.SPxY, billingConfig?.markup),
-    [agreement?.price?.SPxY, billingConfig?.markup]
-  );
 
   if (isAgreementPending || isBillingConfigPending)
     return <div>Loading...</div>;
@@ -98,7 +93,7 @@ function AgreementSummary({ id }: { id: string }) {
         <label className="text-sm font-semibold text-black">SPxY</label>
         <div className="flex gap-2 items-center grow">
           <span className="text-sm text-black">
-            {agreement.price?.SPxY || "—"}
+            <Price currency={agreement.price?.currency} value={agreement.price?.SPxY} />
           </span>
         </div>
       </div>
@@ -113,7 +108,7 @@ function AgreementSummary({ id }: { id: string }) {
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">RPxY</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">{RPxY}</span>
+          <span className="text-sm text-black"><PriceWithMarkup currency={agreement?.price?.currency} value={agreement?.price?.SPxY} markup={billingConfig?.markup} /></span>
         </div>
       </div>
       <div className="flex flex-col gap-1">

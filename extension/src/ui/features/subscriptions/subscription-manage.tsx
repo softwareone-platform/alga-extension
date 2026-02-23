@@ -11,7 +11,7 @@ import { TableContainer } from "@/ui/ui/table";
 import {
   useBillingConfigByAgreement,
 } from "@features/billing-config";
-import { withMarkup } from "@features/markup";
+import { Price, PriceWithMarkup } from "@features/price";
 import { useForm } from "react-hook-form";
 import type { Subscription, AgreementLine, Order } from "@swo/mp-api-model";
 import { useSubscriptionUpdate } from "./hooks";
@@ -157,7 +157,7 @@ function SubscriptionManagementForm({
         minSize: 100,
         size: 120,
         cell: ({ row: { original } }) => (
-          <span>{original.price?.SPxM || "—"}</span>
+          <Price currency={original.price?.currency} value={original.price?.SPxM} />
         ),
       },
       {
@@ -166,7 +166,7 @@ function SubscriptionManagementForm({
         minSize: 100,
         size: 120,
         cell: ({ row: { original } }) => (
-          <span>{original.price?.SPxY || "—"}</span>
+          <Price currency={original.price?.currency} value={original.price?.SPxY} />
         ),
       },
       {
@@ -175,7 +175,7 @@ function SubscriptionManagementForm({
         minSize: 100,
         size: 120,
         cell: ({ row: { original } }) => (
-          <span>{withMarkup(original.price?.SPxM, billingConfig?.markup)}</span>
+          <PriceWithMarkup currency={original.price?.currency} value={original.price?.SPxM} markup={billingConfig?.markup} />
         ),
       },
       {
@@ -184,7 +184,7 @@ function SubscriptionManagementForm({
         minSize: 100,
         size: 120,
         cell: ({ row: { original } }) => (
-          <span>{withMarkup(original.price?.SPxY, billingConfig?.markup)}</span>
+          <PriceWithMarkup currency={original.price?.currency} value={original.price?.SPxY} markup={billingConfig?.markup} />
         ),
       },
     ],
@@ -319,9 +319,11 @@ export function SubscriptionManagement({
 
   const canManage = agreement?.status === "Active" && subscription.lines && subscription.lines.length > 0;
 
+  if (!canManage) return <></>;
+
   return (
     <>
-      {canManage && <Button onClick={() => setIsOpen(true)}>Manage</Button>}
+      <Button onClick={() => setIsOpen(true)}>Manage</Button>
       <SubscriptionManagementDialog
         subscription={subscription}
         isOpen={isOpen}

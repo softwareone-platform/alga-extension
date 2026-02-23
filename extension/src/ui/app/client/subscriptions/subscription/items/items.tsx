@@ -5,13 +5,13 @@ import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack
 import { TableContainer } from "@/ui/ui/table";
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { useSubscription } from "@features/subscriptions";
-import { withMarkup } from "@features/markup";
+import { Price, PriceWithMarkup } from "@features/price";
 import { AgreementLine } from "@swo/mp-api-model";
 import { BillingConfig } from "@/shared/billing-configs";
 
 type ItemRow = AgreementLine & { billingConfig?: BillingConfig | null };
 
-const columns: ColumnDef<ItemRow>[] = [
+const createColumns = (currency?: string): ColumnDef<ItemRow>[] => [
   {
     accessorKey: 'item',
     header: 'Name',
@@ -47,27 +47,25 @@ const columns: ColumnDef<ItemRow>[] = [
     header: 'Unit RP',
     minSize: 80,
     size: 100,
-    cell: ({ row: { original } }) => <span>{original.price?.unitSP || "—"}</span>
+    cell: ({ row: { original } }) => <Price currency={currency} value={original.price?.unitSP} />
   },
   {
     accessorKey: 'rpxm',
     header: 'RPxM',
     minSize: 100,
     size: 120,
-    cell: ({ row: { original } }) => {
-      const priceWithMarkup = withMarkup(original.price?.SPxM, original.billingConfig?.markup);
-      return <span>{priceWithMarkup || "—"}</span>;
-    }
+    cell: ({ row: { original } }) => (
+      <PriceWithMarkup currency={currency} value={original.price?.SPxM} markup={original.billingConfig?.markup} />
+    )
   },
   {
     accessorKey: 'rpxy',
     header: 'RPxY',
     minSize: 100,
     size: 120,
-    cell: ({ row: { original } }) => {
-      const priceWithMarkup = withMarkup(original.price?.SPxY, original.billingConfig?.markup);
-      return <span>{priceWithMarkup || "—"}</span>;
-    }
+    cell: ({ row: { original } }) => (
+      <PriceWithMarkup currency={currency} value={original.price?.SPxY} markup={original.billingConfig?.markup} />
+    )
   },
 ];
 
@@ -85,6 +83,8 @@ export function Items() {
     () => items.map((item) => ({ ...item, billingConfig })),
     [items, billingConfig]
   );
+
+  const columns = createColumns(subscription?.price?.currency);
 
   const table = useReactTable({
     data: itemsWithConfig,

@@ -8,7 +8,7 @@ import { useParams } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";
 import { TermsEntity, Subscription } from "@swo/mp-api-model";
-import { withMarkup } from "@features/markup";
+import { Price, PriceWithMarkup } from "@features/price";
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { BILLING_PERIODS } from "@features/subscriptions";
 import { BillingConfig } from "@/shared/billing-configs";
@@ -44,34 +44,32 @@ const columns: ColumnDef<SubscriptionRow>[] = [
     header: 'SPxM',
     minSize: 80,
     size: 100,
-    cell: ({ row: { original } }) => <span>{original.price?.SPxM || "—"}</span>
+    cell: ({ row: { original } }) => <Price currency={original.price?.currency} value={original.price?.SPxM} />
   },
   {
     accessorKey: 'spxy',
     header: 'SPxY',
     minSize: 80,
     size: 100,
-    cell: ({ row: { original } }) => <span>{original.price?.SPxY || "—"}</span>
+    cell: ({ row: { original } }) => <Price currency={original.price?.currency} value={original.price?.SPxY} />
   },
   {
     accessorKey: 'rpxm',
     header: 'RPxM',
     minSize: 100,
     size: 120,
-    cell: ({ row: { original } }) => {
-      const priceWithMarkup = withMarkup(original.price?.SPxM, original.billingConfig?.markup);
-      return <span>{priceWithMarkup || "—"}</span>;
-    }
+    cell: ({ row: { original } }) => (
+      <PriceWithMarkup currency={original.price?.currency} value={original.price?.SPxM} markup={original.billingConfig?.markup} />
+    )
   },
   {
     accessorKey: 'rpxy',
     header: 'RPxY',
     minSize: 100,
     size: 120,
-    cell: ({ row: { original } }) => {
-      const priceWithMarkup = withMarkup(original.price?.SPxY, original.billingConfig?.markup);
-      return <span>{priceWithMarkup || "—"}</span>;
-    }
+    cell: ({ row: { original } }) => (
+      <PriceWithMarkup currency={original.price?.currency} value={original.price?.SPxY} markup={original.billingConfig?.markup} />
+    )
   },
   {
     accessorKey: 'billingPeriod',

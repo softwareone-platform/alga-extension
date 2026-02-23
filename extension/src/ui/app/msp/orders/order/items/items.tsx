@@ -3,7 +3,7 @@ import { Card } from "@ui/card";
 import { useParams } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { TableContainer } from "@/ui/ui/table";
-import { withMarkup } from "@features/markup";
+import { Price, PriceWithMarkup } from "@features/price";
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { useOrder } from "@features/orders";
 import { Badge } from "@alga-psa/ui-kit";
@@ -35,7 +35,7 @@ export const ItemStatusBadge = ({ status }: { status?: string }) => {
   return <Badge tone={tone}>{status}</Badge>;
 };
 
-const createColumns = (markup?: number): ColumnDef<OrderLine>[] => [
+const createColumns = (markup?: number, currency?: string): ColumnDef<OrderLine>[] => [
   {
     accessorKey: 'name',
     header: 'Name',
@@ -67,34 +67,32 @@ const createColumns = (markup?: number): ColumnDef<OrderLine>[] => [
     header: 'SPxM',
     minSize: 80,
     size: 100,
-    cell: ({ row: { original } }) => <span>{original.price?.SPxM || "—"}</span>
+    cell: ({ row: { original } }) => <Price currency={currency} value={original.price?.SPxM} />
   },
   {
     accessorKey: 'spxy',
     header: 'SPxY',
     minSize: 80,
     size: 100,
-    cell: ({ row: { original } }) => <span>{original.price?.SPxY || "—"}</span>
+    cell: ({ row: { original } }) => <Price currency={currency} value={original.price?.SPxY} />
   },
   {
     accessorKey: 'rpxm',
     header: 'RPxM',
     minSize: 80,
     size: 100,
-    cell: ({ row: { original } }) => {
-      const priceWithMarkup = withMarkup(original.price?.SPxM, markup);
-      return <span>{priceWithMarkup || "—"}</span>;
-    }
+    cell: ({ row: { original } }) => (
+      <PriceWithMarkup currency={currency} value={original.price?.SPxM} markup={markup} />
+    )
   },
   {
     accessorKey: 'rpxy',
     header: 'RPxY',
     minSize: 80,
     size: 100,
-    cell: ({ row: { original } }) => {
-      const priceWithMarkup = withMarkup(original.price?.SPxY, markup);
-      return <span>{priceWithMarkup || "—"}</span>;
-    }
+    cell: ({ row: { original } }) => (
+      <PriceWithMarkup currency={currency} value={original.price?.SPxY} markup={markup} />
+    )
   },
   {
     accessorKey: 'status',
@@ -112,7 +110,7 @@ export function Items() {
   const [columnSizing, setColumnSizing] = useState({});
 
   const lines = order?.lines || [];
-  const columns = createColumns(billingConfig?.markup);
+  const columns = createColumns(billingConfig?.markup, order?.price?.currency);
 
   const table = useReactTable({
     data: lines as OrderLine[],

@@ -5,6 +5,7 @@ import {
   SellerQueryModel,
 } from "@swo/mp-api-model";
 import { AgreementStatusBadge, useAgreement } from "@features/agreements";
+import { Price } from "@features/price";
 import { useParams } from "react-router";
 
 function Agreement({ agreement }: { agreement: AgreementType }) {
@@ -52,14 +53,14 @@ function Agreement({ agreement }: { agreement: AgreementType }) {
         <label className="text-sm font-semibold text-black">SPxM</label>
         <div className="flex gap-2 items-center">
           <span className="text-sm text-black">
-            {agreement.price?.SPxM || "—"}
+            <Price currency={agreement.price?.currency} value={agreement.price?.SPxM} />
           </span>
         </div>
 
         <label className="text-sm font-semibold text-black">SPxY</label>
         <div className="flex gap-2 items-center">
           <span className="text-sm text-black">
-            {agreement.price?.SPxY || "—"}
+            <Price currency={agreement.price?.currency} value={agreement.price?.SPxY} />
           </span>
         </div>
 
