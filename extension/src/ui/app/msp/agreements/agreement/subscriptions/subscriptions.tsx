@@ -169,7 +169,7 @@ export function Subscriptions() {
       <TableContainer>
         <div className="w-full overflow-x-scroll relative">
           <table
-            style={{ width: table.getTotalSize() }}
+            style={{ width: '100%', minWidth: table.getTotalSize() }}
             className="relative table-fixed"
           >
             <thead>

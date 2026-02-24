@@ -209,7 +209,7 @@ function SubscriptionManagementForm({
         <TableContainer>
           <div className="w-full overflow-x-scroll relative">
             <table
-              style={{ width: table.getTotalSize() }}
+              style={{ width: table.getTotalSize(), minWidth: '100%' }}
               className="relative table-fixed"
             >
               <thead>
