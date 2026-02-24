@@ -1,4 +1,4 @@
-export type Operations = "self-service" | "managed";
+export type Operations = "self-service" | "visible" | "hidden";
 export type BillingConfigStatus = "active" | "unconfigured";
 
 export type BillingConfig = {

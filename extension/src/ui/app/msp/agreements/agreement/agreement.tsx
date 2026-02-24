@@ -205,7 +205,7 @@ function BillingConfigEditor({
       defaultValues: {
         note: "",
         markup: 0,
-        operations: "self-service",
+        operations: "visible",
         consumerId: "",
         serviceId: "",
       },
@@ -219,7 +219,7 @@ function BillingConfigEditor({
       reset({
         note: billingConfig.note ?? "",
         markup: billingConfig.markup ?? 0,
-        operations: billingConfig.operations ?? "self-service",
+        operations: billingConfig.operations ?? "visible",
         consumerId: billingConfig.consumerId ?? "",
         serviceId: billingConfig.serviceId ?? "",
       });
@@ -302,11 +302,14 @@ function BillingConfigEditor({
                 >
                   <Radio value="self-service">
                     <span>
-                      Self-service (Clients will see Agreement details)
+                      Self-service (Clients can see Agreement details and manage subscriptions)
                     </span>
                   </Radio>
-                  <Radio value="managed">
-                    <span>Managed (Not visible to Clients)</span>
+                  <Radio value="visible">
+                    <span>Visible (Clients can see Agreement details)</span>
+                  </Radio>
+                  <Radio value="hidden">
+                    <span>Hidden (Clients cannot see Agreement details)</span>
                   </Radio>
                 </RadioGroup>
               )}

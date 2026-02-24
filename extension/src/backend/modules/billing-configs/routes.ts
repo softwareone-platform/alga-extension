@@ -23,7 +23,12 @@ route<unknown, BillingConfigsResponseBody>(
 
     return {
       status: 200,
-      body: all.filter((v) => v.consumerId === user.clientId),
+      body: all.filter(
+        (bc) =>
+          bc.consumerId === user.clientId &&
+          bc.status === "active" &&
+          bc.operations !== "hidden",
+      ),
     };
   },
 );

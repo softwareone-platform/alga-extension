@@ -94,7 +94,8 @@ const columns: ColumnDef<Agreement>[] = [
     size: 120,
     cell: ({ row: { original } }) => {
       const { billingConfig } = useBillingConfigByAgreement(original.id);
-      if (billingConfig?.operations === "managed") return <span className="truncate block">Managed</span>;
+      if (billingConfig?.operations === "visible") return <span className="truncate block">Visible</span>;
+      if (billingConfig?.operations === "hidden") return <span className="truncate block">Hidden</span>;
       if (billingConfig?.operations === "self-service") return <span className="truncate block">Self-service</span>;
       return <span>—</span>;
     },
