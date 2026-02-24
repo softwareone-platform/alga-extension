@@ -6,6 +6,7 @@ import { Tabs } from "@ui/tabs";
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { PriceWithMarkup } from "@features/price";
 import {
+  SubscriptionManagement,
   SubscriptionStatusBadge,
   useSubscription,
   BILLING_PERIODS,
@@ -88,6 +89,7 @@ function SubscriptionSummary({ id }: { id: string }) {
 export function Subscription() {
   const { id } = useParams<{ id: string }>();
   const { subscription, isPending } = useSubscription(id!);
+  const { billingConfig } = useBillingConfigByAgreement(subscription?.agreement?.id);
   if (isPending) return <div>Loading...</div>;
 
   if (!subscription) return <div>Subscription not found</div>;
@@ -101,6 +103,9 @@ export function Subscription() {
           <h1 className="text-3xl font-semibold">{subscription.name}</h1>
           {!!status && <SubscriptionStatusBadge status={status} />}
         </div>
+        {billingConfig?.operations === "self-service" && (
+          <SubscriptionManagement subscription={subscription} />
+        )}
       </header>
       <SubscriptionSummary id={id!} />
       <Tabs>
