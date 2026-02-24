@@ -301,7 +301,7 @@ function BillingConfigEditor({
                   aria-label="Operations"
                 >
                   <Radio value="self-service">
-                    <div className="flex flex-col gap-1">
+                    <div className="flex flex-col">
                       <span>Self-service</span>
                       <span className="text-xs text-gray-500">
                         Clients can see agreement details and manage subscriptions
@@ -309,7 +309,7 @@ function BillingConfigEditor({
                     </div>
                   </Radio>
                   <Radio value="visible">
-                    <div className="flex flex-col gap-1">
+                    <div className="flex flex-col">
                       <span>Visible</span>
                       <span className="text-xs text-gray-500">
                         Clients can see agreement details
@@ -317,7 +317,7 @@ function BillingConfigEditor({
                     </div>
                   </Radio>
                   <Radio value="hidden">
-                    <div className="flex flex-col gap-1">
+                    <div className="flex flex-col">
                       <span>Hidden</span>
                       <span className="text-xs text-gray-500">
                         Clients cannot see agreement details
