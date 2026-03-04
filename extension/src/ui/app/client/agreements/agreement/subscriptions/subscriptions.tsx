@@ -167,7 +167,6 @@ export function Subscriptions() {
               {table.getRowModel().rows.map(row => (
                 <tr
                   key={row.id}
-                  onClick={() => window.open(`/agreements/${row.original.agreementId}/subscriptions/${row.original.id}`, '_blank')}
                   className="border-border-200 border-b text-sm text-text-700 cursor-pointer hover:bg-primary-50"
                 >
                   {row.getVisibleCells().map(cell => (

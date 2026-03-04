@@ -23,7 +23,7 @@
   "dependencies": {
     "@alga-psa/extension-iframe-sdk": "^0.1.0",
     "@alga-psa/extension-runtime": "^0.3.0",
-    "@alga-psa/ui-kit": "^0.1.0",
+    "@alga-psa/ui-kit": "^0.2.0",
     "@headlessui/react": "^2.2.7",
     "@swo/mp-api-model": "^5.1.297",
     "@swo/rql-client": "^5.0.3",
