@@ -4,7 +4,7 @@ import {
   SubscriptionStatusBadge,
   useAgreementSubscriptions,
 } from "@features/agreements";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";
 import { TermsEntity, Subscription } from "@swo/mp-api-model";
@@ -108,6 +108,8 @@ const columns: ColumnDef<SubscriptionRow>[] = [
 ];
 
 export function Subscriptions() {
+  const navigate = useNavigate();
+
   const { id } = useParams<{ id: string }>();
   const [offset, setOffset] = useState(0);
   const { subscriptions, pagination, isFetching, isPending } =
@@ -167,6 +169,7 @@ export function Subscriptions() {
               {table.getRowModel().rows.map(row => (
                 <tr
                   key={row.id}
+                  onClick={() => navigate(`/subscriptions/${row.original.id}`)}
                   className="border-border-200 border-b text-sm text-text-700 cursor-pointer hover:bg-primary-50"
                 >
                   {row.getVisibleCells().map(cell => (
