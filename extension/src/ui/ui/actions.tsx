@@ -6,6 +6,7 @@ import {
   ButtonProps as HeadlessButtonProps,
   MenuItems,
 } from "@headlessui/react";
+import { Button } from "@alga-psa/ui-kit";
 import { ReactNode } from "react";
 import { EllipsisVertical } from "lucide-react";
 import { cn } from "@utils/cn";
@@ -13,9 +14,11 @@ import { cn } from "@utils/cn";
 export const Actions = ({ children }: { children: ReactNode }) => {
   return (
     <Menu>
-      <MenuButton className="flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-primary-600 ring-offset-background relative h-10 py-2 px-4 cursor-pointer border border-border-400 bg-white text-text-700 hover:bg-primary-50 hover:text-primary-700 gap-1 pl-3">
-        <EllipsisVertical className="size-4" />
-        <span>Actions</span>
+      <MenuButton>
+        <Button variant="outline" className="gap-1 pl-3">
+          <EllipsisVertical className="size-4" />
+          <span>Actions</span>
+        </Button>
       </MenuButton>
       <MenuItems
         anchor="bottom end"
