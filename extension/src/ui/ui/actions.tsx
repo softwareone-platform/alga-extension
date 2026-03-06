@@ -15,7 +15,7 @@ export const Actions = ({ children }: { children: ReactNode }) => {
   return (
     <Menu>
       <MenuButton>
-        <Button variant="outline" className="gap-1 pl-3">
+        <Button variant="outline" className="gap-1 flex">
           <EllipsisVertical className="size-4" />
           <span>Actions</span>
         </Button>

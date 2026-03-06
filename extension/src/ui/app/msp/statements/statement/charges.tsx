@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card } from "@ui/card";
+import { Card } from "@alga-psa/ui-kit";
 import { useParams } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";

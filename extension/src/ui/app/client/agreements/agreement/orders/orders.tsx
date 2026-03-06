@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Card } from "@ui/card";
+import { Card } from "@alga-psa/ui-kit";
 import { OrderStatusBadge, useAgreementOrders } from "@features/agreements";
 import { useParams, useNavigate } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";

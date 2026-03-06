@@ -1,4 +1,4 @@
-import { Card } from "@ui/card";
+import { Card } from "@alga-psa/ui-kit";
 import { useAgreement } from "@features/agreements";
 import { useParams } from "react-router";
 import { useBillingConfigByAgreement } from "@features/billing-config";

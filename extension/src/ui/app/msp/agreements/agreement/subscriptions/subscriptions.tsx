@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Card } from "@ui/card";
+import { Card } from "@alga-psa/ui-kit";
 import {
   ColumnDef,
   flexRender,

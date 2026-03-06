@@ -1,6 +1,6 @@
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { useConsumer } from "@features/consumers";
-import { Card } from "@ui/card";
+import { Card } from "@alga-psa/ui-kit";
 import { useParams } from "react-router";
 
 const COMPANY_TYPES = {

@@ -1,4 +1,4 @@
-import { Card } from "@ui/card";
+import { Card } from "@alga-psa/ui-kit";
 import { useAccount } from "@features/account";
 
 export function Settings() {

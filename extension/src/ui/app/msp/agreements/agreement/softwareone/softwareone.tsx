@@ -1,4 +1,4 @@
-import { Card } from "@ui/card";
+import { Card } from "@alga-psa/ui-kit";
 import { Icon } from "@ui/icon";
 import {
   Agreement as AgreementType,

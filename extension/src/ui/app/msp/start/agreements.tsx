@@ -1,7 +1,7 @@
 import { useAgreements, AgreementStatusBadge } from "@features/agreements";
 import { ProductCell } from "@features/products";
 import { useState } from "react";
-import { Card } from "@ui/card";
+import { Card } from "@alga-psa/ui-kit";
 import { Agreement } from "@swo/mp-api-model";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";

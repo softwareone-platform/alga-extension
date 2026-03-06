@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card } from "@ui/card";
+import { Card } from "@alga-psa/ui-kit";
 import { useStatements } from "@features/statements";
 import { InvoiceStatus, Statement } from "@/shared/statements";
 import { Badge } from "@alga-psa/ui-kit";

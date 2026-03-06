@@ -1,6 +1,6 @@
 import { useOrder } from "@features/orders";
 import { Audit } from "@ui/audit";
-import { Card } from "@ui/card";
+import { Card } from "@alga-psa/ui-kit";
 import { useParams } from "react-router";
 
 export function Details() {
