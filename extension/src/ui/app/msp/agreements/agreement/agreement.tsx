@@ -23,7 +23,7 @@ import { Price, PriceWithMarkup } from "@features/price";
 import { useConsumer, useConsumers } from "@features/consumers";
 import { useServices } from "@features/services";
 import { useForm, Controller } from "react-hook-form";
-import { PageLoader } from "@/ui/ui";
+import { Loader, PageLoader } from "@/ui/ui";
 
 function AgreementSummary({ id }: { id: string }) {
   const { agreement, isPending: isAgreementPending } = useAgreement(id);
@@ -38,7 +38,7 @@ function AgreementSummary({ id }: { id: string }) {
   const { consumer } = useConsumer(billingConfig?.consumerId);
 
   if (isAgreementPending || isBillingConfigPending)
-    return <PageLoader />;
+    return <Loader />;
 
   if (!agreement) return <div>Agreement not found</div>;
 
