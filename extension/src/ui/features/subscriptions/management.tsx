@@ -1,4 +1,4 @@
-import { Button } from "@ui/button";
+import { Button } from "@alga-psa/ui-kit";
 import { Dialog, DialogPanel, DialogTitle } from "@/ui/ui";
 import { useMemo, useState } from "react";
 import {
@@ -51,7 +51,7 @@ function OrderConfirmation({
         </div>
       </div>
       <div className="flex justify-end gap-3 mt-6">
-        <Button variant="white" onClick={onClose}>Close</Button>
+        <Button variant="outline" onClick={onClose}>Close</Button>
         <Button onClick={onViewOrder}>
           View order
         </Button>

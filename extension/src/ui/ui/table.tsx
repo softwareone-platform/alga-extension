@@ -1,5 +1,5 @@
 import { forwardRef, HTMLAttributes, useState } from "react";
-import { Button } from "@/ui/ui";
+import { Button } from "@alga-psa/ui-kit";
 import { cn } from "@/ui/utils";
 
 export const TableContainer = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(({ className, children, ...props }, ref) => {
@@ -50,7 +50,7 @@ export const Pagination = forwardRef<HTMLDivElement, PaginationProps>(
         )}
       >
         <Button
-          variant="white"
+          variant="outline"
           onClick={() => setCurrentPage(Math.max(page - 1, 1))}
           disabled={page === 1 || isLoading}
         >
@@ -60,7 +60,7 @@ export const Pagination = forwardRef<HTMLDivElement, PaginationProps>(
           Page {page} of {totalPages} ({totalItems} total records)
         </span>
         <Button
-          variant="white"
+          variant="outline"
           onClick={() => setCurrentPage(Math.min(page + 1, totalPages))}
           disabled={page === totalPages || isLoading}
         >

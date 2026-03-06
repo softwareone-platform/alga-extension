@@ -1,4 +1,4 @@
-import { Button } from "@ui/button";
+import { Button } from "@alga-psa/ui-kit";
 import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
@@ -333,7 +333,7 @@ function BillingConfigEditor({
           </div>
 
           <div className="flex justify-end gap-6">
-            <Button variant="white" onClick={handleCancel} type="button">
+            <Button variant="outline" onClick={handleCancel} type="button">
               Cancel
             </Button>
             <Button type="submit">Save</Button>

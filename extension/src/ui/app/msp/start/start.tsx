@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet, NavLink } from "react-router";
-import { Button } from "@ui/button";
+import { Button } from "@alga-psa/ui-kit";
 import { useAccount } from "@features/account";
 import { Tabs } from "@ui/tabs";
 import { ErrorCard } from "@ui/error-card";
@@ -88,7 +88,7 @@ function SettingsActions() {
             />
           </div>
           <div className="flex justify-end gap-6">
-            <Button variant="white" onClick={() => setIsEnabledOpen(false)}>
+            <Button variant="outline" onClick={() => setIsEnabledOpen(false)}>
               Cancel
             </Button>
             <Button onClick={() => setStatus("active")}>Enable</Button>
@@ -114,7 +114,7 @@ function SettingsActions() {
             />
           </div>
           <div className="flex justify-end gap-6">
-            <Button variant="white" onClick={() => setIsDisabledOpen(false)}>
+            <Button variant="outline" onClick={() => setIsDisabledOpen(false)}>
               Cancel
             </Button>
             <Button onClick={() => setStatus("disabled")}>Disable</Button>
@@ -191,7 +191,7 @@ function SettingsEditor({
         </div>
 
         <div className="flex justify-end gap-6">
-          <Button variant="white" onClick={handleCancel}>
+          <Button variant="outline" onClick={handleCancel}>
             Cancel
           </Button>
           <Button onClick={handleSave}>Save</Button>

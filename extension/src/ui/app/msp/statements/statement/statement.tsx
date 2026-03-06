@@ -1,4 +1,5 @@
-import { LinkButton, Button } from "@ui/button";
+import { LinkButton } from "@ui/button";
+import { Button } from "@alga-psa/ui-kit";
 import { Card } from "@ui/card";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
