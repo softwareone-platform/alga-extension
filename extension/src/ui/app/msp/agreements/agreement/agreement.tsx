@@ -330,13 +330,13 @@ function BillingConfigEditor({
 
             <label className="text-sm font-medium self-start">Note</label>
             <Textarea {...register("note")} rows={4} />
-          </div>
 
-          <div className="flex justify-end gap-6">
-            <Button variant="outline" onClick={handleCancel} type="button">
-              Cancel
-            </Button>
-            <Button type="submit">Save</Button>
+            <div className="flex justify-end gap-6 col-span-2">
+              <Button variant="outline" onClick={handleCancel} type="button">
+                Cancel
+              </Button>
+              <Button type="submit">Save</Button>
+            </div>
           </div>
         </form>
       </DrawerPanel>
