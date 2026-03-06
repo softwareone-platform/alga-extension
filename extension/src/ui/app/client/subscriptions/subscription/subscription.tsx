@@ -24,7 +24,7 @@ function SubscriptionSummary({ id }: { id: string }) {
   if (!subscription) return <></>;
 
   return (
-    <Card className="flex flex-row justify-between">
+    <Card className="flex flex-row justify-between gap-4">
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">
           Subscription ID

@@ -5,7 +5,7 @@ export function Settings() {
   const { account } = useAccount();
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col gap-4">
       <div>
         <label className="block text-sm font-semibold text-gray-900">
           Account Name

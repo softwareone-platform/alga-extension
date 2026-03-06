@@ -28,12 +28,12 @@ function SubscriptionSummary({ id }: { id: string }) {
   const { consumer } = useConsumer(billingConfig?.consumerId!);
 
   if (isSubscriptionPending || isBillingConfigPending)
-    return <Card className="flex flex-row justify-between"><Loader /></Card>;
+    return <Card className="flex flex-row justify-between gap-4"><Loader /></Card>;
 
   if (!subscription) return <></>;
 
   return (
-    <Card className="flex flex-row justify-between">
+    <Card className="flex flex-row justify-between gap-4">
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">
           Subscription ID

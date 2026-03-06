@@ -18,7 +18,7 @@ function AgreementSummary({ id }: { id: string }) {
   if (!agreement) return <div>Agreement not found</div>;
 
   return (
-    <Card className="flex flex-row justify-between">
+    <Card className="flex flex-row justify-between gap-4">
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Agreement ID</label>
         <div className="flex gap-2 items-center grow">
