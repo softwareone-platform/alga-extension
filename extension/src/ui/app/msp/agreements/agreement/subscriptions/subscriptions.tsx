@@ -7,7 +7,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";
-import { Loader } from "@/ui/ui/loader";
+import { Loader } from "@/ui/ui";
 import {
   SubscriptionStatusBadge,
   useAgreementSubscriptions,

@@ -3,7 +3,7 @@ import { Card } from "@alga-psa/ui-kit";
 import { useNavigate, useParams } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";
-import { Loader } from "@/ui/ui/loader";
+import { Loader } from "@/ui/ui";
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { useSubscriptionOrders } from "@features/subscriptions";
 import { Price, PriceWithMarkup } from "@features/price";

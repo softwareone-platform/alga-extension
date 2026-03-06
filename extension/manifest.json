@@ -1,7 +1,7 @@
 {
   "name": "com.swo.extension",
   "publisher": "SoftwareONE",
-  "version": "0.0.136",
+  "version": "0.0.137",
   "runtime": "wasm-js@1",
   "capabilities": [
     "cap:context.read",

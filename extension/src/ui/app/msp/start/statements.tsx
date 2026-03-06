@@ -11,7 +11,7 @@ import { Link } from "@/ui/ui/link";
 import { useBillingConfigByAgreement } from "@/ui/features/billing-config";
 import { Price, PriceWithMarkup } from "@features/price";
 import { Pagination, TableContainer } from "@/ui/ui/table";
-import { Loader } from "@/ui/ui/loader";
+import { Loader } from "@/ui/ui";
 import { useNavigate } from "react-router";
 
 export const AlgaInvoiceStatusBadge = ({

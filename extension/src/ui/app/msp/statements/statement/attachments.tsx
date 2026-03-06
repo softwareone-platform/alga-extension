@@ -3,7 +3,7 @@ import { Card } from "@alga-psa/ui-kit";
 import { useParams } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";
-import { Loader } from "@/ui/ui/loader";
+import { Loader } from "@/ui/ui";
 import { useStatementAttachments } from "@features/statements";
 import { formatDateTime } from "@features/dates";
 import { backendClient } from "@/ui/lib/alga";

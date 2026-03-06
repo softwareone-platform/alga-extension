@@ -10,4 +10,4 @@ export * from "./radio";
 export * from "./listbox";
 export * from "./table";
 export * from "./link";
-export * from "./loader";
+export * from "./loaders";

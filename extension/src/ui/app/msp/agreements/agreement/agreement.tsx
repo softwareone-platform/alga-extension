@@ -23,6 +23,7 @@ import { Price, PriceWithMarkup } from "@features/price";
 import { useConsumer, useConsumers } from "@features/consumers";
 import { useServices } from "@features/services";
 import { useForm, Controller } from "react-hook-form";
+import { PageLoader } from "@/ui/ui";
 
 function AgreementSummary({ id }: { id: string }) {
   const { agreement, isPending: isAgreementPending } = useAgreement(id);
@@ -37,7 +38,7 @@ function AgreementSummary({ id }: { id: string }) {
   const { consumer } = useConsumer(billingConfig?.consumerId);
 
   if (isAgreementPending || isBillingConfigPending)
-    return <div>Loading...</div>;
+    return <PageLoader />;
 
   if (!agreement) return <div>Agreement not found</div>;
 
@@ -349,7 +350,7 @@ export function Agreement() {
   const { agreement, isPending } = useAgreement(id!);
   const [isOpen, setIsOpen] = useState(false);
 
-  if (isPending) return <div>Loading...</div>;
+  if (isPending) return <PageLoader />;
 
   if (!agreement) return <div>Agreement not found</div>;
 

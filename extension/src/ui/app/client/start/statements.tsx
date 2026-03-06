@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Card } from "@alga-psa/ui-kit";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Pagination, TableContainer } from "@/ui/ui/table";
-import { Loader } from "@/ui/ui/loader";
+import { Loader } from "@/ui/ui";
 import { PriceWithMarkup } from "@features/price";
 import { useStatements } from "@features/statements";
 import { Agreement } from "@features/agreements";
