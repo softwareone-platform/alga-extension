@@ -2,6 +2,7 @@ import { Card } from "@alga-psa/ui-kit";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
+import { Loader, PageLoader } from "@/ui/ui/loaders";
 
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { PriceWithMarkup } from "@features/price";
@@ -12,7 +13,7 @@ function OrderSummary({ id }: { id: string }) {
   const { billingConfig, isPending: isBillingConfigPending } =
     useBillingConfigByAgreement(order?.agreement?.id);
 
-  if (isOrderPending || isBillingConfigPending) return <div>Loading...</div>;
+  if (isOrderPending || isBillingConfigPending) return <Loader />;
 
   if (!order) return <></>;
 
@@ -74,7 +75,7 @@ function OrderSummary({ id }: { id: string }) {
 export function Order() {
   const { id } = useParams<{ id: string }>();
   const { order, isPending } = useOrder(id!);
-  if (isPending) return <div>Loading...</div>;
+  if (isPending) return <PageLoader />;
 
   if (!order) return <div>Order not found</div>;
 

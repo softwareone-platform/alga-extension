@@ -2,6 +2,7 @@ import { Card } from "@alga-psa/ui-kit";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
+import { Loader, PageLoader } from "@/ui/ui/loaders";
 
 import { useAgreement, AgreementStatusBadge } from "@features/agreements";
 import { useBillingConfigByAgreement } from "@features/billing-config";
@@ -13,7 +14,7 @@ function AgreementSummary({ id }: { id: string }) {
     useBillingConfigByAgreement(id);
 
   if (isAgreementPending || isBillingConfigPending)
-    return <div>Loading...</div>;
+    return <Loader />;
 
   if (!agreement) return <div>Agreement not found</div>;
 
@@ -73,7 +74,7 @@ export function Agreement() {
   const { id } = useParams<{ id: string }>();
   const { agreement, isPending } = useAgreement(id!);
 
-  if (isPending) return <div>Loading...</div>;
+  if (isPending) return <PageLoader />;
 
   if (!agreement) return <div>Agreement not found</div>;
 

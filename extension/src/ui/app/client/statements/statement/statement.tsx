@@ -2,6 +2,7 @@ import { Card } from "@alga-psa/ui-kit";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
+import { Loader, PageLoader } from "@/ui/ui/loaders";
 
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { PriceWithMarkup } from "@features/price";
@@ -13,7 +14,7 @@ function StatementSummary({ id }: { id: string }) {
     useBillingConfigByAgreement(statement?.agreement?.id);
 
   if (isAgreementPending || isBillingConfigPending)
-    return <div>Loading...</div>;
+    return <Loader />;
 
   if (!statement) return <></>;
 
@@ -65,7 +66,7 @@ function StatementSummary({ id }: { id: string }) {
 export function Statement() {
   const { id } = useParams<{ id: string }>();
   const { statement, isPending } = useStatement(id!);
-  if (isPending) return <div>Loading...</div>;
+  if (isPending) return <PageLoader />;
 
   if (!statement) return <div>Statement not found</div>;
 

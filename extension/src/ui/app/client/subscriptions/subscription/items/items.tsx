@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Card } from "@alga-psa/ui-kit";
+import { Loader } from "@/ui/ui/loaders";
 import { useParams } from "react-router";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { TableContainer } from "@/ui/ui/table";
@@ -95,7 +96,7 @@ export function Items() {
     state: { columnSizing },
   });
 
-  if (isPending) return <>Loading...</>;
+  if (isPending) return <Loader />;
 
   if (!items || items.length === 0) return <>No items found.</>;
 

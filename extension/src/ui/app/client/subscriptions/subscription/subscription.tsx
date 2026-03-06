@@ -2,6 +2,7 @@ import { Card } from "@alga-psa/ui-kit";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
+import { Loader, PageLoader } from "@/ui/ui/loaders";
 
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { PriceWithMarkup } from "@features/price";
@@ -19,7 +20,7 @@ function SubscriptionSummary({ id }: { id: string }) {
     useBillingConfigByAgreement(subscription?.agreement?.id);
 
   if (isSubscriptionPending || isBillingConfigPending)
-    return <div>Loading...</div>;
+    return <Loader />;
 
   if (!subscription) return <></>;
 
@@ -90,7 +91,7 @@ export function Subscription() {
   const { id } = useParams<{ id: string }>();
   const { subscription, isPending } = useSubscription(id!);
   const { billingConfig } = useBillingConfigByAgreement(subscription?.agreement?.id);
-  if (isPending) return <div>Loading...</div>;
+  if (isPending) return <PageLoader />;
 
   if (!subscription) return <div>Subscription not found</div>;
 

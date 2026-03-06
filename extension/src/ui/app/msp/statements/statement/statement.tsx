@@ -5,6 +5,7 @@ import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
 import { useMemo } from "react";
+import { Loader, PageLoader } from "@/ui/ui/loaders";
 import { useBillingConfigByAgreement } from "@features/billing-config";
 import { Price, PriceWithMarkup } from "@features/price";
 import { useStatement, useStatementActions } from "@features/statements";
@@ -40,7 +41,7 @@ function StatementSummary({ id }: { id: string }) {
   const { consumer } = useConsumer(billingConfig?.consumerId);
 
   if (isAgreementPending || isBillingConfigPending)
-    return <div>Loading...</div>;
+    return <Loader />;
 
   if (!statement) return <></>;
 
@@ -122,7 +123,7 @@ export function Statement() {
     return statement?.algaInvoiceStatus;
   }, [createInvoiceStatus, statement?.algaInvoiceStatus]);
 
-  if (isPending) return <div>Loading...</div>;
+  if (isPending) return <PageLoader />;
   if (!statement) return <div>Statement not found</div>;
 
   return (

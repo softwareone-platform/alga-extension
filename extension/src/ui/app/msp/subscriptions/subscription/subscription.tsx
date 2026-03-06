@@ -17,7 +17,7 @@ import {
 import { useConsumer } from "@features/consumers";
 import { Link } from "@/ui/ui/link";
 import { SWO_PORTAL_URL } from "@/ui/config";
-import { Loader } from "@/ui/ui";
+import { Loader, PageLoader } from "@/ui/ui/loaders";
 import { SubscriptionManagement } from "@/ui/features/subscriptions";
 
 function SubscriptionSummary({ id }: { id: string }) {
@@ -130,7 +130,7 @@ export function Subscription() {
   const { id } = useParams<{ id: string }>();
   const { subscription, isPending } = useSubscription(id!);
 
-  if (isPending) return <div>Loading...</div>;
+  if (isPending) return <PageLoader />;
 
   if (!subscription) return <div>Subscription not found</div>;
 
