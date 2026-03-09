@@ -1,32 +1,25 @@
-import { Tabs } from "@ui/tabs";
-import { NavLink, Outlet } from "react-router";
+import { Tabs } from "@alga-psa/ui-kit";
+import { Outlet, useLocation, useNavigate } from "react-router";
 
 export function Start() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   return (
     <div className="w-full flex flex-col p-6 gap-8">
       <header className="w-full flex justify-between gap-10">
         <h1 className="text-3xl font-semibold">Software</h1>
       </header>
-      <Tabs>
-        <NavLink to="agreements">
-          {({ isActive }) => (
-            <Tabs.Tab isActive={isActive}>Agreements</Tabs.Tab>
-          )}
-        </NavLink>
-        <NavLink to="subscriptions">
-          {({ isActive }) => (
-            <Tabs.Tab isActive={isActive}>Subscriptions</Tabs.Tab>
-          )}
-        </NavLink>
-        <NavLink to="orders">
-          {({ isActive }) => <Tabs.Tab isActive={isActive}>Orders</Tabs.Tab>}
-        </NavLink>
-        <NavLink to="statements">
-          {({ isActive }) => (
-            <Tabs.Tab isActive={isActive}>Statements</Tabs.Tab>
-          )}
-        </NavLink>
-      </Tabs>
+      <Tabs
+        tabs={[
+          { key: "agreements", label: "Agreements", content: null },
+          { key: "subscriptions", label: "Subscriptions", content: null },
+          { key: "orders", label: "Orders", content: null },
+          { key: "statements", label: "Statements", content: null },
+        ]}
+        activeKey={location.pathname.split("/").pop() || "agreements"}
+        onChange={(key) => navigate(key)}
+      />
       <Outlet />
     </div>
   );

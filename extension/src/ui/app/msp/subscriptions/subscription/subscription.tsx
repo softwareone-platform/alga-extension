@@ -1,8 +1,7 @@
 import { LinkButton } from "@ui/button";
-import { Card } from "@alga-psa/ui-kit";
+import { Card, Tabs } from "@alga-psa/ui-kit";
 import { Icon } from "@ui/icon";
-import { NavLink, Outlet, useParams } from "react-router";
-import { Tabs } from "@ui/tabs";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router";
 
 import {
   BillingConfigStatusBadge,
@@ -129,6 +128,8 @@ function SubscriptionSummary({ id }: { id: string }) {
 export function Subscription() {
   const { id } = useParams<{ id: string }>();
   const { subscription, isPending } = useSubscription(id!);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   if (isPending) return <PageLoader />;
 
@@ -157,17 +158,15 @@ export function Subscription() {
           </div>
         </header>
         <SubscriptionSummary id={id!} />
-        <Tabs>
-          <NavLink to="items">
-            {({ isActive }) => <Tabs.Tab isActive={isActive}>Items</Tabs.Tab>}
-          </NavLink>
-          <NavLink to="orders">
-            {({ isActive }) => <Tabs.Tab isActive={isActive}>Orders</Tabs.Tab>}
-          </NavLink>
-          <NavLink to="details">
-            {({ isActive }) => <Tabs.Tab isActive={isActive}>Details</Tabs.Tab>}
-          </NavLink>
-        </Tabs>
+        <Tabs
+          tabs={[
+            { key: "items", label: "Items", content: null },
+            { key: "orders", label: "Orders", content: null },
+            { key: "details", label: "Details", content: null },
+          ]}
+          activeKey={location.pathname.split("/").pop() || "items"}
+          onChange={(key) => navigate(key)}
+        />
         <Outlet />
       </div>
     </>

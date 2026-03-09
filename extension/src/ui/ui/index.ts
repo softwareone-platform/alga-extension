@@ -1,5 +1,4 @@
 export * from "./button";
-export * from "./tabs";
 export * from "./error-card";
 export * from "./dialog";
 export * from "./actions";

@@ -1,9 +1,7 @@
 import { LinkButton } from "@ui/button";
-import { Button } from "@alga-psa/ui-kit";
-import { Card } from "@alga-psa/ui-kit";
+import { Button, Card, Tabs } from "@alga-psa/ui-kit";
 import { Icon } from "@ui/icon";
-import { NavLink, Outlet, useParams } from "react-router";
-import { Tabs } from "@ui/tabs";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router";
 import { useMemo } from "react";
 import { Loader, PageLoader } from "@/ui/ui/loaders";
 import { useBillingConfigByAgreement } from "@features/billing-config";
@@ -115,6 +113,8 @@ function StatementSummary({ id }: { id: string }) {
 export function Statement() {
   const { id } = useParams<{ id: string }>();
   const { statement, isPending } = useStatement(id!);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const { createInvoice, createInvoiceStatus } = useStatementActions(id!);
 
@@ -153,19 +153,15 @@ export function Statement() {
         </div>
       </header>
       <StatementSummary id={id!} />
-      <Tabs>
-        <NavLink to="charges">
-          {({ isActive }) => <Tabs.Tab isActive={isActive}>Charges</Tabs.Tab>}
-        </NavLink>
-        <NavLink to="attachments">
-          {({ isActive }) => (
-            <Tabs.Tab isActive={isActive}>Attachments</Tabs.Tab>
-          )}
-        </NavLink>
-        <NavLink to="details">
-          {({ isActive }) => <Tabs.Tab isActive={isActive}>Details</Tabs.Tab>}
-        </NavLink>
-      </Tabs>
+      <Tabs
+        tabs={[
+          { key: "charges", label: "Charges", content: null },
+          { key: "attachments", label: "Attachments", content: null },
+          { key: "details", label: "Details", content: null },
+        ]}
+        activeKey={location.pathname.split("/").pop() || "charges"}
+        onChange={(key) => navigate(key)}
+      />
       <Outlet />
     </div>
   );

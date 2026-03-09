@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { Outlet, NavLink } from "react-router";
-import { Button, Drawer } from "@alga-psa/ui-kit";
+import { Outlet, useLocation, useNavigate } from "react-router";
+import { Button, Drawer, Tabs } from "@alga-psa/ui-kit";
 import { useAccount } from "@features/account";
-import { Tabs } from "@ui/tabs";
 import { ErrorCard } from "@ui/error-card";
 import { Dialog, DialogPanel, DialogTitle } from "@ui/dialog";
 import {
@@ -199,6 +198,8 @@ function SettingsEditor({
 export function Start() {
   const { error } = useAccount();
   const { isLoading, details } = useExtensionDetails();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -221,31 +222,19 @@ export function Start() {
 
       <SettingsEditor isOpen={isOpen} onClose={() => setIsOpen(false)} />
 
-      <Tabs>
-        {details.status !== "unconfigured" && (<>
-          <NavLink to="/start/agreements">
-            {({ isActive }) => (
-              <Tabs.Tab isActive={isActive}>Agreements</Tabs.Tab>
-            )}
-          </NavLink>
-          <NavLink to="/start/subscriptions">
-            {({ isActive }) => (
-              <Tabs.Tab isActive={isActive}>Subscriptions</Tabs.Tab>
-            )}
-          </NavLink>
-          <NavLink to="/start/orders">
-            {({ isActive }) => <Tabs.Tab isActive={isActive}>Orders</Tabs.Tab>}
-          </NavLink>
-          <NavLink to="/start/statements">
-            {({ isActive }) => (
-              <Tabs.Tab isActive={isActive}>Statements</Tabs.Tab>
-            )}
-          </NavLink>
-        </>)}
-        <NavLink to="/start/settings">
-          {({ isActive }) => <Tabs.Tab isActive={isActive}>Settings</Tabs.Tab>}
-        </NavLink>
-      </Tabs>
+      <Tabs
+        tabs={[
+          ...(details.status !== "unconfigured" ? [
+            { key: "agreements", label: "Agreements", content: null },
+            { key: "subscriptions", label: "Subscriptions", content: null },
+            { key: "orders", label: "Orders", content: null },
+            { key: "statements", label: "Statements", content: null },
+          ] : []),
+          { key: "settings", label: "Settings", content: null },
+        ]}
+        activeKey={location.pathname.split("/").pop() || "settings"}
+        onChange={(key) => navigate(`/start/${key}`)}
+      />
       <Outlet />
     </div>
   );

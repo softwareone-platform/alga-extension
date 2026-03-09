@@ -1,7 +1,6 @@
-import { Card } from "@alga-psa/ui-kit";
+import { Card, Tabs } from "@alga-psa/ui-kit";
 import { Icon } from "@ui/icon";
-import { NavLink, Outlet, useParams } from "react-router";
-import { Tabs } from "@ui/tabs";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router";
 import { Loader, PageLoader } from "@/ui/ui/loaders";
 
 import { useBillingConfigByAgreement } from "@features/billing-config";
@@ -91,6 +90,8 @@ export function Subscription() {
   const { id } = useParams<{ id: string }>();
   const { subscription, isPending } = useSubscription(id!);
   const { billingConfig } = useBillingConfigByAgreement(subscription?.agreement?.id);
+  const navigate = useNavigate();
+  const location = useLocation();
   if (isPending) return <PageLoader />;
 
   if (!subscription) return <div>Subscription not found</div>;
@@ -109,17 +110,15 @@ export function Subscription() {
         )}
       </header>
       <SubscriptionSummary id={id!} />
-      <Tabs>
-        <NavLink to="items">
-          {({ isActive }) => <Tabs.Tab isActive={isActive}>Items</Tabs.Tab>}
-        </NavLink>
-        <NavLink to="orders">
-          {({ isActive }) => <Tabs.Tab isActive={isActive}>Orders</Tabs.Tab>}
-        </NavLink>
-        <NavLink to="details">
-          {({ isActive }) => <Tabs.Tab isActive={isActive}>Details</Tabs.Tab>}
-        </NavLink>
-      </Tabs>
+      <Tabs
+        tabs={[
+          { key: "items", label: "Items", content: null },
+          { key: "orders", label: "Orders", content: null },
+          { key: "details", label: "Details", content: null },
+        ]}
+        activeKey={location.pathname.split("/").pop() || "items"}
+        onChange={(key) => navigate(key)}
+      />
       <Outlet />
     </div>
   );

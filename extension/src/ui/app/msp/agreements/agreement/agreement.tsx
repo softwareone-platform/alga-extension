@@ -1,7 +1,6 @@
-import { Button, Card, Drawer } from "@alga-psa/ui-kit";
+import { Button, Card, Drawer, Tabs } from "@alga-psa/ui-kit";
 import { Icon } from "@ui/icon";
-import { NavLink, Outlet, useParams } from "react-router";
-import { Tabs } from "@ui/tabs";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router";
 import { useEffect, useMemo, useState } from "react";
 import { Input, Textarea } from "@ui/input";
 import { useAgreement, AgreementStatusBadge } from "@features/agreements";
@@ -343,6 +342,8 @@ export function Agreement() {
   const { id } = useParams<{ id: string }>();
   const { agreement, isPending } = useAgreement(id!);
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   if (isPending) return <PageLoader />;
 
@@ -367,30 +368,18 @@ export function Agreement() {
         onClose={() => setIsOpen(false)}
         agreementId={id!}
       />
-      <Tabs>
-        <NavLink to="softwareone">
-          {({ isActive }) => (
-            <Tabs.Tab isActive={isActive}>SoftwareOne</Tabs.Tab>
-          )}
-        </NavLink>
-        <NavLink to="subscriptions">
-          {({ isActive }) => (
-            <Tabs.Tab isActive={isActive}>Subscriptions</Tabs.Tab>
-          )}
-        </NavLink>
-        <NavLink to="orders">
-          {({ isActive }) => <Tabs.Tab isActive={isActive}>Orders</Tabs.Tab>}
-        </NavLink>
-        <NavLink to="consumer">
-          {({ isActive }) => <Tabs.Tab isActive={isActive}>Consumer</Tabs.Tab>}
-        </NavLink>
-        <NavLink to="billing">
-          {({ isActive }) => <Tabs.Tab isActive={isActive}>Billing</Tabs.Tab>}
-        </NavLink>
-        <NavLink to="details">
-          {({ isActive }) => <Tabs.Tab isActive={isActive}>Details</Tabs.Tab>}
-        </NavLink>
-      </Tabs>
+      <Tabs
+        tabs={[
+          { key: "softwareone", label: "SoftwareOne", content: null },
+          { key: "subscriptions", label: "Subscriptions", content: null },
+          { key: "orders", label: "Orders", content: null },
+          { key: "consumer", label: "Consumer", content: null },
+          { key: "billing", label: "Billing", content: null },
+          { key: "details", label: "Details", content: null },
+        ]}
+        activeKey={location.pathname.split("/").pop() || "softwareone"}
+        onChange={(key) => navigate(key)}
+      />
       <Outlet />
     </div>
   );

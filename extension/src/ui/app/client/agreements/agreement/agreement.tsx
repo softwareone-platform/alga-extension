@@ -1,7 +1,6 @@
-import { Card } from "@alga-psa/ui-kit";
+import { Card, Tabs } from "@alga-psa/ui-kit";
 import { Icon } from "@ui/icon";
-import { NavLink, Outlet, useParams } from "react-router";
-import { Tabs } from "@ui/tabs";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router";
 import { Loader, PageLoader } from "@/ui/ui/loaders";
 
 import { useAgreement, AgreementStatusBadge } from "@features/agreements";
@@ -73,6 +72,8 @@ function AgreementSummary({ id }: { id: string }) {
 export function Agreement() {
   const { id } = useParams<{ id: string }>();
   const { agreement, isPending } = useAgreement(id!);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   if (isPending) return <PageLoader />;
 
@@ -89,19 +90,15 @@ export function Agreement() {
         </div>
       </header>
       <AgreementSummary id={id!} />
-      <Tabs>
-        <NavLink to="subscriptions">
-          {({ isActive }) => (
-            <Tabs.Tab isActive={isActive}>Subscriptions</Tabs.Tab>
-          )}
-        </NavLink>
-        <NavLink to="orders">
-          {({ isActive }) => <Tabs.Tab isActive={isActive}>Orders</Tabs.Tab>}
-        </NavLink>
-        <NavLink to="details">
-          {({ isActive }) => <Tabs.Tab isActive={isActive}>Details</Tabs.Tab>}
-        </NavLink>
-      </Tabs>
+      <Tabs
+        tabs={[
+          { key: "subscriptions", label: "Subscriptions", content: null },
+          { key: "orders", label: "Orders", content: null },
+          { key: "details", label: "Details", content: null },
+        ]}
+        activeKey={location.pathname.split("/").pop() || "subscriptions"}
+        onChange={(key) => navigate(key)}
+      />
       <Outlet />
     </div>
   );
