@@ -1,7 +1,6 @@
 export * from "./button";
 export * from "./tabs";
 export * from "./error-card";
-export * from "./drawer";
 export * from "./dialog";
 export * from "./actions";
 export * from "./audit";

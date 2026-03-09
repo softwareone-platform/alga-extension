@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { Outlet, NavLink } from "react-router";
-import { Button } from "@alga-psa/ui-kit";
+import { Button, Drawer } from "@alga-psa/ui-kit";
 import { useAccount } from "@features/account";
 import { Tabs } from "@ui/tabs";
 import { ErrorCard } from "@ui/error-card";
-import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
 import { Dialog, DialogPanel, DialogTitle } from "@ui/dialog";
 import {
   useExtensionDetails,
@@ -163,32 +162,28 @@ function SettingsEditor({
   };
 
   return (
-    <Drawer open={isOpen} onClose={handleCancel}>
-      <DrawerPanel>
-        <DrawerTitle onClose={handleCancel}>SoftwareOne Settings</DrawerTitle>
+    <Drawer open={isOpen} onClose={handleCancel} title="SoftwareOne Settings" width="600px">
+      <div className="grid grid-cols-[auto_380px] gap-10 items-center">
+        <label className="text-sm font-medium">API Endpoint</label>
+        <Input
+          type="text"
+          value={endpoint}
+          onChange={(e) => setEndpoint(e.target.value)}
+        />
 
-        <div className="grid grid-cols-[auto_380px] gap-10 items-center">
-          <label className="text-sm font-medium">API Endpoint</label>
-          <Input
-            type="text"
-            value={endpoint}
-            onChange={(e) => setEndpoint(e.target.value)}
-          />
+        <label className="text-sm font-medium">API Token</label>
+        <Input
+          type="password"
+          value={token}
+          onChange={(e) => setToken(e.target.value)}
+        />
 
-          <label className="text-sm font-medium">API Token</label>
-          <Input
-            type="password"
-            value={token}
-            onChange={(e) => setToken(e.target.value)}
-          />
-
-          <label className="text-sm font-medium self-start">Note</label>
-          <Textarea
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            rows={4}
-          />
-        </div>
+        <label className="text-sm font-medium self-start">Note</label>
+        <Textarea
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          rows={4}
+        />
 
         <div className="flex justify-end gap-6">
           <Button variant="outline" onClick={handleCancel}>
@@ -196,7 +191,7 @@ function SettingsEditor({
           </Button>
           <Button onClick={handleSave}>Save</Button>
         </div>
-      </DrawerPanel>
+      </div>
     </Drawer>
   );
 }

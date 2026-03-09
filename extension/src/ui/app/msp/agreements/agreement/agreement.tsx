@@ -1,10 +1,8 @@
-import { Button } from "@alga-psa/ui-kit";
-import { Card } from "@alga-psa/ui-kit";
+import { Button, Card, Drawer } from "@alga-psa/ui-kit";
 import { Icon } from "@ui/icon";
 import { NavLink, Outlet, useParams } from "react-router";
 import { Tabs } from "@ui/tabs";
 import { useEffect, useMemo, useState } from "react";
-import { Drawer, DrawerPanel, DrawerTitle } from "@ui/drawer";
 import { Input, Textarea } from "@ui/input";
 import { useAgreement, AgreementStatusBadge } from "@features/agreements";
 import {
@@ -246,101 +244,97 @@ function BillingConfigEditor({
   };
 
   return (
-    <Drawer open={isOpen} onClose={handleCancel}>
-      <DrawerPanel>
-        <DrawerTitle onClose={handleCancel}>SoftwareOne Settings</DrawerTitle>
-
-        <form onSubmit={onSubmit}>
-          <div className="grid grid-cols-[auto_380px] gap-10 items-center">
-            <label className="text-sm font-medium">Consumer</label>
-            <div>
-              <Controller
-                name="consumerId"
-                control={control}
-                render={({ field }) => (
-                  <ConsumersListbox
-                    consumerId={field.value}
-                    onConsumerIdChange={field.onChange}
-                  />
-                )}
-              />
-            </div>
-            <label className="text-sm font-medium">Service</label>
-            <div>
-              <Controller
-                name="serviceId"
-                control={control}
-                render={({ field }) => (
-                  <ServiceListbox
-                    serviceId={field.value}
-                    onServiceIdChange={field.onChange}
-                  />
-                )}
-              />
-            </div>
-            <label className="text-sm font-medium">Markup</label>
-            <div className="relative">
-              <Input
-                type="number"
-                min={0}
-                {...register("markup", { valueAsNumber: true })}
-                className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield] pr-13"
-              />
-              <span className="absolute right-0 top-[1px] h-[calc(100%-2px)] flex items-center justify-center text-sm border-l border-gray-300 w-10 px-2">
-                %
-              </span>
-            </div>
-
-            <label className="text-sm font-medium self-start">Operations</label>
+    <Drawer open={isOpen} onClose={handleCancel} title="SoftwareOne Settings" width="600px">
+      <form onSubmit={onSubmit}>
+        <div className="grid grid-cols-[auto_380px] gap-10 items-center">
+          <label className="text-sm font-medium">Consumer</label>
+          <div>
             <Controller
-              name="operations"
+              name="consumerId"
               control={control}
               render={({ field }) => (
-                <RadioGroup
-                  value={field.value}
-                  onChange={field.onChange}
-                  aria-label="Operations"
-                >
-                  <Radio value="self-service">
-                    <div className="flex flex-col">
-                      <span>Self-service</span>
-                      <span className="text-xs text-gray-500">
-                        Clients can see agreement details and manage subscriptions
-                      </span>
-                    </div>
-                  </Radio>
-                  <Radio value="visible">
-                    <div className="flex flex-col">
-                      <span>Visible</span>
-                      <span className="text-xs text-gray-500">
-                        Clients can see agreement details
-                      </span>
-                    </div>
-                  </Radio>
-                  <Radio value="hidden">
-                    <div className="flex flex-col">
-                      <span>Hidden</span>
-                      <span className="text-xs text-gray-500">
-                        Clients cannot see agreement details
-                      </span>
-                    </div>
-                  </Radio>
-                </RadioGroup>
+                <ConsumersListbox
+                  consumerId={field.value}
+                  onConsumerIdChange={field.onChange}
+                />
               )}
             />
-
-            <label className="text-sm font-medium self-start">Note</label>
-            <Textarea {...register("note")} rows={4} />
-
-            <div className="flex justify-end gap-6 col-span-2">
-              <Button variant="outline" onClick={handleCancel} type="button">
-                Cancel
-              </Button>
-              <Button type="submit">Save</Button>
-            </div>
           </div>
-        </form>
-      </DrawerPanel>
+          <label className="text-sm font-medium">Service</label>
+          <div>
+            <Controller
+              name="serviceId"
+              control={control}
+              render={({ field }) => (
+                <ServiceListbox
+                  serviceId={field.value}
+                  onServiceIdChange={field.onChange}
+                />
+              )}
+            />
+          </div>
+          <label className="text-sm font-medium">Markup</label>
+          <div className="relative">
+            <Input
+              type="number"
+              min={0}
+              {...register("markup", { valueAsNumber: true })}
+              className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield] pr-13"
+            />
+            <span className="absolute right-0 top-[1px] h-[calc(100%-2px)] flex items-center justify-center text-sm border-l border-gray-300 w-10 px-2">
+              %
+            </span>
+          </div>
+
+          <label className="text-sm font-medium self-start">Operations</label>
+          <Controller
+            name="operations"
+            control={control}
+            render={({ field }) => (
+              <RadioGroup
+                value={field.value}
+                onChange={field.onChange}
+                aria-label="Operations"
+              >
+                <Radio value="self-service">
+                  <div className="flex flex-col">
+                    <span>Self-service</span>
+                    <span className="text-xs text-gray-500">
+                      Clients can see agreement details and manage subscriptions
+                    </span>
+                  </div>
+                </Radio>
+                <Radio value="visible">
+                  <div className="flex flex-col">
+                    <span>Visible</span>
+                    <span className="text-xs text-gray-500">
+                      Clients can see agreement details
+                    </span>
+                  </div>
+                </Radio>
+                <Radio value="hidden">
+                  <div className="flex flex-col">
+                    <span>Hidden</span>
+                    <span className="text-xs text-gray-500">
+                      Clients cannot see agreement details
+                    </span>
+                  </div>
+                </Radio>
+              </RadioGroup>
+            )}
+          />
+
+          <label className="text-sm font-medium self-start">Note</label>
+          <Textarea {...register("note")} rows={4} />
+
+          <div className="flex justify-end gap-6 col-span-2">
+            <Button variant="outline" onClick={handleCancel} type="button">
+              Cancel
+            </Button>
+            <Button type="submit">Save</Button>
+          </div>
+        </div>
+      </form>
     </Drawer>
   );
 }
