@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - Access to the AlgaPSA MSP portal
-- The extension bundle file (`bundle.tar.zst`) downloaded from <DOWNLOAD_LINK>
+- The extension bundle file (`bundle.tar.zst`) downloaded from https://github.com/softwareone-platform/alga-extension/blob/main/docs/installation/bundle.tar.zst
 - A SoftwareOne API Token (generated in the SoftwareOne Portal)
 
 ## Installation
