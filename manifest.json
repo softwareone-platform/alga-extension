@@ -1,0 +1,42 @@
+{
+  "name": "com.swo.extension",
+  "publisher": "SoftwareOne",
+  "version": "0.0.149",
+  "runtime": "wasm-js@1",
+  "capabilities": [
+    "cap:context.read",
+    "cap:http.fetch",
+    "cap:invoice.manual.create",
+    "cap:log.emit",
+    "cap:scheduler.manage",
+    "cap:secrets.get",
+    "cap:storage.kv",
+    "cap:ui.proxy",
+    "cap:user.read"
+  ],
+  "ui": {
+    "type": "iframe",
+    "entry": "ui/index.html",
+    "hooks": {
+      "appMenu": {
+        "label": "SoftwareOne"
+      },
+      "clientPortalMenu": {
+        "label": "SoftwareOne"
+      }
+    }
+  },
+  "api": {
+    "endpoints": [
+      {
+        "method": "POST",
+        "path": "/statements/create-invoices",
+        "handler": "dist/main",
+        "schedulable": true
+      }
+    ]
+  },
+  "assets": [
+    "ui/**/*"
+  ]
+}

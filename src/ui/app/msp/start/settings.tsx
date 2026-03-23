@@ -1,0 +1,57 @@
+import { Card } from "@alga-psa/ui-kit";
+import { useAccount } from "@features/account";
+
+export function Settings() {
+  const { account } = useAccount();
+
+  return (
+    <Card className="flex flex-col gap-4">
+      <div>
+        <label className="block text-sm font-semibold text-gray-900">
+          Account Name
+        </label>
+        <div className="text-sm text-gray-500">{account?.name || "—"}</div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-gray-900">
+          Account ID
+        </label>
+        <div className="text-sm text-gray-500">{account?.id || "—"}</div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-gray-900">
+          Company Description
+        </label>
+        <div className="text-sm text-gray-500">
+          {account?.description || "—"}
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-gray-900">
+          Company Website
+        </label>
+        <div className="text-sm text-gray-500">{account?.website || "—"}</div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-gray-900">
+          Headquarters address
+        </label>
+        {!account?.address && <div className="text-sm text-gray-500">—</div>}
+        {account?.address && (
+          <div className="text-sm text-gray-500 flex flex-col">
+            <span>Address line1: {account?.address.addressLine1}</span>
+            <span>Address line2: {account?.address.addressLine2}</span>
+            <span>City: {account?.address.city}</span>
+            <span>ZIP/post code: {account?.address.postCode}</span>
+            <span>State: {account?.address.state}</span>
+            <span>Country: {account?.address.country}</span>
+          </div>
+        )}
+      </div>
+    </Card>
+  );
+}

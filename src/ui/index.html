@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SoftwareOne</title>
+    <base href="." />
+    <script>
+      (function () {
+        const url = new URL(window.location.href);
+        const path = url.pathname;
+        const baseMatch = path.match(/^\/ext-ui\/[^/]+\/sha256:[^/]+\//);
+        if (baseMatch) {
+          const base = baseMatch[0];
+          const rest = path.slice(base.length);
+          const normalized = rest ? (rest.startsWith('/') ? rest : '/' + rest) : '/';
+          if (normalized !== path) {
+            window.history.replaceState(null, '', normalized + url.search + url.hash);
+          }
+          window.__ALGA_EXT_BASE = base;
+        }
+        if (window.location.pathname.endsWith('/index.html')) {
+          const cleanPath = window.location.pathname.slice(0, -'index.html'.length) || '/';
+          window.history.replaceState(null, '', cleanPath + window.location.search + window.location.hash);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>
