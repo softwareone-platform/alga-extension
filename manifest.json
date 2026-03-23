@@ -1,7 +1,7 @@
 {
   "name": "com.swo.extension",
-  "publisher": "SWO",
-  "version": "0.0.146",
+  "publisher": "SoftwareOne",
+  "version": "0.0.149",
   "runtime": "wasm-js@1",
   "capabilities": [
     "cap:context.read",
@@ -19,10 +19,10 @@
     "entry": "ui/index.html",
     "hooks": {
       "appMenu": {
-        "label": "SWO"
+        "label": "SoftwareOne"
       },
       "clientPortalMenu": {
-        "label": "SWO"
+        "label": "SoftwareOne"
       }
     }
   },
