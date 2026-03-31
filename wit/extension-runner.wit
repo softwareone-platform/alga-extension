@@ -157,6 +157,39 @@ interface types {
         error: option<string>,
     }
 
+    // Client types for cap:client.read
+
+    enum client-read-error {
+        not-allowed,
+        invalid-input,
+        internal,
+    }
+
+    record client-summary {
+        client-id: string,
+        client-name: string,
+        client-type: option<string>,
+        is-inactive: bool,
+        default-currency-code: option<string>,
+        account-manager-id: option<string>,
+        account-manager-name: option<string>,
+        billing-email: option<string>,
+    }
+
+    record clients-list-input {
+        search: option<string>,
+        include-inactive: option<bool>,
+        page: option<u32>,
+        page-size: option<u32>,
+    }
+
+    record clients-list-result {
+        items: list<client-summary>,
+        total-count: u32,
+        page: u32,
+        page-size: u32,
+    }
+
     // Invoicing types for cap:invoice.manual.create
 
     enum discount-type {
@@ -266,6 +299,12 @@ interface scheduler {
     get-endpoints: func() -> result<list<endpoint-info>, scheduler-error>;
 }
 
+interface clients {
+    use types.{client-read-error, client-summary, clients-list-input, clients-list-result};
+    list-clients: func(input: clients-list-input) -> result<clients-list-result, client-read-error>;
+    get-client: func(client-id: string) -> result<option<client-summary>, client-read-error>;
+}
+
 interface invoicing {
     use types.{create-manual-invoice-input, create-manual-invoice-result};
     create-manual-invoice: func(input: create-manual-invoice-input) -> create-manual-invoice-result;
@@ -282,6 +321,7 @@ world runner {
     import ui-proxy;
     import user-v2;
     import scheduler;
+    import clients;
     import invoicing;
 
     export handler: func(request: execute-request) -> execute-response;

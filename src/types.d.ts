@@ -88,6 +88,42 @@ declare module "alga:extension/user-v2" {
   export function getUser(): UserData; // throws UserError on failure
 }
 
+declare module "alga:extension/clients" {
+  export type ClientReadError = "not-allowed" | "invalid-input" | "internal";
+
+  export interface ClientSummary {
+    clientId: string;
+    clientName: string;
+    clientType?: string | null;
+    isInactive: boolean;
+    defaultCurrencyCode?: string | null;
+    accountManagerId?: string | null;
+    accountManagerName?: string | null;
+    billingEmail?: string | null;
+  }
+
+  export interface ClientsListInput {
+    search?: string | null;
+    includeInactive?: boolean | null;
+    page?: number | null;
+    pageSize?: number | null;
+  }
+
+  export interface ClientsListResult {
+    items: ClientSummary[];
+    totalCount: number;
+    page: number;
+    pageSize: number;
+  }
+
+  export function listClients(
+    input: ClientsListInput,
+  ): ClientsListResult; // throws ClientReadError
+  export function getClient(
+    clientId: string,
+  ): ClientSummary | null; // throws ClientReadError
+}
+
 declare module "alga:extension/invoicing" {
   export type DiscountType = "percentage" | "fixed";
 
