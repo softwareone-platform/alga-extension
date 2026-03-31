@@ -243,7 +243,7 @@ function BillingConfigEditor({
   };
 
   return (
-    <Drawer open={isOpen} onClose={handleCancel} title="SoftwareOne Settings" width="600px">
+    <Drawer open={isOpen} onClose={handleCancel} title="Billing Config" width="600px">
       <form onSubmit={onSubmit}>
         <div className="grid grid-cols-[auto_380px] gap-10 items-center">
           <label className="text-sm font-medium">Consumer</label>
