@@ -1,7 +1,7 @@
 {
   "name": "com.swo.extension",
   "publisher": "SoftwareOne",
-  "version": "0.0.150",
+  "version": "0.0.166",
   "runtime": "wasm-js@1",
   "capabilities": [
     "cap:context.read",
@@ -12,7 +12,9 @@
     "cap:secrets.get",
     "cap:storage.kv",
     "cap:ui.proxy",
-    "cap:user.read"
+    "cap:user.read",
+    "cap:client.read",
+    "cap:service.read"
   ],
   "ui": {
     "type": "iframe",

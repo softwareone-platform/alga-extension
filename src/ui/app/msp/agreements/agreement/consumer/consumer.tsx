@@ -3,7 +3,7 @@ import { useConsumer } from "@features/consumers";
 import { Card } from "@alga-psa/ui-kit";
 import { useParams } from "react-router";
 
-const COMPANY_TYPES = {
+const COMPANY_TYPES: Record<string, string> = {
   company: "Company",
   individual: "Individual",
 };
@@ -23,18 +23,18 @@ export function Consumer() {
             Client Name
           </label>
           <div className="flex gap-2 items-center">
-            <span className="text-sm text-black">{consumer?.name || "—"}</span>
+            <span className="text-sm text-black">{consumer?.clientName || "—"}</span>
           </div>
           <label className="text-sm font-semibold text-black">Type</label>
           <div className="flex gap-2 items-center">
             <span className="text-sm text-black">
-              {consumer?.type ? COMPANY_TYPES[consumer?.type] : "—"}
+              {consumer?.clientType ? COMPANY_TYPES[consumer.clientType] : "—"}
             </span>
           </div>
-          <label className="text-sm font-semibold text-black">Website</label>
+          <label className="text-sm font-semibold text-black">Billing Email</label>
           <div className="flex gap-2 items-center">
             <span className="text-sm text-black">
-              {consumer?.website || "—"}
+              {consumer?.billingEmail || "—"}
             </span>
           </div>
         </div>

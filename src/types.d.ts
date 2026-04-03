@@ -88,6 +88,76 @@ declare module "alga:extension/user-v2" {
   export function getUser(): UserData; // throws UserError on failure
 }
 
+declare module "alga:extension/clients" {
+  export type ClientReadError = "not-allowed" | "invalid-input" | "internal";
+
+  export interface ClientSummary {
+    clientId: string;
+    clientName: string;
+    clientType?: string | null;
+    isInactive: boolean;
+    defaultCurrencyCode?: string | null;
+    accountManagerId?: string | null;
+    accountManagerName?: string | null;
+    billingEmail?: string | null;
+  }
+
+  export interface ClientsListInput {
+    search?: string | null;
+    includeInactive?: boolean | null;
+    page?: number | null;
+    pageSize?: number | null;
+  }
+
+  export interface ClientsListResult {
+    items: ClientSummary[];
+    totalCount: number;
+    page: number;
+    pageSize: number;
+  }
+
+  export function listClients(input: ClientsListInput): ClientsListResult; // throws ClientReadError
+  export function getClient(clientId: string): ClientSummary | null; // throws ClientReadError
+}
+
+declare module "alga:extension/services" {
+  export type ServiceItemKind = "service" | "product";
+  export type ServiceBillingMethod = "fixed" | "hourly" | "usage";
+  export type ServiceReadError = "not-allowed" | "invalid-input" | "internal";
+
+  export interface ServiceSummary {
+    serviceId: string;
+    serviceName: string;
+    itemKind: ServiceItemKind;
+    billingMethod: ServiceBillingMethod;
+    serviceTypeId?: string | null;
+    serviceTypeName?: string | null;
+    defaultRate: number;
+    unitOfMeasure: string;
+    isActive: boolean;
+    sku?: string | null;
+  }
+
+  export interface ServicesListInput {
+    search?: string | null;
+    itemKind?: ServiceItemKind | null;
+    isActive?: boolean | null;
+    billingMethod?: ServiceBillingMethod | null;
+    page?: number | null;
+    pageSize?: number | null;
+  }
+
+  export interface ServicesListResult {
+    items: ServiceSummary[];
+    totalCount: number;
+    page: number;
+    pageSize: number;
+  }
+
+  export function listServices(input: ServicesListInput): ServicesListResult; // throws ServiceReadError
+  export function getService(serviceId: string): ServiceSummary | null; // throws ServiceReadError
+}
+
 declare module "alga:extension/invoicing" {
   export type DiscountType = "percentage" | "fixed";
 

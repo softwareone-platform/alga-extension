@@ -16,6 +16,8 @@ export default defineConfig({
     "alga:extension/context",
     "alga:extension/user-v2",
     "alga:extension/invoicing",
+    "alga:extension/clients",
+    "alga:extension/services",
   ],
   esbuildOptions(options) {
     options.alias = {

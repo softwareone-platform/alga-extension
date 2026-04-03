@@ -1,27 +1,24 @@
-import { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ServicesContext } from "./context";
+import { backendClient } from "@lib/alga";
+import { AlgaService, ServicesResponse } from "@/shared/services";
 
 export const useServices = () => {
-  const { servicesClient } = useContext(ServicesContext);
-
   const { data: services, ...rest } = useQuery({
     queryKey: ["services"],
-    queryFn: () => servicesClient!.getServices(),
-    enabled: !!servicesClient,
+    queryFn: async () => {
+      const { data } =
+        await backendClient.get<ServicesResponse>("/alga/services");
+      return data;
+    },
   });
 
   return { services, ...rest };
 };
 
 export const useService = (id?: string) => {
-  const { servicesClient } = useContext(ServicesContext);
+  const { services, ...rest } = useServices();
 
-  const { data: service, ...rest } = useQuery({
-    queryKey: ["service", id],
-    queryFn: () => servicesClient!.getService(id!),
-    enabled: !!servicesClient && !!id,
-  });
+  const service = services?.find((s: AlgaService) => s.serviceId === id);
 
   return { service, ...rest };
 };

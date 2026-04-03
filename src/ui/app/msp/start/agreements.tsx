@@ -57,7 +57,7 @@ const columns: ColumnDef<Agreement>[] = [
     cell: ({ row: { original } }) => {
       const { billingConfig } = useBillingConfigByAgreement(original.id);
       const { consumer } = useConsumer(billingConfig?.consumerId);
-      return <Link to={consumer?.id ? `/consumers/${consumer.id}` : undefined}>{consumer?.name}</Link>;
+      return <Link to={consumer?.clientId ? `/consumers/${consumer.clientId}` : undefined}>{consumer?.clientName}</Link>;
     },
   },
   {

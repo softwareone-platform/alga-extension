@@ -83,7 +83,7 @@ async function deploy() {
     if (!currentUrl.includes('tab=extensions')) {
       console.log('[deploy] Navigating to extensions settings...');
       await page.goto(CONFIG.url, { waitUntil: 'domcontentloaded', timeout: 30000 });
-      await page.waitForTimeout(2000);
+      await page.waitForTimeout(10000);
     }
 
     // Wait for the page to fully load

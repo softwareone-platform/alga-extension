@@ -1,27 +1,24 @@
-import { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ConsumersContext } from "./context";
+import { backendClient } from "@lib/alga";
+import { Consumer, ConsumersResponse } from "@/shared/consumers";
 
 export const useConsumers = () => {
-  const { client } = useContext(ConsumersContext);
-
   const { data: consumers, ...rest } = useQuery({
     queryKey: ["consumers"],
-    queryFn: () => client!.getClients(),
-    enabled: !!client,
+    queryFn: async () => {
+      const { data } =
+        await backendClient.get<ConsumersResponse>("/alga/clients");
+      return data;
+    },
   });
 
   return { consumers, ...rest };
 };
 
 export const useConsumer = (id?: string) => {
-  const { client } = useContext(ConsumersContext);
+  const { consumers, ...rest } = useConsumers();
 
-  const { data: consumer, ...rest } = useQuery({
-    queryKey: ["consumer", id],
-    queryFn: () => client!.getClient(id!),
-    enabled: !!client && !!id,
-  });
+  const consumer = consumers?.find((c: Consumer) => c.clientId === id);
 
   return { consumer, ...rest };
 };
