@@ -116,12 +116,46 @@ declare module "alga:extension/clients" {
     pageSize: number;
   }
 
-  export function listClients(
-    input: ClientsListInput,
-  ): ClientsListResult; // throws ClientReadError
-  export function getClient(
-    clientId: string,
-  ): ClientSummary | null; // throws ClientReadError
+  export function listClients(input: ClientsListInput): ClientsListResult; // throws ClientReadError
+  export function getClient(clientId: string): ClientSummary | null; // throws ClientReadError
+}
+
+declare module "alga:extension/services" {
+  export type ServiceItemKind = "service" | "product";
+  export type ServiceBillingMethod = "fixed" | "hourly" | "usage";
+  export type ServiceReadError = "not-allowed" | "invalid-input" | "internal";
+
+  export interface ServiceSummary {
+    serviceId: string;
+    serviceName: string;
+    itemKind: ServiceItemKind;
+    billingMethod: ServiceBillingMethod;
+    serviceTypeId?: string | null;
+    serviceTypeName?: string | null;
+    defaultRate: number;
+    unitOfMeasure: string;
+    isActive: boolean;
+    sku?: string | null;
+  }
+
+  export interface ServicesListInput {
+    search?: string | null;
+    itemKind?: ServiceItemKind | null;
+    isActive?: boolean | null;
+    billingMethod?: ServiceBillingMethod | null;
+    page?: number | null;
+    pageSize?: number | null;
+  }
+
+  export interface ServicesListResult {
+    items: ServiceSummary[];
+    totalCount: number;
+    page: number;
+    pageSize: number;
+  }
+
+  export function listServices(input: ServicesListInput): ServicesListResult; // throws ServiceReadError
+  export function getService(serviceId: string): ServiceSummary | null; // throws ServiceReadError
 }
 
 declare module "alga:extension/invoicing" {

@@ -190,6 +190,54 @@ interface types {
         page-size: u32,
     }
 
+    // Service types for cap:service.read
+
+    enum service-item-kind {
+        service,
+        product,
+    }
+
+    enum service-billing-method {
+        fixed,
+        hourly,
+        usage,
+    }
+
+    enum service-read-error {
+        not-allowed,
+        invalid-input,
+        internal,
+    }
+
+    record service-summary {
+        service-id: string,
+        service-name: string,
+        item-kind: service-item-kind,
+        billing-method: service-billing-method,
+        service-type-id: option<string>,
+        service-type-name: option<string>,
+        default-rate: f64,
+        unit-of-measure: string,
+        is-active: bool,
+        sku: option<string>,
+    }
+
+    record services-list-input {
+        search: option<string>,
+        item-kind: option<service-item-kind>,
+        is-active: option<bool>,
+        billing-method: option<service-billing-method>,
+        page: option<u32>,
+        page-size: option<u32>,
+    }
+
+    record services-list-result {
+        items: list<service-summary>,
+        total-count: u32,
+        page: u32,
+        page-size: u32,
+    }
+
     // Invoicing types for cap:invoice.manual.create
 
     enum discount-type {
@@ -305,6 +353,12 @@ interface clients {
     get-client: func(client-id: string) -> result<option<client-summary>, client-read-error>;
 }
 
+interface services {
+    use types.{service-read-error, service-summary, services-list-input, services-list-result};
+    list-services: func(input: services-list-input) -> result<services-list-result, service-read-error>;
+    get-service: func(service-id: string) -> result<option<service-summary>, service-read-error>;
+}
+
 interface invoicing {
     use types.{create-manual-invoice-input, create-manual-invoice-result};
     create-manual-invoice: func(input: create-manual-invoice-input) -> create-manual-invoice-result;
@@ -322,6 +376,7 @@ world runner {
     import user-v2;
     import scheduler;
     import clients;
+    import services;
     import invoicing;
 
     export handler: func(request: execute-request) -> execute-response;

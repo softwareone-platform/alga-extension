@@ -13,6 +13,7 @@ import "./modules/user";
 import "./modules/extensions";
 import "./modules/billing-configs";
 import "./modules/statements";
+import "./modules/alga";
 
 export function handler(request: ExecuteRequest): ExecuteResponse {
   try {
