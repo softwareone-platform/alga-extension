@@ -8,7 +8,7 @@ export const useServices = () => {
     queryFn: async () => {
       const { data } =
         await backendClient.get<ServicesResponse>("/alga/services");
-      return data.items;
+      return data;
     },
   });
 

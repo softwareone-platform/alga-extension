@@ -14,9 +14,4 @@ export type AlgaService = {
   sku?: string | null;
 };
 
-export type ServicesResponse = {
-  items: AlgaService[];
-  totalCount: number;
-  page: number;
-  pageSize: number;
-};
+export type ServicesResponse = AlgaService[];

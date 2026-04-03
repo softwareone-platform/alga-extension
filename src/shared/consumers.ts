@@ -9,9 +9,4 @@ export type Consumer = {
   billingEmail?: string | null;
 };
 
-export type ConsumersResponse = {
-  items: Consumer[];
-  totalCount: number;
-  page: number;
-  pageSize: number;
-};
+export type ConsumersResponse = Consumer[];

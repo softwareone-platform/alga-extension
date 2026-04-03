@@ -1,31 +1,51 @@
 import { route } from "@/backend/routing";
-import { listClients, ClientsListResult } from "alga:extension/clients";
-import { listServices, ServicesListResult } from "alga:extension/services";
+import {
+  listClients,
+  ClientSummary,
+} from "alga:extension/clients";
+import {
+  listServices,
+  ServiceSummary,
+} from "alga:extension/services";
 
-route<unknown, ClientsListResult>("GET", "/alga/clients", ({ user }) => {
+route<unknown, ClientSummary[]>("GET", "/alga/clients", ({ user }) => {
   if (!user?.userType) {
     return { status: 403, error: "Unauthorized" };
   }
 
-  const clients = listClients({
-    page: 1,
-    pageSize: 100,
-    includeInactive: false,
-  });
+  const allClients: ClientSummary[] = [];
+  let page = 1;
+  const pageSize = 100;
 
-  return { status: 200, body: clients };
+  while (true) {
+    const result = listClients({ page, pageSize, includeInactive: false });
+    allClients.push(...result.items);
+    if (allClients.length >= result.totalCount || result.items.length < pageSize) {
+      break;
+    }
+    page++;
+  }
+
+  return { status: 200, body: allClients };
 });
 
-route<unknown, ServicesListResult>("GET", "/alga/services", ({ user }) => {
+route<unknown, ServiceSummary[]>("GET", "/alga/services", ({ user }) => {
   if (!user?.userType) {
     return { status: 403, error: "Unauthorized" };
   }
 
-  const services = listServices({
-    page: 1,
-    pageSize: 100,
-    itemKind: "service",
-  });
+  const allServices: ServiceSummary[] = [];
+  let page = 1;
+  const pageSize = 100;
 
-  return { status: 200, body: services };
+  while (true) {
+    const result = listServices({ page, pageSize, itemKind: "service" });
+    allServices.push(...result.items);
+    if (allServices.length >= result.totalCount || result.items.length < pageSize) {
+      break;
+    }
+    page++;
+  }
+
+  return { status: 200, body: allServices };
 });
