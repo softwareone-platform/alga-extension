@@ -84,7 +84,7 @@ function AgreementSummary({ id }: { id: string }) {
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Consumer</label>
         <div className="flex gap-2 items-center grow">
-          <span className="text-sm text-black">{consumer?.name || "—"}</span>
+          <span className="text-sm text-black">{consumer?.clientName || "—"}</span>
         </div>
       </div>
       <div className="flex flex-col gap-1">
@@ -139,17 +139,17 @@ const ConsumerListbox = ({
   const { consumers } = useConsumers();
 
   const consumer = useMemo(
-    () => consumers?.data?.find((v) => v.id === consumerId),
+    () => consumers?.find((v) => v.clientId === consumerId),
     [consumers, consumerId]
   );
 
   return (
     <Listbox value={consumerId} onChange={onConsumerIdChange}>
-      <ListboxButton>{consumer?.name ?? "-"}</ListboxButton>
+      <ListboxButton>{consumer?.clientName ?? "-"}</ListboxButton>
       <ListboxOptions>
-        {consumers?.data?.map((consumer) => (
-          <ListboxOption key={consumer.id} value={consumer.id}>
-            {consumer.name}
+        {consumers?.map((consumer) => (
+          <ListboxOption key={consumer.clientId} value={consumer.clientId}>
+            {consumer.clientName}
           </ListboxOption>
         ))}
         <ListboxOption key="empty" value=""> - </ListboxOption>
@@ -168,17 +168,17 @@ const ServiceListbox = ({
   const { services } = useServices();
 
   const service = useMemo(
-    () => services?.data?.find((v) => v.id === serviceId),
+    () => services?.find((v) => v.serviceId === serviceId),
     [services, serviceId]
   );
 
   return (
     <Listbox value={serviceId} onChange={onServiceIdChange}>
-      <ListboxButton>{service?.name ?? "-"}</ListboxButton>
+      <ListboxButton>{service?.serviceName ?? "-"}</ListboxButton>
       <ListboxOptions>
-        {services?.data?.map((service) => (
-          <ListboxOption key={service.id} value={service.id}>
-            {service.name}
+        {services?.map((service) => (
+          <ListboxOption key={service.serviceId} value={service.serviceId}>
+            {service.serviceName}
           </ListboxOption>
         ))}
         <ListboxOption key="empty" value=""> - </ListboxOption>

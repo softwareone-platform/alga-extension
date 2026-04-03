@@ -73,7 +73,7 @@ function StatementSummary({ id }: { id: string }) {
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-black">Consumer</label>
         <div className="flex gap-2 items-center grow text-sm">
-          <Link to={consumer?.id ? `/consumers/${consumer.id}` : undefined}>{consumer?.name}</Link>
+          <Link to={consumer?.clientId ? `/consumers/${consumer.clientId}` : undefined}>{consumer?.clientName}</Link>
         </div>
       </div>
       <div className="flex flex-col gap-1">

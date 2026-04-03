@@ -1,3 +1,1 @@
-import { Client } from "@lib/alga";
-
-export type Consumer = Client;
+export type { Consumer } from "@/shared/consumers";
