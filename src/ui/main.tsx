@@ -11,7 +11,7 @@ import "./ready-inject.js";
 import "./index.css";
 import "@alga-psa/ui-kit/theme.css";
 
-import { backendClient } from "./lib/alga/url.js";
+import { backendClient } from "./lib/alga";
 import { UserResponseBody } from "@/shared/user";
 
 // import { IframeBridge } from "@alga-psa/extension-iframe-sdk";
