@@ -129,7 +129,7 @@ function AgreementSummary({ id }: { id: string }) {
   );
 }
 
-const ConsumersListbox = ({
+const ConsumerListbox = ({
   consumerId,
   onConsumerIdChange,
 }: {
@@ -252,7 +252,7 @@ function BillingConfigEditor({
               name="consumerId"
               control={control}
               render={({ field }) => (
-                <ConsumersListbox
+                <ConsumerListbox
                   consumerId={field.value}
                   onConsumerIdChange={field.onChange}
                 />

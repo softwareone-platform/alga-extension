@@ -12,7 +12,9 @@
     "cap:secrets.get",
     "cap:storage.kv",
     "cap:ui.proxy",
-    "cap:user.read"
+    "cap:user.read",
+    "cap:client.read",
+    "cap:service.read"
   ],
   "ui": {
     "type": "iframe",
